@@ -1,5 +1,5 @@
 <template>
-  <Logs :logs="logs" />
+  <Logs v-if="logs" :logs="logs" />
 </template>
 
 <script lang="ts">

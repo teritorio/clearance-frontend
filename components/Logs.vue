@@ -6,6 +6,7 @@
       :data="logs"
       stripe
       style="width: 100%"
+      size="mini"
       :row-class-name="tableRowClassName"
     >
       <el-table-column sortable width="150" prop="id" label="Type ID">
@@ -51,23 +52,30 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Attributes">
+      <el-table-column width="300" label="Attributes">
         <template #default="scope">
-          <diff
+          <Diff
             :src="scope.row.base"
             :dst="scope.row.change"
-            :diff="scope.row.diff_attribs || []"
-            :exclude="['tags', 'version']"
+            :diff="scope.row.diff_attribs || {}"
+            :exclude="
+              [].concat(
+                ['tags', 'version'],
+                scope.row.objtype !== 'n' ? ['lon', 'lat'] : [],
+                scope.row.objtype !== 'w' ? ['nodes'] : [],
+                scope.row.objtype !== 'r' ? ['members'] : []
+              )
+            "
             :clear="['nodes', 'members']"
           />
         </template>
       </el-table-column>
       <el-table-column label="tags">
         <template #default="scope">
-          <diff
+          <Diff
             :src="scope.row.base.tags"
             :dst="scope.row.change.tags"
-            :diff="scope.row.diff_tags || []"
+            :diff="scope.row.diff_tags || {}"
           />
         </template>
       </el-table-column>
@@ -120,5 +128,9 @@ export default Vue.extend({
 
 .el-table .success-row {
   --el-table-tr-bg-color: var(--el-color-success-light-9);
+}
+
+:deep(.el-table__cell) {
+  vertical-align: top;
 }
 </style>

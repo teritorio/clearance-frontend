@@ -48,3 +48,11 @@ export function getLogs(apiEndpoint: string): Promise<Logs> {
     }
   })
 }
+
+export function action2priority(logAction: LogAction): number {
+  return logAction ? { reject: 2, accept: 0 }[logAction] : 1
+}
+
+export function maxActionPriority(actions: Action[]): number {
+  return Math.max(...actions.map((action) => action2priority(action[1])))
+}

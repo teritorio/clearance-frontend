@@ -7,5 +7,8 @@ module.exports = {
   ],
   // add your custom config here
   // https://stylelint.io/user-guide/configuration
-  rules: {},
+  rules: {
+    'color-function-notation': null,
+    'selector-class-pattern': null,
+  },
 }
