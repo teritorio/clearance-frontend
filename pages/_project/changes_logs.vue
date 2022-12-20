@@ -16,9 +16,7 @@ export default Vue.extend({
   async asyncData({ params }): Promise<{
     logs: Logs
   }> {
-    const getLogsPromise = getLogs(
-      `http://localhost:9000/${params.project}/changes_logs/`
-    )
+    const getLogsPromise = getLogs('http://localhost:9000', params.project)
 
     const [logs] = await Promise.all([getLogsPromise])
 

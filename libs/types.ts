@@ -22,8 +22,8 @@ export type Subject = {
   members?: Member[]
 }
 
-export type LogAction = null | 'accept' | 'reject'
-export type Action = [string, LogAction]
+export type LogAction = 'accept' | 'reject'
+export type Action = [string, LogAction | null]
 export type Actions = Record<Key, Action[]>
 export type Log = {
   objtype: ObjType
@@ -37,8 +37,8 @@ export type Log = {
 
 export type Logs = Log[]
 
-export function getLogs(apiEndpoint: string): Promise<Logs> {
-  return fetch(apiEndpoint).then((data) => {
+export function getLogs(apiEndpoint: string, project: string): Promise<Logs> {
+  return fetch(`${apiEndpoint}/${project}/changes_logs/`).then((data) => {
     if (data.ok) {
       return data.json() as unknown as Logs
     } else {
@@ -49,10 +49,35 @@ export function getLogs(apiEndpoint: string): Promise<Logs> {
   })
 }
 
-export function action2priority(logAction: LogAction): number {
+export function action2priority(logAction: LogAction | null): number {
   return logAction ? { reject: 2, accept: 0 }[logAction] : 1
 }
 
 export function maxActionPriority(actions: Action[]): number {
   return Math.max(...actions.map((action) => action2priority(action[1])))
+}
+
+export type Validator = {
+  [key: string]: any
+
+  action: LogAction
+  action_force: LogAction
+  description: string
+}
+
+export type Validators = Record<string, Validator>
+
+export function getValidators(
+  apiEndpoint: string,
+  project: string
+): Promise<Validator> {
+  return fetch(`${apiEndpoint}/${project}/validators/`).then((data) => {
+    if (data.ok) {
+      return data.json() as unknown as Validator
+    } else {
+      return Promise.reject(
+        new Error([data.url, data.status, data.statusText].join(' '))
+      )
+    }
+  })
 }
