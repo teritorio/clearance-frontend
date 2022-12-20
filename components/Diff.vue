@@ -39,13 +39,18 @@
         </template>
       </td>
       <td>
-        <el-tag v-if="diff[key] === undefined" type="info">ø</el-tag>
-        <el-tag v-else-if="diff[key].length === 0" type="warning">?</el-tag>
+        <el-tag v-if="diff[key] === undefined" type="info" size="small">
+          ø
+        </el-tag>
+        <el-tag v-else-if="diff[key].length === 0" type="warning" size="small">
+          ?
+        </el-tag>
         <el-tag
           v-for="(action, i) in diff[key]"
           v-else
           :key="i"
           :type="action[1] === 'reject' ? 'danger' : 'info'"
+          size="small"
         >
           {{ action[0] }}
         </el-tag>

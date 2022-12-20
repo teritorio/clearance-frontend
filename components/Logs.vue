@@ -21,6 +21,7 @@
               { n: 'node', w: 'way', r: 'relation' }[scope.row.objtype]
             }/${scope.row.id}`"
             title="OSM Deep History"
+            size="small"
           >
             OSM Deep H
           </el-link>
@@ -41,12 +42,14 @@
           <el-tag
             v-if="scope.row.action"
             :type="scope.row.action === 'reject' ? 'danger' : 'success'"
+            size="small"
           >
             {{ scope.row.action }}
           </el-tag>
           <el-tag
             v-if="scope.row.diff_attribs && scope.row.diff_attribs['deleted']"
             type="danger"
+            size="small"
           >
             deleted
           </el-tag>
