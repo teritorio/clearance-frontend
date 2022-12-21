@@ -29,10 +29,16 @@ export type Log = {
   objtype: ObjType
   id: number
   base: Subject
-  changes: Subject
+  change: Subject
   action: LogAction
   diff_attribs: Actions
   diff_tags: Actions
+}
+
+export type ObjectId = {
+  objtype: ObjType
+  id: number
+  version: number
 }
 
 export type Logs = Log[]
@@ -41,6 +47,30 @@ export function getLogs(apiEndpoint: string, project: string): Promise<Logs> {
   return fetch(`${apiEndpoint}/${project}/changes_logs/`).then((data) => {
     if (data.ok) {
       return data.json() as unknown as Logs
+    } else {
+      return Promise.reject(
+        new Error([data.url, data.status, data.statusText].join(' '))
+      )
+    }
+  })
+}
+
+export function setLogs(
+  apiEndpoint: string,
+  project: string,
+  logAction: LogAction,
+  objectsId: ObjectId
+): Promise<Object> {
+  return fetch(`${apiEndpoint}/${project}/changes_logs/${logAction}`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(objectsId),
+  }).then((data) => {
+    if (data.ok) {
+      return data.json() as unknown as Object
     } else {
       return Promise.reject(
         new Error([data.url, data.status, data.statusText].join(' '))

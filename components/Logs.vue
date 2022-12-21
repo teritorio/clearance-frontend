@@ -1,5 +1,10 @@
 <template>
   <div>
+    <div style="margin-top: 20px">
+      <el-button @click="action(true)">Accept selection</el-button>
+      <el-button @click="action(false)">Reject selection</el-button>
+      <el-button @click="clearSelection()">Clear selection</el-button>
+    </div>
     <el-table
       v-if="logs"
       ref="table"
@@ -8,7 +13,9 @@
       style="width: 100%"
       size="mini"
       :row-class-name="tableRowClassName"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column type="selection" width="55" />
       <el-table-column sortable width="150" prop="id" label="Type ID">
         <template #default="scope">
           {{ scope.row.objtype }}{{ scope.row.id }}
@@ -87,10 +94,19 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import Vue, { PropType, ref, Ref, VueConstructor } from 'vue'
+import { ElTable } from 'element-plus'
 import { Logs, Log } from '~/libs/types'
 
-export default Vue.extend({
+export default (
+  Vue as VueConstructor<
+    Vue & {
+      $refs: {
+        table: InstanceType<typeof ElTable>
+      }
+    }
+  >
+).extend({
   name: 'LogsComponent',
 
   props: {
@@ -98,6 +114,14 @@ export default Vue.extend({
       type: Array as PropType<Logs>,
       required: true,
     },
+  },
+
+  data(): {
+    multipleSelection: Ref<Logs>
+  } {
+    return {
+      multipleSelection: ref<Logs>([]),
+    }
   },
 
   methods: {
@@ -119,6 +143,25 @@ export default Vue.extend({
 
     filterAction(value: string, log: Log) {
       return log.action === value
+    },
+
+    handleSelectionChange(val: Logs) {
+      this.multipleSelection.value = val
+    },
+
+    clearSelection() {
+      this.$refs.table.clearSelection()
+    },
+
+    action(accept: boolean) {
+      this.$emit('action', {
+        logAction: accept ? 'accept' : 'reject',
+        objectIds: this.multipleSelection.value.map((log) => ({
+          objtype: log.objtype,
+          id: log.id,
+          version: log.change.version,
+        })),
+      })
     },
   },
 })
