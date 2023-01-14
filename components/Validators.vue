@@ -15,7 +15,10 @@
       </el-table-column>
       <el-table-column sortable prop="id" label="Action">
         <template #default="scope">
-          {{ scope.row[1].action || scope.row[1].action_force }}
+          {{
+            scope.row[1].action &&
+            (scope.row[1].action.action || scope.row[1].action.action_force)
+          }}
         </template>
       </el-table-column>
       <el-table-column sortable prop="id" label="Description">
