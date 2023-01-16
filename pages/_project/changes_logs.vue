@@ -17,11 +17,11 @@ export default Vue.extend({
     return /^[-_:a-zA-Z0-9]+$/.test(params.project)
   },
 
-  async asyncData({ params }): Promise<{
+  async asyncData({ $config, params }): Promise<{
     project: string
     logs: Logs
   }> {
-    const getLogsPromise = getLogs('http://localhost:9000', params.project)
+    const getLogsPromise = getLogs($config.API, params.project)
 
     const [logs] = await Promise.all([getLogsPromise])
 
@@ -45,7 +45,7 @@ export default Vue.extend({
 
   methods: {
     post(logAction: LogAction, objectIds: ObjectId) {
-      setLogs('http://localhost:9000', this.project, logAction, objectIds)
+      setLogs(this.$config.API, this.project, logAction, objectIds)
     },
   },
 })

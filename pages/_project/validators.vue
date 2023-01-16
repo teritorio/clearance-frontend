@@ -15,13 +15,10 @@ export default Vue.extend({
     return /^[-_:a-zA-Z0-9]+$/.test(params.project)
   },
 
-  async asyncData({ params }): Promise<{
+  async asyncData({ $config, params }): Promise<{
     validators: Validators
   }> {
-    const getValidatorsPromise = getValidators(
-      'http://localhost:9000',
-      params.project
-    )
+    const getValidatorsPromise = getValidators($config.API, params.project)
 
     const [validators] = await Promise.all([getValidatorsPromise])
 
