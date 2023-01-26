@@ -2,6 +2,8 @@ export type ObjType = 'n' | 'w' | 'r'
 export type Key = string
 export interface Value extends String {}
 
+export type MultilingualString = Record<string, string>
+
 export type Tags = Record<Key, Value>
 export type Member = {
   ref: number
@@ -104,6 +106,24 @@ export function getValidators(
   return fetch(`${apiEndpoint}/${project}/validators/`).then((data) => {
     if (data.ok) {
       return data.json() as unknown as Validator
+    } else {
+      return Promise.reject(
+        new Error([data.url, data.status, data.statusText].join(' '))
+      )
+    }
+  })
+}
+
+export type Project = {
+  description: MultilingualString
+}
+
+export type Projects = Record<string, Project>
+
+export function getProjects(apiEndpoint: string): Promise<Projects> {
+  return fetch(`${apiEndpoint}/projects`).then((data) => {
+    if (data.ok) {
+      return data.json() as unknown as Projects
     } else {
       return Promise.reject(
         new Error([data.url, data.status, data.statusText].join(' '))
