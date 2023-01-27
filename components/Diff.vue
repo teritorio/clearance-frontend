@@ -38,11 +38,8 @@
           {{ dst[key] }}
         </template>
       </td>
-      <td>
-        <el-tag v-if="diff[key] === undefined" type="info" size="small">
-          ø
-        </el-tag>
-        <el-tag v-else-if="diff[key].length === 0" type="warning" size="small">
+      <td v-if="diff[key] !== undefined">
+        <el-tag v-if="diff[key].length === 0" type="warning" size="small">
           ?
         </el-tag>
         <el-tag
