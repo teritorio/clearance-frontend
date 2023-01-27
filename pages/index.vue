@@ -7,7 +7,7 @@
         <li v-for="(project, key) in projects" :key="key">
           <a :href="`/${key}/changes_logs/`">{{ key }}</a
           >:
-          {{ project.description }}
+          {{ project }}
         </li>
       </ul>
     </div>

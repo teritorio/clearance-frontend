@@ -116,6 +116,8 @@ export function getValidators(
 
 export type Project = {
   description: MultilingualString
+  date_start: String
+  date_last_update: String
 }
 
 export type Projects = Record<string, Project>
