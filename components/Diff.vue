@@ -2,6 +2,9 @@
   <table>
     <tr v-for="key in keys" :key="key">
       <td :class="[backgroundClass(key), 'key']">
+        {{ actionIcon(key) }}
+      </td>
+      <td :class="[backgroundClass(key), 'key']">
         {{ key }}
       </td>
       <td :class="[backgroundClass(key), 'value']">
@@ -106,8 +109,15 @@ export default Vue.extend({
         (!(key in this.src)
           ? 'attribute-added'
           : !(key in this.dst)
-          ? 'attribute-remodev'
+          ? 'attribute-removed'
           : 'attribute-changed')
+      )
+    },
+
+    actionIcon(key: string): string {
+      return (
+        this.diff[key] &&
+        (!(key in this.src) ? '➕' : !(key in this.dst) ? '✖' : '~')
       )
     },
 
@@ -136,7 +146,7 @@ export default Vue.extend({
   text-decoration: underline;
 }
 
-.attribute-remodev {
+.attribute-removed {
   background: rgb(255, 230, 230);
 }
 
