@@ -18,15 +18,26 @@
       <el-table-column type="selection" width="55" />
       <el-table-column sortable width="150" prop="id" label="Type ID">
         <template #default="scope">
-          {{ scope.row.objtype }}{{ scope.row.id }}
+          <a
+            :href="`https://www.openstreetmap.org/${objtypeFull(
+              scope.row.objtype
+            )}/${scope.row.id}`"
+            target="_blank"
+            >{{ scope.row.objtype }}{{ scope.row.id }}</a
+          >
+          <a
+            :href="`http://127.0.0.1:8111/load_object?objects=${scope.row.objtype}${scope.row.id}`"
+            target="hidden_josm_target"
+            >(j)</a
+          >
           <br />
           v{{ scope.row.base['version'] }} ⮞ v{{ scope.row.change['version'] }}
           <el-link
             type="info"
             target="_blank"
-            :href="`https://osmlab.github.io/osm-deep-history/#/${
-              { n: 'node', w: 'way', r: 'relation' }[scope.row.objtype]
-            }/${scope.row.id}`"
+            :href="`https://osmlab.github.io/osm-deep-history/#/${objtypeFull(
+              scope.row.objtype
+            )}/${scope.row.id}`"
             title="OSM Deep History"
             size="small"
           >
@@ -90,6 +101,7 @@
         </template>
       </el-table-column>
     </el-table>
+    <iframe name="hidden_josm_target" style="display: none"></iframe>
   </div>
 </template>
 
@@ -162,6 +174,13 @@ export default (
           version: log.change.version,
         })),
       })
+    },
+
+    objtypeFull(objtype: 'n' | 'w' | 'r'): 'node' | 'way' | 'relation' {
+      return { n: 'node', w: 'way', r: 'relation' }[objtype] as
+        | 'node'
+        | 'way'
+        | 'relation'
     },
   },
 })
