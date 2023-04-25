@@ -25,7 +25,8 @@ export type Subject = {
 }
 
 export type LogAction = 'accept' | 'reject'
-export type Action = [string, LogAction | null]
+export type LogActionOptions = Record<string, Object>
+export type Action = [string, LogAction | null, LogActionOptions | null]
 export type Actions = Record<Key, Action[]>
 export type Log = {
   objtype: ObjType

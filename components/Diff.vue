@@ -53,6 +53,7 @@
           size="small"
         >
           {{ action[0] }}
+          <template v-if="action[2] != null">({{ action[2] }})</template>
         </el-tag>
       </td>
     </tr>
