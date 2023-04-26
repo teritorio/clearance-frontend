@@ -5,8 +5,7 @@
       <p>Configured projects:</p>
       <ul>
         <li v-for="(project, key) in projects" :key="key">
-          <a :href="`/${key}/changes_logs/`">{{ key }}</a
-          >:
+          <a :href="`/${key}/changes_logs/`">{{ key }}</a>:
           {{ project }}
         </li>
       </ul>

@@ -1,9 +1,5 @@
 <template>
-  <Logs
-    v-if="logs"
-    :logs="logs"
-    @action="post($event.logAction, $event.objectIds)"
-  />
+  <Logs v-if="logs" :logs="logs" @action="post($event.logAction, $event.objectIds)" />
 </template>
 
 <script lang="ts">

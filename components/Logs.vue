@@ -23,13 +23,15 @@
               scope.row.objtype
             )}/${scope.row.id}`"
             target="_blank"
-            >{{ scope.row.objtype }}{{ scope.row.id }}</a
           >
+            {{ scope.row.objtype }}{{ scope.row.id }}
+          </a>
           <a
             :href="`http://127.0.0.1:8111/load_object?objects=${scope.row.objtype}${scope.row.id}`"
             target="hidden_josm_target"
-            >(j)</a
           >
+            (j)
+          </a>
           <br />
           v{{ scope.row.base['version'] }} ⮞ v{{ scope.row.change['version'] }}
           <el-link
@@ -79,14 +81,13 @@
             :src="scope.row.base"
             :dst="scope.row.change"
             :diff="scope.row.diff_attribs || {}"
-            :exclude="
-              [].concat(
-                ['tags', 'version'],
-                scope.row.objtype !== 'n' ? ['lon', 'lat'] : [],
-                scope.row.objtype !== 'w' ? ['nodes'] : [],
-                scope.row.objtype !== 'r' ? ['members'] : []
-              )
-            "
+            :exclude="[
+              'tags',
+              'version',
+              ...(scope.row.objtype !== 'n' ? ['lon', 'lat'] : []),
+              ...(scope.row.objtype !== 'w' ? ['nodes'] : []),
+              ...(scope.row.objtype !== 'r' ? ['members'] : []),
+            ]"
             :clear="['nodes', 'members']"
           />
         </template>

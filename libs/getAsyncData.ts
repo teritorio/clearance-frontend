@@ -1,13 +1,13 @@
-import { AsyncDataOptions } from "nuxt/app"
+import { AsyncDataOptions } from 'nuxt/app'
 import {
   _Transform,
   KeyOfRes,
   PickFrom,
-} from "nuxt/dist/app/composables/asyncData"
-import { NuxtApp } from "nuxt/dist/app/nuxt"
-import { Ref, ref } from "vue"
+} from 'nuxt/dist/app/composables/asyncData'
+import { NuxtApp } from 'nuxt/dist/app/nuxt'
+import { Ref, ref } from 'vue'
 
-import { useAsyncData } from "#imports"
+import { useAsyncData } from '#imports'
 
 export function getAsyncDataOrThrows<
   DataT,
