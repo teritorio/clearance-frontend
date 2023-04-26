@@ -12,10 +12,10 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import { PropType } from "vue";
 
-export default Vue.extend({
-  name: 'DiffCompinent',
+export default defineNuxtComponent({
+  name: "DiffCompinent",
 
   props: {
     object: {
@@ -32,10 +32,10 @@ export default Vue.extend({
     keys(): string[] {
       return Object.keys(this.object).filter(
         (key) => !this.exclude.includes(key)
-      )
+      );
     },
   },
-})
+});
 </script>
 
 <style scoped>

@@ -61,12 +61,12 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import { PropType } from 'vue'
 import _ from 'underscore'
 import { Change, diffChars } from 'diff'
 import { Actions, Subject, Key, maxActionPriority } from '~/libs/types'
 
-export default Vue.extend({
+export default defineNuxtComponent({
   name: 'DiffCompinent',
 
   props: {

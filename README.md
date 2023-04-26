@@ -1,15 +1,35 @@
-# APV4OSM - Web
+# Clearance Frontend
 
-## Build Setup
+Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+
+## Setup
+
+Make sure to install the dependencies:
 
 ```bash
-# install dependencies
-$ yarn install
+yarn install
+```
 
-# serve with hot reload at localhost:3000
-$ yarn dev
+## Development Server
 
-# generate static project
-$ yarn generate
-$ yarn start
+Start the development server on `http://localhost:3000`
+
+```bash
+yarn dev
+```
+
+## Production
+
+Build the application for production:
+
+```bash
+yarn generate
+yarn start
+
+```
+
+Locally preview production build:
+
+```bash
+yarn preview
 ```

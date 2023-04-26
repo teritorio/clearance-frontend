@@ -15,30 +15,23 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { getAsyncDataOrThrows } from '~/libs/getAsyncData'
 import { Projects, getProjects } from '~/libs/types'
 
-export default Vue.extend({
+export default defineNuxtComponent({
   name: 'IndexPage',
 
-  async asyncData({ $config }): Promise<{
-    projects: Projects
+  async setup(): Promise<{
+    projects: Ref<Projects>
   }> {
-    const getProjectsPromise = getProjects($config.API)
+    const getProjectsPromise = getAsyncDataOrThrows('fetchSettings', () =>
+      getProjects(useRuntimeConfig().public.API)
+    )
 
     const [projects] = await Promise.all([getProjectsPromise])
 
-    return Promise.resolve({
-      projects,
-    })
-  },
-
-  data(): {
-    projects: Projects
-  } {
     return {
-      // @ts-ignore
-      projects: null,
+      projects,
     }
   },
 })

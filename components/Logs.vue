@@ -11,7 +11,7 @@
       :data="logs"
       stripe
       style="width: 100%"
-      size="mini"
+      size="small"
       :row-class-name="tableRowClassName"
       @selection-change="handleSelectionChange"
     >
@@ -106,19 +106,10 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType, ref, Ref, VueConstructor } from 'vue'
-import { ElTable } from 'element-plus'
+import { PropType, ref, Ref } from 'vue'
 import { Logs, Log } from '~/libs/types'
 
-export default (
-  Vue as VueConstructor<
-    Vue & {
-      $refs: {
-        table: InstanceType<typeof ElTable>
-      }
-    }
-  >
-).extend({
+export default defineNuxtComponent({
   name: 'LogsComponent',
 
   props: {

@@ -6,7 +6,7 @@
       :data="Object.entries(validators)"
       stripe
       style="width: 100%"
-      size="mini"
+      size="small"
     >
       <el-table-column sortable prop="id" label="Validator ID">
         <template #default="scope">
@@ -36,10 +36,10 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue'
+import { PropType } from 'vue'
 import { Validators } from '~/libs/types'
 
-export default Vue.extend({
+export default defineNuxtComponent({
   name: 'ValidatorsComponent',
 
   props: {
