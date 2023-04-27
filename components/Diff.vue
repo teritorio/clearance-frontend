@@ -42,7 +42,12 @@
         </template>
       </td>
       <td v-if="diff[key] !== undefined">
-        <el-tag v-if="diff[key].length === 0" type="warning" size="small">
+        <el-tag
+          v-if="diff[key].length === 0"
+          type="warning"
+          size="small"
+          :disable-transitions="true"
+        >
           ?
         </el-tag>
         <el-tag
@@ -51,6 +56,7 @@
           :key="i"
           :type="action[1] === 'reject' ? 'danger' : 'info'"
           size="small"
+          :disable-transitions="true"
         >
           {{ action[0] }}
           <template v-if="action[2] != null">({{ action[2] }})</template>

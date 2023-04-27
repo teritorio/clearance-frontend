@@ -63,6 +63,7 @@
             v-if="scope.row.action"
             :type="scope.row.action === 'reject' ? 'danger' : 'success'"
             size="small"
+            :disable-transitions="true"
           >
             {{ scope.row.action }}
           </el-tag>
@@ -70,6 +71,7 @@
             v-if="scope.row.diff_attribs && scope.row.diff_attribs['deleted']"
             type="danger"
             size="small"
+            :disable-transitions="true"
           >
             deleted
           </el-tag>
