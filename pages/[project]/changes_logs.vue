@@ -1,15 +1,23 @@
 <template>
-  <Logs v-if="logs" :logs="logs" @action="post($event.logAction, $event.objectIds)" />
+  <Layout :user="user">
+    <Logs
+      v-if="logs"
+      :logs="logs"
+      @action="post($event.logAction, $event.objectIds)"
+    />
+  </Layout>
 </template>
 
 <script lang="ts">
-import { getAsyncDataOrThrows } from '~/libs/getAsyncData'
+import { getUser, User } from '~/libs/apiTypes'
+import { getAsyncDataOrNull, getAsyncDataOrThrows } from '~/libs/getAsyncData'
 import { Logs, getLogs, LogAction, ObjectId, setLogs } from '~/libs/types'
 
 export default defineNuxtComponent({
   name: 'IndexPage',
 
   async setup(): Promise<{
+    user: Ref<User | null>
     project: Ref<string>
     logs: Ref<Logs>
   }> {
@@ -21,13 +29,18 @@ export default defineNuxtComponent({
 
     const params = useRoute().params
 
+    const getUserPromise = getAsyncDataOrNull('fetchUser', () =>
+      getUser(useRuntimeConfig().public.API)
+    )
+
     const getLogsPromise = getAsyncDataOrThrows('fetchSettings', () =>
       getLogs(useRuntimeConfig().public.API, params.project as string)
     )
 
-    const [logs] = await Promise.all([getLogsPromise])
+    const [user, logs] = await Promise.all([getUserPromise, getLogsPromise])
 
     return {
+      user,
       project: ref(params.project as string),
       logs,
     }

@@ -1,17 +1,21 @@
 <template>
-  <div v-if="validators">
-    <Validators :validators="validators" />
-  </div>
+  <Layout :user="user">
+    <div v-if="validators">
+      <Validators :validators="validators" />
+    </div>
+  </Layout>
 </template>
 
 <script lang="ts">
-import { getAsyncDataOrThrows } from '~/libs/getAsyncData'
+import { getUser, User } from '~/libs/apiTypes'
+import { getAsyncDataOrNull, getAsyncDataOrThrows } from '~/libs/getAsyncData'
 import { Validators, getValidators } from '~/libs/types'
 
 export default defineNuxtComponent({
   name: 'ValidatorsPage',
 
   async setup(): Promise<{
+    user: Ref<User | null>
     validators: Ref<Validators>
   }> {
     definePageMeta({
@@ -22,13 +26,21 @@ export default defineNuxtComponent({
 
     const params = useRoute().params
 
+    const getUserPromise = getAsyncDataOrNull('fetchUser', () =>
+      getUser(useRuntimeConfig().public.API)
+    )
+
     const getValidatorsPromise = getAsyncDataOrThrows('fetchSettings', () =>
       getValidators(useRuntimeConfig().public.API, params.project as string)
     )
 
-    const [validators] = await Promise.all([getValidatorsPromise])
+    const [user, validators] = await Promise.all([
+      getUserPromise,
+      getValidatorsPromise,
+    ])
 
     return {
+      user,
       validators,
     }
   },
