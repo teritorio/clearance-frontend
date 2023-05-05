@@ -73,7 +73,7 @@ import { Change, diffChars } from 'diff'
 import { Actions, Subject, Key, maxActionPriority } from '~/libs/types'
 
 export default defineNuxtComponent({
-  name: 'DiffCompinent',
+  name: 'Diff',
 
   props: {
     src: {
