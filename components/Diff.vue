@@ -50,17 +50,45 @@
         >
           ?
         </el-tag>
-        <el-tag
-          v-for="(action, i) in diff[key]"
-          v-else
-          :key="i"
-          :type="action[1] === 'reject' ? 'danger' : 'info'"
-          size="small"
-          :disable-transitions="true"
-        >
-          {{ action[0] }}
-          <template v-if="action[2] != null">({{ action[2] }})</template>
-        </el-tag>
+
+        <template v-for="(action, i) in diff[key]" v-else :key="i">
+          <el-dropdown :show-timeout="0">
+            <span class="el-dropdown-link">
+              <el-badge
+                :value="
+                  (action && action[2] && Object.keys(action[2]).length) ||
+                  undefined
+                "
+                class="item"
+                :type="action[1] === 'reject' ? 'danger' : 'info'"
+              >
+                <el-tag
+                  :type="action[1] === 'reject' ? 'danger' : 'info'"
+                  size="small"
+                  :disable-transitions="true"
+                >
+                  {{ action[0] }}
+                  <template v-if="action && action[2]">⮟</template>
+                </el-tag>
+              </el-badge>
+            </span>
+            <template v-if="action && action[2]" #dropdown>
+              <el-dropdown-menu v-for="(option, i) in action[2]" :key="i">
+                <el-dropdown-item class="clearfix">
+                  {{ i }}
+                  <template v-if="typeof option !== 'array'">
+                    <ul>
+                      <li v-for="(op, i) in option" :key="i">{{ op }}</li>
+                    </ul>
+                  </template>
+                  <template v-else>
+                    {{ option }}
+                  </template>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </template>
       </td>
     </tr>
   </table>
