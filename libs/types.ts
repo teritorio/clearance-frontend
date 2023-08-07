@@ -38,7 +38,7 @@ export type Changeset = {
 }
 
 export type LogAction = 'accept' | 'reject'
-export type LogActionOptions = Record<string, any>
+export type LogActionOptions = Record<string, string | string[]>
 export type Action = [string, LogAction | null, LogActionOptions | null]
 export type Actions = Record<Key, Action[]>
 export type Log = {

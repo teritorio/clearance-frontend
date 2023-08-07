@@ -42,7 +42,7 @@
                   <el-dropdown-menu v-for="(option, i) in action[2]" :key="i">
                     <el-dropdown-item class="clearfix">
                       {{ i }}
-                      <template v-if="typeof option !== 'array'">
+                      <template v-if="Array.isArray(option)">
                         <ul>
                           <li v-for="(op, i) in option" :key="i">{{ op }}</li>
                         </ul>
@@ -138,18 +138,16 @@ export default defineNuxtComponent({
   },
 
   computed: {
-    keys(): string[] {
-      return _.sortBy(
+    groupedKeys(): string[][] {
+      const keys: string[] = _.sortBy(
         [
           ...new Set([...Object.keys(this.src), ...Object.keys(this.dst)]),
         ].filter((key) => !this.exclude.includes(key)),
         (key) => (this.diff[key] ? -maxActionPriority(this.diff[key]) : 0)
       )
-    },
 
-    groupedKeys(): string[][] {
       return Object.values(
-        _.groupBy(this.keys, (key) =>
+        _.groupBy(keys, (key) =>
           this.diff[key]?.map((diff) => `${diff}`)?.join('||')
         )
       )
