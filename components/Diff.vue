@@ -1,97 +1,107 @@
 <template>
   <table>
-    <tr v-for="key in keys" :key="key">
-      <td v-if="diff[key] !== undefined">
-        <el-tag
-          v-if="diff[key].length === 0"
-          type="warning"
-          size="small"
-          :disable-transitions="true"
-        >
-          ?
-        </el-tag>
+    <template v-for="(groupedKey, groupIndex) in groupedKeys" :key="groupedKey">
+      <tr>
+        <th colspan="4">
+          <template v-if="diff[groupedKey[0]] !== undefined">
+            <el-tag
+              v-if="diff[groupedKey[0]].length === 0"
+              type="warning"
+              size="small"
+              :disable-transitions="true"
+            >
+              ?
+            </el-tag>
 
-        <template v-for="(action, i) in diff[key]" v-else :key="i">
-          <el-dropdown :show-timeout="0">
-            <span class="el-dropdown-link">
-              <el-badge
-                :value="
-                  (action && action[2] && Object.keys(action[2]).length) ||
-                  undefined
-                "
-                class="item"
-                :type="action[1] === 'reject' ? 'danger' : 'info'"
-              >
-                <el-tag
-                  :type="action[1] === 'reject' ? 'danger' : 'info'"
-                  size="small"
-                  :disable-transitions="true"
-                >
-                  {{ action[0] }}
-                  <template v-if="action && action[2]">⮟</template>
-                </el-tag>
-              </el-badge>
-            </span>
-            <template v-if="action && action[2]" #dropdown>
-              <el-dropdown-menu v-for="(option, i) in action[2]" :key="i">
-                <el-dropdown-item class="clearfix">
-                  {{ i }}
-                  <template v-if="typeof option !== 'array'">
-                    <ul>
-                      <li v-for="(op, i) in option" :key="i">{{ op }}</li>
-                    </ul>
-                  </template>
-                  <template v-else>
-                    {{ option }}
-                  </template>
-                </el-dropdown-item>
-              </el-dropdown-menu>
+            <template
+              v-for="(action, actionIndex) in diff[groupedKey[0]]"
+              v-else
+              :key="actionIndex"
+            >
+              <el-dropdown :show-timeout="0">
+                <span class="el-dropdown-link">
+                  <el-badge
+                    :value="
+                      (action && action[2] && Object.keys(action[2]).length) ||
+                      undefined
+                    "
+                    class="item"
+                    :type="action[1] === 'reject' ? 'danger' : 'info'"
+                  >
+                    <el-tag
+                      :type="action[1] === 'reject' ? 'danger' : 'info'"
+                      size="small"
+                      :disable-transitions="true"
+                    >
+                      {{ action[0] }}
+                      <template v-if="action && action[2]">⮟</template>
+                    </el-tag>
+                  </el-badge>
+                </span>
+                <template v-if="action && action[2]" #dropdown>
+                  <el-dropdown-menu v-for="(option, i) in action[2]" :key="i">
+                    <el-dropdown-item class="clearfix">
+                      {{ i }}
+                      <template v-if="typeof option !== 'array'">
+                        <ul>
+                          <li v-for="(op, i) in option" :key="i">{{ op }}</li>
+                        </ul>
+                      </template>
+                      <template v-else>
+                        {{ option }}
+                      </template>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </template>
-          </el-dropdown>
-        </template>
-      </td>
-      <td v-else></td>
-      <td :class="[backgroundClass(key), 'key']">
-        {{ actionIcon(key) }}
-      </td>
-      <td :class="[backgroundClass(key), 'key']">
-        {{ key }}
-      </td>
-      <td :class="[backgroundClass(key), 'value']">
-        <template v-if="clear.includes(key)">[...]</template>
-        <template v-else-if="diff[key]">
-          <span v-if="!(key in src)">{{ dst[key] }} </span>
-          <span v-else-if="!(key in dst)">{{ src[key] }} </span>
-          <span
-            v-else-if="
-              typeof src[key] === 'string' && showTextDiff(src[key], dst[key])
-            "
-            class="attribut-changed"
-          >
-            <span v-for="(part, i) in diffText(src[key], dst[key])" :key="i">
-              <span
-                :class="
-                  part.removed
-                    ? 'diff-text-removed'
-                    : part.added
-                    ? 'diff-text-added'
-                    : 'diff-text-same'
-                "
-                >{{ part.value }}</span
-              >
+          </template>
+          <template v-else-if="groupIndex != 0"> &nbsp; </template>
+        </th>
+      </tr>
+      <tr v-for="key in groupedKey" :key="key">
+        <td :class="[backgroundClass(key), 'key']">
+          {{ actionIcon(key) }}
+        </td>
+        <td :class="[backgroundClass(key), 'key']">
+          {{ key }}
+        </td>
+        <td :class="[backgroundClass(key), 'value']">
+          <template v-if="clear.includes(key)">[...]</template>
+          <template v-else-if="diff[key]">
+            <span v-if="!(key in src)">{{ dst[key] }} </span>
+            <span v-else-if="!(key in dst)">{{ src[key] }} </span>
+            <span
+              v-else-if="
+                typeof src[key] === 'string' && showTextDiff(src[key], dst[key])
+              "
+              class="attribut-changed"
+            >
+              <span v-for="(part, i) in diffText(src[key], dst[key])" :key="i">
+                <span
+                  :class="
+                    part.removed
+                      ? 'diff-text-removed'
+                      : part.added
+                      ? 'diff-text-added'
+                      : 'diff-text-same'
+                  "
+                  >{{ part.value }}</span
+                >
+              </span>
             </span>
-          </span>
-          <span v-else>
-            <span class="diff-text-removed">{{ src[key] }}</span>
-            <br />
-            <span class="diff-text-added">{{ dst[key] }}</span>
-          </span>
-        </template>
-        <template v-else>
-          {{ dst[key] }}
-        </template>
-      </td>
-    </tr>
+            <span v-else>
+              <span class="diff-text-removed">{{ src[key] }}</span>
+              <br />
+              <span class="diff-text-added">{{ dst[key] }}</span>
+            </span>
+          </template>
+          <template v-else>
+            {{ dst[key] }}
+          </template>
+        </td>
+      </tr>
+    </template>
   </table>
 </template>
 
@@ -134,6 +144,14 @@ export default defineNuxtComponent({
           ...new Set([...Object.keys(this.src), ...Object.keys(this.dst)]),
         ].filter((key) => !this.exclude.includes(key)),
         (key) => (this.diff[key] ? -maxActionPriority(this.diff[key]) : 0)
+      )
+    },
+
+    groupedKeys(): string[][] {
+      return Object.values(
+        _.groupBy(this.keys, (key) =>
+          this.diff[key]?.map((diff) => `${diff}`)?.join('||')
+        )
       )
     },
   },
