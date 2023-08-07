@@ -86,12 +86,53 @@
             :exclude="[
               'tags',
               'version',
+              'changeset_id',
+              'created',
+              'uid',
+              'username',
+              'changeset',
               ...(scope.row.objtype !== 'n' ? ['lon', 'lat'] : []),
               ...(scope.row.objtype !== 'w' ? ['nodes'] : []),
               ...(scope.row.objtype !== 'r' ? ['members'] : []),
             ]"
             :clear="['nodes', 'members']"
           />
+          <el-collapse v-model="accordion" accordion>
+            <el-collapse-item :title="scope.row.change.changeset.user" name="0">
+              <p>{{ scope.row.change.changeset.tags.source }}</p>
+              <p>{{ scope.row.change.changeset.tags.comment }}</p>
+            </el-collapse-item>
+
+            <el-collapse-item title="Changeset details" name="1">
+              <table>
+                <template
+                  v-for="[key, value] in Object.entries(
+                    scope.row.change.changeset
+                  )"
+                  :key="key"
+                >
+                  <tr v-if="!['tags'].includes(key)">
+                    <td>{{ key }}</td>
+                    <td>{{ value }}</td>
+                  </tr>
+                </template>
+              </table>
+
+              <table>
+                <template
+                  v-for="[key, value] in Object.entries(
+                    scope.row.change.changeset.tags
+                  )"
+                  :key="key"
+                >
+                  <tr v-if="![].includes(key)">
+                    <td>{{ key }}</td>
+                    <td>{{ value }}</td>
+                  </tr>
+                </template>
+              </table>
+            </el-collapse-item>
+          </el-collapse>
         </template>
       </el-table-column>
       <el-table-column label="tags">
@@ -124,9 +165,11 @@ export default defineNuxtComponent({
 
   data(): {
     multipleSelection: Ref<Logs>
+    accordion: Ref<string>
   } {
     return {
       multipleSelection: ref<Logs>([]),
+      accordion: ref('0'),
     }
   },
 
