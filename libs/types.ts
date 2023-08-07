@@ -14,14 +14,27 @@ export type Member = {
 export type Subject = {
   version: number
   changeset: number
-  created: string
-  uid: number
-  username: string
   tags: Tags
   lon?: number
   lat?: number
   nodes?: number[]
   members?: Member[]
+}
+
+export type Changeset = {
+  id: number
+  created_at: string
+  closed_at: string
+  open: boolean
+  user: string
+  uid: number
+  minlat: number
+  minlon: number
+  maxlat: number
+  maxlon: number
+  comments_count: number
+  changes_count: number
+  tags: Tags
 }
 
 export type LogAction = 'accept' | 'reject'
@@ -34,6 +47,7 @@ export type Log = {
   base: Subject
   change: Subject
   action: LogAction
+  changesets: Changeset[]
   diff_attribs: Actions
   diff_tags: Actions
 }

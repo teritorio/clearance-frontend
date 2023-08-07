@@ -90,7 +90,6 @@
               'created',
               'uid',
               'username',
-              'changeset',
               ...(scope.row.objtype !== 'n' ? ['lon', 'lat'] : []),
               ...(scope.row.objtype !== 'w' ? ['nodes'] : []),
               ...(scope.row.objtype !== 'r' ? ['members'] : []),
@@ -98,17 +97,29 @@
             :clear="['nodes', 'members']"
           />
           <el-collapse v-model="accordion" accordion>
-            <el-collapse-item :title="scope.row.change.changeset.user" name="0">
-              <p>{{ scope.row.change.changeset.tags.source }}</p>
-              <p>{{ scope.row.change.changeset.tags.comment }}</p>
+            <el-collapse-item title="Changesets" name="0">
+              <template
+                v-for="(changeset, index) in scope.row.changesets"
+                :key="index"
+              >
+                <p>
+                  👤 {{ changeset.user }} ⯼ #{{ changeset.id }} 🛠
+                  {{ changeset.tags.created_by }}
+                </p>
+                <p>📷 {{ changeset.tags.source }}</p>
+                <p>✎ {{ changeset.tags.comment }}</p>
+              </template>
             </el-collapse-item>
 
-            <el-collapse-item title="Changeset details" name="1">
+            <el-collapse-item
+              v-for="(changeset, index) in scope.row.changesets"
+              :key="index"
+              :title="`Changeset details #${changeset.id}`"
+              :name="index"
+            >
               <table>
                 <template
-                  v-for="[key, value] in Object.entries(
-                    scope.row.change.changeset
-                  )"
+                  v-for="[key, value] in Object.entries(changeset)"
                   :key="key"
                 >
                   <tr v-if="!['tags'].includes(key)">
@@ -120,9 +131,7 @@
 
               <table>
                 <template
-                  v-for="[key, value] in Object.entries(
-                    scope.row.change.changeset.tags
-                  )"
+                  v-for="[key, value] in Object.entries(changeset.tags)"
                   :key="key"
                 >
                   <tr v-if="![].includes(key)">
