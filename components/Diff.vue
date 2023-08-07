@@ -1,46 +1,6 @@
 <template>
   <table>
     <tr v-for="key in keys" :key="key">
-      <td :class="[backgroundClass(key), 'key']">
-        {{ actionIcon(key) }}
-      </td>
-      <td :class="[backgroundClass(key), 'key']">
-        {{ key }}
-      </td>
-      <td :class="[backgroundClass(key), 'value']">
-        <template v-if="clear.includes(key)">[...]</template>
-        <template v-else-if="diff[key]">
-          <span v-if="!(key in src)">{{ dst[key] }} </span>
-          <span v-else-if="!(key in dst)">{{ src[key] }} </span>
-          <span
-            v-else-if="
-              typeof src[key] === 'string' && showTextDiff(src[key], dst[key])
-            "
-            class="attribut-changed"
-          >
-            <span v-for="(part, i) in diffText(src[key], dst[key])" :key="i">
-              <span
-                :class="
-                  part.removed
-                    ? 'diff-text-removed'
-                    : part.added
-                    ? 'diff-text-added'
-                    : 'diff-text-same'
-                "
-                >{{ part.value }}</span
-              >
-            </span>
-          </span>
-          <span v-else>
-            <span class="diff-text-removed">{{ src[key] }}</span>
-            <br />
-            <span class="diff-text-added">{{ dst[key] }}</span>
-          </span>
-        </template>
-        <template v-else>
-          {{ dst[key] }}
-        </template>
-      </td>
       <td v-if="diff[key] !== undefined">
         <el-tag
           v-if="diff[key].length === 0"
@@ -88,6 +48,47 @@
               </el-dropdown-menu>
             </template>
           </el-dropdown>
+        </template>
+      </td>
+      <td v-else></td>
+      <td :class="[backgroundClass(key), 'key']">
+        {{ actionIcon(key) }}
+      </td>
+      <td :class="[backgroundClass(key), 'key']">
+        {{ key }}
+      </td>
+      <td :class="[backgroundClass(key), 'value']">
+        <template v-if="clear.includes(key)">[...]</template>
+        <template v-else-if="diff[key]">
+          <span v-if="!(key in src)">{{ dst[key] }} </span>
+          <span v-else-if="!(key in dst)">{{ src[key] }} </span>
+          <span
+            v-else-if="
+              typeof src[key] === 'string' && showTextDiff(src[key], dst[key])
+            "
+            class="attribut-changed"
+          >
+            <span v-for="(part, i) in diffText(src[key], dst[key])" :key="i">
+              <span
+                :class="
+                  part.removed
+                    ? 'diff-text-removed'
+                    : part.added
+                    ? 'diff-text-added'
+                    : 'diff-text-same'
+                "
+                >{{ part.value }}</span
+              >
+            </span>
+          </span>
+          <span v-else>
+            <span class="diff-text-removed">{{ src[key] }}</span>
+            <br />
+            <span class="diff-text-added">{{ dst[key] }}</span>
+          </span>
+        </template>
+        <template v-else>
+          {{ dst[key] }}
         </template>
       </td>
     </tr>
