@@ -1,9 +1,15 @@
 <template>
   <div>
     <div style="margin-top: 20px">
-      <el-button @click="action(true)">Accept selection</el-button>
-      <el-button @click="action(false)">Reject selection</el-button>
-      <el-button @click="clearSelection()">Clear selection</el-button>
+      <el-button :disabled="!user" @click="action(true)"
+        >Accept selection</el-button
+      >
+      <el-button :disabled="!user" @click="action(false)"
+        >Reject selection</el-button
+      >
+      <el-button :disabled="!user" @click="clearSelection()"
+        >Clear selection</el-button
+      >
     </div>
     <el-table
       v-if="logs"
@@ -15,7 +21,7 @@
       :row-class-name="tableRowClassName"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55" />
+      <el-table-column :type="user ? 'selection' : undefined" width="55" />
       <el-table-column sortable width="150" prop="id" label="Type ID">
         <template #default="scope">
           <a
@@ -160,12 +166,17 @@
 
 <script lang="ts">
 import { PropType, ref, Ref } from 'vue'
+import { User } from '~/libs/apiTypes'
 import { Logs, Log } from '~/libs/types'
 
 export default defineNuxtComponent({
   name: 'LogsComponent',
 
   props: {
+    user: {
+      type: Object as PropType<Ref<User | null>>,
+      default: null,
+    },
     logs: {
       type: Array as PropType<Logs>,
       required: true,
