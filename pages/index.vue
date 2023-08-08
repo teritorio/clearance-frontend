@@ -6,9 +6,11 @@
         <p>Configured projects:</p>
         <ul>
           <li v-for="(project, key) in projects" :key="key">
-            <a :href="`/${key}/changes_logs/`">{{ key }}</a
-            >:
-            {{ project }}
+            {{ key }}: {{ project }}
+            <ul>
+              <li><a :href="`/${key}/changes_logs/`">changes_logs</a></li>
+              <li><a :href="`/${key}/validators/`">validators</a></li>
+            </ul>
           </li>
         </ul>
       </div>
