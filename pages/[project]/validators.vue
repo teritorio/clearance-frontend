@@ -6,43 +6,30 @@
   </Layout>
 </template>
 
-<script lang="ts">
-import { getUser, User } from '~/libs/apiTypes'
+<script setup lang="ts">
+import { getUser } from '~/libs/apiTypes'
 import { getAsyncDataOrNull, getAsyncDataOrThrows } from '~/libs/getAsyncData'
-import { Validators, getValidators } from '~/libs/types'
+import { getValidators } from '~/libs/types'
 
-export default defineNuxtComponent({
-  name: 'ValidatorsPage',
-
-  async setup(): Promise<{
-    user: Ref<User | null>
-    validators: Ref<Validators>
-  }> {
-    definePageMeta({
-      validate({ params }) {
-        return /^[-_:a-zA-Z0-9]+$/.test(params.project as string)
-      },
-    })
-
-    const params = useRoute().params
-
-    const getUserPromise = getAsyncDataOrNull('fetchUser', () =>
-      getUser(useRuntimeConfig().public.API)
-    )
-
-    const getValidatorsPromise = getAsyncDataOrThrows('fetchSettings', () =>
-      getValidators(useRuntimeConfig().public.API, params.project as string)
-    )
-
-    const [user, validators] = await Promise.all([
-      getUserPromise,
-      getValidatorsPromise,
-    ])
-
-    return {
-      user,
-      validators,
-    }
+definePageMeta({
+  validate({ params }) {
+    return /^[-_:a-zA-Z0-9]+$/.test(params.project as string)
   },
 })
+
+const params = useRoute().params
+
+const getUserPromise = getAsyncDataOrNull('fetchUser', () =>
+  getUser(useRuntimeConfig().public.API)
+)
+
+const getValidatorsPromise = getAsyncDataOrThrows('fetchSettings', () =>
+  getValidators(useRuntimeConfig().public.API, params.project as string)
+)
+
+const [userAsyncData, validatorsAsyncData] = await Promise.all([
+  getUserPromise,
+  getValidatorsPromise,
+])
+const [user, validators] = [userAsyncData?.data, validatorsAsyncData?.data]
 </script>

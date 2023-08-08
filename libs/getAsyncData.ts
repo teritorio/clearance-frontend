@@ -18,12 +18,12 @@ export function getAsyncDataOrThrows<
   key: string,
   handler: (ctx?: NuxtApp) => Promise<DataT>,
   options?: AsyncDataOptions<DataT, Transform, PickKeys>
-): Promise<Ref<PickFrom<ReturnType<Transform>, PickKeys>>> {
-  return useAsyncData(key, handler, options).then(({ data, error }) => {
-    if (error != null && error.value) {
-      throw error
+) {
+  return useAsyncData(key, handler, options).then((asyncData) => {
+    if (asyncData.error != null && asyncData.error.value) {
+      throw asyncData.error
     } else {
-      return data as Ref<PickFrom<ReturnType<Transform>, PickKeys>>
+      return asyncData
     }
   })
 }
@@ -37,12 +37,12 @@ export function getAsyncDataOrNull<
   key: string,
   handler: (ctx?: NuxtApp) => Promise<DataT>,
   options?: AsyncDataOptions<DataT, Transform, PickKeys>
-): Promise<Ref<PickFrom<ReturnType<Transform>, PickKeys> | null>> {
-  return useAsyncData(key, handler, options).then(({ data, error }) => {
-    if (error != null && error.value) {
-      return ref(null)
+) {
+  return useAsyncData(key, handler, options).then((asyncData) => {
+    if (asyncData.error != null && asyncData.error.value) {
+      return undefined
     } else {
-      return data as Ref<PickFrom<ReturnType<Transform>, PickKeys>>
+      return asyncData
     }
   })
 }

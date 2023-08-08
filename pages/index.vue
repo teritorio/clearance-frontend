@@ -16,35 +16,23 @@
   </Layout>
 </template>
 
-<script lang="ts">
-import { getUser, User } from '~/libs/apiTypes'
+<script setup lang="ts">
+import { getUser } from '~/libs/apiTypes'
 import { getAsyncDataOrNull, getAsyncDataOrThrows } from '~/libs/getAsyncData'
-import { Projects, getProjects } from '~/libs/types'
+import { getProjects } from '~/libs/types'
 
-export default defineNuxtComponent({
-  name: 'IndexPage',
+const getUserPromise = getAsyncDataOrNull('fetchUser', () =>
+  getUser(useRuntimeConfig().public.API)
+)
 
-  async setup(): Promise<{
-    user: Ref<User | null>
-    projects: Ref<Projects>
-  }> {
-    const getUserPromise = getAsyncDataOrNull('fetchUser', () =>
-      getUser(useRuntimeConfig().public.API)
-    )
+const getProjectsPromise = getAsyncDataOrThrows('fetchSettings', () =>
+  getProjects(useRuntimeConfig().public.API)
+)
 
-    const getProjectsPromise = getAsyncDataOrThrows('fetchSettings', () =>
-      getProjects(useRuntimeConfig().public.API)
-    )
+const [userAsyncData, projectsAsyncData] = await Promise.all([
+  getUserPromise,
+  getProjectsPromise,
+])
 
-    const [user, projects] = await Promise.all([
-      getUserPromise,
-      getProjectsPromise,
-    ])
-
-    return {
-      user,
-      projects,
-    }
-  },
-})
+const [user, projects] = [userAsyncData?.data, projectsAsyncData?.data]
 </script>
