@@ -37,10 +37,11 @@ const [userAsyncData, logsAsyncData] = await Promise.all([
 const [user, logs] = [userAsyncData?.data, logsAsyncData?.data]
 const project: string = params.project as string
 
-function post(logAction: LogAction, objectIds: ObjectId) {
+function post(logAction: LogAction, objectIds: ObjectId[]) {
   setLogs(useRuntimeConfig().public.API, project, logAction, objectIds).then(
     () => {
-      userAsyncData.refresh()
+      // FIXME should refresh the data, but not fetch it again
+      userAsyncData?.refresh()
     }
   )
 }

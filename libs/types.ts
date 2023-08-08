@@ -76,19 +76,18 @@ export function setLogs(
   apiEndpoint: string,
   project: string,
   logAction: LogAction,
-  objectsId: ObjectId
-): Promise<Object> {
+  objectsIds: ObjectId[]
+): Promise<void> {
   return fetch(`${apiEndpoint}/${project}/changes_logs/${logAction}`, {
+    credentials: 'include',
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(objectsId),
+    body: JSON.stringify(objectsIds),
   }).then((data) => {
-    if (data.ok) {
-      return data.json() as unknown as Object
-    } else {
+    if (!data.ok) {
       return Promise.reject(
         new Error([data.url, data.status, data.statusText].join(' '))
       )

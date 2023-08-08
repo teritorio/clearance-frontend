@@ -164,7 +164,7 @@
 <script lang="ts">
 import { PropType, ref, Ref } from 'vue'
 import { User } from '~/libs/apiTypes'
-import { Logs, Log } from '~/libs/types'
+import { Logs, Log, LogAction, ObjectId } from '~/libs/types'
 
 export default defineNuxtComponent({
   name: 'LogsComponent',
@@ -188,6 +188,10 @@ export default defineNuxtComponent({
       multipleSelection: ref<Logs>([]),
       accordion: ref('0'),
     }
+  },
+
+  emits: {
+    action: (_: { logAction: LogAction; objectIds: ObjectId[] }) => true,
   },
 
   methods: {
