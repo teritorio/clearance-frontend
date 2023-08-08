@@ -4,9 +4,6 @@
       <el-button :disabled="!user" @click="action(true)"
         >Accept selection</el-button
       >
-      <el-button :disabled="!user" @click="action(false)"
-        >Reject selection</el-button
-      >
       <el-button :disabled="!user" @click="clearSelection()"
         >Clear selection</el-button
       >
