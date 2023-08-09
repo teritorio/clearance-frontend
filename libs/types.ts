@@ -1,6 +1,12 @@
 export type ObjType = 'n' | 'w' | 'r'
+export type ObjTypeFull = 'node' | 'way' | 'relation'
+
 export type Key = string
 export interface Value extends String {}
+
+export function objTypeFull(objtype: ObjType): ObjTypeFull {
+  return { n: 'node', w: 'way', r: 'relation' }[objtype] as ObjTypeFull
+}
 
 export type MultilingualString = Record<string, string>
 

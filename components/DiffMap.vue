@@ -5,8 +5,13 @@
 <script lang="ts">
 import { PropType, shallowRef } from 'vue'
 import GeoJSON from 'geojson'
-import { CircleLayerSpecification, LngLatBounds, Map } from 'maplibre-gl'
-import { ObjType } from '~/libs/types'
+import {
+  CircleLayerSpecification,
+  LineLayerSpecification,
+  LngLatBounds,
+  Map,
+} from 'maplibre-gl'
+import { ObjType, objTypeFull } from '~/libs/types'
 
 export default defineNuxtComponent({
   name: 'DiffMap',
@@ -39,37 +44,60 @@ export default defineNuxtComponent({
     fetch(
       'https://overpass-api.de/api/interpreter?' +
         new URLSearchParams({
-          data: `[out:xml][diff:"${this.createdAtBase}","${this.createdAtChange}"];node(${this.id});out geom;`,
+          data: `[out:xml][diff:"${this.createdAtBase}Z","${
+            this.createdAtChange
+          }Z"];${objTypeFull(this.objtype)}(${this.id});out geom;`,
         })
     ).then((data) => {
       if (data.ok) {
         return data.text().then((text) => {
-          const allCoordinates: [number, number][] = []
+          let allCoordinates: [number, number][] = []
           const doc = new DOMParser().parseFromString(text, 'application/xml')
           const [baseGeom, changeGeom] = ['old', 'new'].map((action) => {
             const object = doc.evaluate(
-              `/osm/action/${action}/node`,
+              `/osm/action/${action}/*`,
               doc,
               null,
               XPathResult.FIRST_ORDERED_NODE_TYPE
             ).singleNodeValue as Element | null
             if (object) {
-              const coordinates: [number, number] = [
-                Number(object.attributes.getNamedItem('lon')!.value),
-                Number(object.attributes.getNamedItem('lat')!.value),
-              ]
-              allCoordinates.push(coordinates)
-              return {
-                type: 'Feature',
-                geometry: {
-                  type: 'Point',
-                  coordinates,
-                },
-                properties: {},
-              } as GeoJSON.Feature
-            } else {
-              return [undefined, undefined]
+              let type: string | undefined
+              let coordinates: [number, number] | [number, number][] | undefined
+              if (object.nodeName === 'node') {
+                type = 'Point'
+                coordinates = [
+                  Number(object.attributes.getNamedItem('lon')!.value),
+                  Number(object.attributes.getNamedItem('lat')!.value),
+                ]
+                allCoordinates = allCoordinates.concat([coordinates])
+              } else if (object.nodeName === 'way') {
+                type = 'LineString'
+                doc.evaluate(`/nd`, object, null)
+                const ndsObjects = doc.evaluate(`nd`, object)
+                let e = ndsObjects.iterateNext() as Element | null
+                coordinates = []
+                while (e) {
+                  coordinates.push([
+                    Number(e.attributes.getNamedItem('lon')!.value),
+                    Number(e.attributes.getNamedItem('lat')!.value),
+                  ])
+                  e = ndsObjects.iterateNext() as Element | null
+                }
+
+                allCoordinates = allCoordinates.concat(coordinates)
+              }
+              if (type && coordinates) {
+                return {
+                  type: 'Feature',
+                  geometry: {
+                    type,
+                    coordinates,
+                  },
+                  properties: {},
+                } as GeoJSON.Feature
+              }
             }
+            return [undefined, undefined]
           })
 
           let bounds: LngLatBounds | undefined
@@ -88,58 +116,73 @@ export default defineNuxtComponent({
             cooperativeGestures: true,
           })
 
-          const layout = {}
-          const paint = {
-            'circle-opacity': 1,
-          }
-
           map.on('load', () => {
             map.addSource('baseGeom', { type: 'geojson', data: baseGeom })
             map.addSource('changeGeom', { type: 'geojson', data: changeGeom })
+
+            // Point
             map.addLayer({
-              id: 'baseGeomBorder',
+              id: 'baseGeomCircleBorder',
               type: 'circle',
               source: 'baseGeom',
-              layout,
+              filter: ['==', '$type', 'Point'],
               paint: {
-                ...paint,
                 'circle-color': '#000',
                 'circle-radius': 10,
               },
             } as CircleLayerSpecification)
             map.addLayer({
-              id: 'baseGeom',
+              id: 'baseGeomCircle',
               type: 'circle',
               source: 'baseGeom',
-              layout,
+              filter: ['==', '$type', 'Point'],
               paint: {
-                ...paint,
                 'circle-color': '#FF0000',
                 'circle-radius': 8,
               },
             } as CircleLayerSpecification)
             map.addLayer({
-              id: 'changeGeomBorder',
+              id: 'changeGeomCircleBorder',
               type: 'circle',
               source: 'changeGeom',
-              layout,
+              filter: ['==', '$type', 'Point'],
               paint: {
-                ...paint,
                 'circle-color': '#000',
                 'circle-radius': 12,
               },
             } as CircleLayerSpecification)
             map.addLayer({
-              id: 'changeGeom',
+              id: 'changeGeomCircle',
               type: 'circle',
               source: 'changeGeom',
-              layout,
+              filter: ['==', '$type', 'Point'],
               paint: {
-                ...paint,
                 'circle-color': '#FFBB00',
                 'circle-radius': 10,
               },
             } as CircleLayerSpecification)
+
+            // Linestring
+            map.addLayer({
+              id: 'baseGeomLine',
+              type: 'line',
+              source: 'baseGeom',
+              filter: ['==', '$type', 'LineString'],
+              paint: {
+                'line-color': '#FF0000',
+                'line-width': 3,
+              },
+            } as LineLayerSpecification)
+            map.addLayer({
+              id: 'changeGeomLine',
+              type: 'line',
+              source: 'changeGeom',
+              filter: ['==', '$type', 'LineString'],
+              paint: {
+                'line-color': '#FFBB00',
+                'line-width': 5,
+              },
+            } as LineLayerSpecification)
           })
         })
       }

@@ -128,7 +128,15 @@
 <script lang="ts">
 import { PropType, ref, Ref } from 'vue'
 import { User } from '~/libs/apiTypes'
-import { Logs, Log, LogAction, ObjectId } from '~/libs/types'
+import {
+  Logs,
+  Log,
+  LogAction,
+  ObjectId,
+  ObjTypeFull,
+  ObjType,
+  objTypeFull,
+} from '~/libs/types'
 
 export default defineNuxtComponent({
   name: 'LogsComponent',
@@ -210,11 +218,8 @@ export default defineNuxtComponent({
       }
     },
 
-    objtypeFull(objtype: 'n' | 'w' | 'r'): 'node' | 'way' | 'relation' {
-      return { n: 'node', w: 'way', r: 'relation' }[objtype] as
-        | 'node'
-        | 'way'
-        | 'relation'
+    objtypeFull(objtype: ObjType): ObjTypeFull {
+      return objTypeFull(objtype)
     },
   },
 })
