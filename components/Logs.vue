@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="margin-top: 20px">
-      <el-button :disabled="!user" @click="action(true)">
+      <el-button :disabled="!user" type="primary" @click="action(true)">
         Accept selection
       </el-button>
       <el-button :disabled="!user" @click="clearSelection()">
@@ -18,9 +18,22 @@
       :row-class-name="tableRowClassName"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column :type="user ? 'selection' : undefined" width="55" />
+      <el-table-column :type="user ? 'selection' : undefined" width="35" />
       <el-table-column sortable width="250" prop="id" label="Type ID">
         <template #default="scope">
+          <el-button
+            v-if="user"
+            circle
+            @click="
+              accept({
+                objtype: scope.row.objtype,
+                id: scope.row.id,
+                version: scope.row.change.version,
+              })
+            "
+            >✓</el-button
+          >
+          &nbsp;
           <a
             :href="`https://www.openstreetmap.org/${objtypeFull(
               scope.row.objtype
@@ -36,14 +49,6 @@
             (j)
           </a>
 
-          <el-tag
-            v-if="scope.row.action"
-            :type="scope.row.action === 'reject' ? 'danger' : 'success'"
-            size="small"
-            :disable-transitions="true"
-          >
-            {{ scope.row.action }}
-          </el-tag>
           <el-tag
             v-if="scope.row.diff_attribs && scope.row.diff_attribs['deleted']"
             type="danger"
@@ -189,6 +194,20 @@ export default defineNuxtComponent({
           version: log.change.version,
         })),
       })
+    },
+
+    accept(objectId: ObjectId) {
+      this.$emit('action', {
+        logAction: 'accept',
+        objectIds: [objectId],
+      })
+
+      const index = this.logs.findIndex(
+        (log) => log.objtype === objectId.objtype && log.id === objectId.id
+      )
+      if (index > -1) {
+        this.logs.splice(index, 1)
+      }
     },
 
     objtypeFull(objtype: 'n' | 'w' | 'r'): 'node' | 'way' | 'relation' {
