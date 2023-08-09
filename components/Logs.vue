@@ -7,6 +7,18 @@
       <el-button :disabled="!user" @click="clearSelection()">
         Clear selection
       </el-button>
+      <el-divider direction="vertical" />
+      <el-badge :value="logs.length" class="item">
+        <el-tag>Objects</el-tag>
+      </el-badge>
+      <el-badge
+        v-for="[key, count] in stats"
+        :key="key"
+        :value="count"
+        class="item"
+      >
+        <el-tag size="small" type="danger">{{ key }}</el-tag>
+      </el-badge>
     </div>
     <el-table
       v-if="logs"
@@ -130,6 +142,7 @@
 <script lang="ts">
 import { PropType, ref, Ref } from 'vue'
 import LazyComponent from 'v-lazy-component'
+import _ from 'underscore'
 import { User } from '~/libs/apiTypes'
 import {
   Logs,
@@ -169,6 +182,30 @@ export default defineNuxtComponent({
 
   emits: {
     action: (_: { logAction: LogAction; objectIds: ObjectId[] }) => true,
+  },
+
+  computed: {
+    stats(): [string, number][] {
+      const actions = this.logs
+        .map((log) =>
+          _.uniq(
+            [
+              ...Object.values(log.diff_attribs || {}),
+              ...Object.values(log.diff_tags || {}),
+            ]
+              .flat(1)
+              .map((action) => action[0])
+          )
+        )
+        .flat(1)
+
+      return _.sortBy(
+        Object.entries(
+          _.pick(_.countBy(actions), (value) => value > this.logs.length * 0.05)
+        ) as [string, number][],
+        ([_key, count]) => -count
+      )
+    },
   },
 
   methods: {
