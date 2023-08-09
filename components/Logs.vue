@@ -102,20 +102,28 @@
           <el-collapse v-model="accordion" accordion>
             <el-collapse-item title="Changesets" name="0">
               <template
-                v-for="(changeset, index) in scope.row.changesets"
+                v-for="(changeset, index) in scope.row.changesets.slice(1)"
                 :key="index"
               >
-                <p>
-                  👤 {{ changeset.user }} ⯼ #{{ changeset.id }} 🛠
-                  {{ changeset.tags.created_by }}
+                <p class="changeset">
+                  <span>✎ {{ changeset.tags.comment }}</span
+                  ><br />
+                  <template v-if="changeset.tags.source"
+                    ><span>📷 {{ changeset.tags.source }}</span
+                    ><br
+                  /></template>
+                  <span>👤 {{ changeset.user }}</span>
+                  <template v-if="changeset.tags.created_by"
+                    ><span>🛠 {{ changeset.tags.created_by }}</span
+                    ><br
+                  /></template>
+                  <span>⯼ #{{ changeset.id }}</span>
                 </p>
-                <p>📷 {{ changeset.tags.source }}</p>
-                <p>✎ {{ changeset.tags.comment }}</p>
               </template>
             </el-collapse-item>
 
             <el-collapse-item
-              v-for="(changeset, index) in scope.row.changesets"
+              v-for="(changeset, index) in scope.row.changesets.slice(1)"
               :key="index"
               :title="`Changeset details #${changeset.id}`"
               :name="index"
@@ -255,5 +263,25 @@ export default defineNuxtComponent({
 
 :deep(.el-table__cell) {
   vertical-align: top;
+}
+
+.changeset span:nth-child(1) {
+  background-color: #eef;
+}
+
+.changeset span:nth-child(2) {
+  background-color: #efe;
+}
+
+.changeset span:nth-child(3) {
+  background-color: #fee;
+}
+
+.changeset span:nth-child(4) {
+  background-color: #ffe;
+}
+
+.changeset span:nth-child(5) {
+  background-color: #eff;
 }
 </style>
