@@ -82,9 +82,10 @@ export default defineNuxtComponent({
           const map = new Map({
             container: this.mapContainer,
             style:
-              'https://vecto.teritorio.xyz/styles/teritorio-tourism-latest/style.json',
+              'https://vecto.teritorio.xyz/styles/teritorio-basic/style.json',
             bounds,
             fitBoundsOptions: { maxZoom: 20, padding: 50 },
+            cooperativeGestures: true,
           })
 
           const layout = {}
@@ -95,6 +96,17 @@ export default defineNuxtComponent({
           map.on('load', () => {
             map.addSource('baseGeom', { type: 'geojson', data: baseGeom })
             map.addSource('changeGeom', { type: 'geojson', data: changeGeom })
+            map.addLayer({
+              id: 'baseGeomBorder',
+              type: 'circle',
+              source: 'baseGeom',
+              layout,
+              paint: {
+                ...paint,
+                'circle-color': '#000',
+                'circle-radius': 10,
+              },
+            } as CircleLayerSpecification)
             map.addLayer({
               id: 'baseGeom',
               type: 'circle',
@@ -107,13 +119,24 @@ export default defineNuxtComponent({
               },
             } as CircleLayerSpecification)
             map.addLayer({
+              id: 'changeGeomBorder',
+              type: 'circle',
+              source: 'changeGeom',
+              layout,
+              paint: {
+                ...paint,
+                'circle-color': '#000',
+                'circle-radius': 12,
+              },
+            } as CircleLayerSpecification)
+            map.addLayer({
               id: 'changeGeom',
               type: 'circle',
               source: 'changeGeom',
               layout,
               paint: {
                 ...paint,
-                'circle-color': '#007700',
+                'circle-color': '#FFBB00',
                 'circle-radius': 10,
               },
             } as CircleLayerSpecification)
