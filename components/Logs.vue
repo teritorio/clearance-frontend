@@ -97,18 +97,20 @@
             ]"
             :clear="['nodes', 'members']"
           />
-          <DiffMap
-            v-if="
-              scope.row.diff_attribs &&
-              (scope.row.diff_attribs.hasOwnProperty('lat') ||
-                scope.row.diff_attribs.hasOwnProperty('lon') ||
-                scope.row.diff_attribs.hasOwnProperty('nodes'))
-            "
-            :id="scope.row.id"
-            :objtype="scope.row.objtype"
-            :created-at-base="scope.row.changesets[0].created_at"
-            :created-at-change="scope.row.changesets.at(-1).created_at"
-          />
+          <LazyComponent>
+            <DiffMap
+              v-if="
+                scope.row.diff_attribs &&
+                (scope.row.diff_attribs.hasOwnProperty('lat') ||
+                  scope.row.diff_attribs.hasOwnProperty('lon') ||
+                  scope.row.diff_attribs.hasOwnProperty('nodes'))
+              "
+              :id="scope.row.id"
+              :objtype="scope.row.objtype"
+              :created-at-base="scope.row.changesets[0].created_at"
+              :created-at-change="scope.row.changesets.at(-1).created_at"
+            />
+          </LazyComponent>
         </template>
       </el-table-column>
       <el-table-column label="tags">
@@ -127,6 +129,7 @@
 
 <script lang="ts">
 import { PropType, ref, Ref } from 'vue'
+import LazyComponent from 'v-lazy-component'
 import { User } from '~/libs/apiTypes'
 import {
   Logs,
@@ -140,6 +143,10 @@ import {
 
 export default defineNuxtComponent({
   name: 'LogsComponent',
+
+  components: {
+    LazyComponent,
+  },
 
   props: {
     user: {
