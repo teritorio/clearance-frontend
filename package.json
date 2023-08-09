@@ -25,9 +25,11 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
     "@element-plus/nuxt": "^1.0.4",
+    "@types/geojson": "^7946.0.10",
     "core-js": "^3.25.3",
     "diff": "^5.1.0",
     "element-plus": "^2.2.27",
+    "maplibre-gl": "^3.2.2",
     "underscore": "^1.13.6",
     "vue": "^3.2.47",
     "vue-server-renderer": "^2.7.10",

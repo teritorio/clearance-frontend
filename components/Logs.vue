@@ -48,6 +48,19 @@
           >
             OSM Deep H
           </el-link>
+
+          <DiffMap
+            v-if="
+              scope.row.diff_attribs &&
+              (scope.row.diff_attribs.hasOwnProperty('lat') ||
+                scope.row.diff_attribs.hasOwnProperty('lon') ||
+                scope.row.diff_attribs.hasOwnProperty('nodes'))
+            "
+            :id="scope.row.id"
+            :objtype="scope.row.objtype"
+            :created-at-base="scope.row.changesets[0].created_at"
+            :created-at-change="scope.row.changesets.at(-1).created_at"
+          />
         </template>
       </el-table-column>
       <el-table-column
