@@ -1,18 +1,24 @@
 <template>
   <template v-for="(changeset, index) in changesets" :key="index">
     <p>
-      <span class="comment">✎ {{ changeset.tags.comment }}</span
-      ><br />
+      <span class="comment">✎ {{ changeset.tags.comment }}</span>
+      <br />
       <template v-if="changeset.tags.source">
-        <span class="source">📷 {{ changeset.tags.source }}</span
-        ><br />
+        <span class="source">📷 {{ changeset.tags.source }}</span>
+        <br />
       </template>
       <span class="user">👤 {{ changeset.user }}</span>
       <template v-if="changeset.tags.created_by">
-        <span class="created_by">🛠 {{ changeset.tags.created_by }}</span
-        ><br />
+        <span class="created_by">🛠 {{ changeset.tags.created_by }}</span>
+        <br />
       </template>
-      <span class="id">⯼ #{{ changeset.id }}</span>
+      <span class="id">
+        ⯼
+        <a :href="`https://www.openstreetmap.org/changeset/${changeset.id}`">
+          #{{ changeset.id }}
+        </a>
+      </span>
+      <span class="created_at">🗓 {{ changeset.created_at }}</span>
     </p>
   </template>
 
