@@ -59,48 +59,54 @@
           <template v-else-if="groupIndex != 0"> &nbsp; </template>
         </th>
       </tr>
-      <tr v-for="key in groupedKey" :key="key">
-        <td :class="[backgroundClass(key), 'key']">
-          {{ actionIcon(key) }}
-        </td>
-        <td :class="[backgroundClass(key), 'key']">
-          {{ key }}
-        </td>
-        <td :class="[backgroundClass(key), 'value']">
-          <template v-if="clear.includes(key)">[...]</template>
-          <template v-else-if="diff[key]">
-            <span v-if="!(key in src)">{{ dst[key] }} </span>
-            <span v-else-if="!(key in dst)">{{ src[key] }} </span>
-            <span
-              v-else-if="
-                typeof src[key] === 'string' && showTextDiff(src[key], dst[key])
-              "
-              class="attribut-changed"
-            >
-              <span v-for="(part, i) in diffText(src[key], dst[key])" :key="i">
+      <template v-for="key in groupedKey" :key="key">
+        <tr v-if="!exclude.includes(key)">
+          <td :class="[backgroundClass(key), 'key']">
+            {{ actionIcon(key) }}
+          </td>
+          <td :class="[backgroundClass(key), 'key']">
+            {{ key }}
+          </td>
+          <td :class="[backgroundClass(key), 'value']">
+            <template v-if="clear.includes(key)">[...]</template>
+            <template v-else-if="diff[key]">
+              <span v-if="!(key in src)">{{ dst[key] }} </span>
+              <span v-else-if="!(key in dst)">{{ src[key] }} </span>
+              <span
+                v-else-if="
+                  typeof src[key] === 'string' &&
+                  showTextDiff(src[key], dst[key])
+                "
+                class="attribut-changed"
+              >
                 <span
-                  :class="
-                    part.removed
-                      ? 'diff-text-removed'
-                      : part.added
-                      ? 'diff-text-added'
-                      : 'diff-text-same'
-                  "
-                  >{{ part.value }}</span
+                  v-for="(part, i) in diffText(src[key], dst[key])"
+                  :key="i"
                 >
+                  <span
+                    :class="
+                      part.removed
+                        ? 'diff-text-removed'
+                        : part.added
+                        ? 'diff-text-added'
+                        : 'diff-text-same'
+                    "
+                    >{{ part.value }}</span
+                  >
+                </span>
               </span>
-            </span>
-            <span v-else>
-              <span class="diff-text-removed">{{ src[key] }}</span>
-              <br />
-              <span class="diff-text-added">{{ dst[key] }}</span>
-            </span>
-          </template>
-          <template v-else>
-            {{ dst[key] }}
-          </template>
-        </td>
-      </tr>
+              <span v-else>
+                <span class="diff-text-removed">{{ src[key] }}</span>
+                <br />
+                <span class="diff-text-added">{{ dst[key] }}</span>
+              </span>
+            </template>
+            <template v-else>
+              {{ dst[key] }}
+            </template>
+          </td>
+        </tr>
+      </template>
     </template>
   </table>
 </template>
@@ -140,9 +146,7 @@ export default defineNuxtComponent({
   computed: {
     groupedKeys(): string[][] {
       const keys: string[] = _.sortBy(
-        [
-          ...new Set([...Object.keys(this.src), ...Object.keys(this.dst)]),
-        ].filter((key) => !this.exclude.includes(key)),
+        _.uniq([...Object.keys(this.src), ...Object.keys(this.dst)]),
         (key) => (this.diff[key] ? -maxActionPriority(this.diff[key]) : 0)
       )
 

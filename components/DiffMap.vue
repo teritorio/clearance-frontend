@@ -3,9 +3,9 @@
 </template>
 
 <script lang="ts">
-import { PropType , shallowRef } from 'vue'
+import { PropType, shallowRef } from 'vue'
 import GeoJSON from 'geojson'
-import { CircleLayerSpecification, LngLatBounds , Map } from 'maplibre-gl'
+import { CircleLayerSpecification, LngLatBounds, Map } from 'maplibre-gl'
 import { ObjType } from '~/libs/types'
 
 export default defineNuxtComponent({
@@ -84,7 +84,7 @@ export default defineNuxtComponent({
             style:
               'https://vecto.teritorio.xyz/styles/teritorio-tourism-latest/style.json',
             bounds,
-            fitBoundsOptions: { maxZoom: 20, padding: 20 },
+            fitBoundsOptions: { maxZoom: 20, padding: 50 },
           })
 
           const layout = {}

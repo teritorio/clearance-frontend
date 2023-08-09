@@ -1,12 +1,12 @@
 <template>
   <div>
     <div style="margin-top: 20px">
-      <el-button :disabled="!user" @click="action(true)"
-        >Accept selection</el-button
-      >
-      <el-button :disabled="!user" @click="clearSelection()"
-        >Clear selection</el-button
-      >
+      <el-button :disabled="!user" @click="action(true)">
+        Accept selection
+      </el-button>
+      <el-button :disabled="!user" @click="clearSelection()">
+        Clear selection
+      </el-button>
     </div>
     <el-table
       v-if="logs"
@@ -19,7 +19,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column :type="user ? 'selection' : undefined" width="55" />
-      <el-table-column sortable width="150" prop="id" label="Type ID">
+      <el-table-column sortable width="250" prop="id" label="Type ID">
         <template #default="scope">
           <a
             :href="`https://www.openstreetmap.org/${objtypeFull(
@@ -35,46 +35,7 @@
           >
             (j)
           </a>
-          <br />
-          v{{ scope.row.base['version'] }} ⮞ v{{ scope.row.change['version'] }}
-          <el-link
-            type="info"
-            target="_blank"
-            :href="`https://osmlab.github.io/osm-deep-history/#/${objtypeFull(
-              scope.row.objtype
-            )}/${scope.row.id}`"
-            title="OSM Deep History"
-            size="small"
-          >
-            OSM Deep H
-          </el-link>
 
-          <DiffMap
-            v-if="
-              scope.row.diff_attribs &&
-              (scope.row.diff_attribs.hasOwnProperty('lat') ||
-                scope.row.diff_attribs.hasOwnProperty('lon') ||
-                scope.row.diff_attribs.hasOwnProperty('nodes'))
-            "
-            :id="scope.row.id"
-            :objtype="scope.row.objtype"
-            :created-at-base="scope.row.changesets[0].created_at"
-            :created-at-change="scope.row.changesets.at(-1).created_at"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column
-        sortable
-        width="100"
-        prop="action"
-        label="Action"
-        :filters="[
-          { text: 'accept', value: 'accept' },
-          { text: 'reject', value: 'reject' },
-        ]"
-        :filter-method="filterAction"
-      >
-        <template #default="scope">
           <el-tag
             v-if="scope.row.action"
             :type="scope.row.action === 'reject' ? 'danger' : 'success'"
@@ -91,27 +52,22 @@
           >
             deleted
           </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column width="300" label="Attributes">
-        <template #default="scope">
-          <Diff
-            :src="scope.row.base"
-            :dst="scope.row.change"
-            :diff="scope.row.diff_attribs || {}"
-            :exclude="[
-              'tags',
-              'version',
-              'changeset_id',
-              'created',
-              'uid',
-              'username',
-              ...(scope.row.objtype !== 'n' ? ['lon', 'lat'] : []),
-              ...(scope.row.objtype !== 'w' ? ['nodes'] : []),
-              ...(scope.row.objtype !== 'r' ? ['members'] : []),
-            ]"
-            :clear="['nodes', 'members']"
-          />
+
+          <br />
+
+          v{{ scope.row.base['version'] }} ⮞ v{{ scope.row.change['version'] }}
+          <el-link
+            type="info"
+            target="_blank"
+            :href="`https://osmlab.github.io/osm-deep-history/#/${objtypeFull(
+              scope.row.objtype
+            )}/${scope.row.id}`"
+            title="OSM Deep History"
+            size="small"
+          >
+            OSM Deep H
+          </el-link>
+
           <el-collapse v-model="accordion" accordion>
             <el-collapse-item title="Changesets" name="0">
               <template
@@ -166,6 +122,41 @@
               </table>
             </el-collapse-item>
           </el-collapse>
+        </template>
+      </el-table-column>
+      <el-table-column width="300" label="Attributes">
+        <template #default="scope">
+          <Diff
+            :src="scope.row.base"
+            :dst="scope.row.change"
+            :diff="scope.row.diff_attribs || {}"
+            :exclude="[
+              'tags',
+              'version',
+              'changeset_id',
+              'created',
+              'uid',
+              'username',
+              'lat',
+              'lon',
+              ...(scope.row.objtype !== 'n' ? ['lon', 'lat'] : []),
+              ...(scope.row.objtype !== 'w' ? ['nodes'] : []),
+              ...(scope.row.objtype !== 'r' ? ['members'] : []),
+            ]"
+            :clear="['nodes', 'members']"
+          />
+          <DiffMap
+            v-if="
+              scope.row.diff_attribs &&
+              (scope.row.diff_attribs.hasOwnProperty('lat') ||
+                scope.row.diff_attribs.hasOwnProperty('lon') ||
+                scope.row.diff_attribs.hasOwnProperty('nodes'))
+            "
+            :id="scope.row.id"
+            :objtype="scope.row.objtype"
+            :created-at-base="scope.row.changesets[0].created_at"
+            :created-at-change="scope.row.changesets.at(-1).created_at"
+          />
         </template>
       </el-table-column>
       <el-table-column label="tags">
