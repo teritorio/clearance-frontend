@@ -1,13 +1,6 @@
 <template>
   <div>
     <div style="margin-top: 20px">
-      <el-button :disabled="!user" type="primary" @click="action(true)">
-        Accept selection
-      </el-button>
-      <el-button :disabled="!user" @click="clearSelection()">
-        Clear selection
-      </el-button>
-      <el-divider direction="vertical" />
       <el-badge :value="logs.length" class="item">
         <el-tag>Objects</el-tag>
       </el-badge>
@@ -20,133 +13,135 @@
         <el-tag size="small" type="danger">{{ key }}</el-tag>
       </el-badge>
     </div>
-    <el-table
-      v-if="logs"
-      ref="table"
-      :data="logs"
-      stripe
-      style="width: 100%"
-      size="small"
-      :row-class-name="tableRowClassName"
-      @selection-change="handleSelectionChange"
-    >
-      <el-table-column :type="user ? 'selection' : undefined" width="35" />
-      <el-table-column sortable width="250" prop="id" label="Type ID">
-        <template #default="scope">
-          <el-button
-            v-if="user"
-            circle
-            @click="
-              accept({
-                objtype: scope.row.objtype,
-                id: scope.row.id,
-                version: scope.row.change.version,
-              })
-            "
-            >✓</el-button
-          >
-          &nbsp;
-          <a
-            :href="`https://www.openstreetmap.org/${objtypeFull(
-              scope.row.objtype
-            )}/${scope.row.id}`"
-            target="_blank"
-          >
-            {{ scope.row.objtype }}{{ scope.row.id }}
-          </a>
-          <a
-            :href="`http://127.0.0.1:8111/load_object?objects=${scope.row.objtype}${scope.row.id}`"
-            target="hidden_josm_target"
-          >
-            (j)
-          </a>
 
-          <el-tag
-            v-if="scope.row.diff_attribs && scope.row.diff_attribs['deleted']"
-            type="danger"
-            size="small"
-            :disable-transitions="true"
-          >
-            deleted
-          </el-tag>
+    <template v-for="log in logs || []" :key="log.id">
+      <br />
 
-          <br />
+      <el-card class="box-card">
+        <template #header>
+          <div class="card-header">
+            <span
+              >{{ log.objtype }}{{ log.id }} -
+              {{ log.base.tags.name || log.change.tags.name }}</span
+            >
+            <span>
+              <el-tag
+                v-if="log.diff_attribs && log.diff_attribs['deleted']"
+                type="danger"
+                size="small"
+                :disable-transitions="true"
+              >
+                deleted
+              </el-tag>
+            </span>
+            <span>
+              <a
+                class="el-button"
+                :href="`https://www.openstreetmap.org/${objtypeFull(
+                  log.objtype
+                )}/${log.id}`"
+                target="_blank"
+              >
+                OSM
+              </a>
 
-          v{{ scope.row.base['version'] }} ⮞ v{{ scope.row.change['version'] }}
-          <el-link
-            type="info"
-            target="_blank"
-            :href="`https://osmlab.github.io/osm-deep-history/#/${objtypeFull(
-              scope.row.objtype
-            )}/${scope.row.id}`"
-            title="OSM Deep History"
-            size="small"
-          >
-            OSM Deep H
-          </el-link>
+              <a
+                class="el-button"
+                :href="`http://127.0.0.1:8111/load_object?objects=${log.objtype}${log.id}`"
+                target="hidden_josm_target"
+              >
+                JOSM
+              </a>
 
-          <Changesets :changesets="scope.row.changesets.slice(1)" />
+              <a
+                class="el-button"
+                target="_blank"
+                :href="`https://osmlab.github.io/osm-deep-history/#/${objtypeFull(
+                  log.objtype
+                )}/${log.id}`"
+                title="OSM Deep History"
+              >
+                Deep H
+              </a>
+
+              <el-button
+                v-if="user"
+                type="primary"
+                @click="
+                  accept({
+                    objtype: log.objtype,
+                    id: log.id,
+                    version: log.change.version,
+                  })
+                "
+                >✓</el-button
+              >
+            </span>
+          </div>
         </template>
-      </el-table-column>
-      <el-table-column width="300" label="Attributes">
-        <template #default="scope">
-          <Diff
-            :src="scope.row.base"
-            :dst="scope.row.change"
-            :diff="scope.row.diff_attribs || {}"
-            :exclude="[
-              'tags',
-              'version',
-              'changeset_id',
-              'created',
-              'uid',
-              'username',
-              'lat',
-              'lon',
-              ...(scope.row.objtype !== 'n' ? ['lon', 'lat'] : []),
-              ...(scope.row.objtype !== 'w' ? ['nodes'] : []),
-              ...(scope.row.objtype !== 'r' ? ['members'] : []),
-            ]"
-            :clear="['nodes', 'members']"
-          />
-          <LazyComponent>
-            <DiffMap
-              v-if="
-                scope.row.diff_attribs &&
-                (scope.row.diff_attribs.hasOwnProperty('lat') ||
-                  scope.row.diff_attribs.hasOwnProperty('lon') ||
-                  scope.row.diff_attribs.hasOwnProperty('nodes'))
-              "
-              :id="scope.row.id"
-              :objtype="scope.row.objtype"
-              :created-at-base="scope.row.changesets[0].created_at"
-              :created-at-change="scope.row.changesets.at(-1).created_at"
+        <el-row :gutter="20">
+          <el-col :span="7">
+            v{{ log.base['version'] }} ⮞ v{{ log.change['version'] }}
+            <Changesets :changesets="log.changesets.slice(1)" />
+          </el-col>
+          <el-col :span="7">
+            <Diff
+              :src="log.base"
+              :dst="log.change"
+              :diff="log.diff_attribs || {}"
+              :exclude="[
+                'tags',
+                'version',
+                'changeset_id',
+                'created',
+                'uid',
+                'username',
+                'lat',
+                'lon',
+                ...(log.objtype !== 'n' ? ['lon', 'lat'] : []),
+                ...(log.objtype !== 'w' ? ['nodes'] : []),
+                ...(log.objtype !== 'r' ? ['members'] : []),
+              ]"
+              :clear="['nodes', 'members']"
             />
-          </LazyComponent>
-        </template>
-      </el-table-column>
-      <el-table-column label="tags">
-        <template #default="scope">
-          <Diff
-            :src="scope.row.base.tags"
-            :dst="scope.row.change.tags"
-            :diff="scope.row.diff_tags || {}"
-          />
-        </template>
-      </el-table-column>
-    </el-table>
+            <LazyComponent>
+              <DiffMap
+                v-if="
+                  log.diff_attribs &&
+                  (log.diff_attribs.hasOwnProperty('lat') ||
+                    log.diff_attribs.hasOwnProperty('lon') ||
+                    log.diff_attribs.hasOwnProperty('nodes'))
+                "
+                :id="log.id"
+                :objtype="log.objtype"
+                :created-at-base="log.changesets[0].created_at"
+                :created-at-change="log.changesets.at(-1)!.created_at"
+              />
+            </LazyComponent>
+          </el-col>
+          <el-col :span="10">
+            <Diff
+              :src="log.base.tags"
+              :dst="log.change.tags"
+              :diff="log.diff_tags || {}"
+            />
+          </el-col>
+        </el-row>
+      </el-card>
+    </template>
+
     <iframe name="hidden_josm_target" style="display: none"></iframe>
   </div>
 </template>
 
 <script lang="ts">
-import { PropType, ref, Ref } from 'vue'
+import { PropType, Ref } from 'vue'
 import LazyComponent from 'v-lazy-component'
 import _ from 'underscore'
 import { User } from '~/libs/apiTypes'
+import Diff from '~/components/Diff.vue'
 import {
   Logs,
-  Log,
   LogAction,
   ObjectId,
   ObjTypeFull,
@@ -158,6 +153,7 @@ export default defineNuxtComponent({
   name: 'LogsComponent',
 
   components: {
+    Diff,
     LazyComponent,
   },
 
@@ -170,14 +166,6 @@ export default defineNuxtComponent({
       type: Array as PropType<Logs>,
       required: true,
     },
-  },
-
-  data(): {
-    multipleSelection: Ref<Logs>
-  } {
-    return {
-      multipleSelection: ref<Logs>([]),
-    }
   },
 
   emits: {
@@ -209,45 +197,6 @@ export default defineNuxtComponent({
   },
 
   methods: {
-    tableRowClassName({
-      log,
-      _rowIndex,
-    }: {
-      log: Log
-      _rowIndex: number
-    }): string | null {
-      return log?.action
-        ? {
-            reject: 'warning-row',
-            accept: 'success-row',
-            null: null,
-          }[log.action]
-        : null
-    },
-
-    filterAction(value: string, log: Log) {
-      return log.action === value
-    },
-
-    handleSelectionChange(val: Logs) {
-      this.multipleSelection.value = val
-    },
-
-    clearSelection() {
-      this.$refs.table.clearSelection()
-    },
-
-    action(accept: boolean) {
-      this.$emit('action', {
-        logAction: accept ? 'accept' : 'reject',
-        objectIds: this.multipleSelection.value.map((log) => ({
-          objtype: log.objtype,
-          id: log.id,
-          version: log.change.version,
-        })),
-      })
-    },
-
     accept(objectId: ObjectId) {
       this.$emit('action', {
         logAction: 'accept',
@@ -270,15 +219,9 @@ export default defineNuxtComponent({
 </script>
 
 <style scoped>
-.el-table .warning-row {
-  --el-table-tr-bg-color: var(--el-color-warning-light-9);
-}
-
-.el-table .success-row {
-  --el-table-tr-bg-color: var(--el-color-success-light-9);
-}
-
-:deep(.el-table__cell) {
-  vertical-align: top;
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>
