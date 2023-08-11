@@ -1,56 +1,53 @@
 <template>
-  <template v-for="(changeset, index) in changesets.reverse()" :key="index">
-    <p>
-      <span class="comment">✎ {{ changeset.tags.comment }}</span>
-      <br />
-      <template v-if="changeset.tags.source">
-        <span class="source">📷 {{ changeset.tags.source }}</span>
-        <br />
-      </template>
-      <span class="user">👤 {{ changeset.user }}</span>
-      <template v-if="changeset.tags.created_by">
-        <span class="created_by">🛠 {{ changeset.tags.created_by }}</span>
-        <br />
-      </template>
-      <span class="id">
-        ⯼
-        <a :href="`https://www.openstreetmap.org/changeset/${changeset.id}`">
-          #{{ changeset.id }}
-        </a>
-      </span>
-      <span class="created_at">🗓 {{ changeset.created_at }}</span>
-    </p>
-  </template>
-
-  <el-collapse v-model="accordion" accordion>
-    <el-collapse-item
+  <el-timeline>
+    <el-timeline-item
       v-for="(changeset, index) in changesets.reverse()"
       :key="index"
-      :title="`Changeset details #${changeset.id}`"
-      :name="index"
+      :timestamp="changeset.created_at"
+      placement="top"
     >
-      <table>
-        <template v-for="[key, value] in Object.entries(changeset)" :key="key">
-          <tr v-if="!['tags'].includes(key)">
-            <td>{{ key }}</td>
-            <td>{{ value }}</td>
-          </tr>
+      <p>
+        <span class="comment">✎ {{ changeset.tags.comment }}</span>
+        <br />
+        <template v-if="changeset.tags.source">
+          <span class="source">📷 {{ changeset.tags.source }}</span>
+          <br />
         </template>
-      </table>
+        <span class="user">👤 {{ changeset.user }}</span>
+        <template v-if="changeset.tags.created_by">
+          <span class="created_by">🛠 {{ changeset.tags.created_by }}</span>
+          <br />
+        </template>
+        <el-collapse v-model="accordion" accordion>
+          <el-collapse-item :title="`⯼ #${changeset.id}`" :name="index">
+            <table>
+              <template
+                v-for="[key, value] in Object.entries(changeset)"
+                :key="key"
+              >
+                <tr v-if="!['tags'].includes(key)">
+                  <td>{{ key }}</td>
+                  <td>{{ value }}</td>
+                </tr>
+              </template>
+            </table>
 
-      <table>
-        <template
-          v-for="[key, value] in Object.entries(changeset.tags)"
-          :key="key"
-        >
-          <tr v-if="![].includes(key)">
-            <td>{{ key }}</td>
-            <td>{{ value }}</td>
-          </tr>
-        </template>
-      </table>
-    </el-collapse-item>
-  </el-collapse>
+            <table>
+              <template
+                v-for="[key, value] in Object.entries(changeset.tags)"
+                :key="key"
+              >
+                <tr v-if="![].includes(key)">
+                  <td>{{ key }}</td>
+                  <td>{{ value }}</td>
+                </tr>
+              </template>
+            </table>
+          </el-collapse-item>
+        </el-collapse>
+      </p>
+    </el-timeline-item>
+  </el-timeline>
 </template>
 
 <script lang="ts">
@@ -78,6 +75,14 @@ export default defineNuxtComponent({
 </script>
 
 <style scoped>
+ul.el-timeline {
+  padding: 0;
+}
+
+:deep(.el-collapse div[role='button']) {
+  height: 1.5em;
+}
+
 .comment {
   background-color: #f7f7ff;
 }
