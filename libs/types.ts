@@ -20,6 +20,7 @@ export type Member = {
 export type Subject = {
   version: number
   changeset: number
+  created: string
   tags: Tags
   lon?: number
   lat?: number

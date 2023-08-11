@@ -114,8 +114,8 @@
                 "
                 :id="log.id"
                 :objtype="log.objtype"
-                :created-at-base="log.changesets[0].created_at"
-                :created-at-change="log.changesets.at(-1)!.created_at"
+                :created-at-base="log.base.created"
+                :created-at-change="log.change.created"
               />
             </LazyComponent>
           </el-col>
