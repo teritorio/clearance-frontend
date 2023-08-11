@@ -1,5 +1,5 @@
 <template>
-  <template v-for="(changeset, index) in changesets" :key="index">
+  <template v-for="(changeset, index) in changesets.reverse()" :key="index">
     <p>
       <span class="comment">✎ {{ changeset.tags.comment }}</span>
       <br />
@@ -24,7 +24,7 @@
 
   <el-collapse v-model="accordion" accordion>
     <el-collapse-item
-      v-for="(changeset, index) in changesets"
+      v-for="(changeset, index) in changesets.reverse()"
       :key="index"
       :title="`Changeset details #${changeset.id}`"
       :name="index"
