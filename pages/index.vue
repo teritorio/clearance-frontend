@@ -2,18 +2,18 @@
   <Layout :user="user">
     <div>
       <h1>Clearance for OSM Data</h1>
-      <div v-if="projects">
-        <p>Configured projects:</p>
-        <ul>
-          <li v-for="(project, key) in projects" :key="key">
-            {{ key }}: {{ project }}
-            <ul>
-              <li><a :href="`/${key}/changes_logs/`">changes_logs</a></li>
-              <li><a :href="`/${key}/validators/`">validators</a></li>
-            </ul>
-          </li>
-        </ul>
-      </div>
+      <template v-if="user">
+        <h2>My projects</h2>
+        <el-empty description="No project" :image-size="50" />
+      </template>
+
+      <h2>Public projects</h2>
+      <Project
+        v-for="(project, key) in projects || []"
+        :key="key"
+        :slug="key"
+        :project="project"
+      />
     </div>
   </Layout>
 </template>
@@ -22,6 +22,7 @@
 import { getUser } from '~/libs/apiTypes'
 import { getAsyncDataOrNull, getAsyncDataOrThrows } from '~/libs/getAsyncData'
 import { getProjects } from '~/libs/types'
+import Project from '~/components/Project.vue'
 
 const getUserPromise = getAsyncDataOrNull('fetchUser', () =>
   getUser(useRuntimeConfig().public.API)
