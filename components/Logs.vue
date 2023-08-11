@@ -104,14 +104,16 @@
               ]"
               :clear="['nodes', 'members']"
             />
-            <LazyComponent>
+            <LazyComponent
+              v-if="
+                log.diff_attribs &&
+                (log.diff_attribs.hasOwnProperty('lat') ||
+                  log.diff_attribs.hasOwnProperty('lon') ||
+                  log.diff_attribs.hasOwnProperty('nodes'))
+              "
+              style="border: 1px solid lightgrey"
+            >
               <DiffMap
-                v-if="
-                  log.diff_attribs &&
-                  (log.diff_attribs.hasOwnProperty('lat') ||
-                    log.diff_attribs.hasOwnProperty('lon') ||
-                    log.diff_attribs.hasOwnProperty('nodes'))
-                "
                 :id="log.id"
                 :objtype="log.objtype"
                 :created-at-base="log.base.created"
