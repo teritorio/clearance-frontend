@@ -47,7 +47,7 @@
             <a :href="`${apiUrl}/${slug}/extract/${slug}.osm.bz2`">{{
               `${slug}.osm.bz2`
             }}</a>
-            and <a :href="`${apiUrl}/${slug}/extract/update`">diff</a>
+            and <a :href="`${apiUrl}/${slug}/extract/update/`">diff</a>
           </li>
         </ul>
       </el-row>
