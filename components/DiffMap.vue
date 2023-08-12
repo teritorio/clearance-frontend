@@ -108,7 +108,7 @@ export default defineNuxtComponent({
           }
 
           const map = new Map({
-            container: this.mapContainer,
+            container: this.mapContainer!,
             style:
               'https://vecto.teritorio.xyz/styles/teritorio-basic/style.json?key=teritorio_clearance-1-ahNoohaepohy9iexoo3qua',
             bounds,

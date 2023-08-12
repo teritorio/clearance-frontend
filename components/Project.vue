@@ -38,15 +38,21 @@
       </el-row>
       <el-divider border-style="dotted" />
       <el-row>
+        <template v-for="(userGroup, key) in project.user_groups" :key="key">
+          <UserGroup :user-group="userGroup" />
+          &nbsp;&nbsp;&nbsp;
+        </template>
+      </el-row>
+      <el-row>
         <ul>
           <li>
             Overpass-like API URL : <a :href="overpassUrl">{{ overpassUrl }}</a>
           </li>
           <li>
             Extract
-            <a :href="`${apiUrl}/${slug}/extract/${slug}.osm.bz2`">{{
-              `${slug}.osm.bz2`
-            }}</a>
+            <a :href="`${apiUrl}/${slug}/extract/${slug}.osm.bz2`">
+              {{ `${slug}.osm.bz2` }}
+            </a>
             and <a :href="`${apiUrl}/${slug}/extract/update/`">diff</a>
           </li>
         </ul>

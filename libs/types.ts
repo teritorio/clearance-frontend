@@ -135,12 +135,19 @@ export function getValidators(
   })
 }
 
+export type UserGroup = {
+  title: MultilingualString
+  polygon?: string
+  users: string[]
+}
+
 export type Project = {
   title: MultilingualString
   description: MultilingualString
   date_start: string
   date_last_update: string
   to_be_validated: number
+  user_groups: UserGroup[]
 }
 
 export type Projects = Record<string, Project>
