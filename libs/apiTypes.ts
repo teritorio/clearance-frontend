@@ -1,6 +1,6 @@
 export type User = {
   osm_uid: number
-  osm_name: number
+  osm_name: string
   osm_image_url: string
 }
 
