@@ -1,5 +1,5 @@
 <template>
-  <el-page-header>
+  <el-page-header @back="back">
     <template #content>
       <div class="flex items-right">
         <User :user="user" />
@@ -22,6 +22,12 @@ export default defineNuxtComponent({
     user: {
       type: Object as PropType<User | null>,
       default: null,
+    },
+  },
+
+  methods: {
+    back() {
+      this.$router.push('/')
     },
   },
 })
