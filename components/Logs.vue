@@ -137,18 +137,18 @@
 </template>
 
 <script lang="ts">
-import { PropType, Ref } from 'vue'
+import { PropType } from 'vue'
 import LazyComponent from 'v-lazy-component'
 import _ from 'underscore'
 import { User } from '~/libs/apiTypes'
 import Diff from '~/components/Diff.vue'
 import {
   Logs,
-  LogAction,
   ObjectId,
   ObjTypeFull,
   ObjType,
   objTypeFull,
+  setLogs,
 } from '~/libs/types'
 
 export default defineNuxtComponent({
@@ -160,18 +160,18 @@ export default defineNuxtComponent({
   },
 
   props: {
+    project: {
+      type: String,
+      required: true,
+    },
     user: {
-      type: Object as PropType<Ref<User | null>>,
+      type: Object as PropType<User | null>,
       default: null,
     },
     logs: {
       type: Array as PropType<Logs>,
       required: true,
     },
-  },
-
-  emits: {
-    action: (_: { logAction: LogAction; objectIds: ObjectId[] }) => true,
   },
 
   computed: {
@@ -200,17 +200,18 @@ export default defineNuxtComponent({
 
   methods: {
     accept(objectId: ObjectId) {
-      this.$emit('action', {
-        logAction: 'accept',
-        objectIds: [objectId],
-      })
-
-      const index = this.logs.findIndex(
-        (log) => log.objtype === objectId.objtype && log.id === objectId.id
-      )
-      if (index > -1) {
-        this.logs.splice(index, 1)
-      }
+      setLogs(useRuntimeConfig().public.API, this.project, 'accept', [objectId])
+        .then(() => {
+          const index = this.logs.findIndex(
+            (log) => log.objtype === objectId.objtype && log.id === objectId.id
+          )
+          if (index > -1) {
+            this.logs.splice(index, 1)
+          }
+        })
+        .catch((error) => {
+          alert(error)
+        })
     },
 
     objtypeFull(objtype: ObjType): ObjTypeFull {

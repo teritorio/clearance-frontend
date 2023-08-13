@@ -1,18 +1,13 @@
 <template>
   <Layout :user="user">
-    <Logs
-      v-if="logs"
-      :user="user"
-      :logs="logs"
-      @action="post($event.logAction, $event.objectIds)"
-    />
+    <Logs v-if="logs" :project="project" :user="user" :logs="logs" />
   </Layout>
 </template>
 
 <script setup lang="ts">
 import { getUser } from '~/libs/apiTypes'
 import { getAsyncDataOrNull, getAsyncDataOrThrows } from '~/libs/getAsyncData'
-import { getLogs, LogAction, ObjectId, setLogs } from '~/libs/types'
+import { getLogs } from '~/libs/types'
 
 definePageMeta({
   validate({ params }) {
@@ -21,13 +16,14 @@ definePageMeta({
 })
 
 const params = useRoute().params
+const project: string = params.project as string
 
 const getUserPromise = getAsyncDataOrNull('fetchUser', () =>
   getUser(useRuntimeConfig().public.API)
 )
 
 const getLogsPromise = getAsyncDataOrThrows('fetchSettings', () =>
-  getLogs(useRuntimeConfig().public.API, params.project as string)
+  getLogs(useRuntimeConfig().public.API, project)
 )
 
 const [userAsyncData, logsAsyncData] = await Promise.all([
@@ -35,14 +31,4 @@ const [userAsyncData, logsAsyncData] = await Promise.all([
   getLogsPromise,
 ])
 const [user, logs] = [userAsyncData?.data, logsAsyncData?.data]
-const project: string = params.project as string
-
-function post(logAction: LogAction, objectIds: ObjectId[]) {
-  setLogs(useRuntimeConfig().public.API, project, logAction, objectIds).then(
-    () => {
-      // FIXME should refresh the data, but not fetch it again
-      userAsyncData?.refresh()
-    }
-  )
-}
 </script>
