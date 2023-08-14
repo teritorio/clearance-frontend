@@ -27,19 +27,20 @@
       <el-row>
         <el-col :span="8">
           <el-statistic
-            title="{{ $t('project.start') }}"
-            :value="project.date_start"
+            :title="$t('project.start')"
+            :value="new Date(project.date_start).toLocaleDateString(locale)"
+          />
+        </el-col>
+        <el-col :span="8">
+          <el-countdown
+            :title="$t('project.lastUpdate')"
+            :value="Date.now() * 2 - Date.parse(project.date_last_update)"
+            format="DD [days] HH:mm"
           />
         </el-col>
         <el-col :span="8">
           <el-statistic
-            title="{{ $t('project.upTo') }}"
-            :value="project.date_last_update"
-          />
-        </el-col>
-        <el-col :span="8">
-          <el-statistic
-            title="{{ $t('project.toBeValidated') }}"
+            :title="$t('project.toBeValidated')"
             :value="project.to_be_validated"
           />
         </el-col>
@@ -76,6 +77,7 @@
 
 <script lang="ts">
 import { Project } from '~/libs/types'
+import { useI18n } from '#imports'
 
 export default defineNuxtComponent({
   name: 'Project',
@@ -97,6 +99,9 @@ export default defineNuxtComponent({
     },
     overpassUrl(): string {
       return `${this.apiUrl}/${this.slug}/overpasslike`
+    },
+    locale(): string {
+      return useI18n().locale.value
     },
   },
 })
