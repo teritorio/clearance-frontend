@@ -44,7 +44,7 @@
                       {{ i }}
                       <template v-if="Array.isArray(option)">
                         <ul>
-                          <li v-for="(op, i) in option" :key="i">{{ op }}</li>
+                          <li v-for="op in option" :key="op">{{ op }}</li>
                         </ul>
                       </template>
                       <template v-else>
