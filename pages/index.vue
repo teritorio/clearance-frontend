@@ -1,9 +1,9 @@
 <template>
   <Layout :user="user">
     <div>
-      <h1>Clearance for OSM Data</h1>
+      <h1>{{ $t('app.title') }}</h1>
       <template v-if="user">
-        <h2>My projects</h2>
+        <h2>{{ $t('page.index.myProjects') }}</h2>
         <template v-if="myProjects.length > 0">
           <Project
             v-for="[key, project] in myProjects || []"
@@ -12,9 +12,13 @@
             :project="project"
           />
         </template>
-        <el-empty v-else description="No project" :image-size="50" />
+        <el-empty
+          v-else
+          :description="$t('page.index.empty')"
+          :image-size="50"
+        />
       </template>
-      <h2>Public projects</h2>
+      <h2>{{ $t('page.index.publicProjects') }}</h2>
       <template v-if="otherProjects.length > 0">
         <Project
           v-for="[key, project] in otherProjects || []"
@@ -23,7 +27,7 @@
           :project="project"
         />
       </template>
-      <el-empty v-else description="No project" :image-size="50" />
+      <el-empty v-else :description="$t('page.index.empty')" :image-size="50" />
     </div>
   </Layout>
 </template>

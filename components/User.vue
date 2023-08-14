@@ -1,12 +1,12 @@
 <template>
   <form v-if="!user" :action="loginUrl" method="post">
-    <button type="submit">Login</button>
+    <button type="submit">{{ $t('user.login') }}</button>
   </form>
   <template v-else>
     <el-avatar :src="user.osm_image_url">
       {{ user.osm_name }}
     </el-avatar>
-    <button @click="logout">Logout</button>
+    <button @click="logout">{{ $t('user.logout') }}</button>
   </template>
 </template>
 

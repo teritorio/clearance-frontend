@@ -6,17 +6,19 @@
           <span class="title">{{ project.title.en }}</span>
           <el-tag class="mx-1" size="small">Tourism</el-tag>
           <br />
-          <el-text class="mx-1" type="info">{{
-            project.description.en
-          }}</el-text>
+          <el-text class="mx-1" type="info">
+            {{ project.description.en }}
+          </el-text>
         </span>
         <span>
-          <a class="el-button" :href="`/${slug}/validators/`"> ⚙ Settings </a>
+          <a class="el-button" :href="`/${slug}/validators/`">
+            {{ $t('project.settings') }}
+          </a>
           <a
             class="el-button el-button--primary"
             :href="`/${slug}/changes_logs/`"
           >
-            ✓ Data
+            {{ $t('project.data') }}
           </a>
         </span>
       </div>
@@ -24,14 +26,20 @@
     <div>
       <el-row>
         <el-col :span="8">
-          <el-statistic title="Start" :value="project.date_start" />
-        </el-col>
-        <el-col :span="8">
-          <el-statistic title="Up to date" :value="project.date_last_update" />
+          <el-statistic
+            title="{{ $t('project.start') }}"
+            :value="project.date_start"
+          />
         </el-col>
         <el-col :span="8">
           <el-statistic
-            title="To be validated"
+            title="{{ $t('project.upTo') }}"
+            :value="project.date_last_update"
+          />
+        </el-col>
+        <el-col :span="8">
+          <el-statistic
+            title="{{ $t('project.toBeValidated') }}"
             :value="project.to_be_validated"
           />
         </el-col>
@@ -46,14 +54,19 @@
       <el-row>
         <ul>
           <li>
-            Overpass-like API URL : <a :href="overpassUrl">{{ overpassUrl }}</a>
+            {{ $t('project.overpassUrl') }}
+            <a :href="overpassUrl">{{ overpassUrl }}</a>
           </li>
           <li>
-            Extract
+            {{ $t('project.extract') }}
             <a :href="`${apiUrl}/${slug}/extract/${slug}.osm.bz2`">
               {{ `${slug}.osm.bz2` }}
             </a>
-            and <a :href="`${apiUrl}/${slug}/extract/update/`">diff</a>
+          </li>
+          <li>
+            <a :href="`${apiUrl}/${slug}/extract/update/`">{{
+              $t('project.diff')
+            }}</a>
           </li>
         </ul>
       </el-row>

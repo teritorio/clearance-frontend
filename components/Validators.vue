@@ -8,22 +8,22 @@
       style="width: 100%"
       size="small"
     >
-      <el-table-column sortable prop="id" label="Validator ID">
+      <el-table-column sortable prop="id" :label="$t('validators.validatorId')">
         <template #default="scope">
           {{ scope.row[0] }}
         </template>
       </el-table-column>
-      <el-table-column sortable prop="id" label="Action">
+      <el-table-column sortable prop="id" :label="$t('validators.action')">
         <template #default="scope">
           {{ scope.row[1].action || scope.row[1].action_force }}
         </template>
       </el-table-column>
-      <el-table-column sortable prop="id" label="Description">
+      <el-table-column sortable prop="id" :label="$t('validators.description')">
         <template #default="scope">
           {{ scope.row[1].description }}
         </template>
       </el-table-column>
-      <el-table-column sortable prop="id" label="Other">
+      <el-table-column sortable prop="id" :label="$t('validators.other')">
         <template #default="scope">
           <Object
             :object="scope.row[1]"

@@ -2,7 +2,7 @@
   <div>
     <div style="margin-top: 20px">
       <el-badge :value="logs.length" class="item">
-        <el-tag>Objects</el-tag>
+        <el-tag>{{ $t('logs.objects') }}</el-tag>
       </el-badge>
       <el-badge
         v-for="[key, count] in stats"
@@ -20,10 +20,10 @@
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
-            <span
-              >{{ log.objtype }}{{ log.id }} -
-              {{ log.base.tags.name || log.change.tags.name }}</span
-            >
+            <span>
+              {{ log.objtype }}{{ log.id }} -
+              {{ log.base.tags.name || log.change.tags.name }}
+            </span>
             <span>
               <el-tag
                 v-if="log.diff_attribs && log.diff_attribs['deleted']"
@@ -31,7 +31,7 @@
                 size="small"
                 :disable-transitions="true"
               >
-                deleted
+                {{ $t('logs.deleted') }}
               </el-tag>
             </span>
             <span>
