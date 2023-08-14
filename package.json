@@ -27,6 +27,7 @@
     "@element-plus/nuxt": "^1.0.4",
     "@types/geojson": "^7946.0.10",
     "core-js": "^3.25.3",
+    "dayjs": "^1.11.9",
     "diff": "^5.1.0",
     "element-plus": "^2.2.27",
     "maplibre-gl": "^3.2.2",

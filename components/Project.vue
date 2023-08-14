@@ -24,25 +24,38 @@
       </div>
     </template>
     <div>
-      <el-row>
+      <el-row id="stats">
         <el-col :span="8">
-          <el-statistic
-            :title="$t('project.start')"
-            :value="new Date(project.date_start).toLocaleDateString(locale)"
-          />
+          <div class="el-statistic">
+            <div class="el-statistic__head">{{ $t('project.start') }}</div>
+            <div class="el-statistic__content">
+              <span class="el-statistic__number">
+                {{ dateStart }}
+              </span>
+            </div>
+          </div>
         </el-col>
         <el-col :span="8">
-          <el-countdown
-            :title="$t('project.lastUpdate')"
-            :value="Date.now() * 2 - Date.parse(project.date_last_update)"
-            format="DD [days] HH:mm"
-          />
+          <div class="el-statistic">
+            <div class="el-statistic__head">{{ $t('project.lastUpdate') }}</div>
+            <div class="el-statistic__content">
+              <span class="el-statistic__number">
+                {{ lastUpdate }}
+              </span>
+            </div>
+          </div>
         </el-col>
         <el-col :span="8">
-          <el-statistic
-            :title="$t('project.toBeValidated')"
-            :value="project.to_be_validated"
-          />
+          <div class="el-statistic">
+            <div class="el-statistic__head">
+              {{ $t('project.toBeValidated') }}
+            </div>
+            <div class="el-statistic__content">
+              <span class="el-statistic__number">
+                {{ toBeValidated }}
+              </span>
+            </div>
+          </div>
         </el-col>
       </el-row>
       <el-divider border-style="dotted" />
@@ -76,7 +89,20 @@
 </template>
 
 <script lang="ts">
+import dayjs from 'dayjs'
+import localizedFormat from 'dayjs/plugin/localizedFormat'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import en from 'dayjs/locale/en-gb'
+import fr from 'dayjs/locale/fr'
+import es from 'dayjs/locale/es'
 import { Project } from '~/libs/types'
+
+dayjs.extend(localizedFormat)
+dayjs.extend(relativeTime)
+
+// Force to import and keep locales
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _daysjsLocale = { en, fr, es }
 
 export default defineNuxtComponent({
   name: 'Project',
@@ -102,19 +128,54 @@ export default defineNuxtComponent({
     locale(): string {
       return this.$i18n.locale
     },
+    dateStart(): string {
+      dayjs.locale(this.$i18n.locale)
+      return dayjs(this.project.date_start).format('L')
+    },
+    lastUpdate(): string {
+      return dayjs(this.project.date_last_update)
+        .locale(this.$i18n.locale)
+        .fromNow()
+    },
+    toBeValidated(): string {
+      return this.project.to_be_validated.toLocaleString(this.$i18n.locale)
+    },
   },
 })
 </script>
 
 <style scoped>
+#stats .el-col {
+  text-align: center;
+}
+
+#stats .el-statistic {
+  --el-statistic-title-font-weight: 400;
+  --el-statistic-title-font-size: var(--el-font-size-extra-small);
+  --el-statistic-title-color: var(--el-text-color-regular);
+  --el-statistic-content-font-weight: 400;
+  --el-statistic-content-font-size: var(--el-font-size-extra-large);
+  --el-statistic-content-color: var(--el-text-color-primary);
+}
+
+#stats .el-statistic__head {
+  font-weight: var(--el-statistic-title-font-weight);
+  font-size: var(--el-statistic-title-font-size);
+  color: var(--el-statistic-title-color);
+  line-height: 20px;
+  margin-bottom: 4px;
+}
+
+#stats .el-statistic__content {
+  font-weight: var(--el-statistic-content-font-weight);
+  font-size: var(--el-statistic-content-font-size);
+  color: var(--el-statistic-content-color);
+}
+
 :deep(.card-header) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-:deep(.el-col) {
-  text-align: center;
 }
 
 .title {
