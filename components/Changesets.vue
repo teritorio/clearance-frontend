@@ -37,10 +37,8 @@
                 v-for="[key, value] in Object.entries(changeset.tags)"
                 :key="key"
               >
-                <tr v-if="![].includes(key)">
-                  <td>{{ key }}</td>
-                  <td>{{ value }}</td>
-                </tr>
+                <td>{{ key }}</td>
+                <td>{{ value }}</td>
               </template>
             </table>
           </el-collapse-item>

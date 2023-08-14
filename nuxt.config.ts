@@ -46,6 +46,10 @@ export default defineNuxtConfig({
     transpile: [/lodash.*/],
   },
 
+  typescript: {
+    typeCheck: !!process.env.TYPESCRIPT_CHECK,
+  },
+
   i18n: {
     strategy: 'no_prefix',
     // lazy: true, // lazy-load not working as expected https://i18n.nuxtjs.org/lazy-load-translations/

@@ -2,7 +2,7 @@ export type ObjType = 'n' | 'w' | 'r'
 export type ObjTypeFull = 'node' | 'way' | 'relation'
 
 export type Key = string
-export interface Value extends String {}
+export type Value = string
 
 export function objTypeFull(objtype: ObjType): ObjTypeFull {
   return { n: 'node', w: 'way', r: 'relation' }[objtype] as ObjTypeFull
@@ -17,7 +17,7 @@ export type Member = {
   type: ObjType
 }
 
-export type Subject = {
+export interface Subject extends Record<string, any> {
   version: number
   changeset: number
   created: string

@@ -115,18 +115,18 @@
 import { PropType } from 'vue'
 import _ from 'underscore'
 import { Change, diffChars } from 'diff'
-import { Actions, Tags, Key, maxActionPriority } from '~/libs/types'
+import { Actions, Key, maxActionPriority } from '~/libs/types'
 
 export default defineNuxtComponent({
   name: 'Diff',
 
   props: {
     src: {
-      type: Object as PropType<Tags>,
+      type: Object as PropType<Record<string, any>>,
       required: true,
     },
     dst: {
-      type: Object as PropType<Tags>,
+      type: Object as PropType<Record<string, any>>,
       required: true,
     },
     diff: {

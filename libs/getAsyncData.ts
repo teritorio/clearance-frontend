@@ -1,11 +1,6 @@
 import { AsyncData, AsyncDataOptions } from 'nuxt/app'
-import {
-  _Transform,
-  KeyOfRes,
-  PickFrom,
-} from 'nuxt/dist/app/composables/asyncData'
+import { _Transform, KeysOf } from 'nuxt/dist/app/composables/asyncData'
 import { NuxtApp } from 'nuxt/dist/app/nuxt'
-import { Ref, ref } from 'vue'
 
 import { useAsyncData } from '#imports'
 
@@ -13,7 +8,7 @@ export function getAsyncDataOrThrows<
   DataT,
   DataE = Error,
   Transform extends _Transform<DataT> = _Transform<DataT, DataT>,
-  PickKeys extends KeyOfRes<Transform> = KeyOfRes<Transform>
+  PickKeys extends KeysOf<Transform> = KeysOf<Transform>
 >(
   key: string,
   handler: (ctx?: NuxtApp) => Promise<DataT>,
@@ -32,7 +27,7 @@ export function getAsyncDataOrNull<
   DataT,
   DataE = Error,
   Transform extends _Transform<DataT> = _Transform<DataT, DataT>,
-  PickKeys extends KeyOfRes<Transform> = KeyOfRes<Transform>
+  PickKeys extends KeysOf<Transform> = KeysOf<Transform>
 >(
   key: string,
   handler: (ctx?: NuxtApp) => Promise<DataT>,
