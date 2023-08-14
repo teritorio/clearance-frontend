@@ -4,21 +4,20 @@
       <div class="flex items-right">
         <User :user="user" />
 
-        {{ $i18n.locale }}
         <el-select
           v-model="locale"
           class="m-2"
           placeholder="Language"
           size="small"
+          @change="setLocale"
         >
           <el-option
             v-for="locale in availableLocales"
             :key="locale.code"
-            :label="locale.name"
+            :label="getFlagEmoji(locale.flag) + ' ' + locale.name"
             :value="locale.code"
-          >
-            {{ locale.flag }} {{ locale.name }}
-          </el-option>
+            :fit-input-width="true"
+          />
         </el-select>
       </div>
     </template>
@@ -43,29 +42,32 @@ export default defineNuxtComponent({
     },
   },
 
-  data(): {
-    locale: string
-  } {
-    return {
-      locale: this.$i18n.locale,
-    }
-  },
-
-  watches: {
-    locale(locale: string) {
-      this.$i18n.setLocale(locale)
-    },
-  },
-
   computed: {
     availableLocales(): LocaleObject[] {
       return this.$i18n.locales as LocaleObject[]
+    },
+
+    locale(): string {
+      return this.$i18n.locale
     },
   },
 
   methods: {
     back() {
       this.$router.push('/')
+    },
+
+    setLocale(locale: string): void {
+      this.$i18n.setLocale(locale)
+    },
+
+    // Function from https://dev.to/jorik/country-code-to-flag-emoji-a21
+    getFlagEmoji(countryCode: string) {
+      const codePoints = countryCode
+        .toUpperCase()
+        .split('')
+        .map((char) => 127397 + char.charCodeAt(0))
+      return String.fromCodePoint(...codePoints)
     },
   },
 })
