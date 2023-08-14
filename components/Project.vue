@@ -77,7 +77,6 @@
 
 <script lang="ts">
 import { Project } from '~/libs/types'
-import { useI18n } from '#imports'
 
 export default defineNuxtComponent({
   name: 'Project',
@@ -101,7 +100,7 @@ export default defineNuxtComponent({
       return `${this.apiUrl}/${this.slug}/overpasslike`
     },
     locale(): string {
-      return useI18n().locale.value
+      return this.$i18n.locale
     },
   },
 })

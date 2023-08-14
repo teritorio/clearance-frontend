@@ -4,6 +4,7 @@
       <div class="flex items-right">
         <User :user="user" />
 
+        {{ $i18n.locale }}
         <el-select
           v-model="locale"
           class="m-2"
@@ -31,7 +32,6 @@
 import { PropType } from 'vue'
 import { LocaleObject } from '@nuxtjs/i18n/dist/runtime/composables'
 import { User } from '~/libs/apiTypes'
-import { useI18n } from '#imports'
 
 export default defineNuxtComponent({
   name: 'Layout',
@@ -47,19 +47,19 @@ export default defineNuxtComponent({
     locale: string
   } {
     return {
-      locale: useI18n().locale.value,
+      locale: this.$i18n.locale,
     }
   },
 
   watches: {
-    locale() {
-      useI18n().setLocale(this.locale)
+    locale(locale: string) {
+      this.$i18n.setLocale(locale)
     },
   },
 
   computed: {
     availableLocales(): LocaleObject[] {
-      return useI18n().locales.value as LocaleObject[]
+      return this.$i18n.locales as LocaleObject[]
     },
   },
 
