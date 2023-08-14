@@ -55,7 +55,6 @@ const [user, projects] = [userAsyncData!.data, projectsAsyncData!.data]
 const [myProjects, otherProjects] = _.partition(
   Object.entries(projects.value!),
   ([_key, project]) => {
-    console.error(project)
     return !!Object.values(project.user_groups).find(
       (userGroup) =>
         user?.value?.osm_name && userGroup.users.includes(user?.value?.osm_name)
