@@ -36,8 +36,20 @@
             </span>
             <span class="">
               <el-text class="mx-1" size="small">
-                📌 {{ log.matches.map((m) => m.split(':')[0]).join(', ') }} 🏷️
-                {{ log.matches.map((m) => m.split('#')[1]).join(', ') }}
+                📌
+                {{
+                  [...new Set(log.matches.map((m) => m.split(':')[0]))]
+                    .sort()
+                    .join(', ')
+                }}
+              </el-text>
+              <el-text class="mx-1" size="small">
+                🏷️
+                {{
+                  [...new Set(log.matches.map((m) => m.split('#')[1]))]
+                    .sort()
+                    .join(', ')
+                }}
               </el-text>
             </span>
             <span>
