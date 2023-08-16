@@ -53,6 +53,7 @@ export type Log = {
   id: number
   base: Subject
   change: Subject
+  matches: string[]
   action: LogAction
   changesets: Changeset[]
   diff_attribs: Actions

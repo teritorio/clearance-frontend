@@ -34,6 +34,12 @@
                 {{ $t('logs.deleted') }}
               </el-tag>
             </span>
+            <span class="">
+              <el-text class="mx-1" size="small">
+                📌 {{ log.matches.map((m) => m.split(':')[0]).join(', ') }} 🏷️
+                {{ log.matches.map((m) => m.split('#')[1]).join(', ') }}
+              </el-text>
+            </span>
             <span>
               <a
                 class="el-button"
