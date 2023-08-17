@@ -62,7 +62,6 @@
       <el-row>
         <template v-for="(userGroup, key) in project.user_groups" :key="key">
           <UserGroup :user-group="userGroup" />
-          &nbsp;&nbsp;&nbsp;
         </template>
       </el-row>
       <el-row>

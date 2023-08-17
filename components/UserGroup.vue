@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card style="width: 250px; margin: 7px">
     <template #header>
       <div class="card-header">
         <span>{{ userGroup.title.en || userGroup.title.fr }}</span>
