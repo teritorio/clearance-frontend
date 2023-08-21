@@ -17,7 +17,7 @@ export default {
     settings: '⚙ Paramètres',
     data: '✓ Données',
     start: 'Début',
-    lastUpdate: 'Dernière mise à jour',
+    lastUpdate: 'Fraîcheur des données',
     toBeValidated: 'À valider',
     overpassUrl: 'Overpass-like API URL :',
     extract: 'Extrait :',

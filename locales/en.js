@@ -17,7 +17,7 @@ export default {
     settings: '⚙ Settings',
     data: '✓ Data',
     start: 'Start',
-    lastUpdate: 'Last update',
+    lastUpdate: 'Data freshness',
     toBeValidated: 'To be validated',
     overpassUrl: 'Overpass-like API URL:',
     extract: 'Extract:',
