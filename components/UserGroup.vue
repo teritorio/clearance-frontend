@@ -43,47 +43,54 @@ export default defineNuxtComponent({
     if (this.userGroup.polygon) {
       fetch(this.userGroup.polygon).then((data) => {
         if (data.ok) {
-          return data.json().then((geojson: GeoJSON.MultiPolygon) => {
-            const bounds: LngLatBounds | undefined = geojson.coordinates
-              .flat(2)
-              .reduce((bounds, coord) => {
-                return bounds.extend(coord as [number, number])
-              }, new LngLatBounds(geojson.coordinates[0][0][0] as [number, number], geojson.coordinates[0][0][0] as [number, number]))
+          return data
+            .json()
+            .then((geojson: GeoJSON.Polygon | GeoJSON.MultiPolygon) => {
+              const seed = (
+                geojson.type === 'Polygon'
+                  ? geojson.coordinates[0][0]
+                  : geojson.coordinates[0][0][0]
+              ) as [number, number]
+              const bounds: LngLatBounds | undefined = geojson.coordinates
+                .flat(geojson.type === 'Polygon' ? 1 : 2)
+                .reduce((bounds, coord) => {
+                  return bounds.extend(coord as [number, number])
+                }, new LngLatBounds(seed, seed))
 
-            const map = new Map({
-              container: this.mapContainer!,
-              style:
-                'https://vecto.teritorio.xyz/styles/teritorio-basic/style.json?key=teritorio_clearance-1-ahNoohaepohy9iexoo3qua',
-              bounds,
-              fitBoundsOptions: { maxZoom: 20, padding: 50 },
-              cooperativeGestures: true,
+              const map = new Map({
+                container: this.mapContainer!,
+                style:
+                  'https://vecto.teritorio.xyz/styles/teritorio-basic/style.json?key=teritorio_clearance-1-ahNoohaepohy9iexoo3qua',
+                bounds,
+                fitBoundsOptions: { maxZoom: 20, padding: 50 },
+                cooperativeGestures: true,
+              })
+
+              map.on('load', () => {
+                map.addSource('geojson', { type: 'geojson', data: geojson })
+
+                map.addLayer({
+                  id: 'geojsonFill',
+                  type: 'fill',
+                  source: 'geojson',
+                  filter: ['==', '$type', 'Polygon'],
+                  paint: {
+                    'fill-color': '#333',
+                    'fill-opacity': 0.3,
+                  },
+                } as FillLayerSpecification)
+                map.addLayer({
+                  id: 'geojsonBorder',
+                  type: 'line',
+                  source: 'geojson',
+                  filter: ['==', '$type', 'Polygon'],
+                  paint: {
+                    'line-color': '#777',
+                    'line-width': 2,
+                  },
+                } as LineLayerSpecification)
+              })
             })
-
-            map.on('load', () => {
-              map.addSource('geojson', { type: 'geojson', data: geojson })
-
-              map.addLayer({
-                id: 'geojsonFill',
-                type: 'fill',
-                source: 'geojson',
-                filter: ['==', '$type', 'Polygon'],
-                paint: {
-                  'fill-color': '#333',
-                  'fill-opacity': 0.3,
-                },
-              } as FillLayerSpecification)
-              map.addLayer({
-                id: 'geojsonBorder',
-                type: 'line',
-                source: 'geojson',
-                filter: ['==', '$type', 'Polygon'],
-                paint: {
-                  'line-color': '#777',
-                  'line-width': 2,
-                },
-              } as LineLayerSpecification)
-            })
-          })
         }
       })
     }
