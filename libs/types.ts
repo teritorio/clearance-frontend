@@ -1,3 +1,5 @@
+import { GeoJSON } from 'geojson'
+
 export type ObjType = 'n' | 'w' | 'r'
 export type ObjTypeFull = 'node' | 'way' | 'relation'
 
@@ -26,6 +28,7 @@ export interface Subject extends Record<string, any> {
   lat?: number
   nodes?: number[]
   members?: Member[]
+  geom: GeoJSON.Geometry
 }
 
 export type Changeset = {

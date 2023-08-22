@@ -116,26 +116,19 @@
                 'username',
                 'lat',
                 'lon',
+                'geom',
                 ...(log.objtype !== 'n' ? ['lon', 'lat'] : []),
                 ...(log.objtype !== 'w' ? ['nodes'] : []),
                 ...(log.objtype !== 'r' ? ['members'] : []),
               ]"
               :clear="['nodes', 'members']"
             />
-            <LazyComponent
-              v-if="
-                log.diff_attribs &&
-                (log.diff_attribs.hasOwnProperty('lat') ||
-                  log.diff_attribs.hasOwnProperty('lon') ||
-                  log.diff_attribs.hasOwnProperty('nodes'))
-              "
-              style="border: 1px solid lightgrey"
-            >
+            <LazyComponent style="border: 1px solid lightgrey">
               <DiffMap
                 :id="log.id"
                 :objtype="log.objtype"
-                :created-at-base="log.base.created"
-                :created-at-change="log.change.created"
+                :base-geom="log.base.geom"
+                :change-geom="log.change.geom"
               />
             </LazyComponent>
           </el-col>

@@ -22,6 +22,7 @@ import {
   Map,
 } from 'maplibre-gl'
 import GeoJSON from 'geojson'
+import bbox from '@turf/bbox'
 import { UserGroup } from '~/libs/types'
 
 export default defineNuxtComponent({
@@ -46,17 +47,8 @@ export default defineNuxtComponent({
           return data
             .json()
             .then((geojson: GeoJSON.Polygon | GeoJSON.MultiPolygon) => {
-              const seed = (
-                geojson.type === 'Polygon'
-                  ? geojson.coordinates[0][0]
-                  : geojson.coordinates[0][0][0]
-              ) as [number, number]
-              const bounds: LngLatBounds | undefined = geojson.coordinates
-                .flat(geojson.type === 'Polygon' ? 1 : 2)
-                .reduce((bounds, coord) => {
-                  return bounds.extend(coord as [number, number])
-                }, new LngLatBounds(seed, seed))
-
+              // @ts-ignore
+              const bounds = new LngLatBounds(bbox(geojson))
               const map = new Map({
                 container: this.mapContainer!,
                 style:
