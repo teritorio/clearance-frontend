@@ -26,6 +26,7 @@
     "@element-plus/icons-vue": "^2.0.10",
     "@element-plus/nuxt": "^1.0.4",
     "@turf/bbox": "^6.5.0",
+    "@turf/boolean-equal": "^6.5.0",
     "@types/geojson": "^7946.0.10",
     "core-js": "^3.25.3",
     "dayjs": "^1.11.9",

@@ -123,7 +123,10 @@
               ]"
               :clear="['nodes', 'members']"
             />
-            <LazyComponent style="border: 1px solid lightgrey">
+            <LazyComponent
+              v-if="log.base.geom || log.change.geom"
+              style="border: 1px solid lightgrey"
+            >
               <DiffMap
                 :id="log.id"
                 :objtype="log.objtype"

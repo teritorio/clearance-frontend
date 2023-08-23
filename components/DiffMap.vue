@@ -12,6 +12,7 @@ import {
   Map,
 } from 'maplibre-gl'
 import bbox from '@turf/bbox'
+import booleanEqual from '@turf/boolean-equal'
 import { ObjType } from '~/libs/types'
 
 export default defineNuxtComponent({
@@ -28,11 +29,11 @@ export default defineNuxtComponent({
     },
     baseGeom: {
       type: Object as PropType<GeoJSON.Geometry>,
-      required: true,
+      default: undefined,
     },
     changeGeom: {
       type: Object as PropType<GeoJSON.Geometry>,
-      required: true,
+      default: undefined,
     },
   },
 
@@ -42,11 +43,15 @@ export default defineNuxtComponent({
   },
 
   mounted() {
-    // @ts-ignore
+    const noChanges = booleanEqual(this.baseGeom, this.changeGeom)
+
     const bounds = new LngLatBounds(
+      // @ts-ignore
       bbox({
         type: 'GeometryCollection',
-        geometries: [this.baseGeom, this.changeGeom],
+        geometries: [this.baseGeom, this.changeGeom].filter(
+          (e) => e !== undefined
+        ),
       })
     )
 
@@ -60,72 +65,97 @@ export default defineNuxtComponent({
     })
 
     map.on('load', () => {
-      map.addSource('baseGeom', { type: 'geojson', data: this.baseGeom })
-      map.addSource('changeGeom', { type: 'geojson', data: this.changeGeom })
+      if (this.baseGeom) {
+        map.addSource('baseGeom', { type: 'geojson', data: this.baseGeom })
+        // Point
+        map.addLayer({
+          id: 'baseGeomCircleBorder',
+          type: 'circle',
+          source: 'baseGeom',
+          filter: ['==', '$type', 'Point'],
+          paint: {
+            'circle-color': '#000',
+            'circle-radius': 10,
+          },
+        } as CircleLayerSpecification)
+        map.addLayer({
+          id: 'baseGeomCircle',
+          type: 'circle',
+          source: 'baseGeom',
+          filter: ['==', '$type', 'Point'],
+          paint: {
+            'circle-color': noChanges ? '#F0F0F0' : '#FF0000',
+            'circle-radius': 8,
+          },
+        } as CircleLayerSpecification)
+        // Linestring
+        map.addLayer({
+          id: 'baseGeomLineBorder',
+          type: 'line',
+          source: 'baseGeom',
+          filter: ['==', '$type', 'LineString'],
+          paint: {
+            'line-color': '#000',
+            'line-width': 4,
+          },
+        } as LineLayerSpecification)
+        map.addLayer({
+          id: 'baseGeomLine',
+          type: 'line',
+          source: 'baseGeom',
+          filter: ['==', '$type', 'LineString'],
+          paint: {
+            'line-color': noChanges ? '#F0F0F0' : '#FF0000',
+            'line-width': 3,
+          },
+        } as LineLayerSpecification)
+      }
 
-      // Point
-      map.addLayer({
-        id: 'baseGeomCircleBorder',
-        type: 'circle',
-        source: 'baseGeom',
-        filter: ['==', '$type', 'Point'],
-        paint: {
-          'circle-color': '#000',
-          'circle-radius': 10,
-        },
-      } as CircleLayerSpecification)
-      map.addLayer({
-        id: 'baseGeomCircle',
-        type: 'circle',
-        source: 'baseGeom',
-        filter: ['==', '$type', 'Point'],
-        paint: {
-          'circle-color': '#FF0000',
-          'circle-radius': 8,
-        },
-      } as CircleLayerSpecification)
-      map.addLayer({
-        id: 'changeGeomCircleBorder',
-        type: 'circle',
-        source: 'changeGeom',
-        filter: ['==', '$type', 'Point'],
-        paint: {
-          'circle-color': '#000',
-          'circle-radius': 12,
-        },
-      } as CircleLayerSpecification)
-      map.addLayer({
-        id: 'changeGeomCircle',
-        type: 'circle',
-        source: 'changeGeom',
-        filter: ['==', '$type', 'Point'],
-        paint: {
-          'circle-color': '#FFBB00',
-          'circle-radius': 10,
-        },
-      } as CircleLayerSpecification)
-
-      // Linestring
-      map.addLayer({
-        id: 'baseGeomLine',
-        type: 'line',
-        source: 'baseGeom',
-        filter: ['==', '$type', 'LineString'],
-        paint: {
-          'line-color': '#FF0000',
-          'line-width': 3,
-        },
-      } as LineLayerSpecification)
-      map.addLayer({
-        id: 'changeGeomLine',
-        type: 'line',
-        source: 'changeGeom',
-        filter: ['==', '$type', 'LineString'],
-        paint: {
-          'line-color': '#FFBB00',
-          'line-width': 5,
-        },
-      } as LineLayerSpecification)
+      if (this.changeGeom && !noChanges) {
+        map.addSource('changeGeom', { type: 'geojson', data: this.changeGeom })
+        // Point
+        map.addLayer({
+          id: 'changeGeomCircleBorder',
+          type: 'circle',
+          source: 'changeGeom',
+          filter: ['==', '$type', 'Point'],
+          paint: {
+            'circle-color': '#000',
+            'circle-radius': 12,
+          },
+        } as CircleLayerSpecification)
+        map.addLayer({
+          id: 'changeGeomCircle',
+          type: 'circle',
+          source: 'changeGeom',
+          filter: ['==', '$type', 'Point'],
+          paint: {
+            'circle-color': '#FFBB00',
+            'circle-radius': 10,
+          },
+        } as CircleLayerSpecification)
+        // Linestring
+        map.addLayer({
+          id: 'changeGeomLineBorder',
+          type: 'line',
+          source: 'changeGeom',
+          filter: ['==', '$type', 'LineString'],
+          paint: {
+            'line-color': '#000',
+            'line-width': 6,
+          },
+        } as LineLayerSpecification)
+        map.addLayer({
+          id: 'changeGeomLine',
+          type: 'line',
+          source: 'changeGeom',
+          filter: ['==', '$type', 'LineString'],
+          paint: {
+            'line-color': '#FFBB00',
+            'line-width': 5,
+          },
+        } as LineLayerSpecification)
+      }
     })
   },
 })
