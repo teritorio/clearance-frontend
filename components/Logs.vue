@@ -114,14 +114,9 @@
                 'created',
                 'uid',
                 'username',
-                'lat',
-                'lon',
-                'geom',
-                ...(log.objtype !== 'n' ? ['lon', 'lat'] : []),
-                ...(log.objtype !== 'w' ? ['nodes'] : []),
                 ...(log.objtype !== 'r' ? ['members'] : []),
               ]"
-              :clear="['nodes', 'members']"
+              :clear="['members', 'geom']"
             />
             <LazyComponent
               v-if="log.base.geom || log.change.geom"

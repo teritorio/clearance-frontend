@@ -24,9 +24,6 @@ export interface Subject extends Record<string, any> {
   changeset: number
   created: string
   tags: Tags
-  lon?: number
-  lat?: number
-  nodes?: number[]
   members?: Member[]
   geom: GeoJSON.Geometry
 }
