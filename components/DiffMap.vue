@@ -43,7 +43,11 @@ export default defineNuxtComponent({
   },
 
   mounted() {
-    const noChanges = booleanEqual(this.baseGeom, this.changeGeom)
+    const noChanges =
+      this.baseGeom === this.changeGeom ||
+      (this.baseGeom &&
+        this.changeGeom &&
+        booleanEqual(this.baseGeom, this.changeGeom))
 
     const bounds = new LngLatBounds(
       // @ts-ignore
