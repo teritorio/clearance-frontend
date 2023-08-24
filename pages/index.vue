@@ -2,6 +2,21 @@
   <Layout :user="user">
     <div>
       <h1>{{ $t('app.title') }}</h1>
+      <el-row>
+        <el-col :span="18">
+          <p>
+            <i>{{ $t('app.summary') }}</i>
+            <br />
+            <a href="https://github.com/teritorio/clearance">{{
+              $t('app.github')
+            }}</a>
+          </p>
+        </el-col>
+        <el-col :span="6">
+          <img src="/Clearance-process.svg" style="width: 100%" />
+        </el-col>
+      </el-row>
+
       <template v-if="user">
         <h2>{{ $t('page.index.myProjects') }}</h2>
         <template v-if="myProjects.length > 0">

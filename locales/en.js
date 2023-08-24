@@ -1,6 +1,9 @@
 export default {
   app: {
     title: 'Clearance for OSM Data',
+    summary:
+      '"Clearance" is a tool for producing OSM extracts and keeping them up to date while respecting quality rules. It is based on partial and local updates. Rejected data groups must be corrected in OSM or accepted manually. OSM changes to be revised are handled collaboratively by interest groups.',
+    github: 'Clearance on Github',
   },
   page: {
     index: {
