@@ -12,6 +12,24 @@
       >
         <el-tag size="small" type="danger">{{ key }}</el-tag>
       </el-badge>
+      <br />
+      <el-badge
+        v-for="[key, count] in statUserGroups"
+        :key="key"
+        :value="count"
+        class="item"
+      >
+        <el-tag size="small">📌 {{ key }}</el-tag>
+      </el-badge>
+      <br />
+      <el-badge
+        v-for="[key, count] in statSelectors"
+        :key="key"
+        :value="count"
+        class="item"
+      >
+        <el-tag size="small" type="warning">🏷️ {{ key }}</el-tag>
+      </el-badge>
     </div>
 
     <template v-for="log in logs || []" :key="log.id">
@@ -35,22 +53,25 @@
               </el-tag>
             </span>
             <span class="">
-              <el-text class="mx-1" size="small">
-                📌
-                {{
-                  [...new Set(log.matches.map((m) => m.user_groups).flat())]
-                    .sort()
-                    .join(', ')
-                }}
-              </el-text>
-              <el-text class="mx-1" size="small">
-                🏷️
-                {{
-                  [...new Set(log.matches.map((m) => m.selector))]
-                    .sort()
-                    .join(', ')
-                }}
-              </el-text>
+              <el-tag
+                v-for="text in [
+                  ...new Set(log.matches.map((m) => m.user_groups).flat()),
+                ].sort()"
+                :key="text"
+                size="small"
+              >
+                📌 {{ text }}
+              </el-tag>
+              <el-tag
+                v-for="text in [
+                  ...new Set(log.matches.map((m) => m.selector)),
+                ].sort()"
+                :key="text"
+                size="small"
+                type="warning"
+              >
+                🏷️ {{ text }}
+              </el-tag>
             </span>
             <span>
               <a
@@ -197,17 +218,34 @@ export default defineNuxtComponent({
           )
         )
         .flat(1)
+      return this.count(actions)
+    },
 
-      return _.sortBy(
-        Object.entries(
-          _.pick(_.countBy(actions), (value) => value > this.logs.length * 0.05)
-        ) as [string, number][],
-        ([_key, count]) => -count
-      )
+    statSelectors() {
+      const selectors = this.logs
+        .map((log) => _.uniq(log.matches.map((m) => m.selector)))
+        .flat(1)
+      return this.count(selectors)
+    },
+
+    statUserGroups() {
+      const userGroups = this.logs
+        .map((log) => _.uniq(log.matches.map((m) => m.user_groups)))
+        .flat(2)
+      return this.count(userGroups)
     },
   },
 
   methods: {
+    count(data: string[]): [string, number][] {
+      return _.sortBy(
+        Object.entries(
+          _.pick(_.countBy(data), (value) => value > this.logs.length * 0.05)
+        ) as [string, number][],
+        ([_key, count]) => -count
+      )
+    },
+
     accept(objectId: ObjectId) {
       setLogs(useRuntimeConfig().public.API, this.project, 'accept', [objectId])
         .then(() => {
