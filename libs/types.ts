@@ -44,8 +44,14 @@ export type Changeset = {
   tags: Tags
 }
 
+export type Match = {
+  selector: string
+  sources: string[]
+  user_groups: string[]
+}
+
 export type LogAction = 'accept' | 'reject'
-export type LogActionOptions = Record<string, string | string[]>
+export type LogActionOptions = Record<string, string | string[] | object>
 export type Action = [string, LogAction | null, LogActionOptions | null]
 export type Actions = Record<Key, Action[]>
 export type Log = {
@@ -53,7 +59,7 @@ export type Log = {
   id: number
   base: Subject
   change: Subject
-  matches: string[]
+  matches: Match[]
   action: LogAction
   changesets: Changeset[]
   diff_attribs: Actions

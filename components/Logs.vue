@@ -38,7 +38,7 @@
               <el-text class="mx-1" size="small">
                 📌
                 {{
-                  [...new Set(log.matches.map((m) => m.split(':')[0]))]
+                  [...new Set(log.matches.map((m) => m.user_groups).flat())]
                     .sort()
                     .join(', ')
                 }}
@@ -46,7 +46,7 @@
               <el-text class="mx-1" size="small">
                 🏷️
                 {{
-                  [...new Set(log.matches.map((m) => m.split('#')[1]))]
+                  [...new Set(log.matches.map((m) => m.selector))]
                     .sort()
                     .join(', ')
                 }}
