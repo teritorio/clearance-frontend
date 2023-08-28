@@ -25,6 +25,14 @@
   <div>
     <slot />
   </div>
+  <footer>
+    <p>
+      {{ $t('app.attribution.data') }}
+      <a href="https://www.openstreetmap.org" target="_blank">{{
+        $t('app.attribution.osm')
+      }}</a>
+    </p>
+  </footer>
 </template>
 
 <script lang="ts">
