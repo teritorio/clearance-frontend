@@ -62,8 +62,8 @@ export type Log = {
   matches: Match[]
   action: LogAction
   changesets: Changeset[]
-  diff_attribs: Actions
-  diff_tags: Actions
+  diff_attribs?: Actions
+  diff_tags?: Actions
 }
 
 export type ObjectId = {

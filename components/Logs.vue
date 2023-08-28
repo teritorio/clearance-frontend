@@ -57,7 +57,7 @@
       </el-badge>
     </div>
 
-    <template v-for="log in logs || []" :key="log.id">
+    <template v-for="log in logsWithFilter || []" :key="log.id">
       <br />
 
       <el-card class="box-card">
@@ -272,18 +272,39 @@ export default defineNuxtComponent({
 
     statUserGroups() {
       const userGroups = this.logs
-        .map((log) => _.uniq(log.matches.map((m) => m.user_groups)))
-        .flat(2)
+        .map((log) => _.uniq(log.matches.map((m) => m.user_groups).flat(2)))
+        .flat(1)
       return this.count(userGroups)
+    },
+
+    logsWithFilter() {
+      return this.logs.filter(
+        (log) =>
+          (this.filterByAction === undefined ||
+            Object.values(log.diff_attribs || {})
+              .concat(Object.values(log.diff_tags || {}))
+              .some(
+                (actions) =>
+                  actions?.some(
+                    (action) => action[0] === this.filterByAction
+                  ) || false
+              )) &&
+          (this.filterByUserGroups === undefined ||
+            log.matches.some((match) =>
+              match.user_groups.includes(this.filterByUserGroups!)
+            )) &&
+          (this.filterBySelectors === undefined ||
+            log.matches.some(
+              (match) => match.selector === this.filterBySelectors
+            ))
+      )
     },
   },
 
   methods: {
     count(data: string[]): [string, number][] {
       return _.sortBy(
-        Object.entries(
-          _.pick(_.countBy(data), (value) => value > this.logs.length * 0.05)
-        ) as [string, number][],
+        Object.entries(_.countBy(data)) as [string, number][],
         ([_key, count]) => -count
       )
     },
