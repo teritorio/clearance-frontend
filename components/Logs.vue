@@ -10,7 +10,14 @@
         :value="count"
         class="item"
       >
-        <el-tag size="small" type="danger">{{ key }}</el-tag>
+        <el-button
+          type="danger"
+          :plain="filterByAction != key"
+          size="small"
+          @click="filterByAction = filterByAction != key ? key : undefined"
+        >
+          {{ key }}
+        </el-button>
       </el-badge>
       <br />
       <el-badge
@@ -19,7 +26,16 @@
         :value="count"
         class="item"
       >
-        <el-tag size="small">📌 {{ key }}</el-tag>
+        <el-button
+          type="primary"
+          :plain="filterByUserGroups != key"
+          size="small"
+          @click="
+            filterByUserGroups = filterByUserGroups != key ? key : undefined
+          "
+        >
+          📌 {{ key }}
+        </el-button>
       </el-badge>
       <br />
       <el-badge
@@ -28,7 +44,16 @@
         :value="count"
         class="item"
       >
-        <el-tag size="small" type="warning">🏷️ {{ key }}</el-tag>
+        <el-button
+          type="warning"
+          :plain="filterBySelectors != key"
+          size="small"
+          @click="
+            filterBySelectors = filterBySelectors != key ? key : undefined
+          "
+        >
+          🏷️ {{ key }}
+        </el-button>
       </el-badge>
     </div>
 
@@ -53,7 +78,7 @@
                 {{ $t('logs.deleted') }}
               </el-tag>
             </span>
-            <span class="">
+            <span>
               <el-tag
                 v-for="text in [
                   ...new Set(log.matches.map((m) => m.user_groups).flat()),
@@ -61,6 +86,7 @@
                 :key="text"
                 size="small"
                 class="item"
+                :effect="filterByUserGroups == text ? 'dark' : undefined"
               >
                 📌 {{ text }}
               </el-tag>
@@ -72,6 +98,7 @@
                 size="small"
                 type="warning"
                 class="item"
+                :effect="filterBySelectors == text ? 'dark' : undefined"
               >
                 🏷️ {{ text }}
               </el-tag>
@@ -205,6 +232,18 @@ export default defineNuxtComponent({
       type: Array as PropType<Logs>,
       required: true,
     },
+  },
+
+  data(): {
+    filterByAction?: string
+    filterByUserGroups?: string
+    filterBySelectors?: string
+  } {
+    return {
+      filterByAction: undefined,
+      filterByUserGroups: undefined,
+      filterBySelectors: undefined,
+    }
   },
 
   computed: {
