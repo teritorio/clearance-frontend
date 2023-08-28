@@ -56,6 +56,7 @@ export default defineNuxtComponent({
                 bounds,
                 fitBoundsOptions: { maxZoom: 20, padding: 50 },
                 cooperativeGestures: true,
+                attributionControl: false,
               })
 
               map.on('load', () => {
@@ -90,6 +91,6 @@ export default defineNuxtComponent({
 })
 </script>
 
-<style scoped>
+<style>
 @import url('maplibre-gl/dist/maplibre-gl.css');
 </style>

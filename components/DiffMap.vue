@@ -10,6 +10,7 @@ import {
   LineLayerSpecification,
   LngLatBounds,
   Map,
+  FullscreenControl,
 } from 'maplibre-gl'
 import bbox from '@turf/bbox'
 import booleanEqual from '@turf/boolean-equal'
@@ -66,7 +67,9 @@ export default defineNuxtComponent({
       bounds,
       fitBoundsOptions: { maxZoom: 20, padding: 50 },
       cooperativeGestures: true,
+      attributionControl: false,
     })
+    map.addControl(new FullscreenControl())
 
     map.on('load', () => {
       if (this.baseGeom) {
@@ -165,6 +168,6 @@ export default defineNuxtComponent({
 })
 </script>
 
-<style scoped>
+<style>
 @import url('maplibre-gl/dist/maplibre-gl.css');
 </style>
