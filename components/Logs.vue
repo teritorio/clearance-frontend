@@ -2,7 +2,7 @@
   <div>
     <div style="margin-top: 20px">
       <el-badge :value="logs.length" class="item">
-        <el-tag>{{ $t('logs.objects') }}</el-tag>
+        <el-tag size="small">{{ $t('logs.objects') }}</el-tag>
       </el-badge>
       <el-badge
         v-for="[key, count] in stats"
@@ -48,6 +48,7 @@
                 type="danger"
                 size="small"
                 :disable-transitions="true"
+                class="item"
               >
                 {{ $t('logs.deleted') }}
               </el-tag>
@@ -59,6 +60,7 @@
                 ].sort()"
                 :key="text"
                 size="small"
+                class="item"
               >
                 📌 {{ text }}
               </el-tag>
@@ -69,6 +71,7 @@
                 :key="text"
                 size="small"
                 type="warning"
+                class="item"
               >
                 🏷️ {{ text }}
               </el-tag>
@@ -269,6 +272,11 @@ export default defineNuxtComponent({
 </script>
 
 <style scoped>
+.item {
+  margin-top: 0.7em;
+  margin-right: 1.3em;
+}
+
 .card-header {
   display: flex;
   justify-content: space-between;

@@ -9,6 +9,7 @@
               type="warning"
               size="small"
               :disable-transitions="true"
+              class="item"
             >
               ?
             </el-tag>
@@ -190,6 +191,11 @@ export default defineNuxtComponent({
 </script>
 
 <style scoped>
+.item {
+  margin-top: 0.7em;
+  margin-right: 1.3em;
+}
+
 .diff-text-removed {
   color: red;
 }

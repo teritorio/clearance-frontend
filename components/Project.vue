@@ -4,7 +4,7 @@
       <div class="card-header">
         <span>
           <span class="title">{{ project.title.en }}</span>
-          <el-tag class="mx-1" size="small">Tourism</el-tag>
+          <el-tag class="item" size="small">Tourism</el-tag>
           <br />
           <el-text class="mx-1" type="info">
             {{ project.description.en }}
@@ -180,5 +180,10 @@ export default defineNuxtComponent({
 .title {
   font-weight: 600;
   padding-right: 1em;
+}
+
+.item {
+  margin-top: 0.7em;
+  margin-right: 1.3em;
 }
 </style>
