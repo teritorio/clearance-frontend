@@ -8,6 +8,11 @@ export default {
       data: 'All data and maps',
       osm: '© OpenStreetMap contributors',
     },
+    project: {
+      new: 'To add a new project contact administrator:',
+      join: 'To join the project contact one of the project member. You can use OSM messages.',
+      mainContacts: 'Main contact:',
+    },
   },
   page: {
     index: {

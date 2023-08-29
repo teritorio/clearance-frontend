@@ -5,7 +5,11 @@
         <span>{{ userGroup.title.en || userGroup.title.fr }}</span>
       </div>
     </template>
-    <span v-for="user in userGroup.users" :key="user">👤&nbsp;{{ user }}</span>
+    <span v-for="user in userGroup.users" :key="user">
+      <a :href="`https://www.openstreetmap.org/user/${user}`" target="_blank"
+        >👤&nbsp;{{ user }}</a
+      >
+    </span>
     <div
       ref="mapContainer"
       class="map"

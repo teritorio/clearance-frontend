@@ -11,6 +11,14 @@
               $t('app.github')
             }}</a>
           </p>
+          <p>
+            {{ $t('app.project.new') }}
+            <a
+              href="https://www.openstreetmap.org/user/frodrigo"
+              target="_blank"
+              >frodrigo</a
+            >
+          </p>
         </el-col>
         <el-col :span="6">
           <img src="/Clearance-process.svg" style="width: 100%" />

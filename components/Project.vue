@@ -84,6 +84,15 @@
         </ul>
       </el-row>
     </div>
+    <p>
+      <span>{{ $t('app.project.mainContacts') }}</span>
+      <span v-for="user in project.main_contacts" :key="user">
+        <a :href="`https://www.openstreetmap.org/user/${user}`" target="_blank"
+          >👤&nbsp;{{ user }}</a
+        >
+      </span>
+    </p>
+    <p>{{ $t('app.project.join') }}</p>
   </el-card>
 </template>
 
