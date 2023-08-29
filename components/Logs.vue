@@ -173,6 +173,7 @@
                 'created',
                 'uid',
                 'username',
+                'deleted',
                 ...(log.objtype !== 'r' ? ['members'] : []),
               ]"
               :clear="['members', 'geom']"
