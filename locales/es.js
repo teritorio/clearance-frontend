@@ -24,6 +24,14 @@ export default {
   logs: {
     objects: 'Objetos',
     deleted: 'borrado',
+    filters: 'Filtros',
+    data: 'Grupo de datos a examinar',
+    data_details:
+      'Datos incluidos aquí porque se han selectivo y no cumplan las reglas de validación.',
+    data_details_osm:
+      'Arreglar en OSM si es necesario, y esperar aquí la actualización de los datos. Se eliminará automáticamente de la lista cuando pase la validación.',
+    data_details_manual:
+      'Si después de la comprobación es correcto, utiliza ✓ para integrar los cambios.',
   },
   project: {
     settings: '⚙ Configuración',

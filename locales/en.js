@@ -24,6 +24,14 @@ export default {
   logs: {
     objects: 'Objects',
     deleted: 'deleted',
+    filters: 'Filtres',
+    data: 'Group of data to review',
+    data_details:
+      'Data listed here because targeted and fail to comply with the validation rules.',
+    data_details_osm:
+      'Fix in OSM if required, and wait here for the data update. Will be removed automaticaliy from the list when pass the validation.',
+    data_details_manual:
+      'If after review it is ok, use the ✓ check to integrate the changes.',
   },
   project: {
     settings: '⚙ Settings',

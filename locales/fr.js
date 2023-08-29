@@ -24,6 +24,14 @@ export default {
   logs: {
     objects: 'Objets',
     deleted: 'supprimé',
+    filters: 'Filtres',
+    data: 'Groupe de données à examiner',
+    data_details:
+      "Données listées ici parce qu'elles ont été ciblées et qu'elles ne respectent pas les règles de validation.",
+    data_details_osm:
+      "Corrigez dans OSM si nécessaire, et attendez ici la mise à jour des données. Les données seront automatiquement supprimées de la liste lorsqu'elles auront passé les règles de validation.",
+    data_details_manual:
+      'Si, après examen, tout est bon, utilisez le contrôle ✓ pour intégrer les modifications.',
   },
   project: {
     settings: '⚙ Paramètres',

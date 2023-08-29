@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div style="margin-top: 20px">
+    <h3>{{ $t('logs.filters') }}</h3>
+    <el-row style="margin-top: 20px">
       <el-badge :value="logs.length" class="item">
         <el-tag size="small">{{ $t('logs.objects') }}</el-tag>
       </el-badge>
@@ -19,7 +20,8 @@
           {{ key }}
         </el-button>
       </el-badge>
-      <br />
+    </el-row>
+    <el-row>
       <el-badge
         v-for="[key, count] in statUserGroups"
         :key="key"
@@ -37,7 +39,8 @@
           📌 {{ key }}
         </el-button>
       </el-badge>
-      <br />
+    </el-row>
+    <el-row>
       <el-badge
         v-for="[key, count] in statSelectors"
         :key="key"
@@ -55,11 +58,16 @@
           🏷️ {{ key }}
         </el-button>
       </el-badge>
-    </div>
+    </el-row>
+
+    <h3>{{ $t('logs.data') }}</h3>
+    <p>{{ $t('logs.data_details') }}</p>
+    <ul>
+      <li>{{ $t('logs.data_details_osm') }}</li>
+      <li>{{ $t('logs.data_details_manual') }}</li>
+    </ul>
 
     <template v-for="log in logsWithFilter || []" :key="log.id">
-      <br />
-
       <el-card class="box-card">
         <template #header>
           <div class="card-header">
@@ -190,6 +198,7 @@
           </el-col>
         </el-row>
       </el-card>
+      <br />
     </template>
 
     <iframe name="hidden_josm_target" style="display: none"></iframe>
