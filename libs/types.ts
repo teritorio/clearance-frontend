@@ -156,6 +156,7 @@ export type Project = {
   to_be_validated: number
   main_contacts: string[]
   user_groups: UserGroup[]
+  project_tags: string[]
 }
 
 export type Projects = Record<string, Project>

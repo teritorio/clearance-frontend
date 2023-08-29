@@ -4,7 +4,13 @@
       <div class="card-header">
         <span>
           <span class="title">{{ project.title.en }}</span>
-          <el-tag class="item" size="small">Tourism</el-tag>
+          <el-tag
+            v-for="tag in project.project_tags"
+            :key="tag"
+            class="item"
+            size="small"
+            >{{ tag }}</el-tag
+          >
           <br />
           <el-text class="mx-1" type="info">
             {{ project.description.en }}
