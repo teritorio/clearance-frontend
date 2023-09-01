@@ -151,7 +151,6 @@ export type UserGroup = {
 export type Project = {
   title: MultilingualString
   description: MultilingualString
-  date_start: string
   date_last_update: string
   to_be_validated: number
   main_contacts: string[]

@@ -31,17 +31,7 @@
     </template>
     <div>
       <el-row id="stats">
-        <el-col :span="8">
-          <div class="el-statistic">
-            <div class="el-statistic__head">{{ $t('project.start') }}</div>
-            <div class="el-statistic__content">
-              <span class="el-statistic__number">
-                {{ dateStart }}
-              </span>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="8">
+        <el-col :span="12">
           <div class="el-statistic">
             <div class="el-statistic__head">{{ $t('project.lastUpdate') }}</div>
             <div class="el-statistic__content">
@@ -51,7 +41,7 @@
             </div>
           </div>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="12">
           <div class="el-statistic">
             <div class="el-statistic__head">
               {{ $t('project.toBeValidated') }}
@@ -141,10 +131,6 @@ export default defineNuxtComponent({
     },
     locale(): string {
       return this.$i18n.locale
-    },
-    dateStart(): string {
-      dayjs.locale(this.$i18n.locale)
-      return dayjs(this.project.date_start).format('L')
     },
     lastUpdate(): string {
       return dayjs(this.project.date_last_update)
