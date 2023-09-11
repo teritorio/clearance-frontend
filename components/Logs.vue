@@ -141,6 +141,17 @@
                 Deep H
               </a>
 
+              <a
+                class="el-button"
+                target="_blank"
+                :href="`https://pewu.github.io/osm-history/#/${objtypeFull(
+                  log.objtype
+                )}/${log.id}`"
+                title="OSM History Viewer"
+              >
+                OSM H
+              </a>
+
               <el-button
                 v-if="user"
                 type="primary"
