@@ -185,6 +185,7 @@
                 'uid',
                 'username',
                 'deleted',
+                'geom',
                 ...(log.objtype !== 'r' ? ['members'] : []),
               ]"
               :clear="['members', 'geom']"
