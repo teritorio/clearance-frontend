@@ -160,6 +160,7 @@
                     objtype: log.objtype,
                     id: log.id,
                     version: log.change.version,
+                    deleted: log.change.deleted,
                   })
                 "
                 >✓</el-button

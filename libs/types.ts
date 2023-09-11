@@ -21,6 +21,7 @@ export type Member = {
 
 export interface Subject extends Record<string, any> {
   version: number
+  deleted: boolean
   changeset: number
   created: string
   tags: Tags
@@ -70,6 +71,7 @@ export type ObjectId = {
   objtype: ObjType
   id: number
   version: number
+  deleted: boolean
 }
 
 export type Logs = Log[]
