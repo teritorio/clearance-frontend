@@ -61,14 +61,39 @@
         </th>
       </tr>
       <template v-for="key in groupedKey" :key="key">
-        <tr v-if="!exclude.includes(key)">
+        <tr
+          v-if="!exclude.includes(key)"
+          :class="
+            (diff[groupedKey[0]] === undefined ||
+              diff[groupedKey[0]][0] === undefined ||
+              diff[groupedKey[0]][0][1]) != 'reject' && 'no_changes'
+          "
+        >
           <td :class="[backgroundClass(key), 'key']">
             {{ actionIcon(key) }}
           </td>
-          <td :class="[backgroundClass(key), 'key']">
+          <td
+            :class="
+              (diff[groupedKey[0]] === undefined ||
+                diff[groupedKey[0]][0] === undefined ||
+                diff[groupedKey[0]][0][1]) != 'reject' || [
+                backgroundClass(key),
+                'key',
+              ]
+            "
+          >
             {{ key }}
           </td>
-          <td :class="[backgroundClass(key), 'value']">
+          <td
+            :class="
+              (diff[groupedKey[0]] === undefined ||
+                diff[groupedKey[0]][0] === undefined ||
+                diff[groupedKey[0]][0][1]) != 'reject' || [
+                backgroundClass(key),
+                'value',
+              ]
+            "
+          >
             <template v-if="clear.includes(key)">[...]</template>
             <template v-else-if="diff[key]">
               <span v-if="!(key in src)">{{ dst[key] }} </span>
@@ -226,5 +251,10 @@ td {
 
 td.key {
   white-space: nowrap;
+}
+
+tr.no_changes {
+  font-size: 70%;
+  background-color: var(--el-color-info-light-9);
 }
 </style>
