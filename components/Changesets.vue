@@ -13,13 +13,27 @@
           <span class="source">📷 {{ changeset.tags.source }}</span>
           <br />
         </template>
-        <span class="user">👤 {{ changeset.user }}</span>
+        <span class="user">
+          👤&nbsp;<a
+            :href="`https://www.openstreetmap.org/user/${changeset.user}`"
+            target="_blank"
+            >{{ changeset.user }}</a
+          >
+        </span>
         <template v-if="changeset.tags.created_by">
           <span class="created_by">🛠 {{ changeset.tags.created_by }}</span>
           <br />
         </template>
         <el-collapse v-model="accordion" accordion>
-          <el-collapse-item :title="`⯼ #${changeset.id}`" :name="index">
+          <el-collapse-item :name="index">
+            <template #title>
+              ⯼&nbsp;<a
+                :href="`https://www.openstreetmap.org/changeset/${changeset.id}`"
+                target="_blank"
+                >{{ changeset.id }}</a
+              >
+            </template>
+
             <table>
               <template
                 v-for="[key, value] in Object.entries(changeset)"
