@@ -46,7 +46,7 @@ export type Changeset = {
 }
 
 export type Match = {
-  selector: string
+  selectors: string
   sources: string[]
   user_groups: string[]
 }

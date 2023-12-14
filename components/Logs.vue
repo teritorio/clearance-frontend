@@ -100,7 +100,7 @@
               </el-tag>
               <el-tag
                 v-for="text in [
-                  ...new Set(log.matches.map((m) => m.selector)),
+                  ...new Set(log.matches.map((m) => m.selectors).flat()),
                 ].sort()"
                 :key="text"
                 size="small"
@@ -288,7 +288,7 @@ export default defineNuxtComponent({
 
     statSelectors() {
       const selectors = this.logs
-        .map((log) => _.uniq(log.matches.map((m) => m.selector)))
+        .map((log) => _.uniq(log.matches.map((m) => m.selectors)).flat())
         .flat(1)
       return this.count(selectors)
     },
