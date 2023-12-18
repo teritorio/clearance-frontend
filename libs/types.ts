@@ -77,15 +77,17 @@ export type ObjectId = {
 export type Logs = Log[]
 
 export function getLogs(apiEndpoint: string, project: string): Promise<Logs> {
-  return fetch(`${apiEndpoint}/${project}/changes_logs/`).then((data) => {
-    if (data.ok) {
-      return data.json() as unknown as Logs
-    } else {
-      return Promise.reject(
-        new Error([data.url, data.status, data.statusText].join(' '))
-      )
+  return fetch(`${apiEndpoint}/projects/${project}/changes_logs/`).then(
+    (data) => {
+      if (data.ok) {
+        return data.json() as unknown as Logs
+      } else {
+        return Promise.reject(
+          new Error([data.url, data.status, data.statusText].join(' '))
+        )
+      }
     }
-  })
+  )
 }
 
 export function setLogs(
@@ -94,7 +96,7 @@ export function setLogs(
   logAction: LogAction,
   objectsIds: ObjectId[]
 ): Promise<void> {
-  return fetch(`${apiEndpoint}/${project}/changes_logs/${logAction}`, {
+  return fetch(`${apiEndpoint}/projects/${project}/changes_logs/${logAction}`, {
     credentials: 'include',
     method: 'POST',
     headers: {
@@ -133,15 +135,17 @@ export function getValidators(
   apiEndpoint: string,
   project: string
 ): Promise<Validator> {
-  return fetch(`${apiEndpoint}/${project}/validators/`).then((data) => {
-    if (data.ok) {
-      return data.json() as unknown as Validator
-    } else {
-      return Promise.reject(
-        new Error([data.url, data.status, data.statusText].join(' '))
-      )
+  return fetch(`${apiEndpoint}/projects/${project}/validators/`).then(
+    (data) => {
+      if (data.ok) {
+        return data.json() as unknown as Validator
+      } else {
+        return Promise.reject(
+          new Error([data.url, data.status, data.statusText].join(' '))
+        )
+      }
     }
-  })
+  )
 }
 
 export type UserGroup = {
