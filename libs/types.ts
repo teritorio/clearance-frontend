@@ -177,3 +177,18 @@ export function getProjects(apiEndpoint: string): Promise<Projects> {
     }
   })
 }
+
+export function getProject(
+  apiEndpoint: string,
+  project: string
+): Promise<Project> {
+  return fetch(`${apiEndpoint}/projects/${project}`).then((data) => {
+    if (data.ok) {
+      return data.json() as unknown as Project
+    } else {
+      return Promise.reject(
+        new Error([data.url, data.status, data.statusText].join(' '))
+      )
+    }
+  })
+}

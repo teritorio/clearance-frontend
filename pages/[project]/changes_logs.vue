@@ -1,5 +1,6 @@
 <template>
   <Layout :user="user">
+    <Project :key="key" :slug="key" :project="projectDetails" />
     <Logs v-if="logs" :project="project" :user="user" :logs="logs" />
   </Layout>
 </template>
@@ -7,7 +8,7 @@
 <script setup lang="ts">
 import { getUser } from '~/libs/apiTypes'
 import { getAsyncDataOrNull, getAsyncDataOrThrows } from '~/libs/getAsyncData'
-import { getLogs } from '~/libs/types'
+import { getLogs , getProject } from '~/libs/types'
 
 definePageMeta({
   validate({ params }) {
@@ -22,13 +23,22 @@ const getUserPromise = getAsyncDataOrNull('fetchUser', () =>
   getUser(useRuntimeConfig().public.API)
 )
 
+const getProjectPromise = getAsyncDataOrThrows('fetchProject', () =>
+  getProject(useRuntimeConfig().public.API, project)
+)
+
 const getLogsPromise = getAsyncDataOrThrows('fetchSettings', () =>
   getLogs(useRuntimeConfig().public.API, project)
 )
 
-const [userAsyncData, logsAsyncData] = await Promise.all([
+const [userAsyncData, projectAsyncData, logsAsyncData] = await Promise.all([
   getUserPromise,
+  getProjectPromise,
   getLogsPromise,
 ])
-const [user, logs] = [userAsyncData?.data, logsAsyncData?.data]
+const [user, projectDetails, logs] = [
+  userAsyncData?.data,
+  projectAsyncData?.data,
+  logsAsyncData?.data,
+]
 </script>
