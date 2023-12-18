@@ -72,7 +72,15 @@
         <template #header>
           <div class="card-header">
             <span>
-              {{ log.objtype }}{{ log.id }} -
+              <a
+                :href="`https://www.openstreetmap.org/${objtypeFull(
+                  log.objtype
+                )}/${log.id}/history`"
+                target="_blank"
+              >
+                {{ log.objtype }}{{ log.id }}
+              </a>
+              -
               {{ log.base.tags.name || log.change.tags.name }}
             </span>
             <span>
@@ -114,12 +122,12 @@
             <span>
               <a
                 class="el-button"
-                :href="`https://www.openstreetmap.org/${objtypeFull(
+                :href="`https://www.openstreetmap.org/edit?editor=id&${objtypeFull(
                   log.objtype
-                )}/${log.id}`"
+                )}=${log.id}`"
                 target="_blank"
               >
-                OSM
+                OSM iD
               </a>
 
               <a
