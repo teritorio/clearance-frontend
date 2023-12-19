@@ -6,6 +6,7 @@
     <el-avatar :src="user.osm_image_url">
       {{ user.osm_name }}
     </el-avatar>
+    <span>{{ user.osm_name }}</span>
     <button @click="logout">{{ $t('user.logout') }}</button>
   </template>
 </template>
