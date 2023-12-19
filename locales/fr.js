@@ -34,6 +34,7 @@ export default {
       'Si, après examen, tout est bon, utilisez le contrôle ✓ pour intégrer les modifications.',
   },
   project: {
+    details: 'Détails',
     settings: '⚙ Paramètres',
     data: '✓ Données',
     start: 'Début',

@@ -34,6 +34,7 @@ export default {
       'Si después de la comprobación es correcto, utiliza ✓ para integrar los cambios.',
   },
   project: {
+    details: 'Detalle',
     settings: '⚙ Configuración',
     data: '✓ Datos',
     start: 'Inicio',

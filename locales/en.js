@@ -34,6 +34,7 @@ export default {
       'If after review it is ok, use the ✓ check to integrate the changes.',
   },
   project: {
+    details: 'Details',
     settings: '⚙ Settings',
     data: '✓ Data',
     start: 'Start',
