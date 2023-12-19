@@ -35,6 +35,8 @@ export default {
   },
   project: {
     details: 'Details',
+    user_group_label: 'Group',
+    user_group_users: 'Users',
     settings: '⚙ Settings',
     data: '✓ Data',
     start: 'Start',

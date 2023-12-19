@@ -35,6 +35,8 @@ export default {
   },
   project: {
     details: 'Détails',
+    user_group_label: 'Groupe',
+    user_group_users: 'Utilisateurs',
     settings: '⚙ Paramètres',
     data: '✓ Données',
     start: 'Début',

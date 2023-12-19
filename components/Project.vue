@@ -56,9 +56,7 @@
       </el-row>
       <el-divider border-style="dotted" />
       <el-row>
-        <template v-for="(userGroup, key) in project.user_groups" :key="key">
-          <UserGroup :user-group="userGroup" />
-        </template>
+        <UserGroups :user-groups="Object.values(project.user_groups)" />
       </el-row>
       <el-row>
         <ul>
