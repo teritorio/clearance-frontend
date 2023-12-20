@@ -13,6 +13,7 @@ export default {
       join: "Pour rejoindre le projet, contactez l'un des membres. Vous pouvez utiliser les messages OSM.",
       mainContacts: 'Contact principal :',
     },
+    back: 'Retour',
   },
   page: {
     index: {

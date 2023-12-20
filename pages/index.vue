@@ -1,5 +1,5 @@
 <template>
-  <Layout :user="user">
+  <Layout :user="user" :back="false">
     <div>
       <h1>{{ $t('app.title') }}</h1>
       <el-row>

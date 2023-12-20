@@ -1,27 +1,29 @@
 <template>
-  <el-page-header @back="back">
-    <template #content>
-      <div class="flex items-right">
-        <User :user="user" />
-
-        <el-select
-          v-model="locale"
-          class="m-2"
-          placeholder="Language"
-          size="small"
-          @change="setLocale"
-        >
-          <el-option
-            v-for="locale in availableLocales"
-            :key="locale.code"
-            :label="getFlagEmoji(locale.flag) + ' ' + locale.name"
-            :value="locale.code"
-            :fit-input-width="true"
-          />
-        </el-select>
-      </div>
-    </template>
-  </el-page-header>
+  <el-row>
+    <el-col v-if="back" :span="2">
+      <el-button tag="a" href="/">{{ $t('app.back') }}</el-button>
+    </el-col>
+    <el-col :span="4">
+      <User :user="user" />
+    </el-col>
+    <el-col :span="4">
+      <el-select
+        v-model="locale"
+        class="m-2"
+        placeholder="Language"
+        size="small"
+        @change="setLocale"
+      >
+        <el-option
+          v-for="locale in availableLocales"
+          :key="locale.code"
+          :label="getFlagEmoji(locale.flag) + ' ' + locale.name"
+          :value="locale.code"
+          :fit-input-width="true"
+        />
+      </el-select>
+    </el-col>
+  </el-row>
   <div>
     <slot />
   </div>
@@ -44,6 +46,10 @@ export default defineNuxtComponent({
   name: 'Layout',
 
   props: {
+    back: {
+      type: Boolean,
+      default: true,
+    },
     user: {
       type: Object as PropType<User | null>,
       default: null,
@@ -61,10 +67,6 @@ export default defineNuxtComponent({
   },
 
   methods: {
-    back() {
-      this.$router.push('/')
-    },
-
     setLocale(locale: string): void {
       this.$i18n.setLocale(locale)
     },

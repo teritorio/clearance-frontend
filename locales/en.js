@@ -13,6 +13,7 @@ export default {
       join: 'To join the project contact one of the project member. You can use OSM messages.',
       mainContacts: 'Main contact:',
     },
+    back: 'Back',
   },
   page: {
     index: {
