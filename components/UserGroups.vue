@@ -13,7 +13,7 @@
       </el-table-column>
       <el-table-column prop="id" :label="$t('project.user_group_users')">
         <template #default="scope">
-          <span v-for="user in scope.row.users" :key="user">
+          <span v-for="user in scope.row.users" :key="user" class="user">
             <a
               :href="`https://www.openstreetmap.org/user/${user}`"
               target="_blank"
@@ -136,4 +136,10 @@ export default defineNuxtComponent({
 
 <style>
 @import url('maplibre-gl/dist/maplibre-gl.css');
+</style>
+
+<style scoped>
+.user + .user {
+  margin-left: 0.5em;
+}
 </style>

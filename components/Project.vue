@@ -16,17 +16,14 @@
             {{ project.description.en }}
           </el-text>
         </span>
-        <span>
-          <a class="el-button" :href="`/${slug}/validators/`">
+        <el-button-group>
+          <el-button tag="a" :href="`/${slug}/validators/`">
             {{ $t('project.settings') }}
-          </a>
-          <a
-            class="el-button el-button--primary"
-            :href="`/${slug}/changes_logs/`"
-          >
-            {{ $t('project.data') }}
-          </a>
-        </span>
+          </el-button>
+          <el-button tag="a" type="primary" :href="`/${slug}/changes_logs/`">
+            {{ $t('project.details') }}
+          </el-button>
+        </el-button-group>
       </div>
     </template>
     <div>

@@ -119,27 +119,30 @@
                 🏷️ {{ text }}
               </el-tag>
             </span>
-            <span>
-              <a
-                class="el-button"
+            <el-button-group>
+              <el-button
+                tag="a"
+                size="small"
                 :href="`https://www.openstreetmap.org/edit?editor=id&${objtypeFull(
                   log.objtype
                 )}=${log.id}`"
                 target="_blank"
               >
                 OSM iD
-              </a>
+              </el-button>
 
-              <a
-                class="el-button"
+              <el-button
+                tag="a"
+                size="small"
                 :href="`http://127.0.0.1:8111/load_object?objects=${log.objtype}${log.id}`"
                 target="hidden_josm_target"
               >
                 JOSM
-              </a>
+              </el-button>
 
-              <a
-                class="el-button"
+              <el-button
+                tag="a"
+                size="small"
                 target="_blank"
                 :href="`https://osmlab.github.io/osm-deep-history/#/${objtypeFull(
                   log.objtype
@@ -147,10 +150,11 @@
                 title="OSM Deep History"
               >
                 Deep H
-              </a>
+              </el-button>
 
-              <a
-                class="el-button"
+              <el-button
+                tag="a"
+                size="small"
                 target="_blank"
                 :href="`https://pewu.github.io/osm-history/#/${objtypeFull(
                   log.objtype
@@ -158,10 +162,11 @@
                 title="OSM History Viewer"
               >
                 OSM H
-              </a>
+              </el-button>
+            </el-button-group>
 
+            <el-button-group v-if="user">
               <el-button
-                v-if="user"
                 type="primary"
                 @click="
                   accept({
@@ -173,7 +178,7 @@
                 "
                 >✓</el-button
               >
-            </span>
+            </el-button-group>
           </div>
         </template>
         <el-row :gutter="20">

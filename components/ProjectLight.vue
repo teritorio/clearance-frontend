@@ -16,14 +16,14 @@
             {{ project.description.en }}
           </el-text>
         </span>
-        <span>
-          <a class="el-button" :href="`/${slug}/validators/`">
+        <el-button-group>
+          <el-button tag="a" :href="`/${slug}/validators/`">
             {{ $t('project.settings') }}
-          </a>
-          <a class="el-button el-button--primary" :href="`/${slug}`">
+          </el-button>
+          <el-button tag="a" type="primary" :href="`/${slug}`">
             {{ $t('project.details') }}
-          </a>
-        </span>
+          </el-button>
+        </el-button-group>
       </div>
     </template>
     <div>
