@@ -325,8 +325,8 @@ export default defineNuxtComponent({
               match.user_groups.includes(this.filterByUserGroups!)
             )) &&
           (this.filterBySelectors === undefined ||
-            log.matches.some(
-              (match) => match.selector === this.filterBySelectors
+            log.matches.some((match) =>
+              match.selectors.includes(this.filterBySelectors)
             ))
       )
     },
