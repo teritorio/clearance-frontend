@@ -67,9 +67,9 @@
       <li>{{ $t('logs.data_details_manual') }}</li>
     </ul>
 
-    <el-space :fill="true" wrap :size="20">
+    <el-space v-infinite-scroll="scroolLoad" :fill="true" wrap :size="20">
       <Log
-        v-for="log in logsWithFilter || []"
+        v-for="log in (logsWithFilter || []).slice(0, scroolCount + 1)"
         :key="log.id"
         :log="log"
         :project="project"
@@ -114,11 +114,13 @@ export default defineNuxtComponent({
     filterByAction?: string
     filterByUserGroups?: string
     filterBySelectors?: string
+    scroolCount: number
   } {
     return {
       filterByAction: undefined,
       filterByUserGroups: undefined,
       filterBySelectors: undefined,
+      scroolCount: 10,
     }
   },
 
@@ -183,6 +185,10 @@ export default defineNuxtComponent({
         Object.entries(_.countBy(data)) as [string, number][],
         ([_key, count]) => -count
       )
+    },
+
+    scroolLoad(): void {
+      this.scroolCount += 10
     },
   },
 })
