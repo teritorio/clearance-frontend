@@ -1,6 +1,6 @@
 <template>
   <Layout :user="user">
-    <Project :slug="projectDetails.slug" :project="projectDetails" />
+    <Project :project="projectDetails" />
   </Layout>
 </template>
 

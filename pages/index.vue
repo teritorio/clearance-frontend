@@ -31,7 +31,6 @@
           <Project
             v-for="[key, project] in myProjects || []"
             :key="key"
-            :slug="key"
             :project="project"
           />
         </template>
@@ -46,7 +45,6 @@
         <Project
           v-for="[key, project] in otherProjects || []"
           :key="key"
-          :slug="key"
           :project="project"
         />
       </template>
@@ -75,17 +73,14 @@ const [userAsyncData, projectsAsyncData] = await Promise.all([
   getProjectsPromise,
 ])
 
-const [user, projects] = [userAsyncData!.data, projectsAsyncData!.data]
+const [user, projects] = [userAsyncData?.data, projectsAsyncData!.data]
 
 // Computed
 
 const [myProjects, otherProjects] = _.partition(
   Object.entries(projects.value!),
   ([_key, project]) => {
-    return !!Object.values(project.user_groups).find(
-      (userGroup) =>
-        user?.value?.osm_name && userGroup.users.includes(user?.value?.osm_name)
-    )
+    user?.projects?.include(project)
   }
 )
 </script>

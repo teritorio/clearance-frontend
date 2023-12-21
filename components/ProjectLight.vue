@@ -17,10 +17,10 @@
           </el-text>
         </span>
         <el-button-group>
-          <el-button tag="a" :href="`/${slug}/validators/`">
+          <el-button tag="a" :href="`/${project.id}/validators/`">
             {{ $t('project.settings') }}
           </el-button>
-          <el-button tag="a" type="primary" :href="`/${slug}`">
+          <el-button tag="a" type="primary" :href="`/${project.id}`">
             {{ $t('project.details') }}
           </el-button>
         </el-button-group>
@@ -75,10 +75,6 @@ export default defineNuxtComponent({
   name: 'Project',
 
   props: {
-    slug: {
-      type: String,
-      required: true,
-    },
     project: {
       type: Object as PropType<Project>,
       default: null,
@@ -90,7 +86,7 @@ export default defineNuxtComponent({
       return useRuntimeConfig().public.API
     },
     overpassUrl(): string {
-      return `${this.apiUrl}/${this.slug}/overpasslike`
+      return `${this.apiUrl}/${this.project.id}/overpasslike`
     },
     locale(): string {
       return this.$i18n.locale

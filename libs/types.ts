@@ -155,6 +155,7 @@ export type UserGroup = {
 }
 
 export type Project = {
+  id: string
   title: MultilingualString
   description: MultilingualString
   date_last_update: string

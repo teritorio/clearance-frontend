@@ -1,6 +1,6 @@
 <template>
   <Layout :user="user">
-    <ProjectLight :slug="projectDetails.slug" :project="projectDetails" />
+    <ProjectLight :project="projectDetails" />
     <Logs v-if="logs" :project="project" :user="user" :logs="logs" />
   </Layout>
 </template>

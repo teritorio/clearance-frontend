@@ -17,10 +17,14 @@
           </el-text>
         </span>
         <el-button-group>
-          <el-button tag="a" :href="`/${slug}/validators/`">
+          <el-button tag="a" :href="`/${project.id}/validators/`">
             {{ $t('project.settings') }}
           </el-button>
-          <el-button tag="a" type="primary" :href="`/${slug}/changes_logs/`">
+          <el-button
+            tag="a"
+            type="primary"
+            :href="`/${project.id}/changes_logs/`"
+          >
             {{ $t('project.details') }}
           </el-button>
         </el-button-group>
@@ -63,12 +67,12 @@
           </li>
           <li>
             {{ $t('project.extract') }}
-            <a :href="`${apiUrl}/${slug}/extract/${slug}.osm.bz2`">
-              {{ `${slug}.osm.bz2` }}
+            <a :href="`${apiUrl}/${project.id}/extract/${project.id}.osm.bz2`">
+              {{ `${project.id}.osm.bz2` }}
             </a>
           </li>
           <li>
-            <a :href="`${apiUrl}/${slug}/extract/update/`">{{
+            <a :href="`${apiUrl}/${project.id}/extract/update/`">{{
               $t('project.diff')
             }}</a>
           </li>
@@ -107,10 +111,6 @@ export default defineNuxtComponent({
   name: 'Project',
 
   props: {
-    slug: {
-      type: String,
-      required: true,
-    },
     project: {
       type: Object as PropType<Project>,
       default: null,
@@ -122,7 +122,7 @@ export default defineNuxtComponent({
       return useRuntimeConfig().public.API
     },
     overpassUrl(): string {
-      return `${this.apiUrl}/${this.slug}/overpasslike`
+      return `${this.apiUrl}/${this.project.id}/overpasslike`
     },
     locale(): string {
       return this.$i18n.locale
