@@ -4,12 +4,14 @@ export type User = {
   osm_image_url: string
 }
 
-export function getUser(apiEndpoint: string): Promise<User> {
+export function getUser(apiEndpoint: string): Promise<User | undefined> {
   return fetch(`${apiEndpoint}/users/me`, {
     credentials: 'include',
   }).then((data) => {
     if (data.ok) {
       return data.json() as unknown as User
+    } else if (data.status === 404) {
+      return undefined
     } else {
       return Promise.reject(
         new Error([data.url, data.status, data.statusText].join(' '))
