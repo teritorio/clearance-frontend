@@ -165,7 +165,7 @@ export type Project = {
   project_tags: string[]
 }
 
-export type Projects = Record<string, Project>
+export type Projects = Project[]
 
 export function getProjects(apiEndpoint: string): Promise<Projects> {
   return fetch(`${apiEndpoint}/projects`).then((data) => {

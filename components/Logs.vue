@@ -165,7 +165,7 @@
               </el-button>
             </el-button-group>
 
-            <el-button-group v-if="user">
+            <el-button-group v-if="user?.projects?.includes(project)">
               <el-button
                 type="primary"
                 @click="

@@ -29,8 +29,8 @@
         <h2>{{ $t('page.index.myProjects') }}</h2>
         <template v-if="myProjects.length > 0">
           <Project
-            v-for="[key, project] in myProjects || []"
-            :key="key"
+            v-for="project in myProjects || []"
+            :key="project.id"
             :project="project"
           />
         </template>
@@ -43,8 +43,8 @@
       <h2>{{ $t('page.index.publicProjects') }}</h2>
       <template v-if="otherProjects.length > 0">
         <Project
-          v-for="[key, project] in otherProjects || []"
-          :key="key"
+          v-for="project in otherProjects || []"
+          :key="project.id"
           :project="project"
         />
       </template>
@@ -77,10 +77,7 @@ const [user, projects] = [userAsyncData?.data, projectsAsyncData!.data]
 
 // Computed
 
-const [myProjects, otherProjects] = _.partition(
-  Object.entries(projects.value!),
-  ([_key, project]) => {
-    user?.projects?.include(project)
-  }
+const [myProjects, otherProjects] = _.partition(projects.value, (project) =>
+  user?.projects?.includes(project.id)
 )
 </script>
