@@ -33,6 +33,7 @@ export default {
       "Corrigez dans OSM si nécessaire, et attendez ici la mise à jour des données. Les données seront automatiquement supprimées de la liste lorsqu'elles auront passé les règles de validation.",
     data_details_manual:
       'Si, après examen, tout est bon, utilisez le contrôle ✓ pour intégrer les modifications.',
+    tags_more: '(et plus)',
   },
   project: {
     details: 'Détails',

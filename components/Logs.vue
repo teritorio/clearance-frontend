@@ -2,7 +2,7 @@
   <div>
     <h3>{{ $t('logs.filters') }}</h3>
     <el-row style="margin-top: 20px">
-      <el-badge :value="logs.length" class="item">
+      <el-badge :value="logs.length" class="item" :max="999">
         <el-tag size="small">{{ $t('logs.objects') }}</el-tag>
       </el-badge>
       <el-badge
@@ -10,6 +10,7 @@
         :key="key"
         :value="count"
         class="item"
+        :max="999"
       >
         <el-button
           type="danger"
@@ -27,6 +28,7 @@
         :key="key"
         :value="count"
         class="item"
+        :max="999"
       >
         <el-button
           type="primary"
@@ -46,6 +48,7 @@
         :key="key"
         :value="count"
         class="item"
+        :max="999"
       >
         <el-button
           type="warning"
@@ -58,6 +61,25 @@
           🏷️ {{ key }}
         </el-button>
       </el-badge>
+    </el-row>
+    <el-row>
+      <el-badge
+        v-for="[key, count] in statUsers.slice(0, 20)"
+        :key="key"
+        :value="count"
+        class="item"
+        :max="999"
+      >
+        <el-button
+          type="info"
+          :plain="filterByUsers != key"
+          size="small"
+          @click="filterByUsers = filterByUsers != key ? key : undefined"
+        >
+          👤 {{ key }}
+        </el-button>
+      </el-badge>
+      <span v-if="statUsers.length > 20">{{ $t('logs.tags_more') }}</span>
     </el-row>
 
     <h3>{{ $t('logs.data') }}</h3>
@@ -114,12 +136,14 @@ export default defineNuxtComponent({
     filterByAction?: string
     filterByUserGroups?: string
     filterBySelectors?: string
+    filterByUsers?: string
     scroolCount: number
   } {
     return {
       filterByAction: undefined,
       filterByUserGroups: undefined,
       filterBySelectors: undefined,
+      filterByUsers: undefined,
       scroolCount: 10,
     }
   },
@@ -155,9 +179,21 @@ export default defineNuxtComponent({
       return this.count(userGroups)
     },
 
+    statUsers() {
+      const users = this.logs
+        .map((log) =>
+          log.changesets.slice(1).map((changeset) => changeset.user)
+        )
+        .flat(2)
+      return this.count(users)
+    },
+
     logsWithFilter() {
-      return this.logs.filter(
-        (log) =>
+      return this.logs.filter((log) => {
+        const changesetsUsers =
+          this.filterByUsers !== undefined &&
+          _.uniq(log.changesets.slice(1).map((changeset) => changeset.user))
+        return (
           (this.filterByAction === undefined ||
             Object.values(log.diff_attribs || {})
               .concat(Object.values(log.diff_tags || {}))
@@ -174,8 +210,12 @@ export default defineNuxtComponent({
           (this.filterBySelectors === undefined ||
             log.matches.some((match) =>
               match.selectors.includes(this.filterBySelectors)
-            ))
-      )
+            )) &&
+          (this.filterByUsers === undefined ||
+            (changesetsUsers.length === 1 &&
+              changesetsUsers[0] === this.filterByUsers))
+        )
+      })
     },
   },
 
