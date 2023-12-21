@@ -28,11 +28,13 @@
       <template v-if="user">
         <h2>{{ $t('page.index.myProjects') }}</h2>
         <template v-if="myProjects.length > 0">
-          <Project
-            v-for="project in myProjects || []"
-            :key="project.id"
-            :project="project"
-          />
+          <el-space :fill="true" wrap :size="20">
+            <Project
+              v-for="project in myProjects"
+              :key="project.id"
+              :project="project"
+            />
+          </el-space>
         </template>
         <el-empty
           v-else
@@ -42,11 +44,13 @@
       </template>
       <h2>{{ $t('page.index.publicProjects') }}</h2>
       <template v-if="otherProjects.length > 0">
-        <Project
-          v-for="project in otherProjects || []"
-          :key="project.id"
-          :project="project"
-        />
+        <el-space :fill="true" wrap :size="20">
+          <Project
+            v-for="project in otherProjects"
+            :key="project.id"
+            :project="project"
+          />
+        </el-space>
       </template>
       <el-empty v-else :description="$t('page.index.empty')" :image-size="50" />
     </div>
@@ -78,6 +82,6 @@ const [user, projects] = [userAsyncData?.data, projectsAsyncData!.data]
 // Computed
 
 const [myProjects, otherProjects] = _.partition(projects.value, (project) =>
-  user?.projects?.includes(project.id)
+  user?.value?.projects.includes(project.id)
 )
 </script>

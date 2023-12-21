@@ -67,8 +67,8 @@
       <li>{{ $t('logs.data_details_manual') }}</li>
     </ul>
 
-    <template v-for="log in logsWithFilter || []" :key="log.id">
-      <el-card class="box-card">
+    <el-space :fill="true" wrap :size="20">
+      <el-card v-for="log in logsWithFilter || []" :key="log.id">
         <template #header>
           <div class="card-header">
             <span>
@@ -225,8 +225,7 @@
           </el-col>
         </el-row>
       </el-card>
-      <br />
-    </template>
+    </el-space>
 
     <iframe name="hidden_josm_target" style="display: none"></iframe>
   </div>
