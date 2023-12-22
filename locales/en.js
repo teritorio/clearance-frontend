@@ -34,6 +34,7 @@ export default {
     data_details_manual:
       'If after review it is ok, use the ✓ check to integrate the changes.',
     tags_more: '(and more)',
+    validate_selection: 'Validate all filtered',
   },
   project: {
     details: 'Details',

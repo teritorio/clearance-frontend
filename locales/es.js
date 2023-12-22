@@ -34,6 +34,7 @@ export default {
     data_details_manual:
       'Si después de la comprobación es correcto, utiliza ✓ para integrar los cambios.',
     tags_more: '(y mas)',
+    validate_selection: 'Validar objetos filtrados',
   },
   project: {
     details: 'Detalle',

@@ -1,7 +1,13 @@
 <template>
   <Layout :user="user">
     <ProjectLight :project="projectDetails" />
-    <Logs v-if="logs" :project="project" :user="user" :logs="logs" />
+    <Logs
+      v-if="logs"
+      :project="project"
+      :user="user"
+      :logs="logs"
+      @remove-logs="removeLogs($event)"
+    />
   </Layout>
 </template>
 
@@ -41,4 +47,13 @@ const [user, projectDetails, logs] = [
   projectAsyncData?.data,
   logsAsyncData?.data,
 ]
+
+function removeLogs(objectIds: ObjectId[]) {
+  logs.value = logs.value.filter(
+    (log) =>
+      objectIds.findIndex(
+        (objectId) => log.objtype === objectId.objtype && log.id === objectId.id
+      ) === -1
+  )
+}
 </script>

@@ -100,7 +100,7 @@
           <el-button
             type="primary"
             @click="
-              accept({
+              $emit('accept', {
                 objtype: log.objtype,
                 id: log.id,
                 version: log.change.version,
@@ -162,13 +162,7 @@
 import { PropType } from 'vue'
 import LazyComponent from 'v-lazy-component'
 import Diff from '~/components/Diff.vue'
-import {
-  ObjectId,
-  ObjTypeFull,
-  ObjType,
-  objTypeFull,
-  setLogs,
-} from '~/libs/types'
+import { ObjTypeFull, objTypeFull } from '~/libs/types'
 
 export default defineNuxtComponent({
   name: 'LogsComponent',
@@ -193,6 +187,10 @@ export default defineNuxtComponent({
     },
   },
 
+  emits: {
+    accept: (_objectId: ObjectId) => true,
+  },
+
   data(): {
     filterByAction?: string
     filterByUserGroups?: string
@@ -206,21 +204,6 @@ export default defineNuxtComponent({
   },
 
   methods: {
-    accept(objectId: ObjectId) {
-      setLogs(useRuntimeConfig().public.API, this.project, 'accept', [objectId])
-        .then(() => {
-          const index = this.logs.findIndex(
-            (log) => log.objtype === objectId.objtype && log.id === objectId.id
-          )
-          if (index > -1) {
-            this.logs.splice(index, 1)
-          }
-        })
-        .catch((error) => {
-          alert(error)
-        })
-    },
-
     objtypeFull(objtype: ObjType): ObjTypeFull {
       return objTypeFull(objtype)
     },

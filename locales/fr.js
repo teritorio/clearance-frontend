@@ -34,6 +34,7 @@ export default {
     data_details_manual:
       'Si, après examen, tout est bon, utilisez le contrôle ✓ pour intégrer les modifications.',
     tags_more: '(et plus)',
+    validate_selection: 'Valider les objets filtrés',
   },
   project: {
     details: 'Détails',

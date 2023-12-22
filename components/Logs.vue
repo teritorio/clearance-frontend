@@ -15,6 +15,7 @@
         <el-button
           type="danger"
           :plain="filterByAction != key"
+          :disabled="filterByAction && filterByAction != key"
           size="small"
           @click="filterByAction = filterByAction != key ? key : undefined"
         >
@@ -33,6 +34,7 @@
         <el-button
           type="primary"
           :plain="filterByUserGroups != key"
+          :disabled="filterByUserGroups && filterByUserGroups != key"
           size="small"
           @click="
             filterByUserGroups = filterByUserGroups != key ? key : undefined
@@ -53,6 +55,7 @@
         <el-button
           type="warning"
           :plain="filterBySelectors != key"
+          :disabled="filterBySelectors && filterBySelectors != key"
           size="small"
           @click="
             filterBySelectors = filterBySelectors != key ? key : undefined
@@ -73,6 +76,7 @@
         <el-button
           type="info"
           :plain="filterByUsers != key"
+          :disabled="filterByUsers && filterByUsers != key"
           size="small"
           @click="filterByUsers = filterByUsers != key ? key : undefined"
         >
@@ -81,6 +85,20 @@
       </el-badge>
       <span v-if="statUsers.length > 20">{{ $t('logs.tags_more') }}</span>
     </el-row>
+
+    <el-button-group
+      v-if="
+        isProjectUser &&
+        (filterByAction ||
+          filterByUserGroups ||
+          filterBySelectors ||
+          filterByUsers)
+      "
+    >
+      <el-button type="primary" @click="validate_selection()"
+        >✓ {{ $t('logs.validate_selection') }}</el-button
+      >
+    </el-button-group>
 
     <h3>{{ $t('logs.data') }}</h3>
     <p>{{ $t('logs.data_details') }}</p>
@@ -95,7 +113,8 @@
         :key="log.id"
         :log="log"
         :project="project"
-        :project-user="!!user?.projects?.includes(project)"
+        :project-user="isProjectUser"
+        @accept="accept([$event])"
       />
     </el-space>
 
@@ -108,7 +127,7 @@ import { PropType } from 'vue'
 import _ from 'underscore'
 import { User } from '~/libs/apiTypes'
 import Log from '~/components/Log.vue'
-import { Logs } from '~/libs/types'
+import { Logs, setLogs } from '~/libs/types'
 
 export default defineNuxtComponent({
   name: 'LogsComponent',
@@ -146,6 +165,10 @@ export default defineNuxtComponent({
       filterByUsers: undefined,
       scroolCount: 10,
     }
+  },
+
+  emits: {
+    'remove-logs': (_objectIds: ObjectId[]) => true,
   },
 
   computed: {
@@ -217,6 +240,10 @@ export default defineNuxtComponent({
         )
       })
     },
+
+    isProjectUser(): boolean {
+      return !!this.user?.projects?.includes(this.project)
+    },
   },
 
   methods: {
@@ -225,6 +252,36 @@ export default defineNuxtComponent({
         Object.entries(_.countBy(data)) as [string, number][],
         ([_key, count]) => -count
       )
+    },
+
+    accept(objectIds: ObjectId[]) {
+      setLogs(useRuntimeConfig().public.API, this.project, 'accept', objectIds)
+        .then(() => this.$emit('remove-logs', objectIds))
+        .catch((error) => {
+          alert(error)
+        })
+    },
+
+    accept_selection() {
+      const objectIds = this.logsWithFilter.map((log) => ({
+        objtype: log.objtype,
+        id: log.id,
+        version: log.change.version,
+        deleted: log.change.deleted,
+      }))
+      this.accept(objectIds)
+    },
+
+    reset_filter() {
+      this.filterByAction = undefined
+      this.filterByUserGroups = undefined
+      this.filterBySelectors = undefined
+      this.filterByUsers = undefined
+    },
+
+    validate_selection() {
+      this.accept_selection()
+      this.reset_filter()
     },
 
     scroolLoad(): void {
