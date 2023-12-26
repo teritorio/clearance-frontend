@@ -1,12 +1,19 @@
 <template>
-  <el-row>
-    <el-col v-if="back" :span="2">
-      <el-button tag="a" href="/">{{ $t('app.back') }}</el-button>
-    </el-col>
-    <el-col :span="4">
-      <User :user="user" />
-    </el-col>
-    <el-col :span="4">
+  <el-menu mode="horizontal" :ellipsis="false">
+    <el-menu-item v-if="back" index="0">
+      <a href="/" :title="$t('app.back')">
+        <img src="/favicon.svg" style="width: 6em" />
+      </a>
+    </el-menu-item>
+    <el-menu-item v-else index="0">
+      <img src="/favicon.svg" style="width: 6em" />
+    </el-menu-item>
+    <div class="flex-grow" />
+    <el-menu-item index="1">
+      <slot name="header" />
+    </el-menu-item>
+    <div class="flex-grow" />
+    <el-menu-item index="2">
       <el-select
         v-model="locale"
         class="m-2"
@@ -22,8 +29,11 @@
           :fit-input-width="true"
         />
       </el-select>
-    </el-col>
-  </el-row>
+    </el-menu-item>
+    <el-menu-item index="3">
+      <User :user="user" />
+    </el-menu-item>
+  </el-menu>
   <div>
     <slot />
   </div>
@@ -82,3 +92,9 @@ export default defineNuxtComponent({
   },
 })
 </script>
+
+<style scoped>
+.flex-grow {
+  flex-grow: 1;
+}
+</style>

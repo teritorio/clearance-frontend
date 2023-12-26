@@ -1,58 +1,26 @@
 <template>
-  <el-card class="box-card">
-    <template #header>
-      <div class="card-header">
-        <span>
-          <span class="title">{{ project.title.en }}</span>
-          <el-tag
-            v-for="tag in project.project_tags"
-            :key="tag"
-            class="item"
-            size="small"
-            >{{ tag }}</el-tag
-          >
-          <br />
-          <el-text class="mx-1" type="info">
-            {{ project.description.en }}
-          </el-text>
-        </span>
-        <el-button-group>
-          <el-button tag="a" :href="`/${project.id}/validators/`">
-            {{ $t('project.settings') }}
-          </el-button>
-          <el-button tag="a" type="primary" :href="`/${project.id}`">
-            {{ $t('project.details') }}
-          </el-button>
-        </el-button-group>
-      </div>
-    </template>
-    <div>
-      <el-row id="stats">
-        <el-col :span="12">
-          <div class="el-statistic">
-            <div class="el-statistic__head">{{ $t('project.lastUpdate') }}</div>
-            <div class="el-statistic__content">
-              <span class="el-statistic__number">
-                {{ lastUpdate }}
-              </span>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="12">
-          <div class="el-statistic">
-            <div class="el-statistic__head">
-              {{ $t('project.toBeValidated') }}
-            </div>
-            <div class="el-statistic__content">
-              <span class="el-statistic__number">
-                {{ toBeValidated }}
-              </span>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
-  </el-card>
+  <span>
+    <span class="title">{{ project.title.en }}</span>
+    <el-tag
+      v-for="tag in project.project_tags"
+      :key="tag"
+      class="item"
+      size="small"
+      >{{ tag }}</el-tag
+    >
+    <br />
+    <el-text class="mx-1" type="info">
+      {{ project.description.en }}
+    </el-text>
+  </span>
+  <el-button-group>
+    <el-button tag="a" :href="`/${project.id}/validators/`">
+      {{ $t('project.settings') }}
+    </el-button>
+    <el-button tag="a" :href="`/${project.id}`">
+      {{ $t('project.details') }}
+    </el-button>
+  </el-button-group>
 </template>
 
 <script lang="ts">
