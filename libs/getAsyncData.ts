@@ -1,5 +1,9 @@
 import { AsyncData, AsyncDataOptions } from 'nuxt/app'
-import { _Transform, KeysOf } from 'nuxt/dist/app/composables/asyncData'
+import {
+  _Transform,
+  KeysOf,
+  _AsyncData,
+} from 'nuxt/dist/app/composables/asyncData'
 import { NuxtApp } from 'nuxt/dist/app/nuxt'
 
 import { useAsyncData } from '#imports'
@@ -40,4 +44,12 @@ export function getAsyncDataOrNull<
       return asyncData
     }
   }) as AsyncData<DataT, DataE>
+}
+
+export function setAsyncRef<Type>(ref: Ref<Type | undefined>) {
+  return (data: _AsyncData<Type | null, Error>) => {
+    if (data?.data.value) {
+      ref.value = data?.data.value
+    }
+  }
 }

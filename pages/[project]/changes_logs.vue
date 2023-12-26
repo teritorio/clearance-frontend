@@ -1,20 +1,31 @@
 <template>
   <Layout :user="user">
     <template #header>
-      <ProjectLight :project="projectDetails" />
+      <ProjectLight v-if="projectDetails" :project="projectDetails" />
+      <template v-else>
+        <div v-loading="true"></div>
+      </template>
     </template>
     <LogsCompo
+      v-if="logs !== undefined"
       :project="project"
       :user="user"
       :logs="logs"
       @remove-logs="removeLogs($event)"
     />
+    <template v-else>
+      <div v-loading="true"></div>
+    </template>
   </Layout>
 </template>
 
 <script setup lang="ts">
-import { getUser } from '~/libs/apiTypes'
-import { getAsyncDataOrNull, getAsyncDataOrThrows } from '~/libs/getAsyncData'
+import { getUser, User } from '~/libs/apiTypes'
+import {
+  getAsyncDataOrNull,
+  getAsyncDataOrThrows,
+  setAsyncRef,
+} from '~/libs/getAsyncData'
 import LogsCompo from '~/components/Logs.vue'
 import { getLogs, getProject, Logs, ObjectId, Project } from '~/libs/types'
 
@@ -27,31 +38,24 @@ definePageMeta({
 const params = useRoute().params
 const project: string = params.project as string
 
-const getUserPromise = getAsyncDataOrNull('fetchUser', () =>
+const user = ref<User>()
+const projectDetails = ref<Project>()
+const logs = ref<Logs>()
+
+getAsyncDataOrNull('fetchUser', () =>
   getUser(useRuntimeConfig().public.API)
-)
+).then(setAsyncRef(user))
 
-const getProjectPromise = getAsyncDataOrThrows('fetchProject', () =>
+getAsyncDataOrThrows('fetchProject', () =>
   getProject(useRuntimeConfig().public.API, project)
-)
+).then(setAsyncRef(projectDetails))
 
-const getLogsPromise = getAsyncDataOrThrows('fetchSettings', () =>
+getAsyncDataOrThrows('fetchSettings', () =>
   getLogs(useRuntimeConfig().public.API, project)
-)
-
-const [userAsyncData, projectAsyncData, logsAsyncData] = await Promise.all([
-  getUserPromise,
-  getProjectPromise,
-  getLogsPromise,
-])
-const [user, projectDetails, logs] = [
-  userAsyncData?.data,
-  projectAsyncData!.data as Ref<Project>,
-  logsAsyncData!.data as Ref<Logs>,
-]
+).then(setAsyncRef(logs))
 
 function removeLogs(objectIds: ObjectId[]) {
-  logs.value = logs.value.filter(
+  logs.value = logs.value?.filter(
     (log) =>
       objectIds.findIndex(
         (objectId) => log.objtype === objectId.objtype && log.id === objectId.id

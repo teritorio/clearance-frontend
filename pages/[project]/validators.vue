@@ -1,13 +1,31 @@
 <template>
   <Layout :user="user">
-    <Validators :validators="validators" />
+    <template #header>
+      <ProjectLight v-if="projectDetails" :project="projectDetails" />
+      <template v-else>
+        <div v-loading="true"></div>
+      </template>
+    </template>
+    <Validators v-if="validators" :validators="validators" />
+    <template v-else>
+      <div v-loading="true"></div>
+    </template>
   </Layout>
 </template>
 
 <script setup lang="ts">
-import { getUser } from '~/libs/apiTypes'
-import { getAsyncDataOrNull, getAsyncDataOrThrows } from '~/libs/getAsyncData'
-import { getValidators, Validators as ValidatorsType } from '~/libs/types'
+import { getUser, User } from '~/libs/apiTypes'
+import {
+  getAsyncDataOrNull,
+  getAsyncDataOrThrows,
+  setAsyncRef,
+} from '~/libs/getAsyncData'
+import {
+  getProject,
+  getValidators,
+  Project,
+  Validators as ValidatorsType,
+} from '~/libs/types'
 
 definePageMeta({
   validate({ params }) {
@@ -16,21 +34,21 @@ definePageMeta({
 })
 
 const params = useRoute().params
+const project: string = params.project as string
 
-const getUserPromise = getAsyncDataOrNull('fetchUser', () =>
+const user = ref<User>()
+const projectDetails = ref<Project>()
+const validators = ref<ValidatorsType>()
+
+getAsyncDataOrNull('fetchUser', () =>
   getUser(useRuntimeConfig().public.API)
-)
+).then(setAsyncRef(user))
 
-const getValidatorsPromise = getAsyncDataOrThrows('fetchSettings', () =>
-  getValidators(useRuntimeConfig().public.API, params.project as string)
-)
+getAsyncDataOrThrows('fetchProject', () =>
+  getProject(useRuntimeConfig().public.API, project)
+).then(setAsyncRef(projectDetails))
 
-const [userAsyncData, validatorsAsyncData] = await Promise.all([
-  getUserPromise,
-  getValidatorsPromise,
-])
-const [user, validators] = [
-  userAsyncData?.data,
-  validatorsAsyncData!.data as Ref<ValidatorsType>,
-]
+getAsyncDataOrThrows('fetchValidators', () =>
+  getValidators(useRuntimeConfig().public.API, project)
+).then(setAsyncRef(validators))
 </script>

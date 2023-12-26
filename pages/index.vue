@@ -25,25 +25,25 @@
         </el-col>
       </el-row>
 
-      <template v-if="user">
+      <template v-if="myProjects !== undefined && myProjects?.length > 0">
         <h2>{{ $t('page.index.myProjects') }}</h2>
-        <template v-if="myProjects.length > 0">
-          <el-space :fill="true" wrap :size="20">
-            <Project
-              v-for="project in myProjects"
-              :key="project.id"
-              :project="project"
-            />
-          </el-space>
-        </template>
+        <el-space :fill="true" wrap :size="20">
+          <Project
+            v-for="project in myProjects"
+            :key="project.id"
+            :project="project"
+          />
+        </el-space>
+      </template>
+      <h2>{{ $t('page.index.publicProjects') }}</h2>
+      <template v-if="otherProjects === undefined">
         <el-empty
-          v-else
+          v-loading="true"
           :description="$t('page.index.empty')"
           :image-size="50"
         />
       </template>
-      <h2>{{ $t('page.index.publicProjects') }}</h2>
-      <template v-if="otherProjects.length > 0">
+      <template v-else-if="otherProjects.length > 0">
         <el-space :fill="true" wrap :size="20">
           <Project
             v-for="project in otherProjects"
@@ -59,32 +59,32 @@
 
 <script setup lang="ts">
 import _ from 'underscore'
-import { getUser } from '~/libs/apiTypes'
-import { getAsyncDataOrNull, getAsyncDataOrThrows } from '~/libs/getAsyncData'
-import { getProjects , Projects } from '~/libs/types'
+import { getUser, User } from '~/libs/apiTypes'
+import {
+  getAsyncDataOrNull,
+  getAsyncDataOrThrows,
+  setAsyncRef,
+} from '~/libs/getAsyncData'
+import { getProjects, Projects } from '~/libs/types'
 
-const getUserPromise = getAsyncDataOrNull('fetchUser', () =>
+const user = ref<User>()
+const myProjects = ref<Projects>()
+const otherProjects = ref<Projects>()
+
+getAsyncDataOrNull('fetchUser', () =>
   getUser(useRuntimeConfig().public.API)
-)
+).then(setAsyncRef(user))
 
-const getProjectsPromise = getAsyncDataOrThrows('fetchSettings', () =>
+getAsyncDataOrThrows('fetchSettings', () =>
   getProjects(useRuntimeConfig().public.API)
-)
+).then((data) => {
+  const projects = data.data as Ref<Projects>
 
-const [userAsyncData, projectsAsyncData] = await Promise.all([
-  getUserPromise,
-  getProjectsPromise,
-])
-
-const [user, projects] = [
-  userAsyncData?.data,
-  projectsAsyncData!.data as Ref<Projects>,
-]
-
-// Computed
-
-const [myProjects, otherProjects] = _.partition(
-  projects.value,
-  (project) => user?.value?.projects.includes(project.id) || false
-)
+  const [my, other] = _.partition(
+    projects.value,
+    (project) => user?.value?.projects.includes(project.id) || false
+  )
+  myProjects.value = my
+  otherProjects.value = other
+})
 </script>

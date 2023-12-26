@@ -1,12 +1,19 @@
 <template>
   <Layout :user="user">
-    <ProjectCompo :project="projectDetails" />
+    <ProjectCompo v-if="projectDetails" :project="projectDetails" />
+    <template v-else>
+      <div v-loading="true"></div>
+    </template>
   </Layout>
 </template>
 
 <script setup lang="ts">
-import { getUser } from '~/libs/apiTypes'
-import { getAsyncDataOrNull, getAsyncDataOrThrows } from '~/libs/getAsyncData'
+import { getUser, User } from '~/libs/apiTypes'
+import {
+  getAsyncDataOrNull,
+  getAsyncDataOrThrows,
+  setAsyncRef,
+} from '~/libs/getAsyncData'
 import ProjectCompo from '~/components/Project.vue'
 import { getProject, Project } from '~/libs/types'
 
@@ -19,20 +26,14 @@ definePageMeta({
 const params = useRoute().params
 const project: string = params.project as string
 
-const getUserPromise = getAsyncDataOrNull('fetchUser', () =>
+const user = ref<User>()
+const projectDetails = ref<Project>()
+
+getAsyncDataOrNull('fetchUser', () =>
   getUser(useRuntimeConfig().public.API)
-)
+).then(setAsyncRef(user))
 
-const getProjectPromise = getAsyncDataOrThrows('fetchProject', () =>
+getAsyncDataOrThrows('fetchProject', () =>
   getProject(useRuntimeConfig().public.API, project)
-)
-
-const [userAsyncData, projectAsyncData] = await Promise.all([
-  getUserPromise,
-  getProjectPromise,
-])
-const [user, projectDetails] = [
-  userAsyncData?.data,
-  projectAsyncData!.data as Ref<Project>,
-]
+).then(setAsyncRef(projectDetails))
 </script>
