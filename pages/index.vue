@@ -61,8 +61,7 @@
 import _ from 'underscore'
 import { getUser } from '~/libs/apiTypes'
 import { getAsyncDataOrNull, getAsyncDataOrThrows } from '~/libs/getAsyncData'
-import { getProjects } from '~/libs/types'
-import Project from '~/components/Project.vue'
+import { getProjects , Projects } from '~/libs/types'
 
 const getUserPromise = getAsyncDataOrNull('fetchUser', () =>
   getUser(useRuntimeConfig().public.API)
@@ -77,11 +76,15 @@ const [userAsyncData, projectsAsyncData] = await Promise.all([
   getProjectsPromise,
 ])
 
-const [user, projects] = [userAsyncData?.data, projectsAsyncData!.data]
+const [user, projects] = [
+  userAsyncData?.data,
+  projectsAsyncData!.data as Ref<Projects>,
+]
 
 // Computed
 
-const [myProjects, otherProjects] = _.partition(projects.value, (project) =>
-  user?.value?.projects.includes(project.id)
+const [myProjects, otherProjects] = _.partition(
+  projects.value,
+  (project) => user?.value?.projects.includes(project.id) || false
 )
 </script>

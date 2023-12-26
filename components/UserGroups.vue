@@ -42,6 +42,7 @@ import {
 } from 'maplibre-gl'
 import GeoJSON from 'geojson'
 import bbox from '@turf/bbox'
+import _ from 'underscore'
 import { UserGroup } from '~/libs/types'
 
 const colors = ['#2364AA', '#EA7317', '#73BFB8', '#FEC601', '#3DA5D9']
@@ -62,29 +63,39 @@ export default defineNuxtComponent({
   },
 
   mounted() {
-    const fetchAllPolygons: Promise<GeoJSON.Polygon | GeoJSON.MultiPolygon>[] =
-      this.userGroups
-        .map((userGroup, index) => {
-          userGroup.color = colors[index % colors.length]
-          return userGroup
-        })
-        .filter((userGroup) => userGroup.polygon)
-        .map((userGroup) => {
-          return fetch(userGroup.polygon).then(async (data) => {
-            if (data.ok) {
-              const geojson: GeoJSON.Polygon | GeoJSON.MultiPolygon = {
-                type: 'Feature',
-                geometry: await data.json(),
-                properties: { color: userGroup.color },
-              }
-              return Promise.resolve(geojson)
+    const fetchAllPolygons: Promise<
+      GeoJSON.Feature<GeoJSON.Polygon | GeoJSON.MultiPolygon> | undefined
+    >[] = this.userGroups
+      .map((userGroup, index) => {
+        return {
+          ...userGroup,
+          color: colors[index % colors.length],
+        }
+      })
+      .filter((userGroup) => !!userGroup.polygon)
+      .map((userGroup) => {
+        return fetch(userGroup.polygon!).then(async (data) => {
+          if (data.ok) {
+            const geojson: GeoJSON.Feature<
+              GeoJSON.Polygon | GeoJSON.MultiPolygon
+            > = {
+              type: 'Feature',
+              geometry: await data.json(),
+              properties: { color: userGroup.color },
             }
-          })
+            return Promise.resolve(geojson)
+          }
         })
+      })
 
     Promise.all(fetchAllPolygons).then((allPolygons) => {
-      const geojson = { type: 'FeatureCollection', features: allPolygons }
-      const bounds = new LngLatBounds(bbox(geojson))
+      const geojson = {
+        type: 'FeatureCollection',
+        features: _.compact(allPolygons),
+      }
+      const bounds = new LngLatBounds(
+        bbox(geojson) as [number, number, number, number]
+      )
 
       const map = new Map({
         container: this.mapContainer!,
@@ -126,8 +137,10 @@ export default defineNuxtComponent({
   computed: {
     groups() {
       return Object.values(this.userGroups).map((userGroup, index) => {
-        userGroup.color = colors[index % colors.length]
-        return userGroup
+        return {
+          ...userGroup,
+          color: colors[index % colors.length],
+        }
       })
     },
   },

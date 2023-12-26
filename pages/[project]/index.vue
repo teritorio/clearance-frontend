@@ -1,13 +1,14 @@
 <template>
   <Layout :user="user">
-    <Project :project="projectDetails" />
+    <ProjectCompo :project="projectDetails" />
   </Layout>
 </template>
 
 <script setup lang="ts">
 import { getUser } from '~/libs/apiTypes'
 import { getAsyncDataOrNull, getAsyncDataOrThrows } from '~/libs/getAsyncData'
-import { getProject } from '~/libs/types'
+import ProjectCompo from '~/components/Project.vue'
+import { getProject, Project } from '~/libs/types'
 
 definePageMeta({
   validate({ params }) {
@@ -30,5 +31,8 @@ const [userAsyncData, projectAsyncData] = await Promise.all([
   getUserPromise,
   getProjectPromise,
 ])
-const [user, projectDetails] = [userAsyncData?.data, projectAsyncData?.data]
+const [user, projectDetails] = [
+  userAsyncData?.data,
+  projectAsyncData!.data as Ref<Project>,
+]
 </script>

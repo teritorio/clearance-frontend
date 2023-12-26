@@ -40,7 +40,7 @@ import { PropType } from 'vue'
 import { Validators } from '~/libs/types'
 
 export default defineNuxtComponent({
-  name: 'ValidatorsComponent',
+  name: 'ValidatorsCompo',
 
   props: {
     validators: {

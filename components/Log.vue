@@ -12,7 +12,7 @@
             {{ log.objtype }}{{ log.id }}
           </a>
           -
-          {{ log.base.tags.name || log.change.tags.name }}
+          {{ log.base?.tags.name || log.change.tags.name }}
         </span>
         <span>
           <el-tag
@@ -144,20 +144,20 @@
           :clear="['members', 'geom']"
         />
         <LazyComponent
-          v-if="log.base.geom || log.change.geom"
+          v-if="log.base?.geom || log.change.geom"
           style="border: 1px solid lightgrey"
         >
           <DiffMap
             :id="log.id"
             :objtype="log.objtype"
-            :base-geom="log.base.geom"
+            :base-geom="log.base?.geom"
             :change-geom="log.change.geom"
           />
         </LazyComponent>
       </el-col>
       <el-col :span="10">
         <Diff
-          :src="log.base.tags"
+          :src="log.base?.tags"
           :dst="log.change.tags"
           :diff="log.diff_tags || {}"
         />
@@ -168,9 +168,10 @@
 
 <script lang="ts">
 import { PropType } from 'vue'
+// @ts-ignore
 import LazyComponent from 'v-lazy-component'
 import Diff from '~/components/Diff.vue'
-import { ObjTypeFull, objTypeFull } from '~/libs/types'
+import { Log, ObjectId, ObjType, ObjTypeFull, objTypeFull } from '~/libs/types'
 
 export default defineNuxtComponent({
   name: 'LogsComponent',

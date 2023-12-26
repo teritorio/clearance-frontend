@@ -15,7 +15,7 @@
         <el-button
           type="danger"
           :plain="filterByAction != key"
-          :disabled="filterByAction && filterByAction != key"
+          :disabled="(filterByAction && filterByAction != key) || false"
           size="small"
           @click="filterByAction = filterByAction != key ? key : undefined"
         >
@@ -34,7 +34,7 @@
         <el-button
           type="primary"
           :plain="filterByUserGroups != key"
-          :disabled="filterByUserGroups && filterByUserGroups != key"
+          :disabled="(filterByUserGroups && filterByUserGroups != key) || false"
           size="small"
           @click="
             filterByUserGroups = filterByUserGroups != key ? key : undefined
@@ -55,7 +55,7 @@
         <el-button
           type="warning"
           :plain="filterBySelectors != key"
-          :disabled="filterBySelectors && filterBySelectors != key"
+          :disabled="(filterBySelectors && filterBySelectors != key) || false"
           size="small"
           @click="
             filterBySelectors = filterBySelectors != key ? key : undefined
@@ -76,7 +76,7 @@
         <el-button
           type="info"
           :plain="filterByUsers != key"
-          :disabled="filterByUsers && filterByUsers != key"
+          :disabled="(filterByUsers && filterByUsers != key) || false"
           size="small"
           @click="filterByUsers = filterByUsers != key ? key : undefined"
         >
@@ -127,7 +127,7 @@ import { PropType } from 'vue'
 import _ from 'underscore'
 import { User } from '~/libs/apiTypes'
 import Log from '~/components/Log.vue'
-import { Logs, setLogs } from '~/libs/types'
+import { Logs, ObjectId, setLogs } from '~/libs/types'
 
 export default defineNuxtComponent({
   name: 'LogsComponent',
@@ -159,10 +159,14 @@ export default defineNuxtComponent({
     scroolCount: number
   } {
     return {
-      filterByAction: this.$route.query.filterByAction,
-      filterByUserGroups: this.$route.query.filterByUserGroups,
-      filterBySelectors: this.$route.query.filterBySelectors,
-      filterByUsers: this.$route.query.filterByUsers,
+      filterByAction: this.$route.query.filterByAction as string | undefined,
+      filterByUserGroups: this.$route.query.filterByUserGroups as
+        | string
+        | undefined,
+      filterBySelectors: this.$route.query.filterBySelectors as
+        | string
+        | undefined,
+      filterByUsers: this.$route.query.filterByUsers as string | undefined,
       scroolCount: 10,
     }
   },
@@ -255,10 +259,11 @@ export default defineNuxtComponent({
             )) &&
           (this.filterBySelectors === undefined ||
             log.matches.some((match) =>
-              match.selectors.includes(this.filterBySelectors)
+              match.selectors.includes(this.filterBySelectors!)
             )) &&
           (this.filterByUsers === undefined ||
-            (changesetsUsers.length === 1 &&
+            (changesetsUsers &&
+              changesetsUsers.length === 1 &&
               changesetsUsers[0] === this.filterByUsers))
         )
       })
@@ -313,7 +318,7 @@ export default defineNuxtComponent({
 
     updateUrl(): void {
       this.$router.replace({
-        name: this.$route.name,
+        name: this.$route.name || undefined,
         query: {
           ...this.$route.query,
           filterByAction: this.filterByAction,

@@ -1,15 +1,13 @@
 <template>
   <Layout :user="user">
-    <div v-if="validators">
-      <Validators :validators="validators" />
-    </div>
+    <Validators :validators="validators" />
   </Layout>
 </template>
 
 <script setup lang="ts">
 import { getUser } from '~/libs/apiTypes'
 import { getAsyncDataOrNull, getAsyncDataOrThrows } from '~/libs/getAsyncData'
-import { getValidators } from '~/libs/types'
+import { getValidators, Validators as ValidatorsType } from '~/libs/types'
 
 definePageMeta({
   validate({ params }) {
@@ -31,5 +29,8 @@ const [userAsyncData, validatorsAsyncData] = await Promise.all([
   getUserPromise,
   getValidatorsPromise,
 ])
-const [user, validators] = [userAsyncData?.data, validatorsAsyncData?.data]
+const [user, validators] = [
+  userAsyncData?.data,
+  validatorsAsyncData!.data as Ref<ValidatorsType>,
+]
 </script>

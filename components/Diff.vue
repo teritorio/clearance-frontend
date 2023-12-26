@@ -149,7 +149,7 @@ export default defineNuxtComponent({
   props: {
     src: {
       type: Object as PropType<Record<string, any>>,
-      required: true,
+      default: {},
     },
     dst: {
       type: Object as PropType<Record<string, any>>,

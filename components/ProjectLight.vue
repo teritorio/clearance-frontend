@@ -45,7 +45,7 @@ export default defineNuxtComponent({
   props: {
     project: {
       type: Object as PropType<Project>,
-      default: null,
+      required: true,
     },
   },
 

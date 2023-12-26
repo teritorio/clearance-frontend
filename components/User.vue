@@ -26,7 +26,7 @@ export default defineNuxtComponent({
   },
 
   setup() {
-    const form = shallowRef(null)
+    const form = shallowRef<HTMLFormElement>()
     return { form }
   },
 
@@ -38,7 +38,7 @@ export default defineNuxtComponent({
 
   methods: {
     submit(): void {
-      this.form.submit()
+      this.form?.submit()
     },
     logout(): void {
       userLogout(useRuntimeConfig().public.API)

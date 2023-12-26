@@ -3,8 +3,7 @@
     <template #header>
       <ProjectLight :project="projectDetails" />
     </template>
-    <Logs
-      v-if="logs"
+    <LogsCompo
       :project="project"
       :user="user"
       :logs="logs"
@@ -16,7 +15,8 @@
 <script setup lang="ts">
 import { getUser } from '~/libs/apiTypes'
 import { getAsyncDataOrNull, getAsyncDataOrThrows } from '~/libs/getAsyncData'
-import { getLogs, getProject } from '~/libs/types'
+import LogsCompo from '~/components/Logs.vue'
+import { getLogs, getProject, Logs, ObjectId, Project } from '~/libs/types'
 
 definePageMeta({
   validate({ params }) {
@@ -46,8 +46,8 @@ const [userAsyncData, projectAsyncData, logsAsyncData] = await Promise.all([
 ])
 const [user, projectDetails, logs] = [
   userAsyncData?.data,
-  projectAsyncData?.data,
-  logsAsyncData?.data,
+  projectAsyncData!.data as Ref<Project>,
+  logsAsyncData!.data as Ref<Logs>,
 ]
 
 function removeLogs(objectIds: ObjectId[]) {
