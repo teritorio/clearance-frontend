@@ -114,8 +114,16 @@
     </template>
     <el-row :gutter="20">
       <el-col :span="7">
-        v{{ log.base['version'] }} ⮞ v{{ log.change['version'] }}
-        <Changesets :changesets="log.changesets.slice(1)" />
+        <template v-if="log.base">v{{ log.base['version'] }} ⮞ </template>v{{
+          log.change['version']
+        }}
+        <Changesets
+          :changesets="
+            log.changesets.length === 1
+              ? log.changesets.slice(0, 0)
+              : log.changesets.slice(1)
+          "
+        />
       </el-col>
       <el-col :span="7">
         <Diff

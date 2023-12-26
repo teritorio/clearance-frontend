@@ -205,7 +205,10 @@ export default defineNuxtComponent({
     statUsers() {
       const users = this.logs
         .map((log) =>
-          log.changesets.slice(1).map((changeset) => changeset.user)
+          (log.changesets.length === 1
+            ? log.changesets.slice(0, 0)
+            : log.changesets.slice(1)
+          ).map((changeset) => changeset.user)
         )
         .flat(2)
       return this.count(users)
@@ -215,7 +218,12 @@ export default defineNuxtComponent({
       return this.logs.filter((log) => {
         const changesetsUsers =
           this.filterByUsers !== undefined &&
-          _.uniq(log.changesets.slice(1).map((changeset) => changeset.user))
+          _.uniq(
+            (log.changesets.length === 1
+              ? log.changesets.slice(0, 0)
+              : log.changesets.slice(1)
+            ).map((changeset) => changeset.user)
+          )
         return (
           (this.filterByAction === undefined ||
             Object.values(log.diff_attribs || {})

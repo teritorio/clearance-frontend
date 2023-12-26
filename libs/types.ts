@@ -58,7 +58,7 @@ export type Actions = Record<Key, Action[]>
 export type Log = {
   objtype: ObjType
   id: number
-  base: Subject
+  base?: Subject
   change: Subject
   matches: Match[]
   action: LogAction
