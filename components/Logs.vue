@@ -159,12 +159,27 @@ export default defineNuxtComponent({
     scroolCount: number
   } {
     return {
-      filterByAction: undefined,
-      filterByUserGroups: undefined,
-      filterBySelectors: undefined,
-      filterByUsers: undefined,
+      filterByAction: this.$route.query.filterByAction,
+      filterByUserGroups: this.$route.query.filterByUserGroups,
+      filterBySelectors: this.$route.query.filterBySelectors,
+      filterByUsers: this.$route.query.filterByUsers,
       scroolCount: 10,
     }
+  },
+
+  watch: {
+    filterByAction() {
+      this.updateUrl()
+    },
+    filterByUserGroups() {
+      this.updateUrl()
+    },
+    filterBySelectors() {
+      this.updateUrl()
+    },
+    filterByUsers() {
+      this.updateUrl()
+    },
   },
 
   emits: {
@@ -294,6 +309,19 @@ export default defineNuxtComponent({
 
     scroolLoad(): void {
       this.scroolCount += 10
+    },
+
+    updateUrl(): void {
+      this.$router.replace({
+        name: this.$route.name,
+        query: {
+          ...this.$route.query,
+          filterByAction: this.filterByAction,
+          filterByUserGroups: this.filterByUserGroups,
+          filterBySelectors: this.filterBySelectors,
+          filterByUsers: this.filterByUsers,
+        },
+      })
     },
   },
 })
