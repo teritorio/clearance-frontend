@@ -118,11 +118,7 @@
           log.change['version']
         }}
         <Changesets
-          :changesets="
-            log.changesets.length === 1
-              ? log.changesets.slice(0, 0)
-              : log.changesets.slice(1)
-          "
+          :changesets="log.base ? log.changesets.slice(1) : log.changesets"
         />
       </el-col>
       <el-col :span="7">
