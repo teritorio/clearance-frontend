@@ -96,7 +96,7 @@
           >
             <template v-if="clear.includes(key)">[...]</template>
             <template v-else-if="diff[key]">
-              <span v-if="!(key in src)">{{ dst[key] }} </span>
+              <span v-if="!src || !(key in src)">{{ dst[key] }} </span>
               <span v-else-if="!(key in dst)">{{ src[key] }} </span>
               <span
                 v-else-if="
@@ -149,7 +149,7 @@ export default defineNuxtComponent({
   props: {
     src: {
       type: Object as PropType<Record<string, any>>,
-      default: {},
+      required: false,
     },
     dst: {
       type: Object as PropType<Record<string, any>>,
@@ -172,7 +172,7 @@ export default defineNuxtComponent({
   computed: {
     groupedKeys(): string[][] {
       const keys: string[] = _.sortBy(
-        _.uniq([...Object.keys(this.src), ...Object.keys(this.dst)]),
+        _.uniq([...Object.keys(this.src || {}), ...Object.keys(this.dst)]),
         (key) => (this.diff[key] ? -maxActionPriority(this.diff[key]) : 0)
       )
 
@@ -188,7 +188,7 @@ export default defineNuxtComponent({
     backgroundClass(key: string): string {
       return (
         this.diff[key] &&
-        (!(key in this.src)
+        (!this.src || !(key in this.src)
           ? 'attribute-added'
           : !(key in this.dst)
           ? 'attribute-removed'
@@ -199,7 +199,11 @@ export default defineNuxtComponent({
     actionIcon(key: string): string {
       return (
         this.diff[key] &&
-        (!(key in this.src) ? '➕' : !(key in this.dst) ? '✖' : '~')
+        (!this.src || !(key in this.src)
+          ? '➕'
+          : !(key in this.dst)
+          ? '✖'
+          : '~')
       )
     },
 
