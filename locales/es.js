@@ -24,6 +24,7 @@ export default {
   },
   logs: {
     objects: 'Objetos',
+    created: 'creado',
     deleted: 'borrado',
     filters: 'Filtros',
     data: 'Grupo de datos a examinar',

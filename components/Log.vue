@@ -14,9 +14,18 @@
           -
           {{ log.base?.tags.name || log.change.tags.name }}
         </span>
-        <span>
+        <span v-if="!log.base">
           <el-tag
-            v-if="log.diff_attribs && log.diff_attribs['deleted']"
+            type="success"
+            size="small"
+            :disable-transitions="true"
+            class="item"
+          >
+            {{ $t('logs.created') }}
+          </el-tag>
+        </span>
+        <span v-if="log.diff_attribs && log.diff_attribs['deleted']">
+          <el-tag
             type="danger"
             size="small"
             :disable-transitions="true"
