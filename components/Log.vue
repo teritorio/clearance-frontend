@@ -177,11 +177,13 @@ import { PropType } from 'vue'
 import LazyComponent from 'v-lazy-component'
 import Diff from '~/components/Diff.vue'
 import { Log, ObjectId, ObjType, ObjTypeFull, objTypeFull } from '~/libs/types'
+import Changesets from '~/components/Changesets.vue'
 
 export default defineNuxtComponent({
   name: 'LogsComponent',
 
   components: {
+    Changesets,
     Diff,
     LazyComponent,
   },
