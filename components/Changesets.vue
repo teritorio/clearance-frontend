@@ -1,7 +1,7 @@
 <template>
   <el-timeline>
     <el-timeline-item
-      v-for="(changeset, index) in changesets.reverse()"
+      v-for="(changeset, index) in changesets"
       :key="index"
       :timestamp="changeset.created_at"
       placement="top"
