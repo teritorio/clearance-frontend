@@ -22,7 +22,7 @@ export type Member = {
 export interface Subject extends Record<string, any> {
   version: number
   deleted: boolean
-  changeset: number
+  changeset_id: number
   created: string
   tags: Tags
   members?: Member[]
