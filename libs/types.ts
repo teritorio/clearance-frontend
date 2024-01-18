@@ -46,7 +46,9 @@ export type Changeset = {
 }
 
 export type Match = {
-  selectors: string
+  icon: string
+  name: MultilingualString
+  selectors: string[]
   sources: string[]
   user_groups: string[]
 }

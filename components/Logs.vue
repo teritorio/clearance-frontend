@@ -46,22 +46,27 @@
     </el-row>
     <el-row>
       <el-badge
-        v-for="[key, count] in statSelectors"
-        :key="key"
+        v-for="[match, count] in statSelectors"
+        :key="match.selectors.join(';')"
         :value="count"
         class="item"
         :max="999"
       >
         <el-button
           type="warning"
-          :plain="filterBySelectors != key"
-          :disabled="(filterBySelectors && filterBySelectors != key) || false"
+          :plain="filterBySelectors != match.selectors"
+          :disabled="
+            (filterBySelectors && !matchFilterBySelectors(match.selectors)) ||
+            false
+          "
           size="small"
           @click="
-            filterBySelectors = filterBySelectors != key ? key : undefined
+            filterBySelectors = !matchFilterBySelectors(match.selectors)
+              ? match.selectors
+              : undefined
           "
         >
-          🏷️ {{ key }}
+          🏷️ {{ $i18nHash(match.name) }}
         </el-button>
       </el-badge>
     </el-row>
@@ -154,7 +159,7 @@ export default defineNuxtComponent({
   data(): {
     filterByAction?: string
     filterByUserGroups?: string
-    filterBySelectors?: string
+    filterBySelectors?: string[]
     filterByUsers?: string
     scroolCount: number
   } {
@@ -164,7 +169,7 @@ export default defineNuxtComponent({
         | string
         | undefined,
       filterBySelectors: this.$route.query.filterBySelectors as
-        | string
+        | string[]
         | undefined,
       filterByUsers: this.$route.query.filterByUsers as string | undefined,
       scroolCount: 10,
@@ -208,10 +213,8 @@ export default defineNuxtComponent({
     },
 
     statSelectors() {
-      const selectors = this.logs
-        .map((log) => _.uniq(log.matches.map((m) => m.selectors)).flat())
-        .flat(1)
-      return this.count(selectors)
+      const matches = this.logs.map((log) => _.uniq(log.matches).flat()).flat(1)
+      return this.count(matches, (m) => m.selectors.join(';'))
     },
 
     statUserGroups() {
@@ -257,7 +260,7 @@ export default defineNuxtComponent({
             )) &&
           (this.filterBySelectors === undefined ||
             log.matches.some((match) =>
-              match.selectors.includes(this.filterBySelectors!)
+              this.matchFilterBySelectors(match.selectors)
             )) &&
           (this.filterByUsers === undefined ||
             (changesetsUsers &&
@@ -273,11 +276,15 @@ export default defineNuxtComponent({
   },
 
   methods: {
-    count(data: string[]): [string, number][] {
+    count<Type>(
+      data: Type[],
+      key: (o: Type) => string = (i) => `${i}`
+    ): [Type, number][] {
+      const index = _.indexBy(data, key)
       return _.sortBy(
-        Object.entries(_.countBy(data)) as [string, number][],
+        Object.entries(_.countBy(data, key)) as [string, number][],
         ([_key, count]) => -count
-      )
+      ).map(([key, count]) => [index[key], count])
     },
 
     accept(objectIds: ObjectId[]) {
@@ -325,6 +332,13 @@ export default defineNuxtComponent({
           filterByUsers: this.filterByUsers,
         },
       })
+    },
+
+    matchFilterBySelectors(selectors: string[]): boolean {
+      return (
+        this.filterBySelectors !== undefined &&
+        _.intersection(selectors, this.filterBySelectors).length > 0
+      )
     },
   },
 })

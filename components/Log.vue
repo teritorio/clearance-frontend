@@ -42,21 +42,23 @@
             :key="text"
             size="small"
             class="item"
-            :effect="filterByUserGroups == text ? 'dark' : undefined"
           >
             📌 {{ text }}
           </el-tag>
           <el-tag
-            v-for="text in [
-              ...new Set(log.matches.map((m) => m.selectors).flat()),
-            ].sort()"
-            :key="text"
+            v-for="match in log.matches.sort()"
+            :key="match.selectors.join(';')"
             size="small"
             type="warning"
             class="item"
-            :effect="filterBySelectors == text ? 'dark' : undefined"
           >
-            🏷️ {{ text }}
+            <div>
+              🏷️ {{ $i18nHash(match.name) }}
+              <br />
+              <div v-for="selector in match.selectors" :key="selector">
+                {{ selector }}
+              </div>
+            </div>
           </el-tag>
         </span>
         <el-button-group>
@@ -205,18 +207,6 @@ export default defineNuxtComponent({
 
   emits: {
     accept: (_objectId: ObjectId) => true,
-  },
-
-  data(): {
-    filterByAction?: string
-    filterByUserGroups?: string
-    filterBySelectors?: string
-  } {
-    return {
-      filterByAction: undefined,
-      filterByUserGroups: undefined,
-      filterBySelectors: undefined,
-    }
   },
 
   methods: {
