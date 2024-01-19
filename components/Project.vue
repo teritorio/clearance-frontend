@@ -3,7 +3,7 @@
     <template #header>
       <div class="card-header">
         <span>
-          <span class="title">{{ project.title.en }}</span>
+          <span class="title">{{ $i18nHash(project.title) }}</span>
           <el-tag
             v-for="tag in project.project_tags"
             :key="tag"
@@ -13,7 +13,7 @@
           >
           <br />
           <el-text class="mx-1" type="info">
-            {{ project.description.en }}
+            {{ $i18nHash(project.description) }}
           </el-text>
         </span>
         <el-button-group>
