@@ -1,5 +1,12 @@
 <template>
   <div>
+    <el-row>
+      <DiffMap
+        :base-geom="baseGeoms"
+        :change-geom="changeGeoms"
+        style="resize: vertical"
+      />
+    </el-row>
     <h3>{{ $t('logs.filters') }}</h3>
     <el-row style="margin-top: 20px">
       <el-badge :value="logs.length" class="item" :max="999">
@@ -150,6 +157,7 @@
 <script lang="ts">
 import { PropType } from 'vue'
 import _ from 'underscore'
+import { Geometry } from 'geojson'
 import { User } from '~/libs/apiTypes'
 import Log from '~/components/Log.vue'
 import { Logs, ObjectId, setLogs } from '~/libs/types'
@@ -304,6 +312,16 @@ export default defineNuxtComponent({
 
     isProjectUser(): boolean {
       return !!this.user?.projects?.includes(this.project)
+    },
+
+    baseGeoms(): Geometry[] {
+      return this.logs
+        .map((log) => log.base?.geom)
+        .filter((geom): geom is Geometry => !!geom)
+    },
+
+    changeGeoms(): Geometry[] {
+      return this.logs.map((log) => log.change.geom)
     },
   },
 

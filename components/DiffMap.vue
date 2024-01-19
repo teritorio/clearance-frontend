@@ -20,12 +20,12 @@ export default defineNuxtComponent({
 
   props: {
     baseGeom: {
-      type: Object as PropType<GeoJSON.Geometry>,
-      default: undefined,
+      type: Array as PropType<GeoJSON.Geometry[]>,
+      required: true,
     },
     changeGeom: {
-      type: Object as PropType<GeoJSON.Geometry>,
-      default: undefined,
+      type: Array as PropType<GeoJSON.Geometry[]>,
+      required: true,
     },
   },
 
@@ -36,19 +36,19 @@ export default defineNuxtComponent({
 
   mounted() {
     const noChanges =
-      this.baseGeom === this.changeGeom ||
-      (this.baseGeom &&
-        this.changeGeom &&
-        // @ts-ignore
-        booleanEqual(this.baseGeom, this.changeGeom))
+      this.baseGeom.length === 1 &&
+      this.changeGeom.length === 1 &&
+      (this.baseGeom[0] === this.changeGeom[0] ||
+        (this.baseGeom &&
+          this.changeGeom &&
+          // @ts-ignore
+          booleanEqual(this.baseGeom[0], this.changeGeom[0])))
 
     const bounds = new LngLatBounds(
       // @ts-ignore
       bbox({
         type: 'GeometryCollection',
-        geometries: [this.baseGeom, this.changeGeom].filter(
-          (e) => e !== undefined
-        ),
+        geometries: [...this.baseGeom, ...this.changeGeom],
       })
     )
 
@@ -65,7 +65,13 @@ export default defineNuxtComponent({
 
     map.on('load', () => {
       if (this.baseGeom) {
-        map.addSource('baseGeom', { type: 'geojson', data: this.baseGeom })
+        map.addSource('baseGeom', {
+          type: 'geojson',
+          data: {
+            type: 'GeometryCollection',
+            geometries: this.baseGeom,
+          },
+        })
         // Point
         map.addLayer({
           id: 'baseGeomCircleBorder',
@@ -111,7 +117,13 @@ export default defineNuxtComponent({
       }
 
       if (this.changeGeom && !noChanges) {
-        map.addSource('changeGeom', { type: 'geojson', data: this.changeGeom })
+        map.addSource('changeGeom', {
+          type: 'geojson',
+          data: {
+            type: 'GeometryCollection',
+            geometries: this.changeGeom,
+          },
+        })
         // Point
         map.addLayer({
           id: 'changeGeomCircleBorder',
