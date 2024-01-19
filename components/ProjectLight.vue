@@ -24,20 +24,7 @@
 </template>
 
 <script lang="ts">
-import dayjs from 'dayjs'
-import localizedFormat from 'dayjs/plugin/localizedFormat'
-import relativeTime from 'dayjs/plugin/relativeTime'
-import en from 'dayjs/locale/en-gb'
-import fr from 'dayjs/locale/fr'
-import es from 'dayjs/locale/es'
 import { Project } from '~/libs/types'
-
-dayjs.extend(localizedFormat)
-dayjs.extend(relativeTime)
-
-// Force to import and keep locales
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _daysjsLocale = { en, fr, es }
 
 export default defineNuxtComponent({
   name: 'Project',
@@ -46,26 +33,6 @@ export default defineNuxtComponent({
     project: {
       type: Object as PropType<Project>,
       required: true,
-    },
-  },
-
-  computed: {
-    apiUrl(): string {
-      return useRuntimeConfig().public.API
-    },
-    overpassUrl(): string {
-      return `${this.apiUrl}/${this.project.id}/overpasslike`
-    },
-    locale(): string {
-      return this.$i18n.locale
-    },
-    lastUpdate(): string {
-      return dayjs(this.project.date_last_update)
-        .locale(this.$i18n.locale)
-        .fromNow()
-    },
-    toBeValidated(): string {
-      return this.project.to_be_validated.toLocaleString(this.$i18n.locale)
     },
   },
 })

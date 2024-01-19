@@ -132,8 +132,8 @@ export default defineNuxtComponent({
         .locale(this.$i18n.locale)
         .fromNow()
     },
-    toBeValidated(): string {
-      return this.project.to_be_validated.toLocaleString(this.$i18n.locale)
+    toBeValidated(): string | undefined {
+      return this.project.to_be_validated?.toLocaleString(this.$i18n.locale)
     },
   },
 })
