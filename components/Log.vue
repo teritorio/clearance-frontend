@@ -54,10 +54,11 @@
           >
             <div>
               🏷️ {{ $i18nHash(match.name) }}
-              <br />
-              <div v-for="selector in match.selectors" :key="selector">
+              <br v-if="$i18nHash(match.name) !== undefined" />
+              <span v-for="selector in match.selectors" :key="selector">
                 {{ selector }}
-              </div>
+                <br />
+              </span>
             </div>
           </el-tag>
         </span>

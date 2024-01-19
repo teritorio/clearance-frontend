@@ -66,7 +66,7 @@
               : undefined
           "
         >
-          🏷️ {{ $i18nHash(match.name) }}
+          🏷️ {{ $i18nHash(match.name) || match.selectors.join(' ') }}
         </el-button>
       </el-badge>
     </el-row>
