@@ -90,6 +90,25 @@
       </el-badge>
       <span v-if="statUsers.length > 20">{{ $t('logs.tags_more') }}</span>
     </el-row>
+    <el-row>
+      <el-badge
+        v-for="[key, count] in statDates"
+        :key="key"
+        :value="count"
+        class="item"
+        :max="999"
+      >
+        <el-button
+          type="primary"
+          :plain="filterByDate != key"
+          :disabled="(filterByDate && filterByDate != key) || false"
+          size="small"
+          @click="filterByDate = filterByDate != key ? key : undefined"
+        >
+          📅 {{ key }}
+        </el-button>
+      </el-badge>
+    </el-row>
 
     <el-button-group
       v-if="
@@ -97,7 +116,8 @@
         (filterByAction ||
           filterByUserGroups ||
           filterBySelectors ||
-          filterByUsers)
+          filterByUsers ||
+          filterByDate)
       "
     >
       <el-button type="primary" @click="validate_selection()"
@@ -161,6 +181,7 @@ export default defineNuxtComponent({
     filterByUserGroups?: string
     filterBySelectors?: string[]
     filterByUsers?: string
+    filterByDate?: string
     scroolCount: number
   } {
     return {
@@ -172,6 +193,7 @@ export default defineNuxtComponent({
         | string[]
         | undefined,
       filterByUsers: this.$route.query.filterByUsers as string | undefined,
+      filterByDate: this.$route.query.filterByDate as string | undefined,
       scroolCount: 10,
     }
   },
@@ -187,6 +209,9 @@ export default defineNuxtComponent({
       this.updateUrl()
     },
     filterByUsers() {
+      this.updateUrl()
+    },
+    filterByDate() {
       this.updateUrl()
     },
   },
@@ -235,6 +260,11 @@ export default defineNuxtComponent({
       return this.count(users)
     },
 
+    statDates() {
+      const dates = this.logs.map((log) => log.change.created.substring(0, 10))
+      return this.count(dates).sort()
+    },
+
     logsWithFilter() {
       return this.logs.filter((log) => {
         const changesetsUsers =
@@ -265,7 +295,9 @@ export default defineNuxtComponent({
           (this.filterByUsers === undefined ||
             (changesetsUsers &&
               changesetsUsers.length === 1 &&
-              changesetsUsers[0] === this.filterByUsers))
+              changesetsUsers[0] === this.filterByUsers)) &&
+          (this.filterByDate === undefined ||
+            log.change.created.substring(0, 10) === this.filterByDate)
         )
       })
     },
@@ -310,6 +342,7 @@ export default defineNuxtComponent({
       this.filterByUserGroups = undefined
       this.filterBySelectors = undefined
       this.filterByUsers = undefined
+      this.filterByDate = undefined
     },
 
     validate_selection() {
@@ -330,6 +363,7 @@ export default defineNuxtComponent({
           filterByUserGroups: this.filterByUserGroups,
           filterBySelectors: this.filterBySelectors,
           filterByUsers: this.filterByUsers,
+          filterByDate: this.filterByDate,
         },
       })
     },
