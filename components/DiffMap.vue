@@ -14,20 +14,11 @@ import {
 } from 'maplibre-gl'
 import bbox from '@turf/bbox'
 import booleanEqual from '@turf/boolean-equal'
-import { ObjType } from '~/libs/types'
 
 export default defineNuxtComponent({
   name: 'DiffMap',
 
   props: {
-    objtype: {
-      type: String as PropType<ObjType>,
-      required: true,
-    },
-    id: {
-      type: Number as PropType<number>,
-      required: true,
-    },
     baseGeom: {
       type: Object as PropType<GeoJSON.Geometry>,
       default: undefined,

@@ -155,12 +155,7 @@
           v-if="log.base?.geom || log.change.geom"
           style="border: 1px solid lightgrey"
         >
-          <DiffMap
-            :id="log.id"
-            :objtype="log.objtype"
-            :base-geom="log.base?.geom"
-            :change-geom="log.change.geom"
-          />
+          <DiffMap :base-geom="log.base?.geom" :change-geom="log.change.geom" />
         </LazyComponent>
       </el-col>
       <el-col :span="10">
