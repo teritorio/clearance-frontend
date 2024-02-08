@@ -122,7 +122,7 @@ export default defineNuxtComponent({
       return useRuntimeConfig().public.API
     },
     overpassUrl(): string {
-      return `${this.apiUrl}/${this.project.id}/overpasslike`
+      return `${this.apiUrl}/projects/${this.project.id}/overpasslike/`
     },
     locale(): string {
       return this.$i18n.locale
