@@ -209,7 +209,7 @@ export default defineNuxtComponent({
 
     showTextDiff(before: string, after: string): boolean {
       const d = this.diffText(before, after)
-      return d.length <= 4
+      return d.length <= 2
     },
 
     diffText(before: string, after: string): Change[] {
