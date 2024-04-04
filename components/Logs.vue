@@ -157,7 +157,7 @@
 <script lang="ts">
 import { PropType } from 'vue'
 import _ from 'underscore'
-import { Geometry } from 'geojson'
+import type { Geometry } from 'geojson'
 import { User } from '~/libs/apiTypes'
 import Log from '~/components/Log.vue'
 import { Logs, ObjectId, setLogs } from '~/libs/types'

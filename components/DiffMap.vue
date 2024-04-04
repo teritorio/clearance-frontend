@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { PropType, shallowRef } from 'vue'
-import GeoJSON from 'geojson'
+import type { Geometry } from 'geojson'
 import {
   CircleLayerSpecification,
   LineLayerSpecification,
@@ -20,11 +20,11 @@ export default defineNuxtComponent({
 
   props: {
     baseGeom: {
-      type: Array as PropType<GeoJSON.Geometry[]>,
+      type: Array as PropType<Geometry[]>,
       required: true,
     },
     changeGeom: {
-      type: Array as PropType<GeoJSON.Geometry[]>,
+      type: Array as PropType<Geometry[]>,
       required: true,
     },
   },
