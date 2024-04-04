@@ -40,7 +40,7 @@ import {
   LngLatBounds,
   Map,
 } from 'maplibre-gl'
-import GeoJSON from 'geojson'
+import type { Feature, Polygon, MultiPolygon } from 'geojson'
 import bbox from '@turf/bbox'
 import _ from 'underscore'
 import { UserGroup } from '~/libs/types'
@@ -64,7 +64,7 @@ export default defineNuxtComponent({
 
   mounted() {
     const fetchAllPolygons: Promise<
-      GeoJSON.Feature<GeoJSON.Polygon | GeoJSON.MultiPolygon> | undefined
+      Feature<Polygon | MultiPolygon> | undefined
     >[] = this.userGroups
       .map((userGroup, index) => {
         return {
@@ -76,9 +76,7 @@ export default defineNuxtComponent({
       .map((userGroup) => {
         return fetch(userGroup.polygon!).then(async (data) => {
           if (data.ok) {
-            const geojson: GeoJSON.Feature<
-              GeoJSON.Polygon | GeoJSON.MultiPolygon
-            > = {
+            const geojson: Feature<Polygon | MultiPolygon> = {
               type: 'Feature',
               geometry: await data.json(),
               properties: { color: userGroup.color },
