@@ -39,7 +39,7 @@ export default defineNuxtConfig({
   buildModules: [],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@element-plus/nuxt', '@nuxtjs/i18n'],
+  modules: ['@nuxt/eslint', '@element-plus/nuxt', '@nuxtjs/i18n'],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
@@ -49,6 +49,8 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: !!process.env.TYPESCRIPT_CHECK,
   },
+
+  eslint: {},
 
   i18n: {
     strategy: 'no_prefix',
