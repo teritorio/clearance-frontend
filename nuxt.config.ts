@@ -50,7 +50,12 @@ export default defineNuxtConfig({
     typeCheck: !!process.env.TYPESCRIPT_CHECK,
   },
 
-  eslint: {},
+  eslint: {
+    config: {
+      standalone: false,
+      stylistic: true,
+    },
+  },
 
   i18n: {
     strategy: 'no_prefix',
