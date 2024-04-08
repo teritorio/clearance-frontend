@@ -104,7 +104,6 @@ dayjs.extend(localizedFormat)
 dayjs.extend(relativeTime)
 
 // Force to import and keep locales
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _daysjsLocale = { en, fr, es }
 
 export default defineNuxtComponent({

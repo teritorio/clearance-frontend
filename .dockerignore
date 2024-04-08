@@ -71,5 +71,3 @@ dist
 # Storybook
 .nuxt-storybook
 storybook-static
-
-.eslintcache
