@@ -1,3 +1,18 @@
+<script lang="ts">
+import type { Project } from '~/libs/types'
+
+export default defineNuxtComponent({
+  name: 'Project',
+
+  props: {
+    project: {
+      type: Object as PropType<Project>,
+      required: true,
+    },
+  },
+})
+</script>
+
 <template>
   <span>
     <span class="title">{{ $i18nHash(project.title) }}</span>
@@ -6,9 +21,8 @@
       :key="tag"
       class="item"
       size="small"
-      >{{ tag }}</el-tag
-    >
-    <br />
+    >{{ tag }}</el-tag>
+    <br>
     <el-text class="mx-1" type="info">
       {{ $i18nHash(project.description) }}
     </el-text>
@@ -22,21 +36,6 @@
     </el-button>
   </el-button-group>
 </template>
-
-<script lang="ts">
-import { Project } from '~/libs/types'
-
-export default defineNuxtComponent({
-  name: 'Project',
-
-  props: {
-    project: {
-      type: Object as PropType<Project>,
-      required: true,
-    },
-  },
-})
-</script>
 
 <style scoped>
 #stats .el-col {

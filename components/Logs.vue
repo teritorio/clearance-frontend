@@ -1,3 +1,246 @@
+<script lang="ts">
+import type { PropType } from 'vue'
+import _ from 'underscore'
+import type { Geometry } from 'geojson'
+import type { User } from '~/libs/apiTypes'
+import Log from '~/components/Log.vue'
+import type { Logs, ObjectId } from '~/libs/types'
+import { setLogs } from '~/libs/types'
+
+export default defineNuxtComponent({
+  name: 'LogsComponent',
+
+  components: {
+    Log,
+  },
+
+  props: {
+    project: {
+      type: String,
+      required: true,
+    },
+    user: {
+      type: Object as PropType<User | null>,
+      default: null,
+    },
+    logs: {
+      type: Array as PropType<Logs>,
+      required: true,
+    },
+  },
+
+  data(): {
+    filterByAction?: string
+    filterByUserGroups?: string
+    filterBySelectors?: string[]
+    filterByUsers?: string
+    filterByDate?: string
+    scroolCount: number
+  } {
+    return {
+      filterByAction: this.$route.query.filterByAction as string | undefined,
+      filterByUserGroups: this.$route.query.filterByUserGroups as
+      | string
+      | undefined,
+      filterBySelectors: this.$route.query.filterBySelectors as
+      | string[]
+      | undefined,
+      filterByUsers: this.$route.query.filterByUsers as string | undefined,
+      filterByDate: this.$route.query.filterByDate as string | undefined,
+      scroolCount: 10,
+    }
+  },
+
+  watch: {
+    filterByAction() {
+      this.updateUrl()
+    },
+    filterByUserGroups() {
+      this.updateUrl()
+    },
+    filterBySelectors() {
+      this.updateUrl()
+    },
+    filterByUsers() {
+      this.updateUrl()
+    },
+    filterByDate() {
+      this.updateUrl()
+    },
+  },
+
+  emits: {
+    'remove-logs': (_objectIds: ObjectId[]) => true,
+  },
+
+  computed: {
+    stats(): [string, number][] {
+      const actions = this.logs
+        .map(log =>
+          _.uniq(
+            [
+              ...Object.values(log.diff_attribs || {}),
+              ...Object.values(log.diff_tags || {}),
+            ]
+              .flat(1)
+              .map(action => action[0]),
+          ),
+        )
+        .flat(1)
+      return this.count(actions)
+    },
+
+    statSelectors() {
+      const matches = this.logs.map(log => _.uniq(log.matches).flat()).flat(1)
+      return this.count(matches, m => m.selectors.join(';'))
+    },
+
+    statUserGroups() {
+      const userGroups = this.logs
+        .map(log => _.uniq(log.matches.map(m => m.user_groups).flat(2)))
+        .flat(1)
+      return this.count(userGroups)
+    },
+
+    statUsers() {
+      const users = this.logs
+        .map(log =>
+          (log.base ? log.changesets.slice(1) : log.changesets).map(
+            changeset => changeset.user,
+          ),
+        )
+        .flat(2)
+      return this.count(users)
+    },
+
+    statDates() {
+      const dates = this.logs.map(log => log.change.created.substring(0, 10))
+      return this.count(dates).sort()
+    },
+
+    logsWithFilter() {
+      return this.logs.filter((log) => {
+        const changesetsUsers
+          = this.filterByUsers !== undefined
+          && _.uniq(
+            (log.base ? log.changesets.slice(1) : log.changesets).map(
+              changeset => changeset.user,
+            ),
+          )
+        return (
+          (this.filterByAction === undefined
+          || Object.values(log.diff_attribs || {})
+            .concat(Object.values(log.diff_tags || {}))
+            .some(
+              actions =>
+                actions?.some(
+                  action => action[0] === this.filterByAction,
+                ) || false,
+            ))
+            && (this.filterByUserGroups === undefined
+            || log.matches.some(match =>
+              match.user_groups.includes(this.filterByUserGroups!),
+            ))
+            && (this.filterBySelectors === undefined
+            || log.matches.some(match =>
+              this.matchFilterBySelectors(match.selectors),
+            ))
+            && (this.filterByUsers === undefined
+            || (changesetsUsers
+            && changesetsUsers.length === 1
+            && changesetsUsers[0] === this.filterByUsers))
+            && (this.filterByDate === undefined
+            || log.change.created.substring(0, 10) === this.filterByDate)
+        )
+      })
+    },
+
+    isProjectUser(): boolean {
+      return !!this.user?.projects?.includes(this.project)
+    },
+
+    baseGeoms(): Geometry[] {
+      return this.logs
+        .map(log => log.base?.geom)
+        .filter((geom): geom is Geometry => !!geom)
+    },
+
+    changeGeoms(): Geometry[] {
+      return this.logs.map(log => log.change.geom)
+    },
+  },
+
+  methods: {
+    count<Type>(
+      data: Type[],
+      key: (o: Type) => string = i => `${i}`,
+    ): [Type, number][] {
+      const index = _.indexBy(data, key)
+      return _.sortBy(
+        Object.entries(_.countBy(data, key)) as [string, number][],
+        ([_key, count]) => -count,
+      ).map(([key, count]) => [index[key], count])
+    },
+
+    accept(objectIds: ObjectId[]) {
+      setLogs(useRuntimeConfig().public.API, this.project, 'accept', objectIds)
+        .then(() => this.$emit('remove-logs', objectIds))
+        .catch((error) => {
+          alert(error)
+        })
+    },
+
+    accept_selection() {
+      const objectIds = this.logsWithFilter.map(log => ({
+        objtype: log.objtype,
+        id: log.id,
+        version: log.change.version,
+        deleted: log.change.deleted,
+      }))
+      this.accept(objectIds)
+    },
+
+    reset_filter() {
+      this.filterByAction = undefined
+      this.filterByUserGroups = undefined
+      this.filterBySelectors = undefined
+      this.filterByUsers = undefined
+      this.filterByDate = undefined
+    },
+
+    validate_selection() {
+      this.accept_selection()
+      this.reset_filter()
+    },
+
+    scroolLoad(): void {
+      this.scroolCount += 10
+    },
+
+    updateUrl(): void {
+      this.$router.replace({
+        name: this.$route.name || undefined,
+        query: {
+          ...this.$route.query,
+          filterByAction: this.filterByAction,
+          filterByUserGroups: this.filterByUserGroups,
+          filterBySelectors: this.filterBySelectors,
+          filterByUsers: this.filterByUsers,
+          filterByDate: this.filterByDate,
+        },
+      })
+    },
+
+    matchFilterBySelectors(selectors: string[]): boolean {
+      return (
+        this.filterBySelectors !== undefined
+        && _.intersection(selectors, this.filterBySelectors).length > 0
+      )
+    },
+  },
+})
+</script>
+
 <template>
   <div>
     <el-row>
@@ -10,7 +253,9 @@
     <h3>{{ $t('logs.filters') }}</h3>
     <el-row style="margin-top: 20px">
       <el-badge :value="logs.length" class="item" :max="999">
-        <el-tag size="small">{{ $t('logs.objects') }}</el-tag>
+        <el-tag size="small">
+          {{ $t('logs.objects') }}
+        </el-tag>
       </el-badge>
       <el-badge
         v-for="[key, count] in stats"
@@ -63,8 +308,8 @@
           type="warning"
           :plain="filterBySelectors != match.selectors"
           :disabled="
-            (filterBySelectors && !matchFilterBySelectors(match.selectors)) ||
-            false
+            (filterBySelectors && !matchFilterBySelectors(match.selectors))
+              || false
           "
           size="small"
           @click="
@@ -119,17 +364,17 @@
 
     <el-button-group
       v-if="
-        isProjectUser &&
-        (filterByAction ||
-          filterByUserGroups ||
-          filterBySelectors ||
-          filterByUsers ||
-          filterByDate)
+        isProjectUser
+          && (filterByAction
+            || filterByUserGroups
+            || filterBySelectors
+            || filterByUsers
+            || filterByDate)
       "
     >
-      <el-button type="primary" @click="validate_selection()"
-        >✓ {{ $t('logs.validate_selection') }}</el-button
-      >
+      <el-button type="primary" @click="validate_selection()">
+        ✓ {{ $t('logs.validate_selection') }}
+      </el-button>
     </el-button-group>
 
     <h3>{{ $t('logs.data') }}</h3>
@@ -150,251 +395,9 @@
       />
     </el-space>
 
-    <iframe name="hidden_josm_target" style="display: none"></iframe>
+    <iframe name="hidden_josm_target" style="display: none" />
   </div>
 </template>
-
-<script lang="ts">
-import { PropType } from 'vue'
-import _ from 'underscore'
-import type { Geometry } from 'geojson'
-import { User } from '~/libs/apiTypes'
-import Log from '~/components/Log.vue'
-import { Logs, ObjectId, setLogs } from '~/libs/types'
-
-export default defineNuxtComponent({
-  name: 'LogsComponent',
-
-  components: {
-    Log,
-  },
-
-  props: {
-    project: {
-      type: String,
-      required: true,
-    },
-    user: {
-      type: Object as PropType<User | null>,
-      default: null,
-    },
-    logs: {
-      type: Array as PropType<Logs>,
-      required: true,
-    },
-  },
-
-  data(): {
-    filterByAction?: string
-    filterByUserGroups?: string
-    filterBySelectors?: string[]
-    filterByUsers?: string
-    filterByDate?: string
-    scroolCount: number
-  } {
-    return {
-      filterByAction: this.$route.query.filterByAction as string | undefined,
-      filterByUserGroups: this.$route.query.filterByUserGroups as
-        | string
-        | undefined,
-      filterBySelectors: this.$route.query.filterBySelectors as
-        | string[]
-        | undefined,
-      filterByUsers: this.$route.query.filterByUsers as string | undefined,
-      filterByDate: this.$route.query.filterByDate as string | undefined,
-      scroolCount: 10,
-    }
-  },
-
-  watch: {
-    filterByAction() {
-      this.updateUrl()
-    },
-    filterByUserGroups() {
-      this.updateUrl()
-    },
-    filterBySelectors() {
-      this.updateUrl()
-    },
-    filterByUsers() {
-      this.updateUrl()
-    },
-    filterByDate() {
-      this.updateUrl()
-    },
-  },
-
-  emits: {
-    'remove-logs': (_objectIds: ObjectId[]) => true,
-  },
-
-  computed: {
-    stats(): [string, number][] {
-      const actions = this.logs
-        .map((log) =>
-          _.uniq(
-            [
-              ...Object.values(log.diff_attribs || {}),
-              ...Object.values(log.diff_tags || {}),
-            ]
-              .flat(1)
-              .map((action) => action[0])
-          )
-        )
-        .flat(1)
-      return this.count(actions)
-    },
-
-    statSelectors() {
-      const matches = this.logs.map((log) => _.uniq(log.matches).flat()).flat(1)
-      return this.count(matches, (m) => m.selectors.join(';'))
-    },
-
-    statUserGroups() {
-      const userGroups = this.logs
-        .map((log) => _.uniq(log.matches.map((m) => m.user_groups).flat(2)))
-        .flat(1)
-      return this.count(userGroups)
-    },
-
-    statUsers() {
-      const users = this.logs
-        .map((log) =>
-          (log.base ? log.changesets.slice(1) : log.changesets).map(
-            (changeset) => changeset.user
-          )
-        )
-        .flat(2)
-      return this.count(users)
-    },
-
-    statDates() {
-      const dates = this.logs.map((log) => log.change.created.substring(0, 10))
-      return this.count(dates).sort()
-    },
-
-    logsWithFilter() {
-      return this.logs.filter((log) => {
-        const changesetsUsers =
-          this.filterByUsers !== undefined &&
-          _.uniq(
-            (log.base ? log.changesets.slice(1) : log.changesets).map(
-              (changeset) => changeset.user
-            )
-          )
-        return (
-          (this.filterByAction === undefined ||
-            Object.values(log.diff_attribs || {})
-              .concat(Object.values(log.diff_tags || {}))
-              .some(
-                (actions) =>
-                  actions?.some(
-                    (action) => action[0] === this.filterByAction
-                  ) || false
-              )) &&
-          (this.filterByUserGroups === undefined ||
-            log.matches.some((match) =>
-              match.user_groups.includes(this.filterByUserGroups!)
-            )) &&
-          (this.filterBySelectors === undefined ||
-            log.matches.some((match) =>
-              this.matchFilterBySelectors(match.selectors)
-            )) &&
-          (this.filterByUsers === undefined ||
-            (changesetsUsers &&
-              changesetsUsers.length === 1 &&
-              changesetsUsers[0] === this.filterByUsers)) &&
-          (this.filterByDate === undefined ||
-            log.change.created.substring(0, 10) === this.filterByDate)
-        )
-      })
-    },
-
-    isProjectUser(): boolean {
-      return !!this.user?.projects?.includes(this.project)
-    },
-
-    baseGeoms(): Geometry[] {
-      return this.logs
-        .map((log) => log.base?.geom)
-        .filter((geom): geom is Geometry => !!geom)
-    },
-
-    changeGeoms(): Geometry[] {
-      return this.logs.map((log) => log.change.geom)
-    },
-  },
-
-  methods: {
-    count<Type>(
-      data: Type[],
-      key: (o: Type) => string = (i) => `${i}`
-    ): [Type, number][] {
-      const index = _.indexBy(data, key)
-      return _.sortBy(
-        Object.entries(_.countBy(data, key)) as [string, number][],
-        ([_key, count]) => -count
-      ).map(([key, count]) => [index[key], count])
-    },
-
-    accept(objectIds: ObjectId[]) {
-      setLogs(useRuntimeConfig().public.API, this.project, 'accept', objectIds)
-        .then(() => this.$emit('remove-logs', objectIds))
-        .catch((error) => {
-          alert(error)
-        })
-    },
-
-    accept_selection() {
-      const objectIds = this.logsWithFilter.map((log) => ({
-        objtype: log.objtype,
-        id: log.id,
-        version: log.change.version,
-        deleted: log.change.deleted,
-      }))
-      this.accept(objectIds)
-    },
-
-    reset_filter() {
-      this.filterByAction = undefined
-      this.filterByUserGroups = undefined
-      this.filterBySelectors = undefined
-      this.filterByUsers = undefined
-      this.filterByDate = undefined
-    },
-
-    validate_selection() {
-      this.accept_selection()
-      this.reset_filter()
-    },
-
-    scroolLoad(): void {
-      this.scroolCount += 10
-    },
-
-    updateUrl(): void {
-      this.$router.replace({
-        name: this.$route.name || undefined,
-        query: {
-          ...this.$route.query,
-          filterByAction: this.filterByAction,
-          filterByUserGroups: this.filterByUserGroups,
-          filterBySelectors: this.filterBySelectors,
-          filterByUsers: this.filterByUsers,
-          filterByDate: this.filterByDate,
-        },
-      })
-    },
-
-    matchFilterBySelectors(selectors: string[]): boolean {
-      return (
-        this.filterBySelectors !== undefined &&
-        _.intersection(selectors, this.filterBySelectors).length > 0
-      )
-    },
-  },
-})
-</script>
 
 <style scoped>
 .item {

@@ -1,18 +1,5 @@
-<template>
-  <table>
-    <tr v-for="key in keys" :key="key">
-      <td>
-        {{ key }}
-      </td>
-      <td>
-        {{ object[key] }}
-      </td>
-    </tr>
-  </table>
-</template>
-
 <script lang="ts">
-import { PropType } from 'vue'
+import type { PropType } from 'vue'
 
 export default defineNuxtComponent({
   name: 'DiffCompinent',
@@ -31,12 +18,25 @@ export default defineNuxtComponent({
   computed: {
     keys(): string[] {
       return Object.keys(this.object).filter(
-        (key) => !this.exclude.includes(key)
+        key => !this.exclude.includes(key),
       )
     },
   },
 })
 </script>
+
+<template>
+  <table>
+    <tr v-for="key in keys" :key="key">
+      <td>
+        {{ key }}
+      </td>
+      <td>
+        {{ object[key] }}
+      </td>
+    </tr>
+  </table>
+</template>
 
 <style scoped>
 td {

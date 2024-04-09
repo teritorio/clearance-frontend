@@ -1,49 +1,16 @@
-<template>
-  <el-col :span="12">
-    <el-table :data="groups" stripe style="width: 100%">
-      <el-table-column prop="id" width="30">
-        <template #default="scope">
-          <span :style="`color:${scope.row.color}`">⬤</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="id" :label="$t('project.user_group_label')">
-        <template #default="scope">
-          {{ $i18nHash(scope.row.title) }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="id" :label="$t('project.user_group_users')">
-        <template #default="scope">
-          <span v-for="user in scope.row.users" :key="user" class="user">
-            <a
-              :href="`https://www.openstreetmap.org/user/${user}`"
-              target="_blank"
-              >👤&nbsp;{{ user }}</a
-            >
-          </span>
-        </template>
-      </el-table-column>
-    </el-table>
-  </el-col>
-  <el-col :span="12">
-    <div
-      ref="mapContainer"
-      class="map"
-      style="width: 400px; height: 400px"
-    ></div>
-  </el-col>
-</template>
-
 <script lang="ts">
-import {
+import type {
   FillLayerSpecification,
   LineLayerSpecification,
+} from 'maplibre-gl'
+import {
   LngLatBounds,
   Map,
 } from 'maplibre-gl'
-import type { Feature, Polygon, MultiPolygon } from 'geojson'
+import type { Feature, MultiPolygon, Polygon } from 'geojson'
 import bbox from '@turf/bbox'
 import _ from 'underscore'
-import { UserGroup } from '~/libs/types'
+import type { UserGroup } from '~/libs/types'
 
 const colors = ['#2364AA', '#EA7317', '#73BFB8', '#FEC601', '#3DA5D9']
 
@@ -72,7 +39,7 @@ export default defineNuxtComponent({
           color: colors[index % colors.length],
         }
       })
-      .filter((userGroup) => !!userGroup.polygon)
+      .filter(userGroup => !!userGroup.polygon)
       .map((userGroup) => {
         return fetch(userGroup.polygon!).then(async (data) => {
           if (data.ok) {
@@ -92,7 +59,7 @@ export default defineNuxtComponent({
         features: _.compact(allPolygons),
       }
       const bounds = new LngLatBounds(
-        bbox(geojson) as [number, number, number, number]
+        bbox(geojson) as [number, number, number, number],
       )
 
       const map = new Map({
@@ -144,6 +111,40 @@ export default defineNuxtComponent({
   },
 })
 </script>
+
+<template>
+  <el-col :span="12">
+    <el-table :data="groups" stripe style="width: 100%">
+      <el-table-column prop="id" width="30">
+        <template #default="scope">
+          <span :style="`color:${scope.row.color}`">⬤</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="id" :label="$t('project.user_group_label')">
+        <template #default="scope">
+          {{ $i18nHash(scope.row.title) }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="id" :label="$t('project.user_group_users')">
+        <template #default="scope">
+          <span v-for="user in scope.row.users" :key="user" class="user">
+            <a
+              :href="`https://www.openstreetmap.org/user/${user}`"
+              target="_blank"
+            >👤&nbsp;{{ user }}</a>
+          </span>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-col>
+  <el-col :span="12">
+    <div
+      ref="mapContainer"
+      class="map"
+      style="width: 400px; height: 400px"
+    />
+  </el-col>
+</template>
 
 <style>
 @import url('maplibre-gl/dist/maplibre-gl.css');

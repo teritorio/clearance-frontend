@@ -13,7 +13,7 @@ export function objTypeFull(objtype: ObjType): ObjTypeFull {
 export type MultilingualString = Record<string, string>
 
 export type Tags = Record<Key, Value>
-export type Member = {
+export interface Member {
   ref: number
   role: string
   type: ObjType
@@ -29,7 +29,7 @@ export interface Subject extends Record<string, any> {
   geom: Geometry
 }
 
-export type Changeset = {
+export interface Changeset {
   id: number
   created_at: string
   closed_at: string
@@ -45,7 +45,7 @@ export type Changeset = {
   tags: Tags
 }
 
-export type Match = {
+export interface Match {
   icon: string
   name: MultilingualString
   selectors: string[]
@@ -57,7 +57,7 @@ export type LogAction = 'accept' | 'reject'
 export type LogActionOptions = Record<string, string | string[] | object>
 export type Action = [string, LogAction | null, LogActionOptions | null]
 export type Actions = Record<Key, Action[]>
-export type Log = {
+export interface Log {
   objtype: ObjType
   id: number
   base?: Subject
@@ -69,7 +69,7 @@ export type Log = {
   diff_tags?: Actions
 }
 
-export type ObjectId = {
+export interface ObjectId {
   objtype: ObjType
   id: number
   version: number
@@ -83,12 +83,13 @@ export function getLogs(apiEndpoint: string, project: string): Promise<Logs> {
     (data) => {
       if (data.ok) {
         return data.json() as unknown as Logs
-      } else {
+      }
+      else {
         return Promise.reject(
-          new Error([data.url, data.status, data.statusText].join(' '))
+          new Error([data.url, data.status, data.statusText].join(' ')),
         )
       }
-    }
+    },
   )
 }
 
@@ -96,20 +97,20 @@ export function setLogs(
   apiEndpoint: string,
   project: string,
   logAction: LogAction,
-  objectsIds: ObjectId[]
+  objectsIds: ObjectId[],
 ): Promise<void> {
   return fetch(`${apiEndpoint}/projects/${project}/changes_logs/${logAction}`, {
     credentials: 'include',
     method: 'POST',
     headers: {
-      Accept: 'application/json',
+      'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(objectsIds),
   }).then((data) => {
     if (!data.ok) {
       return Promise.reject(
-        new Error([data.url, data.status, data.statusText].join(' '))
+        new Error([data.url, data.status, data.statusText].join(' ')),
       )
     }
   })
@@ -120,10 +121,10 @@ export function action2priority(logAction: LogAction | null): number {
 }
 
 export function maxActionPriority(actions: Action[]): number {
-  return Math.max(...actions.map((action) => action2priority(action[1])))
+  return Math.max(...actions.map(action => action2priority(action[1])))
 }
 
-export type Validator = {
+export interface Validator {
   [key: string]: any
 
   action: LogAction
@@ -135,28 +136,29 @@ export type Validators = Record<string, Validator>
 
 export function getValidators(
   apiEndpoint: string,
-  project: string
+  project: string,
 ): Promise<Validator> {
   return fetch(`${apiEndpoint}/projects/${project}/validators/`).then(
     (data) => {
       if (data.ok) {
         return data.json() as unknown as Validator
-      } else {
+      }
+      else {
         return Promise.reject(
-          new Error([data.url, data.status, data.statusText].join(' '))
+          new Error([data.url, data.status, data.statusText].join(' ')),
         )
       }
-    }
+    },
   )
 }
 
-export type UserGroup = {
+export interface UserGroup {
   title: MultilingualString
   polygon?: string
   users: string[]
 }
 
-export type Project = {
+export interface Project {
   id: string
   title: MultilingualString
   description: MultilingualString
@@ -173,9 +175,10 @@ export function getProjects(apiEndpoint: string): Promise<Projects> {
   return fetch(`${apiEndpoint}/projects`).then((data) => {
     if (data.ok) {
       return data.json() as unknown as Projects
-    } else {
+    }
+    else {
       return Promise.reject(
-        new Error([data.url, data.status, data.statusText].join(' '))
+        new Error([data.url, data.status, data.statusText].join(' ')),
       )
     }
   })
@@ -183,14 +186,15 @@ export function getProjects(apiEndpoint: string): Promise<Projects> {
 
 export function getProject(
   apiEndpoint: string,
-  project: string
+  project: string,
 ): Promise<Project> {
   return fetch(`${apiEndpoint}/projects/${project}`).then((data) => {
     if (data.ok) {
       return data.json() as unknown as Project
-    } else {
+    }
+    else {
       return Promise.reject(
-        new Error([data.url, data.status, data.statusText].join(' '))
+        new Error([data.url, data.status, data.statusText].join(' ')),
       )
     }
   })
