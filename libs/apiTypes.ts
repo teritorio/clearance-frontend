@@ -1,4 +1,4 @@
-export type User = {
+export interface User {
   osm_uid: number
   osm_name: string
   osm_image_url: string
@@ -11,11 +11,13 @@ export function getUser(apiEndpoint: string): Promise<User | null> {
   }).then((data) => {
     if (data.ok) {
       return data.json() as unknown as User
-    } else if (data.status === 404) {
+    }
+    else if (data.status === 404) {
       return null
-    } else {
+    }
+    else {
       return Promise.reject(
-        new Error([data.url, data.status, data.statusText].join(' '))
+        new Error([data.url, data.status, data.statusText].join(' ')),
       )
     }
   })
@@ -27,7 +29,7 @@ export function userLogout(apiEndpoint: string): Promise<void> {
   }).then((data) => {
     if (!data.ok) {
       return Promise.reject(
-        new Error([data.url, data.status, data.statusText].join(' '))
+        new Error([data.url, data.status, data.statusText].join(' ')),
       )
     }
   })

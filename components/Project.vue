@@ -1,3 +1,50 @@
+<script lang="ts">
+import dayjs from 'dayjs'
+import localizedFormat from 'dayjs/plugin/localizedFormat'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import en from 'dayjs/locale/en-gb'
+import fr from 'dayjs/locale/fr'
+import es from 'dayjs/locale/es'
+import type { Project } from '~/libs/types'
+
+dayjs.extend(localizedFormat)
+dayjs.extend(relativeTime)
+
+// Force to import and keep locales
+const _daysjsLocale = { en, fr, es }
+
+export default defineNuxtComponent({
+  name: 'Project',
+
+  props: {
+    project: {
+      type: Object as PropType<Project>,
+      required: true,
+    },
+  },
+
+  computed: {
+    apiUrl(): string {
+      return useRuntimeConfig().public.API
+    },
+    overpassUrl(): string {
+      return `${this.apiUrl}/projects/${this.project.id}/overpasslike/`
+    },
+    locale(): string {
+      return this.$i18n.locale
+    },
+    lastUpdate(): string {
+      return dayjs(this.project.date_last_update)
+        .locale(this.$i18n.locale)
+        .fromNow()
+    },
+    toBeValidated(): string | undefined {
+      return this.project.to_be_validated?.toLocaleString(this.$i18n.locale)
+    },
+  },
+})
+</script>
+
 <template>
   <el-card>
     <template #header>
@@ -9,9 +56,8 @@
             :key="tag"
             class="item"
             size="small"
-            >{{ tag }}</el-tag
-          >
-          <br />
+          >{{ tag }}</el-tag>
+          <br>
           <el-text class="mx-1" type="info">
             {{ $i18nHash(project.description) }}
           </el-text>
@@ -34,7 +80,9 @@
       <el-row id="stats">
         <el-col :span="12">
           <div class="el-statistic">
-            <div class="el-statistic__head">{{ $t('project.lastUpdate') }}</div>
+            <div class="el-statistic__head">
+              {{ $t('project.lastUpdate') }}
+            </div>
             <div class="el-statistic__content">
               <span class="el-statistic__number">
                 {{ lastUpdate }}
@@ -82,61 +130,12 @@
     <p>
       <span>{{ $t('app.project.mainContacts') }}</span>
       <span v-for="user in project.main_contacts" :key="user">
-        <a :href="`https://www.openstreetmap.org/user/${user}`" target="_blank"
-          >👤&nbsp;{{ user }}</a
-        >
+        <a :href="`https://www.openstreetmap.org/user/${user}`" target="_blank">👤&nbsp;{{ user }}</a>
       </span>
     </p>
     <p>{{ $t('app.project.join') }}</p>
   </el-card>
 </template>
-
-<script lang="ts">
-import dayjs from 'dayjs'
-import localizedFormat from 'dayjs/plugin/localizedFormat'
-import relativeTime from 'dayjs/plugin/relativeTime'
-import en from 'dayjs/locale/en-gb'
-import fr from 'dayjs/locale/fr'
-import es from 'dayjs/locale/es'
-import { Project } from '~/libs/types'
-
-dayjs.extend(localizedFormat)
-dayjs.extend(relativeTime)
-
-// Force to import and keep locales
-const _daysjsLocale = { en, fr, es }
-
-export default defineNuxtComponent({
-  name: 'Project',
-
-  props: {
-    project: {
-      type: Object as PropType<Project>,
-      required: true,
-    },
-  },
-
-  computed: {
-    apiUrl(): string {
-      return useRuntimeConfig().public.API
-    },
-    overpassUrl(): string {
-      return `${this.apiUrl}/projects/${this.project.id}/overpasslike/`
-    },
-    locale(): string {
-      return this.$i18n.locale
-    },
-    lastUpdate(): string {
-      return dayjs(this.project.date_last_update)
-        .locale(this.$i18n.locale)
-        .fromNow()
-    },
-    toBeValidated(): string | undefined {
-      return this.project.to_be_validated?.toLocaleString(this.$i18n.locale)
-    },
-  },
-})
-</script>
 
 <style scoped>
 #stats .el-col {

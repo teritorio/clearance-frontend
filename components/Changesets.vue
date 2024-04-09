@@ -1,3 +1,27 @@
+<script lang="ts">
+import type { PropType } from 'vue'
+import type { Changeset } from '~/libs/types'
+
+export default defineNuxtComponent({
+  name: 'Changesets',
+
+  props: {
+    changesets: {
+      type: Array as PropType<Changeset[]>,
+      required: true,
+    },
+  },
+
+  data(): {
+    accordion: Ref<string>
+  } {
+    return {
+      accordion: ref('0'),
+    }
+  },
+})
+</script>
+
 <template>
   <el-timeline>
     <el-timeline-item
@@ -8,21 +32,20 @@
     >
       <p>
         <span class="comment">✎ {{ changeset.tags.comment }}</span>
-        <br />
+        <br>
         <template v-if="changeset.tags.source">
           <span class="source">📷 {{ changeset.tags.source }}</span>
-          <br />
+          <br>
         </template>
         <span class="user">
           👤&nbsp;<a
             :href="`https://www.openstreetmap.org/user/${changeset.user}`"
             target="_blank"
-            >{{ changeset.user }}</a
-          >
+          >{{ changeset.user }}</a>
         </span>
         <template v-if="changeset.tags.created_by">
           <span class="created_by">🛠 {{ changeset.tags.created_by }}</span>
-          <br />
+          <br>
         </template>
         <el-collapse v-model="accordion" accordion>
           <el-collapse-item :name="index">
@@ -30,8 +53,7 @@
               ⯼&nbsp;<a
                 :href="`https://www.openstreetmap.org/changeset/${changeset.id}`"
                 target="_blank"
-                >{{ changeset.id }}</a
-              >
+              >{{ changeset.id }}</a>
             </template>
 
             <table>
@@ -61,30 +83,6 @@
     </el-timeline-item>
   </el-timeline>
 </template>
-
-<script lang="ts">
-import { PropType } from 'vue'
-import { Changeset } from '~/libs/types'
-
-export default defineNuxtComponent({
-  name: 'Changesets',
-
-  props: {
-    changesets: {
-      type: Array as PropType<Changeset[]>,
-      required: true,
-    },
-  },
-
-  data(): {
-    accordion: Ref<string>
-  } {
-    return {
-      accordion: ref('0'),
-    }
-  },
-})
-</script>
 
 <style scoped>
 ul.el-timeline {

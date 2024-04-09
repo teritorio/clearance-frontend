@@ -1,3 +1,35 @@
+<script setup lang="ts">
+import _ from 'underscore'
+import type { User } from '~/libs/apiTypes'
+import { getUser } from '~/libs/apiTypes'
+import {
+  getAsyncDataOrNull,
+  getAsyncDataOrThrows,
+  setAsyncRef,
+} from '~/libs/getAsyncData'
+import type { Projects } from '~/libs/types'
+import { getProjects } from '~/libs/types'
+
+const user = ref<User>()
+const myProjects = ref<Projects>()
+const otherProjects = ref<Projects>()
+
+getAsyncDataOrNull('fetchUser', () =>
+  getUser(useRuntimeConfig().public.API)).then(setAsyncRef(user))
+
+getAsyncDataOrThrows('fetchSettings', () =>
+  getProjects(useRuntimeConfig().public.API)).then((data) => {
+  const projects = data.data as Ref<Projects>
+
+  const [my, other] = _.partition(
+    projects.value,
+    project => user?.value?.projects.includes(project.id) || false,
+  )
+  myProjects.value = my
+  otherProjects.value = other
+})
+</script>
+
 <template>
   <Layout :user="user" :back="false">
     <div>
@@ -6,7 +38,7 @@
         <el-col :span="18">
           <p>
             <i>{{ $t('app.summary') }}</i>
-            <br />
+            <br>
             <a href="https://github.com/teritorio/clearance">{{
               $t('app.github')
             }}</a>
@@ -16,12 +48,11 @@
             <a
               href="https://www.openstreetmap.org/user/frodrigo"
               target="_blank"
-              >frodrigo</a
-            >
+            >frodrigo</a>
           </p>
         </el-col>
         <el-col :span="6">
-          <img src="/Clearance-process.svg" style="width: 100%" />
+          <img src="/Clearance-process.svg" style="width: 100%">
         </el-col>
       </el-row>
 
@@ -56,35 +87,3 @@
     </div>
   </Layout>
 </template>
-
-<script setup lang="ts">
-import _ from 'underscore'
-import { getUser, User } from '~/libs/apiTypes'
-import {
-  getAsyncDataOrNull,
-  getAsyncDataOrThrows,
-  setAsyncRef,
-} from '~/libs/getAsyncData'
-import { getProjects, Projects } from '~/libs/types'
-
-const user = ref<User>()
-const myProjects = ref<Projects>()
-const otherProjects = ref<Projects>()
-
-getAsyncDataOrNull('fetchUser', () =>
-  getUser(useRuntimeConfig().public.API)
-).then(setAsyncRef(user))
-
-getAsyncDataOrThrows('fetchSettings', () =>
-  getProjects(useRuntimeConfig().public.API)
-).then((data) => {
-  const projects = data.data as Ref<Projects>
-
-  const [my, other] = _.partition(
-    projects.value,
-    (project) => user?.value?.projects.includes(project.id) || false
-  )
-  myProjects.value = my
-  otherProjects.value = other
-})
-</script>

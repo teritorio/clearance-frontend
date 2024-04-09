@@ -1,3 +1,47 @@
+<script lang="ts">
+import type { PropType } from 'vue'
+import LazyComponent from 'v-lazy-component'
+import Diff from '~/components/Diff.vue'
+import type { Log, ObjType, ObjTypeFull, ObjectId } from '~/libs/types'
+import { objTypeFull } from '~/libs/types'
+import Changesets from '~/components/Changesets.vue'
+
+export default defineNuxtComponent({
+  name: 'LogsComponent',
+
+  components: {
+    Changesets,
+    Diff,
+    LazyComponent,
+  },
+
+  props: {
+    log: {
+      type: Object as PropType<Log>,
+      required: true,
+    },
+    project: {
+      type: String,
+      required: true,
+    },
+    projectUser: {
+      type: Boolean,
+      required: true,
+    },
+  },
+
+  emits: {
+    accept: (_objectId: ObjectId) => true,
+  },
+
+  methods: {
+    objtypeFull(objtype: ObjType): ObjTypeFull {
+      return objTypeFull(objtype)
+    },
+  },
+})
+</script>
+
 <template>
   <el-card>
     <template #header>
@@ -24,7 +68,7 @@
             {{ $t('logs.created') }}
           </el-tag>
         </span>
-        <span v-if="log.diff_attribs && log.diff_attribs['deleted']">
+        <span v-if="log.diff_attribs && log.diff_attribs.deleted">
           <el-tag
             type="danger"
             size="small"
@@ -54,10 +98,10 @@
           >
             <div>
               🏷️ {{ $i18nHash(match.name) }}
-              <br v-if="$i18nHash(match.name) !== undefined" />
+              <br v-if="$i18nHash(match.name) !== undefined">
               <span v-for="selector in match.selectors" :key="selector">
                 {{ selector }}
-                <br />
+                <br>
               </span>
             </div>
           </el-tag>
@@ -67,7 +111,7 @@
             tag="a"
             size="small"
             :href="`https://www.openstreetmap.org/edit?editor=id&${objtypeFull(
-              log.objtype
+              log.objtype,
             )}=${log.id}`"
             target="_blank"
           >
@@ -88,7 +132,7 @@
             size="small"
             target="_blank"
             :href="`https://osmlab.github.io/osm-deep-history/#/${objtypeFull(
-              log.objtype
+              log.objtype,
             )}/${log.id}`"
             title="OSM Deep History"
           >
@@ -100,7 +144,7 @@
             size="small"
             target="_blank"
             :href="`https://pewu.github.io/osm-history/#/${objtypeFull(
-              log.objtype
+              log.objtype,
             )}/${log.id}`"
             title="OSM History Viewer"
           >
@@ -119,15 +163,18 @@
                 deleted: log.change.deleted,
               })
             "
-            >✓</el-button
           >
+            ✓
+          </el-button>
         </el-button-group>
       </div>
     </template>
     <el-row :gutter="20">
       <el-col :span="7">
-        <template v-if="log.base">v{{ log.base['version'] }} ⮞ </template>v{{
-          log.change['version']
+        <template v-if="log.base">
+          v{{ log.base.version }} ⮞
+        </template>v{{
+          log.change.version
         }}
         <Changesets
           :changesets="log.base ? log.changesets.slice(1) : log.changesets"
@@ -171,50 +218,6 @@
     </el-row>
   </el-card>
 </template>
-
-<script lang="ts">
-import { PropType } from 'vue'
-// @ts-ignore
-import LazyComponent from 'v-lazy-component'
-import Diff from '~/components/Diff.vue'
-import { Log, ObjectId, ObjType, ObjTypeFull, objTypeFull } from '~/libs/types'
-import Changesets from '~/components/Changesets.vue'
-
-export default defineNuxtComponent({
-  name: 'LogsComponent',
-
-  components: {
-    Changesets,
-    Diff,
-    LazyComponent,
-  },
-
-  props: {
-    log: {
-      type: Object as PropType<Log>,
-      required: true,
-    },
-    project: {
-      type: String,
-      required: true,
-    },
-    projectUser: {
-      type: Boolean,
-      required: true,
-    },
-  },
-
-  emits: {
-    accept: (_objectId: ObjectId) => true,
-  },
-
-  methods: {
-    objtypeFull(objtype: ObjType): ObjTypeFull {
-      return objTypeFull(objtype)
-    },
-  },
-})
-</script>
 
 <style scoped>
 .item {

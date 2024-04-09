@@ -1,3 +1,19 @@
+<script lang="ts">
+import type { PropType } from 'vue'
+import type { Validators } from '~/libs/types'
+
+export default defineNuxtComponent({
+  name: 'ValidatorsCompo',
+
+  props: {
+    validators: {
+      type: Object as PropType<Validators>,
+      required: true,
+    },
+  },
+})
+</script>
+
 <template>
   <div>
     <el-table
@@ -34,22 +50,6 @@
     </el-table>
   </div>
 </template>
-
-<script lang="ts">
-import { PropType } from 'vue'
-import { Validators } from '~/libs/types'
-
-export default defineNuxtComponent({
-  name: 'ValidatorsCompo',
-
-  props: {
-    validators: {
-      type: Object as PropType<Validators>,
-      required: true,
-    },
-  },
-})
-</script>
 
 <style scoped>
 :deep(.el-table__cell) {

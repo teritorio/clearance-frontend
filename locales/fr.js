@@ -9,8 +9,8 @@ export default {
       osm: '© contributeurs OpenStreetMap',
     },
     project: {
-      new: "Pour ajouter un nouveau projet, contactez l'administrateur :",
-      join: "Pour rejoindre le projet, contactez l'un des membres. Vous pouvez utiliser les messages OSM.",
+      new: 'Pour ajouter un nouveau projet, contactez l\'administrateur :',
+      join: 'Pour rejoindre le projet, contactez l\'un des membres. Vous pouvez utiliser les messages OSM.',
       mainContacts: 'Contact principal :',
     },
     back: 'Retour',
@@ -29,9 +29,9 @@ export default {
     filters: 'Filtres',
     data: 'Groupe de données à examiner',
     data_details:
-      "Données listées ici parce qu'elles ont été ciblées et qu'elles ne respectent pas les règles de validation.",
+      'Données listées ici parce qu\'elles ont été ciblées et qu\'elles ne respectent pas les règles de validation.',
     data_details_osm:
-      "Corrigez dans OSM si nécessaire, et attendez ici la mise à jour des données. Les données seront automatiquement supprimées de la liste lorsqu'elles auront passé les règles de validation.",
+      'Corrigez dans OSM si nécessaire, et attendez ici la mise à jour des données. Les données seront automatiquement supprimées de la liste lorsqu\'elles auront passé les règles de validation.',
     data_details_manual:
       'Si, après examen, tout est bon, utilisez le contrôle ✓ pour intégrer les modifications.',
     tags_more: '(et plus)',

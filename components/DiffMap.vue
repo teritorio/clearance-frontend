@@ -1,16 +1,15 @@
-<template>
-  <div ref="mapContainer" class="map" style="width: 100%; height: 200px"></div>
-</template>
-
 <script lang="ts">
-import { PropType, shallowRef } from 'vue'
+import type { PropType } from 'vue'
+import { shallowRef } from 'vue'
 import type { Geometry } from 'geojson'
-import {
+import type {
   CircleLayerSpecification,
   LineLayerSpecification,
+} from 'maplibre-gl'
+import {
+  FullscreenControl,
   LngLatBounds,
   Map,
-  FullscreenControl,
 } from 'maplibre-gl'
 import bbox from '@turf/bbox'
 import booleanEqual from '@turf/boolean-equal'
@@ -35,21 +34,19 @@ export default defineNuxtComponent({
   },
 
   mounted() {
-    const noChanges =
-      this.baseGeom.length === 1 &&
-      this.changeGeom.length === 1 &&
-      (this.baseGeom[0] === this.changeGeom[0] ||
-        (this.baseGeom &&
-          this.changeGeom &&
-          // @ts-ignore
-          booleanEqual(this.baseGeom[0], this.changeGeom[0])))
+    const noChanges
+      = this.baseGeom.length === 1
+      && this.changeGeom.length === 1
+      && (this.baseGeom[0] === this.changeGeom[0]
+      || (this.baseGeom
+      && this.changeGeom
+      && booleanEqual(this.baseGeom[0], this.changeGeom[0])))
 
     const bounds = new LngLatBounds(
-      // @ts-ignore
       bbox({
         type: 'GeometryCollection',
         geometries: [...this.baseGeom, ...this.changeGeom],
-      })
+      }),
     )
 
     const map = new Map({
@@ -171,6 +168,10 @@ export default defineNuxtComponent({
   },
 })
 </script>
+
+<template>
+  <div ref="mapContainer" class="map" style="width: 100%; height: 200px" />
+</template>
 
 <style>
 @import url('maplibre-gl/dist/maplibre-gl.css');
