@@ -142,7 +142,7 @@ export default defineNuxtComponent({
               </el-dropdown>
             </template>
           </template>
-          <template v-else-if="groupIndex != 0">
+          <template v-else-if="groupIndex !== 0">
 &nbsp;
           </template>
         </th>
@@ -153,7 +153,7 @@ export default defineNuxtComponent({
           :class="
             (diff[groupedKey[0]] === undefined
               || diff[groupedKey[0]][0] === undefined
-              || diff[groupedKey[0]][0][1]) != 'reject' && 'no_changes'
+              || diff[groupedKey[0]][0][1]) !== 'reject' && 'no_changes'
           "
         >
           <td class="key" :class="[backgroundClass(key)]">
@@ -163,7 +163,7 @@ export default defineNuxtComponent({
             :class="
               (diff[groupedKey[0]] === undefined
                 || diff[groupedKey[0]][0] === undefined
-                || diff[groupedKey[0]][0][1]) != 'reject' || [
+                || diff[groupedKey[0]][0][1]) !== 'reject' || [
                 backgroundClass(key),
                 'key',
               ]
@@ -175,7 +175,7 @@ export default defineNuxtComponent({
             :class="
               (diff[groupedKey[0]] === undefined
                 || diff[groupedKey[0]][0] === undefined
-                || diff[groupedKey[0]][0][1]) != 'reject' || [
+                || diff[groupedKey[0]][0][1]) !== 'reject' || [
                 backgroundClass(key),
                 'value',
               ]

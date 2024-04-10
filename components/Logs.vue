@@ -70,7 +70,7 @@ export default defineNuxtComponent({
   },
 
   emits: {
-    'remove-logs': (_objectIds: ObjectId[]) => true,
+    removeLogs: (_objectIds: ObjectId[]) => true,
   },
 
   computed: {
@@ -184,8 +184,9 @@ export default defineNuxtComponent({
 
     accept(objectIds: ObjectId[]) {
       setLogs(useRuntimeConfig().public.API, this.project, 'accept', objectIds)
-        .then(() => this.$emit('remove-logs', objectIds))
+        .then(() => this.$emit('removeLogs', objectIds))
         .catch((error) => {
+          /* eslint no-alert: 0 */
           alert(error)
         })
     },
@@ -266,10 +267,10 @@ export default defineNuxtComponent({
       >
         <el-button
           type="danger"
-          :plain="filterByAction != key"
-          :disabled="(filterByAction && filterByAction != key) || false"
+          :plain="filterByAction !== key"
+          :disabled="(filterByAction && filterByAction !== key) || false"
           size="small"
-          @click="filterByAction = filterByAction != key ? key : undefined"
+          @click="filterByAction = filterByAction !== key ? key : undefined"
         >
           {{ key }}
         </el-button>
@@ -285,11 +286,11 @@ export default defineNuxtComponent({
       >
         <el-button
           type="primary"
-          :plain="filterByUserGroups != key"
-          :disabled="(filterByUserGroups && filterByUserGroups != key) || false"
+          :plain="filterByUserGroups !== key"
+          :disabled="(filterByUserGroups && filterByUserGroups !== key) || false"
           size="small"
           @click="
-            filterByUserGroups = filterByUserGroups != key ? key : undefined
+            filterByUserGroups = filterByUserGroups !== key ? key : undefined
           "
         >
           📌 {{ key }}
@@ -306,7 +307,7 @@ export default defineNuxtComponent({
       >
         <el-button
           type="warning"
-          :plain="filterBySelectors != match.selectors"
+          :plain="filterBySelectors !== match.selectors"
           :disabled="
             (filterBySelectors && !matchFilterBySelectors(match.selectors))
               || false
@@ -332,10 +333,10 @@ export default defineNuxtComponent({
       >
         <el-button
           type="info"
-          :plain="filterByUsers != key"
-          :disabled="(filterByUsers && filterByUsers != key) || false"
+          :plain="filterByUsers !== key"
+          :disabled="(filterByUsers && filterByUsers !== key) || false"
           size="small"
-          @click="filterByUsers = filterByUsers != key ? key : undefined"
+          @click="filterByUsers = filterByUsers !== key ? key : undefined"
         >
           👤 {{ key }}
         </el-button>
@@ -352,10 +353,10 @@ export default defineNuxtComponent({
       >
         <el-button
           type="primary"
-          :plain="filterByDate != key"
-          :disabled="(filterByDate && filterByDate != key) || false"
+          :plain="filterByDate !== key"
+          :disabled="(filterByDate && filterByDate !== key) || false"
           size="small"
-          @click="filterByDate = filterByDate != key ? key : undefined"
+          @click="filterByDate = filterByDate !== key ? key : undefined"
         >
           📅 {{ key }}
         </el-button>
