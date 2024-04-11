@@ -36,12 +36,12 @@ export default defineNuxtComponent({
     groupedKeys(): string[][] {
       const keys: string[] = _.sortBy(
         _.uniq([...Object.keys(this.src || {}), ...Object.keys(this.dst)]),
-        key => (this.diff[key] ? -maxActionPriority(this.diff[key]) : 0),
+        (key) => (this.diff[key] ? -maxActionPriority(this.diff[key]) : 0),
       )
 
       return Object.values(
-        _.groupBy(keys, key =>
-          this.diff[key]?.map(diff => `${diff}`)?.join('||')),
+        _.groupBy(keys, (key) =>
+          this.diff[key]?.map((diff) => `${diff}`)?.join('||')),
       )
     },
   },

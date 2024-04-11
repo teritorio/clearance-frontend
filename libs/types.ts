@@ -121,7 +121,7 @@ export function action2priority(logAction: LogAction | null): number {
 }
 
 export function maxActionPriority(actions: Action[]): number {
-  return Math.max(...actions.map(action => action2priority(action[1])))
+  return Math.max(...actions.map((action) => action2priority(action[1])))
 }
 
 export interface Validator {

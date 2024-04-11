@@ -18,7 +18,7 @@ export default defineNuxtComponent({
   computed: {
     keys(): string[] {
       return Object.keys(this.object).filter(
-        key => !this.exclude.includes(key),
+        (key) => !this.exclude.includes(key),
       )
     },
   },
