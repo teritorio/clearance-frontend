@@ -57,7 +57,7 @@ export default defineNuxtComponent({
             class="item"
             size="small"
           >{{ tag }}</el-tag>
-          <br>
+          <br />
           <el-text class="mx-1" type="info">
             {{ $i18nHash(project.description) }}
           </el-text>

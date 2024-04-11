@@ -11,6 +11,11 @@ export default withNuxt({
   rules: {
     'curly': ['error', 'all'],
     'style/arrow-parens': ['error', 'always'],
+    'vue/html-self-closing': ['error', {
+      html: {
+        void: 'always',
+      },
+    }],
     'vue/no-unused-refs': 0,
   },
 }))

@@ -211,7 +211,7 @@ export default defineNuxtComponent({
               </span>
               <span v-else>
                 <span class="diff-text-removed">{{ src[key] }}</span>
-                <br>
+                <br />
                 <span class="diff-text-added">{{ dst[key] }}</span>
               </span>
             </template>

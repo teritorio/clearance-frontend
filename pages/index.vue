@@ -38,7 +38,7 @@ getAsyncDataOrThrows('fetchSettings', () =>
         <el-col :span="18">
           <p>
             <i>{{ $t('app.summary') }}</i>
-            <br>
+            <br />
             <a href="https://github.com/teritorio/clearance">{{
               $t('app.github')
             }}</a>
@@ -52,7 +52,7 @@ getAsyncDataOrThrows('fetchSettings', () =>
           </p>
         </el-col>
         <el-col :span="6">
-          <img src="/Clearance-process.svg" style="width: 100%">
+          <img src="/Clearance-process.svg" style="width: 100%" />
         </el-col>
       </el-row>
 
