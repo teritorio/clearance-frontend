@@ -32,10 +32,10 @@ export default defineNuxtComponent({
     >
       <p>
         <span class="comment">✎ {{ changeset.tags.comment }}</span>
-        <br>
+        <br />
         <template v-if="changeset.tags.source">
           <span class="source">📷 {{ changeset.tags.source }}</span>
-          <br>
+          <br />
         </template>
         <span class="user">
           👤&nbsp;<a
@@ -45,7 +45,7 @@ export default defineNuxtComponent({
         </span>
         <template v-if="changeset.tags.created_by">
           <span class="created_by">🛠 {{ changeset.tags.created_by }}</span>
-          <br>
+          <br />
         </template>
         <el-collapse v-model="accordion" accordion>
           <el-collapse-item :name="index">

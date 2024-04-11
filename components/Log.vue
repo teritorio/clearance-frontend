@@ -98,10 +98,10 @@ export default defineNuxtComponent({
           >
             <div>
               🏷️ {{ $i18nHash(match.name) }}
-              <br v-if="$i18nHash(match.name) !== undefined">
+              <br v-if="$i18nHash(match.name) !== undefined" />
               <span v-for="selector in match.selectors" :key="selector">
                 {{ selector }}
-                <br>
+                <br />
               </span>
             </div>
           </el-tag>
