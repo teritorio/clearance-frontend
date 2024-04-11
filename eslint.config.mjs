@@ -9,6 +9,7 @@ export default withNuxt({
   },
 }, antfu({
   rules: {
+    'curly': ['error', 'all'],
     'style/arrow-parens': ['error', 'always'],
     'vue/no-unused-refs': 0,
   },
