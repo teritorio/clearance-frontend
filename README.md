@@ -23,9 +23,11 @@ yarn dev
 ```
 
 ### Setup hooks
+
 Ensure that `core.hooksPath` is properly setup !
 
 From your project root run:
+
 ```bash
 git config core.hooksPath .git/hooks/
 ```
@@ -35,6 +37,15 @@ Then update your hooks with the following command:
 ```bash
 yarn dlx simple-git-hooks
 ```
+
+### ESLint config inspector
+
+[Docs](https://github.com/eslint/config-inspector)
+
+```bash
+npx @eslint/config-inspector
+```
+Visit http://localhost:7777/ to view and play with your ESLint config
 
 ## Production
 
