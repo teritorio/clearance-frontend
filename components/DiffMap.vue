@@ -2,9 +2,11 @@
 import type { PropType } from 'vue'
 import { shallowRef } from 'vue'
 import type { Geometry } from 'geojson'
+import type { Geometry as TurfGeometry } from '@turf/helpers'
 import type {
   CircleLayerSpecification,
   LineLayerSpecification,
+  LngLatLike,
 } from 'maplibre-gl'
 import {
   FullscreenControl,
@@ -40,14 +42,12 @@ export default defineNuxtComponent({
       && (this.baseGeom[0] === this.changeGeom[0]
       || (this.baseGeom
       && this.changeGeom
-      && booleanEqual(this.baseGeom[0], this.changeGeom[0])))
+      && booleanEqual(this.baseGeom[0] as TurfGeometry, this.changeGeom[0] as TurfGeometry)))
 
-    const bounds = new LngLatBounds(
-      bbox({
-        type: 'GeometryCollection',
-        geometries: [...this.baseGeom, ...this.changeGeom],
-      }),
-    )
+    const bounds = new LngLatBounds(bbox({
+      type: 'GeometryCollection',
+      geometries: [...this.baseGeom, ...this.changeGeom],
+    }) as unknown as LngLatLike)
 
     const map = new Map({
       container: this.mapContainer!,
