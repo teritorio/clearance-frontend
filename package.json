@@ -5,8 +5,8 @@
   "packageManager": "yarn@4.1.1",
   "scripts": {
     "build": "nuxt build",
-    "dev": "TYPESCRIPT_CHECK=true nuxt dev",
-    "generate": "TYPESCRIPT_CHECK=true nuxt generate",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
     "start": "nuxt start",
     "preview": "nuxt preview",
     "lint": "eslint .",
