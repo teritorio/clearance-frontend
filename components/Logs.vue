@@ -76,14 +76,14 @@ export default defineNuxtComponent({
   computed: {
     stats(): [string, number][] {
       const actions = this.logs
-        .map(log =>
+        .map((log) =>
           _.uniq(
             [
               ...Object.values(log.diff_attribs || {}),
               ...Object.values(log.diff_tags || {}),
             ]
               .flat(1)
-              .map(action => action[0]),
+              .map((action) => action[0]),
           ),
         )
         .flat(1)
@@ -91,22 +91,22 @@ export default defineNuxtComponent({
     },
 
     statSelectors() {
-      const matches = this.logs.map(log => _.uniq(log.matches).flat()).flat(1)
-      return this.count(matches, m => m.selectors.join(';'))
+      const matches = this.logs.map((log) => _.uniq(log.matches).flat()).flat(1)
+      return this.count(matches, (m) => m.selectors.join(';'))
     },
 
     statUserGroups() {
       const userGroups = this.logs
-        .map(log => _.uniq(log.matches.map(m => m.user_groups).flat(2)))
+        .map((log) => _.uniq(log.matches.map((m) => m.user_groups).flat(2)))
         .flat(1)
       return this.count(userGroups)
     },
 
     statUsers() {
       const users = this.logs
-        .map(log =>
+        .map((log) =>
           (log.base ? log.changesets.slice(1) : log.changesets).map(
-            changeset => changeset.user,
+            (changeset) => changeset.user,
           ),
         )
         .flat(2)
@@ -114,7 +114,7 @@ export default defineNuxtComponent({
     },
 
     statDates() {
-      const dates = this.logs.map(log => log.change.created.substring(0, 10))
+      const dates = this.logs.map((log) => log.change.created.substring(0, 10))
       return this.count(dates).sort()
     },
 
@@ -124,7 +124,7 @@ export default defineNuxtComponent({
           = this.filterByUsers !== undefined
           && _.uniq(
             (log.base ? log.changesets.slice(1) : log.changesets).map(
-              changeset => changeset.user,
+              (changeset) => changeset.user,
             ),
           )
         return (
@@ -132,17 +132,17 @@ export default defineNuxtComponent({
           || Object.values(log.diff_attribs || {})
             .concat(Object.values(log.diff_tags || {}))
             .some(
-              actions =>
+              (actions) =>
                 actions?.some(
-                  action => action[0] === this.filterByAction,
+                  (action) => action[0] === this.filterByAction,
                 ) || false,
             ))
             && (this.filterByUserGroups === undefined
-            || log.matches.some(match =>
+            || log.matches.some((match) =>
               match.user_groups.includes(this.filterByUserGroups!),
             ))
             && (this.filterBySelectors === undefined
-            || log.matches.some(match =>
+            || log.matches.some((match) =>
               this.matchFilterBySelectors(match.selectors),
             ))
             && (this.filterByUsers === undefined
@@ -161,19 +161,19 @@ export default defineNuxtComponent({
 
     baseGeoms(): Geometry[] {
       return this.logs
-        .map(log => log.base?.geom)
+        .map((log) => log.base?.geom)
         .filter((geom): geom is Geometry => !!geom)
     },
 
     changeGeoms(): Geometry[] {
-      return this.logs.map(log => log.change.geom)
+      return this.logs.map((log) => log.change.geom)
     },
   },
 
   methods: {
     count<Type>(
       data: Type[],
-      key: (o: Type) => string = i => `${i}`,
+      key: (o: Type) => string = (i) => `${i}`,
     ): [Type, number][] {
       const index = _.indexBy(data, key)
       return _.sortBy(
@@ -192,7 +192,7 @@ export default defineNuxtComponent({
     },
 
     accept_selection() {
-      const objectIds = this.logsWithFilter.map(log => ({
+      const objectIds = this.logsWithFilter.map((log) => ({
         objtype: log.objtype,
         id: log.id,
         version: log.change.version,

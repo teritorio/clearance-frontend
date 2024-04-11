@@ -39,7 +39,7 @@ export default defineNuxtComponent({
           color: colors[index % colors.length],
         }
       })
-      .filter(userGroup => !!userGroup.polygon)
+      .filter((userGroup) => !!userGroup.polygon)
       .map((userGroup) => {
         return fetch(userGroup.polygon!).then(async (data) => {
           if (data.ok) {

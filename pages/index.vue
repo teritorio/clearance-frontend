@@ -23,7 +23,7 @@ getAsyncDataOrThrows('fetchSettings', () =>
 
   const [my, other] = _.partition(
     projects.value,
-    project => user?.value?.projects.includes(project.id) || false,
+    (project) => user?.value?.projects.includes(project.id) || false,
   )
   myProjects.value = my
   otherProjects.value = other

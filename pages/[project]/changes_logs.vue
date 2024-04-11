@@ -34,9 +34,9 @@ getAsyncDataOrThrows('fetchSettings', () =>
 
 function removeLogs(objectIds: ObjectId[]) {
   logs.value = logs.value?.filter(
-    log =>
+    (log) =>
       objectIds.findIndex(
-        objectId => log.objtype === objectId.objtype && log.id === objectId.id,
+        (objectId) => log.objtype === objectId.objtype && log.id === objectId.id,
       ) === -1,
   )
 }
@@ -51,10 +51,7 @@ function removeLogs(objectIds: ObjectId[]) {
       </template>
     </template>
     <LogsCompo
-      v-if="logs !== undefined"
-      :project="project"
-      :user="user"
-      :logs="logs"
+      v-if="logs !== undefined" :project="project" :user="user" :logs="logs"
       @remove-logs="removeLogs($event)"
     />
     <template v-else>
