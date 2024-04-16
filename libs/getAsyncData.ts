@@ -3,8 +3,8 @@ import type {
   KeysOf,
   _AsyncData,
   _Transform,
-} from 'nuxt/dist/app/composables/asyncData'
-import type { NuxtApp } from 'nuxt/dist/app/nuxt'
+} from '#app/composables/asyncData'
+import type { NuxtApp } from '#app/nuxt'
 
 import { useAsyncData } from '#imports'
 

@@ -7,7 +7,7 @@ import {
   LngLatBounds,
   Map,
 } from 'maplibre-gl'
-import type { Feature, MultiPolygon, Polygon } from 'geojson'
+import type { Feature, FeatureCollection, MultiPolygon, Polygon } from 'geojson'
 import bbox from '@turf/bbox'
 import _ from 'underscore'
 import type { UserGroup } from '~/libs/types'
@@ -57,7 +57,7 @@ export default defineNuxtComponent({
       const geojson = {
         type: 'FeatureCollection',
         features: _.compact(allPolygons),
-      }
+      } as FeatureCollection
       const bounds = new LngLatBounds(
         bbox(geojson) as [number, number, number, number],
       )

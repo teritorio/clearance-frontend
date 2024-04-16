@@ -2,7 +2,6 @@
 import type { PropType } from 'vue'
 import { shallowRef } from 'vue'
 import type { Geometry } from 'geojson'
-import type { Geometry as TurfGeometry } from '@turf/helpers'
 import type {
   CircleLayerSpecification,
   LineLayerSpecification,
@@ -42,7 +41,7 @@ export default defineNuxtComponent({
       && (this.baseGeom[0] === this.changeGeom[0]
       || (this.baseGeom
       && this.changeGeom
-      && booleanEqual(this.baseGeom[0] as TurfGeometry, this.changeGeom[0] as TurfGeometry)))
+      && booleanEqual(this.baseGeom[0], this.changeGeom[0])))
 
     const bounds = new LngLatBounds(bbox({
       type: 'GeometryCollection',
