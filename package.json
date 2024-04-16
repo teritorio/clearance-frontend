@@ -60,6 +60,7 @@
     "preserveUnused": true
   },
   "lint-staged": {
-    "*": "eslint --fix"
+    "*": "eslint --fix",
+    "**/*.{vue,ts}": "nuxi typecheck ."
   }
 }
