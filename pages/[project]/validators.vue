@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import type { User } from '~/libs/apiTypes'
-import { getUser } from '~/libs/apiTypes'
 import {
-  getAsyncDataOrNull,
   getAsyncDataOrThrows,
   setAsyncRef,
 } from '~/libs/getAsyncData'
@@ -23,13 +20,8 @@ definePageMeta({
 
 const params = useRoute().params
 const project: string = params.project as string
-
-const user = ref<User>()
 const projectDetails = ref<Project>()
 const validators = ref<ValidatorsType>()
-
-getAsyncDataOrNull('fetchUser', () =>
-  getUser(useRuntimeConfig().public.API)).then(setAsyncRef(user))
 
 getAsyncDataOrThrows('fetchProject', () =>
   getProject(useRuntimeConfig().public.API, project)).then(setAsyncRef(projectDetails))
@@ -39,16 +31,8 @@ getAsyncDataOrThrows('fetchValidators', () =>
 </script>
 
 <template>
-  <Layout :user="user">
-    <template #header>
-      <ProjectLight v-if="projectDetails" :project="projectDetails" />
-      <template v-else>
-        <div v-loading="true" />
-      </template>
-    </template>
+  <div>
+    <ProjectLight v-if="projectDetails" :project="projectDetails" />
     <Validators v-if="validators" :validators="validators" />
-    <template v-else>
-      <div v-loading="true" />
-    </template>
-  </Layout>
+  </div>
 </template>

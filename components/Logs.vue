@@ -19,10 +19,6 @@ export default defineNuxtComponent({
       type: String,
       required: true,
     },
-    user: {
-      type: Object as PropType<User | null>,
-      default: null,
-    },
     logs: {
       type: Array as PropType<Logs>,
       required: true,
@@ -49,6 +45,12 @@ export default defineNuxtComponent({
       filterByDate: this.$route.query.filterByDate as string | undefined,
       scroolCount: 10,
     }
+  },
+
+  setup() {
+    const user = useState<User>('user')
+
+    return { user }
   },
 
   watch: {

@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import type { User } from '~/libs/apiTypes'
-import { getUser } from '~/libs/apiTypes'
 import {
-  getAsyncDataOrNull,
   getAsyncDataOrThrows,
   setAsyncRef,
 } from '~/libs/getAsyncData'
-import LogsCompo from '~/components/Logs.vue'
 import type { Logs, ObjectId, Project } from '~/libs/types'
 import { getLogs, getProject } from '~/libs/types'
 
@@ -18,13 +14,8 @@ definePageMeta({
 
 const params = useRoute().params
 const project: string = params.project as string
-
-const user = ref<User>()
 const projectDetails = ref<Project>()
 const logs = ref<Logs>()
-
-getAsyncDataOrNull('fetchUser', () =>
-  getUser(useRuntimeConfig().public.API)).then(setAsyncRef(user))
 
 getAsyncDataOrThrows('fetchProject', () =>
   getProject(useRuntimeConfig().public.API, project)).then(setAsyncRef(projectDetails))
@@ -43,19 +34,13 @@ function removeLogs(objectIds: ObjectId[]) {
 </script>
 
 <template>
-  <Layout :user="user">
-    <template #header>
-      <ProjectLight v-if="projectDetails" :project="projectDetails" />
-      <template v-else>
-        <div v-loading="true" />
-      </template>
-    </template>
-    <LogsCompo
-      v-if="logs !== undefined" :project="project" :user="user" :logs="logs"
+  <div>
+    <ProjectLight v-if="projectDetails" :project="projectDetails" />
+    <Logs
+      v-if="logs !== undefined"
+      :project="project"
+      :logs="logs"
       @remove-logs="removeLogs($event)"
     />
-    <template v-else>
-      <div v-loading="true" />
-    </template>
-  </Layout>
+  </div>
 </template>
