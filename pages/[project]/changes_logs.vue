@@ -3,7 +3,7 @@ import {
   getAsyncDataOrThrows,
   setAsyncRef,
 } from '~/libs/getAsyncData'
-import type { Logs, ObjectId, Project } from '~/libs/types'
+import type { Log, ObjectId, Project } from '~/libs/types'
 import { getLogs, getProject } from '~/libs/types'
 
 definePageMeta({
@@ -15,7 +15,7 @@ definePageMeta({
 const params = useRoute().params
 const project: string = params.project as string
 const projectDetails = ref<Project>()
-const logs = ref<Logs>()
+const logs = ref<Log[]>()
 
 getAsyncDataOrThrows('fetchProject', () =>
   getProject(useRuntimeConfig().public.API, project)).then(setAsyncRef(projectDetails))

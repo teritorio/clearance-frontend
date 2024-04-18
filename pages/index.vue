@@ -2,16 +2,16 @@
 import _ from 'underscore'
 import type { User } from '~/libs/apiTypes'
 import { getAsyncDataOrThrows } from '~/libs/getAsyncData'
-import type { Projects } from '~/libs/types'
+import type { Project } from '~/libs/types'
 import { getProjects } from '~/libs/types'
 
 const user = useState<User>('user')
-const myProjects = ref<Projects>()
-const otherProjects = ref<Projects>()
+const myProjects = ref<Project[]>()
+const otherProjects = ref<Project[]>()
 
 getAsyncDataOrThrows('fetchSettings', () =>
   getProjects(useRuntimeConfig().public.API)).then((data) => {
-  const projects = data.data as Ref<Projects>
+  const projects = data.data as Ref<Project[]>
 
   const [my, other] = _.partition(
     projects.value,
@@ -25,6 +25,7 @@ getAsyncDataOrThrows('fetchSettings', () =>
 <template>
   <div>
     <h1>{{ $t('app.title') }}</h1>
+
     <el-row>
       <el-col :span="18">
         <p>
@@ -46,7 +47,6 @@ getAsyncDataOrThrows('fetchSettings', () =>
         <img src="/Clearance-process.svg" style="width: 100%" />
       </el-col>
     </el-row>
-
     <template v-if="myProjects !== undefined && myProjects?.length > 0">
       <h2>{{ $t('page.index.myProjects') }}</h2>
       <el-space :fill="true" wrap :size="20">
@@ -57,7 +57,9 @@ getAsyncDataOrThrows('fetchSettings', () =>
         />
       </el-space>
     </template>
+
     <h2>{{ $t('page.index.publicProjects') }}</h2>
+
     <template v-if="otherProjects === undefined">
       <el-empty
         v-loading="true"
@@ -65,6 +67,7 @@ getAsyncDataOrThrows('fetchSettings', () =>
         :image-size="50"
       />
     </template>
+
     <template v-else-if="otherProjects.length > 0">
       <el-space :fill="true" wrap :size="20">
         <Project
@@ -74,6 +77,7 @@ getAsyncDataOrThrows('fetchSettings', () =>
         />
       </el-space>
     </template>
+
     <el-empty v-else :description="$t('page.index.empty')" :image-size="50" />
   </div>
 </template>
