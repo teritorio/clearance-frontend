@@ -12,19 +12,6 @@
   "major": {
     "dependencyDashboardApproval": true
   },
-  "packageRules": [
-    {
-      "matchPackagePatterns": ["lint"],
-      "automerge": true,
-      "groupName": "Lint packages"
-    },
-    {
-      "matchUpdateTypes": ["minor", "patch"],
-      "matchCurrentVersion": "!/^0/",
-      "automerge": true,
-      "groupName": "All dependencies (non-major)"
-    }
-  ],
   "schedule": [
     "after 10pm every weekday",
     "before 7am every weekday"
