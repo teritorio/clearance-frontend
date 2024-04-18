@@ -1,25 +1,19 @@
 <script setup lang="ts">
 import _ from 'underscore'
 import type { User } from '~/libs/apiTypes'
-import { getAsyncDataOrThrows } from '~/libs/getAsyncData'
 import type { Project } from '~/libs/types'
-import { getProjects } from '~/libs/types'
 
 const user = useState<User>('user')
+const projects = useState<Project>('projects')
 const myProjects = ref<Project[]>()
 const otherProjects = ref<Project[]>()
 
-getAsyncDataOrThrows('fetchSettings', () =>
-  getProjects(useRuntimeConfig().public.API)).then((data) => {
-  const projects = data.data as Ref<Project[]>
-
-  const [my, other] = _.partition(
-    projects.value,
-    (project) => user?.value?.projects.includes(project.id) || false,
-  )
-  myProjects.value = my
-  otherProjects.value = other
-})
+const [my, other] = _.partition(
+  projects.value,
+  (project: Project) => user?.value?.projects.includes(project.id) || false,
+)
+myProjects.value = my
+otherProjects.value = other
 </script>
 
 <template>
