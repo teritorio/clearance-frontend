@@ -1,26 +1,34 @@
 <script setup lang="ts">
 import type { User } from '~/libs/apiTypes'
+import type { Project } from '~/libs/types'
 
 const back = ref(true)
 const { locale, locales, setLocale } = useI18n()
 
-const user = useState<User>('user')
 const authToken = useCookie('_interslice_session')
 if (authToken.value) {
   await callOnce(async () => {
     try {
-      user.value = await $fetch<User>(`${useRuntimeConfig().public.API}/users/me`, { credentials: 'include' })
+      const user = await useFetchWithCache<User>('user', `${useRuntimeConfig().public.API}/users/me`, { credentials: 'include' })
+      useState<User>('user', () => user.value)
     }
-    catch (error) {
-      console.error(error)
+    catch (err: any) {
+      ElMessage.error(err.message)
     }
   })
+}
+
+try {
+  const projects = await useFetchWithCache<Project[]>('projects', `${useRuntimeConfig().public.API}/projects`)
+  useState<Project[]>('projects', () => projects.value)
+}
+catch (err: any) {
+  ElMessage.error(err.message)
 }
 
 const availableLocales = computed(() => {
   return locales.value.filter((i) => i.code !== locale.value)
 })
-
 // Function from https://dev.to/jorik/country-code-to-flag-emoji-a21
 function getFlagEmoji(countryCode: string) {
   const codePoints = countryCode
@@ -32,7 +40,7 @@ function getFlagEmoji(countryCode: string) {
 </script>
 
 <template>
-  <NuxtLayout>
+  <nuxt-layout>
     <el-menu mode="horizontal" :ellipsis="false">
       <el-menu-item v-if="back" index="0">
         <nuxt-link to="/" :title="$t('app.back')">
@@ -68,7 +76,7 @@ function getFlagEmoji(countryCode: string) {
         <User :user="user" />
       </el-menu-item>
     </el-menu>
-    <NuxtPage />
+    <nuxt-page />
     <footer>
       <p>
         {{ $t('app.attribution.data') }}
@@ -77,11 +85,5 @@ function getFlagEmoji(countryCode: string) {
         }}</a>
       </p>
     </footer>
-  </NuxtLayout>
+  </nuxt-layout>
 </template>
-
-<style scoped>
-.flex-grow {
-  flex-grow: 1;
-}
-</style>
