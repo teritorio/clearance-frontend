@@ -28,12 +28,12 @@ export default defineNuxtComponent({
     </el-text>
   </span>
   <el-button-group>
-    <el-button tag="a" :href="`/${project.id}/validators/`">
+    <nuxt-link class="el-button" :to="`/${project.id}/validators/`">
       {{ $t('project.settings') }}
-    </el-button>
-    <el-button tag="a" :href="`/${project.id}`">
+    </nuxt-link>
+    <nuxt-link class="el-button el-button--primary" :to="`/${project.id}`">
       {{ $t('project.details') }}
-    </el-button>
+    </nuxt-link>
   </el-button-group>
 </template>
 
