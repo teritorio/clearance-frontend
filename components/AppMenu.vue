@@ -50,7 +50,7 @@ function getFlagEmoji(countryCode: string) {
       </el-select>
     </el-menu-item>
     <el-menu-item index="3">
-      <User :user="user" />
+      <user-profile :user="user" />
     </el-menu-item>
   </el-menu>
 </template>
