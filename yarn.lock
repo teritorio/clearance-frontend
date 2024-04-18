@@ -2870,31 +2870,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/bbox@npm:7.0.0-alpha.2":
-  version: 7.0.0-alpha.2
-  resolution: "@turf/bbox@npm:7.0.0-alpha.2"
+"@turf/bbox@npm:7.0.0-alpha.114":
+  version: 7.0.0-alpha.114
+  resolution: "@turf/bbox@npm:7.0.0-alpha.114"
   dependencies:
-    "@turf/helpers": "npm:^7.0.0-alpha.2"
-    "@turf/meta": "npm:^7.0.0-alpha.2"
-    tslib: "npm:^2.3.0"
-  checksum: 10c0/ffd23ed8414755c794b70b55f3a0765381adc401a7332d5daa604610cc3b9aa10f9d55bc9a30ac156f8536f0d630a884614df556e80cb134c13700ed2d6b894e
+    "@turf/helpers": "npm:^7.0.0-alpha.114+e0bdd0add"
+    "@turf/meta": "npm:^7.0.0-alpha.114+e0bdd0add"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/782f3c528a1aec8428f04c6771cb2385af8aabdf1a9317cfbbcdb88b8107d652bc70f4d28ef842c97c9e1016a009b5c7061e3dceba99eaf7e7177e86122368fc
   languageName: node
   linkType: hard
 
-"@turf/boolean-equal@npm:7.0.0-alpha.2":
-  version: 7.0.0-alpha.2
-  resolution: "@turf/boolean-equal@npm:7.0.0-alpha.2"
+"@turf/boolean-equal@npm:7.0.0-alpha.114":
+  version: 7.0.0-alpha.114
+  resolution: "@turf/boolean-equal@npm:7.0.0-alpha.114"
   dependencies:
-    "@turf/clean-coords": "npm:^7.0.0-alpha.2"
-    "@turf/helpers": "npm:^7.0.0-alpha.2"
-    "@turf/invariant": "npm:^7.0.0-alpha.2"
-    geojson-equality: "npm:0.1.6"
-    tslib: "npm:^2.3.0"
-  checksum: 10c0/08807424d7fd01a7af1ba8e13b78133f17698aecc32e32f9ffdde2da04eb5025a81f9718bb0c83f14f9d8698e1db87f05db905f3c996f3fac82b02037fea9507
+    "@turf/clean-coords": "npm:^7.0.0-alpha.114+e0bdd0add"
+    "@turf/helpers": "npm:^7.0.0-alpha.114+e0bdd0add"
+    "@turf/invariant": "npm:^7.0.0-alpha.114+e0bdd0add"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/d09b2defa708376cc53a46b2ffd5469b690803cf4b11f24b06f47a71397775980e78f6246c7dcd9d4aa00395f9c790961882cae1d8a237ce400620f8ec63c320
   languageName: node
   linkType: hard
 
-"@turf/clean-coords@npm:^7.0.0-alpha.2":
+"@turf/clean-coords@npm:^7.0.0-alpha.114+e0bdd0add":
   version: 7.0.0-alpha.114
   resolution: "@turf/clean-coords@npm:7.0.0-alpha.114"
   dependencies:
@@ -2905,16 +2904,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/helpers@npm:7.0.0-alpha.2":
-  version: 7.0.0-alpha.2
-  resolution: "@turf/helpers@npm:7.0.0-alpha.2"
-  dependencies:
-    tslib: "npm:^2.3.0"
-  checksum: 10c0/dcc5598d1725468f3244abd21a53cf74610ec86ca6f38dfcdf7cff48afa04318d6e02ef81b8f24c49515b6f68c382c50ac36f7393855935092c526922a217958
-  languageName: node
-  linkType: hard
-
-"@turf/helpers@npm:^7.0.0-alpha.114+e0bdd0add, @turf/helpers@npm:^7.0.0-alpha.2":
+"@turf/helpers@npm:7.0.0-alpha.114, @turf/helpers@npm:^7.0.0-alpha.114+e0bdd0add":
   version: 7.0.0-alpha.114
   resolution: "@turf/helpers@npm:7.0.0-alpha.114"
   dependencies:
@@ -2924,7 +2914,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/invariant@npm:^7.0.0-alpha.114+e0bdd0add, @turf/invariant@npm:^7.0.0-alpha.2":
+"@turf/invariant@npm:^7.0.0-alpha.114+e0bdd0add":
   version: 7.0.0-alpha.114
   resolution: "@turf/invariant@npm:7.0.0-alpha.114"
   dependencies:
@@ -2934,7 +2924,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/meta@npm:^7.0.0-alpha.2":
+"@turf/meta@npm:^7.0.0-alpha.114+e0bdd0add":
   version: 7.0.0-alpha.114
   resolution: "@turf/meta@npm:7.0.0-alpha.114"
   dependencies:
@@ -5524,20 +5514,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deep-equal@npm:^1.0.0":
-  version: 1.1.2
-  resolution: "deep-equal@npm:1.1.2"
-  dependencies:
-    is-arguments: "npm:^1.1.1"
-    is-date-object: "npm:^1.0.5"
-    is-regex: "npm:^1.1.4"
-    object-is: "npm:^1.1.5"
-    object-keys: "npm:^1.1.1"
-    regexp.prototype.flags: "npm:^1.5.1"
-  checksum: 10c0/cd85d822d18e9b3e1532d0f6ba412d229aa9d22881d70da161674428ae96e47925191296f7cda29306bac252889007da40ed8449363bd1c96c708acb82068a00
-  languageName: node
-  linkType: hard
-
 "deep-equal@npm:^2.2.3":
   version: 2.2.3
   resolution: "deep-equal@npm:2.2.3"
@@ -5849,9 +5825,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"element-plus@npm:2.6.3":
-  version: 2.6.3
-  resolution: "element-plus@npm:2.6.3"
+"element-plus@npm:2.7.0":
+  version: 2.7.0
+  resolution: "element-plus@npm:2.7.0"
   dependencies:
     "@ctrl/tinycolor": "npm:^3.4.1"
     "@element-plus/icons-vue": "npm:^2.3.1"
@@ -5870,7 +5846,7 @@ __metadata:
     normalize-wheel-es: "npm:^1.2.0"
   peerDependencies:
     vue: ^3.2.0
-  checksum: 10c0/bdac52476c9e9c07c2cf87f8e314e12841165de97adba62b4f29d5514de5b72d98680808bf001f15b77de2601209e277884072d4f26b112f14f20d6e195867ae
+  checksum: 10c0/38512e46b9d4179f5f9e6b850d4ef75270c5640146282425cea9de870f7d6d87d8251cec9c61e37a7d8fd367f8074986b8a5c767bb403877dd6a44606f134f39
   languageName: node
   linkType: hard
 
@@ -7021,15 +6997,6 @@ __metadata:
   version: 1.0.0-beta.2
   resolution: "gensync@npm:1.0.0-beta.2"
   checksum: 10c0/782aba6cba65b1bb5af3b095d96249d20edbe8df32dbf4696fd49be2583faf676173bf4809386588828e4dd76a3354fcbeb577bab1c833ccd9fc4577f26103f8
-  languageName: node
-  linkType: hard
-
-"geojson-equality@npm:0.1.6":
-  version: 0.1.6
-  resolution: "geojson-equality@npm:0.1.6"
-  dependencies:
-    deep-equal: "npm:^1.0.0"
-  checksum: 10c0/9cc11f110cfb03049cb4f271542e89a83c737ca68f07d4f90164013039994c0b06451ab7a3c523de216d8c8abcdfca9576f63692114bb5690f02376ce12196a3
   languageName: node
   linkType: hard
 
@@ -12872,7 +12839,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.3.0, tslib@npm:^2.3.1, tslib@npm:^2.6.2":
+"tslib@npm:^2.3.1, tslib@npm:^2.6.2":
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 10c0/e03a8a4271152c8b26604ed45535954c0a45296e32445b4b87f8a5abdb2421f40b59b4ca437c4346af0f28179780d604094eb64546bee2019d903d01c6c19bdb
@@ -13794,9 +13761,9 @@ __metadata:
     "@element-plus/nuxt": "npm:^1.0.8"
     "@nuxt/eslint": "npm:^0.3.7"
     "@nuxtjs/i18n": "npm:^8.3.0"
-    "@turf/bbox": "npm:7.0.0-alpha.2"
-    "@turf/boolean-equal": "npm:7.0.0-alpha.2"
-    "@turf/helpers": "npm:7.0.0-alpha.2"
+    "@turf/bbox": "npm:7.0.0-alpha.114"
+    "@turf/boolean-equal": "npm:7.0.0-alpha.114"
+    "@turf/helpers": "npm:7.0.0-alpha.114"
     "@types/diff": "npm:^5.0.9"
     "@types/eslint": "npm:^8.56.9"
     "@types/geojson": "npm:^7946.0.14"
@@ -13805,7 +13772,7 @@ __metadata:
     babel-jest: "npm:^29.7.0"
     dayjs: "npm:^1.11.10"
     diff: "npm:^5.2.0"
-    element-plus: "npm:2.6.3"
+    element-plus: "npm:2.7.0"
     eslint: "npm:8.57.0"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"
