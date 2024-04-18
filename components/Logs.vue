@@ -2,9 +2,8 @@
 import type { PropType } from 'vue'
 import _ from 'underscore'
 import type { Geometry } from 'geojson'
-import type { User } from '~/libs/apiTypes'
 import LogsComponent from '~/components/LogsComponent.vue'
-import type { Log, ObjectId } from '~/libs/types'
+import type { Log, ObjectId, User } from '~/libs/types'
 import { setLogs } from '~/libs/types'
 
 export default defineNuxtComponent({

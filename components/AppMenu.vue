@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { User } from '~/libs/apiTypes'
+import type { User } from '~/libs/types'
 
 const back = ref(true)
 const user = useState<User>('user')

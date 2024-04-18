@@ -1,10 +1,3 @@
-export interface User {
-  osm_uid: number
-  osm_name: string
-  osm_image_url: string
-  projects: string[]
-}
-
 export function userLogout(apiEndpoint: string): Promise<void> {
   return fetch(`${apiEndpoint}/../../../users`, {
     method: 'DELETE',
