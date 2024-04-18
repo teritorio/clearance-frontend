@@ -3,15 +3,15 @@ import type { PropType } from 'vue'
 import _ from 'underscore'
 import type { Geometry } from 'geojson'
 import type { User } from '~/libs/apiTypes'
-import Log from '~/components/Log.vue'
-import type { Logs, ObjectId } from '~/libs/types'
+import LogsComponent from '~/components/LogsComponent.vue'
+import type { Log, ObjectId } from '~/libs/types'
 import { setLogs } from '~/libs/types'
 
 export default defineNuxtComponent({
   name: 'LogsComponent',
 
   components: {
-    Log,
+    LogsComponent,
   },
 
   props: {
@@ -20,7 +20,7 @@ export default defineNuxtComponent({
       required: true,
     },
     logs: {
-      type: Array as PropType<Logs>,
+      type: Array as PropType<Log[]>,
       required: true,
     },
   },
@@ -388,7 +388,7 @@ export default defineNuxtComponent({
     </ul>
 
     <el-space v-infinite-scroll="scroolLoad" :fill="true" wrap :size="20">
-      <Log
+      <LogsComponent
         v-for="log in (logsWithFilter || []).slice(0, scroolCount + 1)"
         :key="log.id"
         :log="log"

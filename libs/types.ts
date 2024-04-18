@@ -76,13 +76,11 @@ export interface ObjectId {
   deleted: boolean
 }
 
-export type Logs = Log[]
-
-export function getLogs(apiEndpoint: string, project: string): Promise<Logs> {
+export function getLogs(apiEndpoint: string, project: string): Promise<Log[]> {
   return fetch(`${apiEndpoint}/projects/${project}/changes_logs/`).then(
     (data) => {
       if (data.ok) {
-        return data.json() as unknown as Logs
+        return data.json() as unknown as Log[]
       }
       else {
         return Promise.reject(
@@ -169,12 +167,10 @@ export interface Project {
   project_tags: string[]
 }
 
-export type Projects = Project[]
-
-export function getProjects(apiEndpoint: string): Promise<Projects> {
+export function getProjects(apiEndpoint: string): Promise<Project[]> {
   return fetch(`${apiEndpoint}/projects`).then((data) => {
     if (data.ok) {
-      return data.json() as unknown as Projects
+      return data.json() as unknown as Project[]
     }
     else {
       return Promise.reject(
