@@ -25,8 +25,18 @@ catch (err: any) {
 
 <template>
   <nuxt-layout>
-    <app-menu />
-    <nuxt-page />
-    <app-footer />
+    <el-container direction="vertical">
+      <app-menu />
+      <el-main>
+        <nuxt-page />
+      </el-main>
+      <app-footer />
+    </el-container>
   </nuxt-layout>
 </template>
+
+<style>
+body {
+  margin: 0;
+}
+</style>
