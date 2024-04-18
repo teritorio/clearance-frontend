@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { User } from '~/libs/apiTypes'
-import type { Project } from '~/libs/types'
+import type { Project, User } from '~/libs/types'
 
 const authToken = useCookie('_interslice_session')
 if (authToken.value) {

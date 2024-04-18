@@ -76,6 +76,13 @@ export interface ObjectId {
   deleted: boolean
 }
 
+export interface User {
+  osm_uid: number
+  osm_name: string
+  osm_image_url: string
+  projects: string[]
+}
+
 export function getLogs(apiEndpoint: string, project: string): Promise<Log[]> {
   return fetch(`${apiEndpoint}/projects/${project}/changes_logs/`).then(
     (data) => {

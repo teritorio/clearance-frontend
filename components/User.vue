@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { PropType } from 'vue'
-import type { User } from '~/libs/apiTypes'
+import type { User } from '~/libs/types'
 import { userLogout } from '~/libs/apiTypes'
 
 export default defineNuxtComponent({

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import _ from 'underscore'
-import type { User } from '~/libs/apiTypes'
-import type { Project } from '~/libs/types'
+import type { Project, User } from '~/libs/types'
 
 const user = useState<User>('user')
 const projects = useState<Project>('projects')
