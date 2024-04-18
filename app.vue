@@ -35,9 +35,9 @@ function getFlagEmoji(countryCode: string) {
   <NuxtLayout>
     <el-menu mode="horizontal" :ellipsis="false">
       <el-menu-item v-if="back" index="0">
-        <a href="/" :title="$t('app.back')">
+        <nuxt-link to="/" :title="$t('app.back')">
           <img src="/favicon.svg" style="width: 6em" />
-        </a>
+        </nuxt-link>
       </el-menu-item>
       <el-menu-item v-else index="0">
         <img src="/favicon.svg" style="width: 6em" />
