@@ -2870,14 +2870,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/bbox@npm:7.0.0-alpha.2":
-  version: 7.0.0-alpha.2
-  resolution: "@turf/bbox@npm:7.0.0-alpha.2"
+"@turf/bbox@npm:7.0.0-alpha.114":
+  version: 7.0.0-alpha.114
+  resolution: "@turf/bbox@npm:7.0.0-alpha.114"
   dependencies:
-    "@turf/helpers": "npm:^7.0.0-alpha.2"
-    "@turf/meta": "npm:^7.0.0-alpha.2"
-    tslib: "npm:^2.3.0"
-  checksum: 10c0/ffd23ed8414755c794b70b55f3a0765381adc401a7332d5daa604610cc3b9aa10f9d55bc9a30ac156f8536f0d630a884614df556e80cb134c13700ed2d6b894e
+    "@turf/helpers": "npm:^7.0.0-alpha.114+e0bdd0add"
+    "@turf/meta": "npm:^7.0.0-alpha.114+e0bdd0add"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/782f3c528a1aec8428f04c6771cb2385af8aabdf1a9317cfbbcdb88b8107d652bc70f4d28ef842c97c9e1016a009b5c7061e3dceba99eaf7e7177e86122368fc
   languageName: node
   linkType: hard
 
@@ -2934,7 +2934,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/meta@npm:^7.0.0-alpha.2":
+"@turf/meta@npm:^7.0.0-alpha.114+e0bdd0add":
   version: 7.0.0-alpha.114
   resolution: "@turf/meta@npm:7.0.0-alpha.114"
   dependencies:
@@ -13794,7 +13794,7 @@ __metadata:
     "@element-plus/nuxt": "npm:^1.0.8"
     "@nuxt/eslint": "npm:^0.3.7"
     "@nuxtjs/i18n": "npm:^8.3.0"
-    "@turf/bbox": "npm:7.0.0-alpha.2"
+    "@turf/bbox": "npm:7.0.0-alpha.114"
     "@turf/boolean-equal": "npm:7.0.0-alpha.2"
     "@turf/helpers": "npm:7.0.0-alpha.2"
     "@types/diff": "npm:^5.0.9"
