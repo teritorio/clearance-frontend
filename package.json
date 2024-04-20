@@ -25,7 +25,7 @@
     "@types/geojson": "^7946.0.14",
     "dayjs": "^1.11.10",
     "diff": "^5.2.0",
-    "element-plus": "2.6.3",
+    "element-plus": "2.7.1",
     "maplibre-gl": "^4.1.2",
     "underscore": "^1.13.6",
     "v-lazy-component": "^3.0.9",
