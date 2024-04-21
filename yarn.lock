@@ -898,16 +898,16 @@ __metadata:
   linkType: hard
 
 "@element-plus/nuxt@npm:^1.0.8":
-  version: 1.0.8
-  resolution: "@element-plus/nuxt@npm:1.0.8"
+  version: 1.0.9
+  resolution: "@element-plus/nuxt@npm:1.0.9"
   dependencies:
-    "@nuxt/kit": "npm:^3.11.1"
+    "@nuxt/kit": "npm:^3.11.2"
     magic-string: "npm:^0.27.0"
-    unplugin: "npm:^1.10.0"
+    unplugin: "npm:^1.10.1"
   peerDependencies:
     "@element-plus/icons-vue": ">=0.2.6"
     element-plus: ">=2"
-  checksum: 10c0/70c8f1eea1c5126176af779dd26483458039d2cf57d7b74d43bb101433d61b91488c7a1f279e3af09cf387032b45eda0c6ec2d0a663cf6dfb606e67f4da704bf
+  checksum: 10c0/ea162f8b963f55d8833310f0957ae1cbb454f13266b564c57ec7a77e05e676960492884d8c8fb0c9b5d818219ec6acc46d956a63e844a3efdbbd76284dc4fc52
   languageName: node
   linkType: hard
 
