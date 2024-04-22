@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import {
-  getAsyncDataOrThrows,
-  setAsyncRef,
-} from '~/libs/getAsyncData'
 import type { Log, ObjectId, Project } from '~/libs/types'
-import { getLogs, getProject } from '~/libs/types'
 
 definePageMeta({
   validate({ params }) {
@@ -13,15 +8,27 @@ definePageMeta({
 })
 
 const params = useRoute().params
-const project: string = params.project as string
-const projectDetails = ref<Project>()
+const projectSlug = params.project as string
+const project = ref<Project>()
 const logs = ref<Log[]>()
 
-getAsyncDataOrThrows('fetchProject', () =>
-  getProject(useRuntimeConfig().public.API, project)).then(setAsyncRef(projectDetails))
+try {
+  const projectData = await useFetchWithCache<Project>(`project-${projectSlug}`, `${useRuntimeConfig().public.API}/projects/${projectSlug}`)
+  project.value = projectData.value
+  useState<Project>('project', () => projectData.value)
+}
+catch (err: any) {
+  ElMessage.error(err.message)
+}
 
-getAsyncDataOrThrows('fetchSettings', () =>
-  getLogs(useRuntimeConfig().public.API, project)).then(setAsyncRef(logs))
+try {
+  const logsData = await useFetchWithCache<Log[]>(`logs-${projectSlug}`, `${useRuntimeConfig().public.API}/projects/${projectSlug}/changes_logs`)
+  logs.value = logsData.value
+  useState<Log[]>('logs', () => logsData.value)
+}
+catch (err: any) {
+  ElMessage.error(err.message)
+}
 
 function removeLogs(objectIds: ObjectId[]) {
   logs.value = logs.value?.filter(
@@ -35,10 +42,10 @@ function removeLogs(objectIds: ObjectId[]) {
 
 <template>
   <div>
-    <ProjectLight v-if="projectDetails" :project="projectDetails" />
-    <Logs
-      v-if="logs !== undefined"
-      :project="project"
+    <project-light v-if="project" :project="project" />
+    <logs
+      v-if="logs?.length"
+      :project="projectSlug"
       :logs="logs"
       @remove-logs="removeLogs($event)"
     />
