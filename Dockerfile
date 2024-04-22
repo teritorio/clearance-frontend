@@ -1,24 +1,15 @@
 ARG  NODE_VERSION
 FROM node:${NODE_VERSION}
 
-RUN apk --no-cache add git
+WORKDIR /app
+RUN corepack enable
 
-# Create app directory
-RUN mkdir -p /usr/src/app/.nuxt
-WORKDIR /usr/src/app
-
-# Install app dependencies
-COPY package.json yarn.lock /usr/src/app/
+COPY package.json yarn.lock /app/
 RUN yarn install
-RUN yarn add -D serve
-COPY . /usr/src/app
-RUN yarn install
-RUN yarn generate
 
-# Set environment variables
-ENV NODE_ENV production
-ENV NUXT_HOST 0.0.0.0
-ENV NUXT_PORT 3000
+COPY . .
+RUN yarn install
+RUN yarn build
 
 EXPOSE 3000
-CMD [ "yarn", "start" ]
+CMD [ "node", ".output/server/index.mjs" ]
