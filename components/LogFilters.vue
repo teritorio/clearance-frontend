@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { countBy, indexBy, intersection, sortBy, uniq } from 'underscore'
+import { countBy, indexBy, sortBy, uniq } from 'underscore'
+import type { LocationQuery } from 'vue-router'
 import type { Log } from '~/libs/types'
 
 const logs = useState<Log[]>('logs')
+
 const route = useRoute()
-const filterByAction = route.query.filterByAction as string | undefined
-const filterByUserGroups = route.query.filterByUserGroups as string | undefined
-const filterBySelectors = route.query.filterBySelectors as string[] | undefined
-const filterByUsers = route.query.filterByUsers as string | undefined
-const filterByDate = route.query.filterByDate as string | undefined
+const filters = ref<LocationQuery>()
+watchEffect(() => {
+  filters.value = route.query
+})
 
 const stats = computed((): [string, number][] => {
   const actions = logs.value
@@ -65,10 +66,13 @@ function getStats<Type>(
   ).map(([key, count]) => [index[key], count])
 }
 
-function matchFilterBySelectors(selectors: string[]): boolean {
-  return (
-    filterBySelectors !== undefined && intersection(selectors, filterBySelectors).length > 0
-  )
+const router = useRouter()
+async function applyFilter(key: string, value: string) {
+  const query = filters.value?.[key] === value
+    ? Object.fromEntries(Object.entries(route.query).filter(([k, _v]) => k !== key))
+    : { ...route.query, [key]: value }
+
+  await router.replace({ ...route, query })
 }
 </script>
 
@@ -82,106 +86,97 @@ function matchFilterBySelectors(selectors: string[]): boolean {
         </el-tag>
       </el-badge>
       <el-badge
-        v-for="[key, count] in stats"
-        :key="key"
+        v-for="[filter, count] in stats"
+        :key="filter"
         :value="count"
         class="item"
         :max="999"
       >
         <el-button
           type="danger"
-          :plain="filterByAction !== key"
-          :disabled="(filterByAction && filterByAction !== key) || false"
           size="small"
-          @click="filterByAction = filterByAction !== key ? key : undefined"
+          :plain="filters?.filterByAction !== filter"
+          :disabled="!!(filters?.filterByAction && filters?.filterByAction !== filter)"
+          @click="applyFilter('filterByAction', filter)"
         >
-          {{ key }}
+          {{ filter }}
         </el-button>
       </el-badge>
     </el-row>
     <el-row>
       <el-badge
-        v-for="[key, count] in statUserGroups"
-        :key="key"
+        v-for="[filter, count] in statUserGroups"
+        :key="filter"
         :value="count"
         class="item"
         :max="999"
       >
         <el-button
           type="primary"
-          :plain="filterByUserGroups !== key"
-          :disabled="(filterByUserGroups && filterByUserGroups !== key) || false"
           size="small"
-          @click="
-            filterByUserGroups = filterByUserGroups !== key ? key : undefined
-          "
+          :plain="filters?.filterByUserGroups !== filter"
+          :disabled="!!(filters?.filterByUserGroups && filters?.filterByUserGroups !== filter)"
+          @click="applyFilter('filterByUserGroups', filter)"
         >
-          📌 {{ key }}
+          📌 {{ filter }}
         </el-button>
       </el-badge>
     </el-row>
     <el-row>
       <el-badge
         v-for="[match, count] in statSelectors"
-        :key="match.selectors.join(';')"
+        :key="match.selectors.join()"
         :value="count"
         class="item"
         :max="999"
       >
         <el-button
           type="warning"
-          :plain="filterBySelectors !== match.selectors"
-          :disabled="
-            (filterBySelectors && !matchFilterBySelectors(match.selectors))
-              || false
-          "
+          :plain="filters?.filterBySelectors !== match.selectors.join()"
+          :disabled="!!(filters?.filterBySelectors && filters?.filterBySelectors !== match.selectors.join())"
           size="small"
-          @click="
-            filterBySelectors = !matchFilterBySelectors(match.selectors)
-              ? match.selectors
-              : undefined
-          "
+          @click="applyFilter('filterBySelectors', match.selectors.join())"
         >
-          🏷️ {{ $i18nHash(match.name) || match.selectors.join(' ') }}
+          🏷️ {{ $i18nHash(match.name) || match.selectors.join() }}
         </el-button>
       </el-badge>
     </el-row>
     <el-row>
       <el-badge
-        v-for="[key, count] in statUsers.slice(0, 20)"
-        :key="key"
+        v-for="[filter, count] in statUsers.slice(0, 20)"
+        :key="filter"
         :value="count"
         class="item"
         :max="999"
       >
         <el-button
           type="info"
-          :plain="filterByUsers !== key"
-          :disabled="(filterByUsers && filterByUsers !== key) || false"
+          :plain="filters?.filterByUsers !== filter"
+          :disabled="!!(filters?.filterByUsers && filters?.filterByUsers !== filter)"
           size="small"
-          @click="filterByUsers = filterByUsers !== key ? key : undefined"
+          @click="applyFilter('filterByUsers', filter)"
         >
-          👤 {{ key }}
+          👤 {{ filter }}
         </el-button>
       </el-badge>
       <span v-if="statUsers.length > 20">{{ $t('logs.tags_more') }}</span>
     </el-row>
     <el-row>
       <el-badge
-        v-for="[key, count] in statDates"
-        :key="key"
+        v-for="[filter, count] in statDates"
+        :key="filter"
         :value="count"
         class="item"
         :max="999"
       >
         <el-button
           type="primary"
-          :plain="filterByDate !== key"
-          :disabled="(filterByDate && filterByDate !== key) || false"
+          :plain="filters?.filterByDate !== filter"
+          :disabled="!!(filters?.filterByDate && filters?.filterByDate !== filter)"
           size="small"
-          @click="filterByDate = filterByDate !== key ? key : undefined"
+          @click="applyFilter('filterByDate', filter)"
         >
-          📅 {{ key }}
+          📅 {{ filter }}
         </el-button>
       </el-badge>
     </el-row>
