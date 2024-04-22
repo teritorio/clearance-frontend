@@ -9,4 +9,4 @@ services:
     environment:
       - API=${API}
     ports:
-      - 3000:3000
+      - ${FRONTEND_PORT:-3000}:3000
