@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Geometry } from 'geojson'
 import type { Log, ObjectId, Project } from '~/libs/types'
 
 definePageMeta({
@@ -30,6 +31,24 @@ catch (err: any) {
   ElMessage.error(err.message)
 }
 
+const baseGeoms = computed(() => {
+  if (!logs.value) {
+    return []
+  }
+
+  return logs.value
+    .map((log) => log.base?.geom)
+    .filter((geom): geom is Geometry => !!geom)
+})
+
+const changeGeoms = computed(() => {
+  if (!logs.value) {
+    return []
+  }
+
+  return logs.value.map((log) => log.change.geom)
+})
+
 function removeLogs(objectIds: ObjectId[]) {
   logs.value = logs.value?.filter(
     (log) =>
@@ -41,13 +60,22 @@ function removeLogs(objectIds: ObjectId[]) {
 </script>
 
 <template>
-  <div>
+  <el-container direction="vertical">
+    <!-- TODO: Improve this component for reuse -->
     <project-light v-if="project" :project="project" />
+    <!-- TODO: Create a component -->
+    <el-row>
+      <diff-map
+        :base-geom="baseGeoms"
+        :change-geom="changeGeoms"
+        style="resize: vertical"
+      />
+    </el-row>
     <logs
       v-if="logs?.length"
       :project="projectSlug"
       :logs="logs"
       @remove-logs="removeLogs($event)"
     />
-  </div>
+  </el-container>
 </template>
