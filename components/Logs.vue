@@ -2,7 +2,6 @@
 import { intersection, uniq } from 'underscore'
 import LogsComponent from '~/components/LogsComponent.vue'
 import type { Log, ObjectId, User } from '~/libs/types'
-import { setLogs } from '~/libs/types'
 
 const props = defineProps<{
   projectSlug: string
@@ -57,13 +56,26 @@ const isProjectUser = computed(() => {
   return !!user.value.projects?.includes(props.projectSlug)
 })
 
-function accept(objectIds: ObjectId[]) {
-  setLogs(useRuntimeConfig().public.API, props.projectSlug, 'accept', objectIds)
-    .then(() => emit('removeLogs', objectIds))
-    .catch((error) => {
-      /* eslint no-alert: 0 */
-      alert(error)
-    })
+async function accept(objectIds: ObjectId[]) {
+  try {
+    await useFetchWithCache(
+      'accept',
+      `${useRuntimeConfig().public.API}/projects/${props.projectSlug}/changes_logs/accept`,
+      {
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(objectIds),
+      },
+    )
+    emit('removeLogs', objectIds)
+  }
+  catch (err: any) {
+    ElMessage.error(err.message)
+  }
 }
 
 function accept_selection() {

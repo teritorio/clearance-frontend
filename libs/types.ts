@@ -98,29 +98,6 @@ export function getLogs(apiEndpoint: string, project: string): Promise<Log[]> {
   )
 }
 
-export function setLogs(
-  apiEndpoint: string,
-  project: string,
-  logAction: LogAction,
-  objectsIds: ObjectId[],
-): Promise<void> {
-  return fetch(`${apiEndpoint}/projects/${project}/changes_logs/${logAction}`, {
-    credentials: 'include',
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(objectsIds),
-  }).then((data) => {
-    if (!data.ok) {
-      return Promise.reject(
-        new Error([data.url, data.status, data.statusText].join(' ')),
-      )
-    }
-  })
-}
-
 export function action2priority(logAction: LogAction | null): number {
   return logAction ? { reject: 2, accept: 0 }[logAction] : 1
 }
