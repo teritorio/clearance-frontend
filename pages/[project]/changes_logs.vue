@@ -72,11 +72,6 @@ function removeLogs(objectIds: ObjectId[]) {
       />
     </el-row>
     <log-filters />
-    <logs
-      v-if="logs?.length"
-      :project="projectSlug"
-      :logs="logs"
-      @remove-logs="removeLogs($event)"
-    />
+    <logs :project-slug="projectSlug" @remove-logs="removeLogs($event)" />
   </el-container>
 </template>
