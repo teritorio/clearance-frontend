@@ -18,7 +18,7 @@
     "@commitlint/types": "^19.0.3",
     "@element-plus/icons-vue": "^2.3.1",
     "@element-plus/nuxt": "^1.0.9",
-    "@turf/bbox": "7.0.0-alpha.114",
+    "@turf/bbox": "7.0.0-alpha.115",
     "@turf/boolean-equal": "7.0.0-alpha.114",
     "@turf/helpers": "7.0.0-alpha.115",
     "@types/diff": "^5.0.9",

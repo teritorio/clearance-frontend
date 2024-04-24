@@ -2871,14 +2871,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/bbox@npm:7.0.0-alpha.114":
-  version: 7.0.0-alpha.114
-  resolution: "@turf/bbox@npm:7.0.0-alpha.114"
+"@turf/bbox@npm:7.0.0-alpha.115":
+  version: 7.0.0-alpha.115
+  resolution: "@turf/bbox@npm:7.0.0-alpha.115"
   dependencies:
-    "@turf/helpers": "npm:^7.0.0-alpha.114+e0bdd0add"
-    "@turf/meta": "npm:^7.0.0-alpha.114+e0bdd0add"
+    "@turf/helpers": "npm:^7.0.0-alpha.115+c76e6e96e"
+    "@turf/meta": "npm:^7.0.0-alpha.115+c76e6e96e"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/782f3c528a1aec8428f04c6771cb2385af8aabdf1a9317cfbbcdb88b8107d652bc70f4d28ef842c97c9e1016a009b5c7061e3dceba99eaf7e7177e86122368fc
+  checksum: 10c0/dc64d9a013288417f4aec8cb50b696f667afbe92bdecd865728dfa1157f6b65f135cd2a4558ea15f73613dce05ed100463b788327c9f572cd17ca1c81c8a85bf
   languageName: node
   linkType: hard
 
@@ -2925,6 +2925,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@turf/helpers@npm:^7.0.0-alpha.115+c76e6e96e":
+  version: 7.0.0-alpha.115
+  resolution: "@turf/helpers@npm:7.0.0-alpha.115"
+  dependencies:
+    deep-equal: "npm:^2.2.3"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/bc836e5bebe7759f8fdcbf9ebc760e0377b73aed80bfc1286ea034a71d7805fc750c1a4ebe7b001b47a7154892f0cae50bafc45ef284a49dc507f70da5320713
+  languageName: node
+  linkType: hard
+
 "@turf/invariant@npm:^7.0.0-alpha.114+e0bdd0add":
   version: 7.0.0-alpha.114
   resolution: "@turf/invariant@npm:7.0.0-alpha.114"
@@ -2935,12 +2945,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/meta@npm:^7.0.0-alpha.114+e0bdd0add":
-  version: 7.0.0-alpha.114
-  resolution: "@turf/meta@npm:7.0.0-alpha.114"
+"@turf/meta@npm:^7.0.0-alpha.115+c76e6e96e":
+  version: 7.0.0-alpha.115
+  resolution: "@turf/meta@npm:7.0.0-alpha.115"
   dependencies:
-    "@turf/helpers": "npm:^7.0.0-alpha.114+e0bdd0add"
-  checksum: 10c0/654802f936e1feb92e9a8b0abc266b3d2b2dae002e33d3edb9922ba413dbb7accdc894df3be3ecd2b9d1db8c5dd91c955a89686f5670c0f03ac6d616cd409a52
+    "@turf/helpers": "npm:^7.0.0-alpha.115+c76e6e96e"
+  checksum: 10c0/9b901662b4421611f3e97205c4563f3501ba07b88092ef60a7b54669de3bfb2443a8efdc810f3785097eaaf183be5da8d69862dfb457d4e64e92a445f6e969f1
   languageName: node
   linkType: hard
 
@@ -13811,7 +13821,7 @@ __metadata:
     "@element-plus/nuxt": "npm:^1.0.9"
     "@nuxt/eslint": "npm:^0.3.7"
     "@nuxtjs/i18n": "npm:^8.3.0"
-    "@turf/bbox": "npm:7.0.0-alpha.114"
+    "@turf/bbox": "npm:7.0.0-alpha.115"
     "@turf/boolean-equal": "npm:7.0.0-alpha.114"
     "@turf/helpers": "npm:7.0.0-alpha.115"
     "@types/diff": "npm:^5.0.9"
