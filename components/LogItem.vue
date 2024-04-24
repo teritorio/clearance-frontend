@@ -7,7 +7,7 @@ import { objTypeFull } from '~/libs/types'
 import Changesets from '~/components/Changesets.vue'
 
 export default defineNuxtComponent({
-  name: 'LogsComponent',
+  name: 'LogItem',
 
   components: {
     Changesets,
