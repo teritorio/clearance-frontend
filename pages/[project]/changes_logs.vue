@@ -163,7 +163,7 @@ function matchFilterBySelectors(selectors: string[]) {
     </ul>
     <log-list
       v-if="logs?.length"
-      :project="projectSlug"
+      :project-slug="projectSlug"
       :logs="logsWithFilter"
       @accept="accept($event)"
     />
