@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Log, ObjectId, User } from '~/libs/types'
+import type { Log, ObjType, User } from '~/libs/types'
 
 const props = defineProps<{
   projectSlug: string
@@ -7,7 +7,7 @@ const props = defineProps<{
 }>()
 
 defineEmits<{
-  (e: 'accept', objectIds: ObjectId[]): void
+  (e: 'accept', id: { id: number, objtype: ObjType }): void
 }>()
 
 const user = useState<User>('user')
@@ -34,7 +34,7 @@ const lazyLogs = computed(() => {
         :log="log"
         :project="projectSlug"
         :project-user="isProjectUser"
-        @accept="$emit('accept', [$event])"
+        @accept="$emit('accept', $event)"
       />
     </el-space>
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import LazyComponent from 'v-lazy-component'
-import type { Log, ObjType, ObjectId } from '~/libs/types'
+import type { Log, ObjType } from '~/libs/types'
 import { objTypeFull } from '~/libs/types'
 
 const props = defineProps<{
@@ -10,7 +10,7 @@ const props = defineProps<{
 }>()
 
 defineEmits<{
-  (e: 'accept', objectId: ObjectId): void
+  (e: 'accept', id: { id: number, objtype: ObjType }): void
 }>()
 
 const logSorted = computed(() => {
@@ -134,14 +134,7 @@ function objtypeFull(objtype: ObjType) {
         <el-button-group v-if="projectUser">
           <el-button
             type="primary"
-            @click="
-              $emit('accept', {
-                objtype: log.objtype,
-                id: log.id,
-                version: log.change.version,
-                deleted: log.change.deleted,
-              })
-            "
+            @click="$emit('accept', { id: log.id, objtype: log.objtype })"
           >
             ✓
           </el-button>
