@@ -69,6 +69,7 @@ function removeLogs(objectIds: ObjectId[]) {
         style="resize: vertical"
       />
     </el-row>
+    <log-filters />
     <log-list
       v-if="logs?.length"
       :project="projectSlug"
