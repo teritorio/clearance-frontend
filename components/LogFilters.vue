@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { countBy, indexBy, intersection, sortBy, uniq } from 'underscore'
+import { countBy, indexBy, sortBy, uniq } from 'underscore'
+import type { LocationQuery } from 'vue-router'
 import type { Log } from '~/libs/types'
 
 const route = useRoute()
-const filterByAction = ref<string | undefined>(route.query.filterByAction as string)
-const filterByUserGroups = ref<string | undefined>(route.query.filterByUserGroups as string)
-const filterBySelectors = ref<string[] | undefined>(route.query.filterByUserGroups as string[])
-const filterByUsers = ref<string | undefined>(route.query.filterByUsers as string)
-const filterByDate = ref<string | undefined>(route.query.filterByDate as string)
+const filters = ref<LocationQuery>()
+watchEffect(() => {
+  filters.value = route.query
+})
 
 const logs = useState<Log[]>('logs')
 const stats = computed(() => {
@@ -54,8 +54,6 @@ const statDates = computed(() => {
   return getStats(dates).sort()
 })
 
-watch(route.query, updateUrl)
-
 function getStats<Type>(data: Type[], key: (o: Type) => string = (i) => `${i}`): [Type, number][] {
   const index = indexBy(data, key)
   return sortBy(
@@ -65,22 +63,11 @@ function getStats<Type>(data: Type[], key: (o: Type) => string = (i) => `${i}`):
 }
 
 const router = useRouter()
-function updateUrl() {
-  router.replace({
-    name: route.name || undefined,
-    query: {
-      ...route.query,
-      filterByAction: filterByAction.value,
-      filterByUserGroups: filterByUserGroups.value,
-      filterBySelectors: filterBySelectors.value,
-      filterByUsers: filterByUsers.value,
-      filterByDate: filterByDate.value,
-    },
-  })
-}
-
-function matchFilterBySelectors(selectors: string[]) {
-  return filterBySelectors.value !== undefined && intersection(selectors, filterBySelectors.value).length > 0
+async function applyFilter(key: string, value: string) {
+  const query = filters.value?.[key] === value
+    ? Object.fromEntries(Object.entries(route.query).filter(([k, _v]) => k !== key))
+    : { ...route.query, [key]: value }
+  await router.replace({ ...route, query })
 }
 </script>
 
@@ -102,10 +89,10 @@ function matchFilterBySelectors(selectors: string[]) {
       >
         <el-button
           type="danger"
-          :plain="filterByAction !== key"
-          :disabled="(filterByAction && filterByAction !== key) || false"
+          :plain="filters?.filterByAction !== key"
+          :disabled="!!(filters?.filterByAction && filters?.filterByAction !== key)"
           size="small"
-          @click="filterByAction = filterByAction !== key ? key : undefined"
+          @click="applyFilter('filterByAction', key)"
         >
           {{ key }}
         </el-button>
@@ -121,12 +108,10 @@ function matchFilterBySelectors(selectors: string[]) {
       >
         <el-button
           type="primary"
-          :plain="filterByUserGroups !== key"
-          :disabled="(filterByUserGroups && filterByUserGroups !== key) || false"
+          :plain="filters?.filterByUserGroups !== key"
+          :disabled="!!(filters?.filterByUserGroups && filters?.filterByUserGroups !== key)"
           size="small"
-          @click="
-            filterByUserGroups = filterByUserGroups !== key ? key : undefined
-          "
+          @click="applyFilter('filterByUserGroups', key)"
         >
           📌 {{ key }}
         </el-button>
@@ -135,24 +120,17 @@ function matchFilterBySelectors(selectors: string[]) {
     <el-row>
       <el-badge
         v-for="[match, count] in statSelectors"
-        :key="match.selectors.join(';')"
+        :key="match.selectors.join()"
         :value="count"
         class="item"
         :max="999"
       >
         <el-button
           type="warning"
-          :plain="filterBySelectors !== match.selectors"
-          :disabled="
-            (filterBySelectors && !matchFilterBySelectors(match.selectors))
-              || false
-          "
+          :plain="filters?.filterBySelectors !== match.selectors.join()"
+          :disabled="!!(filters?.filterBySelectors && filters?.filterBySelectors !== match.selectors.join())"
           size="small"
-          @click="
-            filterBySelectors = !matchFilterBySelectors(match.selectors)
-              ? match.selectors
-              : undefined
-          "
+          @click="applyFilter('filterBySelectors', match.selectors.join())"
         >
           🏷️ {{ $i18nHash(match.name) || match.selectors.join(' ') }}
         </el-button>
@@ -168,10 +146,10 @@ function matchFilterBySelectors(selectors: string[]) {
       >
         <el-button
           type="info"
-          :plain="filterByUsers !== key"
-          :disabled="(filterByUsers && filterByUsers !== key) || false"
+          :plain="filters?.filterByUsers !== key"
+          :disabled="!!(filters?.filterByUsers && filters?.filterByUsers !== key)"
           size="small"
-          @click="filterByUsers = filterByUsers !== key ? key : undefined"
+          @click="applyFilter('filterByUsers', key)"
         >
           👤 {{ key }}
         </el-button>
@@ -188,10 +166,10 @@ function matchFilterBySelectors(selectors: string[]) {
       >
         <el-button
           type="primary"
-          :plain="filterByDate !== key"
-          :disabled="(filterByDate && filterByDate !== key) || false"
+          :plain="filters?.filterByDate !== key"
+          :disabled="!!(filters?.filterByDate && filters?.filterByDate !== key)"
           size="small"
-          @click="filterByDate = filterByDate !== key ? key : undefined"
+          @click="applyFilter('filterByDate', key)"
         >
           📅 {{ key }}
         </el-button>
@@ -199,3 +177,10 @@ function matchFilterBySelectors(selectors: string[]) {
     </el-row>
   </aside>
 </template>
+
+<style scoped>
+.item {
+  margin-top: 0.7em;
+  margin-right: 1.3em;
+}
+</style>
