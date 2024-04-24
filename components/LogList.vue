@@ -11,7 +11,7 @@ const emit = defineEmits<{
   (e: 'removeLogs', objectIds: ObjectId[]): void
 }>()
 
-const scroolCount = ref<number>(10)
+const scrollCount = ref<number>(10)
 
 const user = useState<User>('user')
 const isProjectUser = computed(() => {
@@ -27,16 +27,16 @@ function accept(objectIds: ObjectId[]) {
     })
 }
 
-function scroolLoad() {
-  scroolCount.value += 10
+function scrollLoad() {
+  scrollCount.value += 10
 }
 </script>
 
 <template>
   <div>
-    <el-space v-infinite-scroll="scroolLoad" :fill="true" wrap :size="20">
+    <el-space v-infinite-scroll="scrollLoad" :fill="true" wrap :size="20">
       <log-item
-        v-for="log in (logs || []).slice(0, scroolCount + 1)"
+        v-for="log in (logs || []).slice(0, scrollCount + 1)"
         :key="log.id"
         :log="log"
         :project="project"
