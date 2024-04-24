@@ -1,45 +1,26 @@
-<script lang="ts">
-import type { PropType } from 'vue'
+<script setup lang="ts">
 import LazyComponent from 'v-lazy-component'
-import Diff from '~/components/Diff.vue'
-import type { Log, ObjType, ObjTypeFull, ObjectId } from '~/libs/types'
+import type { Log, ObjType, ObjectId } from '~/libs/types'
 import { objTypeFull } from '~/libs/types'
-import Changesets from '~/components/Changesets.vue'
 
-export default defineNuxtComponent({
-  name: 'LogItem',
+const props = defineProps<{
+  log: Log
+  project: string
+  projectUser: boolean
+}>()
 
-  components: {
-    Changesets,
-    Diff,
-    LazyComponent,
-  },
+defineEmits<{
+  (e: 'accept', objectId: ObjectId): void
+}>()
 
-  props: {
-    log: {
-      type: Object as PropType<Log>,
-      required: true,
-    },
-    project: {
-      type: String,
-      required: true,
-    },
-    projectUser: {
-      type: Boolean,
-      required: true,
-    },
-  },
-
-  emits: {
-    accept: (_objectId: ObjectId) => true,
-  },
-
-  methods: {
-    objtypeFull(objtype: ObjType): ObjTypeFull {
-      return objTypeFull(objtype)
-    },
-  },
+const logSorted = computed(() => {
+  const sorted = props.log
+  return sorted.matches.sort()
 })
+
+function objtypeFull(objtype: ObjType) {
+  return objTypeFull(objtype)
+}
 </script>
 
 <template>
@@ -48,9 +29,7 @@ export default defineNuxtComponent({
       <div class="card-header">
         <span>
           <a
-            :href="`https://www.openstreetmap.org/${objtypeFull(log.objtype)}/${
-              log.id
-            }/history`"
+            :href="`https://www.openstreetmap.org/${objtypeFull(log.objtype)}/${log.id}/history`"
             target="_blank"
           >
             {{ log.objtype }}{{ log.id }}
@@ -90,7 +69,7 @@ export default defineNuxtComponent({
             📌 {{ text }}
           </el-tag>
           <el-tag
-            v-for="match in log.matches.sort()"
+            v-for="match in logSorted"
             :key="match.selectors.join(';')"
             size="small"
             type="warning"
@@ -176,12 +155,10 @@ export default defineNuxtComponent({
         </template>v{{
           log.change.version
         }}
-        <Changesets
-          :changesets="log.base ? log.changesets.slice(1) : log.changesets"
-        />
+        <changesets :changesets="log.base ? log.changesets.slice(1) : log.changesets" />
       </el-col>
       <el-col :span="7">
-        <Diff
+        <diff
           :src="log.base"
           :dst="log.change"
           :diff="log.diff_attribs || {}"
@@ -202,14 +179,14 @@ export default defineNuxtComponent({
           v-if="log.base?.geom || log.change.geom"
           style="border: 1px solid lightgrey"
         >
-          <DiffMap
+          <diff-map
             :base-geom="(log.base?.geom && [log.base?.geom]) || []"
             :change-geom="[log.change.geom]"
           />
         </LazyComponent>
       </el-col>
       <el-col :span="10">
-        <Diff
+        <diff
           :src="log.base?.tags"
           :dst="log.change.tags"
           :diff="log.diff_tags || {}"
