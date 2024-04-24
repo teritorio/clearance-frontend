@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Geometry } from 'geojson'
 import { intersection, uniq } from 'underscore'
-import type { Log, ObjectId, Project, User } from '~/libs/types'
+import type { Log, ObjType, ObjectId, Project, User } from '~/libs/types'
 
 definePageMeta({
   validate({ params }) {
@@ -105,28 +105,46 @@ function removeLogs(objectIds: ObjectId[]) {
   )
 }
 
-const router = useRouter()
-async function reset_filter() {
-  await router.replace({ ...route, query: undefined })
+function formatAcceptedLogs(identifier?: { id: number, objtype: ObjType }): ObjectId[] {
+  if (identifier) {
+    const log = logsWithFilter.value.find((log) => log.id === identifier.id && log.objtype === identifier.objtype)
+
+    if (!log) {
+      throw createError({
+        statusCode: 404,
+        message: 'Accepted log not found',
+      })
+    }
+
+    return [{
+      objtype: log.objtype,
+      id: log.id,
+      version: log.change.version,
+      deleted: log.change.deleted,
+    }]
+  }
+  else {
+    const logs = logsWithFilter.value.map((log) => ({
+      objtype: log.objtype,
+      id: log.id,
+      version: log.change.version,
+      deleted: log.change.deleted,
+    }))
+
+    if (!logs.length) {
+      throw createError({
+        statusCode: 404,
+        message: 'Accepted logs not found',
+      })
+    }
+
+    return logs
+  }
 }
 
-function accept_selection() {
-  const objectIds = logsWithFilter.value.map((log) => ({
-    objtype: log.objtype,
-    id: log.id,
-    version: log.change.version,
-    deleted: log.change.deleted,
-  }))
-  accept(objectIds)
-}
-
-async function handleBulkValidation() {
-  accept_selection()
-  reset_filter()
-}
-
-async function accept(objectIds: ObjectId[]) {
+async function handleAccept(identifier?: { id: number, objtype: ObjType }) {
   try {
+    const objectIds = formatAcceptedLogs(identifier)
     await $fetch(
       `${useRuntimeConfig().public.API}/projects/${projectSlug}/changes_logs/accept`,
       {
@@ -140,10 +158,16 @@ async function accept(objectIds: ObjectId[]) {
       },
     )
     removeLogs(objectIds)
+    resetFilters()
   }
   catch (err: any) {
     ElMessage.error(err.message)
   }
+}
+
+const router = useRouter()
+async function resetFilters() {
+  await router.replace({ ...route, query: undefined })
 }
 
 function matchFilterBySelectors(selectors: string[]) {
@@ -163,8 +187,8 @@ function matchFilterBySelectors(selectors: string[]) {
     </el-row>
     <log-filters />
     <log-validator-bulk
-      v-if="!isProjectUser && (Object.keys(route.query).length)"
-      @bulk-validation="handleBulkValidation"
+      v-if="isProjectUser && (Object.keys(route.query).length)"
+      @bulk-validation="handleAccept"
     />
     <h3>{{ $t('logs.data') }}</h3>
     <p>{{ $t('logs.data_details') }}</p>
@@ -176,7 +200,7 @@ function matchFilterBySelectors(selectors: string[]) {
       v-if="logs?.length"
       :project-slug="projectSlug"
       :logs="logsWithFilter"
-      @accept="accept($event)"
+      @accept="handleAccept($event)"
     />
   </el-main>
 </template>
