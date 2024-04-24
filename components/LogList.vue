@@ -34,13 +34,6 @@ function scroolLoad() {
 
 <template>
   <div>
-    <h3>{{ $t('logs.data') }}</h3>
-    <p>{{ $t('logs.data_details') }}</p>
-    <ul>
-      <li>{{ $t('logs.data_details_osm') }}</li>
-      <li>{{ $t('logs.data_details_manual') }}</li>
-    </ul>
-
     <el-space v-infinite-scroll="scroolLoad" :fill="true" wrap :size="20">
       <log-item
         v-for="log in (logs || []).slice(0, scroolCount + 1)"

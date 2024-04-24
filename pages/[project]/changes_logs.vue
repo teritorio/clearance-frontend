@@ -164,6 +164,12 @@ function matchFilterBySelectors(selectors: string[]) {
       v-if="isProjectUser && (filterByAction || filterByUserGroups || filterBySelectors || filterByUsers || filterByDate)"
       @bulk-validation="handleBulkValidation"
     />
+    <h3>{{ $t('logs.data') }}</h3>
+    <p>{{ $t('logs.data_details') }}</p>
+    <ul>
+      <li>{{ $t('logs.data_details_osm') }}</li>
+      <li>{{ $t('logs.data_details_manual') }}</li>
+    </ul>
     <log-list
       v-if="logs?.length"
       :project="projectSlug"
