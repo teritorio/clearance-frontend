@@ -2882,30 +2882,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/boolean-equal@npm:7.0.0-alpha.114":
-  version: 7.0.0-alpha.114
-  resolution: "@turf/boolean-equal@npm:7.0.0-alpha.114"
+"@turf/boolean-equal@npm:7.0.0-alpha.115":
+  version: 7.0.0-alpha.115
+  resolution: "@turf/boolean-equal@npm:7.0.0-alpha.115"
   dependencies:
-    "@turf/clean-coords": "npm:^7.0.0-alpha.114+e0bdd0add"
-    "@turf/helpers": "npm:^7.0.0-alpha.114+e0bdd0add"
-    "@turf/invariant": "npm:^7.0.0-alpha.114+e0bdd0add"
+    "@turf/clean-coords": "npm:^7.0.0-alpha.115+c76e6e96e"
+    "@turf/helpers": "npm:^7.0.0-alpha.115+c76e6e96e"
+    "@turf/invariant": "npm:^7.0.0-alpha.115+c76e6e96e"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/d09b2defa708376cc53a46b2ffd5469b690803cf4b11f24b06f47a71397775980e78f6246c7dcd9d4aa00395f9c790961882cae1d8a237ce400620f8ec63c320
+  checksum: 10c0/32700d5d22d24e1d3cf52837798079ac05e4b45396975ba9467b8061c4fd9b1d6cee7257b890463c380a65c0ac4eb29142a634db55dda4183c20b69f8fc85961
   languageName: node
   linkType: hard
 
-"@turf/clean-coords@npm:^7.0.0-alpha.114+e0bdd0add":
-  version: 7.0.0-alpha.114
-  resolution: "@turf/clean-coords@npm:7.0.0-alpha.114"
+"@turf/clean-coords@npm:^7.0.0-alpha.115+c76e6e96e":
+  version: 7.0.0-alpha.115
+  resolution: "@turf/clean-coords@npm:7.0.0-alpha.115"
   dependencies:
-    "@turf/helpers": "npm:^7.0.0-alpha.114+e0bdd0add"
-    "@turf/invariant": "npm:^7.0.0-alpha.114+e0bdd0add"
+    "@turf/helpers": "npm:^7.0.0-alpha.115+c76e6e96e"
+    "@turf/invariant": "npm:^7.0.0-alpha.115+c76e6e96e"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/89d0b144be6d56ef2a00c2ea37d74399813af18922eec6c82f27acac74cd2a176d2ea662210d955b69069406b5c30c57a75b08aac159f5ce4970aee53d1ed2ed
+  checksum: 10c0/56e298d2e084642647e69ffabed238a7da82ca2eebdef6dd5182331d61e18db1d012d615c73ccc058f75835ac18b5d19e9cd9b31ec1ad7cabb0f9bc896a91799
   languageName: node
   linkType: hard
 
-"@turf/helpers@npm:7.0.0-alpha.115":
+"@turf/helpers@npm:7.0.0-alpha.115, @turf/helpers@npm:^7.0.0-alpha.115+c76e6e96e":
   version: 7.0.0-alpha.115
   resolution: "@turf/helpers@npm:7.0.0-alpha.115"
   dependencies:
@@ -2915,33 +2915,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/helpers@npm:^7.0.0-alpha.114+e0bdd0add":
-  version: 7.0.0-alpha.114
-  resolution: "@turf/helpers@npm:7.0.0-alpha.114"
-  dependencies:
-    deep-equal: "npm:^2.2.3"
-    tslib: "npm:^2.6.2"
-  checksum: 10c0/f0d74f58f3ee0dedea0305de1c30100d458b6f633ef7b2d9b914795f7596e574a61aeabdb0e63f9bba4d409f2799685671772c5540d59cef6b4a313d7ea005e3
-  languageName: node
-  linkType: hard
-
-"@turf/helpers@npm:^7.0.0-alpha.115+c76e6e96e":
+"@turf/invariant@npm:^7.0.0-alpha.115+c76e6e96e":
   version: 7.0.0-alpha.115
-  resolution: "@turf/helpers@npm:7.0.0-alpha.115"
+  resolution: "@turf/invariant@npm:7.0.0-alpha.115"
   dependencies:
-    deep-equal: "npm:^2.2.3"
+    "@turf/helpers": "npm:^7.0.0-alpha.115+c76e6e96e"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/bc836e5bebe7759f8fdcbf9ebc760e0377b73aed80bfc1286ea034a71d7805fc750c1a4ebe7b001b47a7154892f0cae50bafc45ef284a49dc507f70da5320713
-  languageName: node
-  linkType: hard
-
-"@turf/invariant@npm:^7.0.0-alpha.114+e0bdd0add":
-  version: 7.0.0-alpha.114
-  resolution: "@turf/invariant@npm:7.0.0-alpha.114"
-  dependencies:
-    "@turf/helpers": "npm:^7.0.0-alpha.114+e0bdd0add"
-    tslib: "npm:^2.6.2"
-  checksum: 10c0/6df460f5bd0a22e3b6ba2e1bf4895f5cfd34ec28963afcaef596f1fd8f0d5274f9f09b03a145cdb100fed5b31f07ae634248b3c9d006530443034305b2ee16b2
+  checksum: 10c0/e171cc959c5ed262f2ed6167790e405d96e1ba0b3de758615896d13e268c41f615c97e7356e8dc68010d2ec9c9aa48e7528bb91cecf31d4b1625b083209d3937
   languageName: node
   linkType: hard
 
@@ -13822,7 +13802,7 @@ __metadata:
     "@nuxt/eslint": "npm:^0.3.7"
     "@nuxtjs/i18n": "npm:^8.3.0"
     "@turf/bbox": "npm:7.0.0-alpha.115"
-    "@turf/boolean-equal": "npm:7.0.0-alpha.114"
+    "@turf/boolean-equal": "npm:7.0.0-alpha.115"
     "@turf/helpers": "npm:7.0.0-alpha.115"
     "@types/diff": "npm:^5.0.9"
     "@types/eslint": "npm:^8.56.9"
