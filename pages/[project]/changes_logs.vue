@@ -43,7 +43,7 @@ function removeLogs(objectIds: ObjectId[]) {
 <template>
   <div>
     <project-light v-if="project" :project="project" />
-    <logs
+    <log-list
       v-if="logs?.length"
       :project="projectSlug"
       :logs="logs"
