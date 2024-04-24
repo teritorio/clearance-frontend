@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { countBy, indexBy, intersection, sortBy, uniq } from 'underscore'
-import type { Geometry } from 'geojson'
 import type { Log, ObjectId, User } from '~/libs/types'
 import { setLogs } from '~/libs/types'
 
@@ -107,16 +106,6 @@ const isProjectUser = computed(() => {
   return !!user.value?.projects?.includes(props.project)
 })
 
-const baseGeoms = computed(() => {
-  return props.logs
-    .map((log) => log.base?.geom)
-    .filter((geom): geom is Geometry => !!geom)
-})
-
-const changeGeoms = computed(() => {
-  return props.logs.map((log) => log.change.geom)
-})
-
 watch(route.query, updateUrl)
 
 function getStats<Type>(data: Type[], key: (o: Type) => string = (i) => `${i}`): [Type, number][] {
@@ -188,13 +177,6 @@ function matchFilterBySelectors(selectors: string[]) {
 
 <template>
   <div>
-    <el-row>
-      <diff-map
-        :base-geom="baseGeoms"
-        :change-geom="changeGeoms"
-        style="resize: vertical"
-      />
-    </el-row>
     <h3>{{ $t('logs.filters') }}</h3>
     <el-row style="margin-top: 20px">
       <el-badge :value="logs.length" class="item" :max="999">
