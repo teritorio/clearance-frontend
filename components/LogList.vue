@@ -19,13 +19,17 @@ const scrollCount = ref<number>(10)
 function scrollLoad() {
   scrollCount.value += 10
 }
+
+const lazyLogs = computed(() => {
+  return props.logs.slice(0, scrollCount.value)
+})
 </script>
 
 <template>
   <div>
     <el-space v-infinite-scroll="scrollLoad" :fill="true" wrap :size="20">
       <log-item
-        v-for="log in (logs || []).slice(0, scrollCount + 1)"
+        v-for="log in lazyLogs"
         :key="log.id"
         :log="log"
         :project="projectSlug"
