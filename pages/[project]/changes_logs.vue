@@ -165,7 +165,7 @@ function matchFilterBySelectors(selectors: string[]) {
       v-if="logs?.length"
       :project="projectSlug"
       :logs="logsWithFilter"
-      @remove-logs="removeLogs($event)"
+      @accept="accept($event)"
     />
   </el-main>
 </template>

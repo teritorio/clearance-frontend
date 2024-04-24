@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import type { Log, ObjectId, User } from '~/libs/types'
-import { setLogs } from '~/libs/types'
 
 const props = defineProps<{
   project: string
   logs: Log[]
 }>()
 
-const emit = defineEmits<{
-  (e: 'removeLogs', objectIds: ObjectId[]): void
+defineEmits<{
+  (e: 'accept', objectIds: ObjectId[]): void
 }>()
 
 const scrollCount = ref<number>(10)
@@ -17,15 +16,6 @@ const user = useState<User>('user')
 const isProjectUser = computed(() => {
   return !!user.value?.projects?.includes(props.project)
 })
-
-function accept(objectIds: ObjectId[]) {
-  setLogs(useRuntimeConfig().public.API, props.project, 'accept', objectIds)
-    .then(() => emit('removeLogs', objectIds))
-    .catch((error) => {
-      /* eslint no-alert: 0 */
-      alert(error)
-    })
-}
 
 function scrollLoad() {
   scrollCount.value += 10
@@ -41,7 +31,7 @@ function scrollLoad() {
         :log="log"
         :project="project"
         :project-user="isProjectUser"
-        @accept="accept([$event])"
+        @accept="$emit('accept', [$event])"
       />
     </el-space>
 
