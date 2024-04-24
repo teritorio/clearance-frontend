@@ -56,12 +56,6 @@ const isProjectUser = computed(() => {
   return !!user.value?.projects?.includes(projectSlug)
 })
 
-const filterByAction = ref<string | undefined>(route.query.filterByAction as string)
-const filterByUserGroups = ref<string | undefined>(route.query.filterByUserGroups as string)
-const filterBySelectors = ref<string[] | undefined>(route.query.filterByUserGroups as string[])
-const filterByUsers = ref<string | undefined>(route.query.filterByUsers as string)
-const filterByDate = ref<string | undefined>(route.query.filterByDate as string)
-
 const logsWithFilter = computed(() => {
   if (!logs.value?.length) {
     return []
@@ -69,36 +63,36 @@ const logsWithFilter = computed(() => {
 
   return logs.value.filter((log) => {
     const changesetsUsers
-      = filterByUsers.value !== undefined
+      = route.query.filterByUsers !== undefined
       && uniq(
         (log.base ? log.changesets.slice(1) : log.changesets).map(
           (changeset) => changeset.user,
         ),
       )
     return (
-      (filterByAction.value === undefined
+      (route.query.filterByAction === undefined
       || Object.values(log.diff_attribs || {})
         .concat(Object.values(log.diff_tags || {}))
         .some(
           (actions) =>
             actions?.some(
-              (action) => action[0] === filterByAction.value,
+              (action) => action[0] === route.query.filterByAction,
             ) || false,
         ))
-        && (filterByUserGroups.value === undefined
+        && (route.query.filterByUserGroups === undefined
         || log.matches.some((match) =>
-          match.user_groups.includes(filterByUserGroups.value!),
+          match.user_groups.includes(route.query.filterByUserGroups as string),
         ))
-        && (filterBySelectors.value === undefined
+        && (route.query.filterBySelectors === undefined
         || log.matches.some((match) =>
           matchFilterBySelectors(match.selectors),
         ))
-        && (filterByUsers.value === undefined
+        && (route.query.filterByUsers === undefined
         || (changesetsUsers
         && changesetsUsers.length === 1
-        && changesetsUsers[0] === filterByUsers.value))
-        && (filterByDate.value === undefined
-        || log.change.created.substring(0, 10) === filterByDate.value)
+        && changesetsUsers[0] === route.query.filterByUsers))
+        && (route.query.filterByDate === undefined
+        || log.change.created.substring(0, 10) === route.query.filterByDate)
     )
   })
 })
@@ -142,10 +136,7 @@ function accept(objectIds: ObjectId[]) {
 }
 
 function matchFilterBySelectors(selectors: string[]) {
-  return (
-    filterBySelectors.value !== undefined
-    && intersection(selectors, filterBySelectors.value).length > 0
-  )
+  return route.query.filterBySelectors !== undefined && intersection(selectors, route.query.filterBySelectors as string).length > 0
 }
 </script>
 
@@ -161,7 +152,7 @@ function matchFilterBySelectors(selectors: string[]) {
     </el-row>
     <log-filters />
     <log-validator-bulk
-      v-if="isProjectUser && (filterByAction || filterByUserGroups || filterBySelectors || filterByUsers || filterByDate)"
+      v-if="isProjectUser && (Object.keys(route.query).length)"
       @bulk-validation="handleBulkValidation"
     />
     <h3>{{ $t('logs.data') }}</h3>
