@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import LogsComponent from '~/components/LogsComponent.vue'
 import type { Log, User } from '~/libs/types'
 
 const props = defineProps<{
@@ -10,44 +9,29 @@ const props = defineProps<{
 defineEmits(['validate'])
 
 const user = useState<User>('user')
-
 const isProjectUser = computed(() => {
+  if (!user.value) {
+    return false
+  }
   return !!user.value.projects?.includes(props.projectSlug)
 })
 
-const scrollCount = ref(10)
+const scrollCount = ref(2)
+const lazyLogs = computed(() => props.logs.slice(0, scrollCount.value))
 function scrollLoad() {
-  scrollCount.value += 10
+  scrollCount.value += 2
 }
 </script>
 
 <template>
-  <div>
-    <h3>{{ $t('logs.data') }}</h3>
-    <p>{{ $t('logs.data_details') }}</p>
-    <ul>
-      <li>{{ $t('logs.data_details_osm') }}</li>
-      <li>{{ $t('logs.data_details_manual') }}</li>
-    </ul>
-
-    <el-space v-infinite-scroll="scrollLoad" :fill="true" wrap :size="20">
-      <LogsComponent
-        v-for="log in (logs || []).slice(0, scrollCount + 1)"
-        :key="log.id"
-        :log="log"
-        :project="projectSlug"
-        :project-user="isProjectUser"
-        @accept="$emit('validate', $event)"
-      />
-    </el-space>
-
-    <iframe name="hidden_josm_target" style="display: none" />
-  </div>
+  <el-space v-infinite-scroll="scrollLoad" :fill="true" wrap :size="20">
+    <log-item
+      v-for="log in lazyLogs"
+      :key="log.id"
+      :log="log"
+      :project="projectSlug"
+      :project-user="isProjectUser"
+      @accept="$emit('validate', $event)"
+    />
+  </el-space>
 </template>
-
-<style scoped>
-.item {
-  margin-top: 0.7em;
-  margin-right: 1.3em;
-}
-</style>

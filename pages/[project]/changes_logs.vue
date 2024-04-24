@@ -136,7 +136,11 @@ async function validate(objectIds: ObjectId[]) {
 
 const router = useRouter()
 async function handleBulkValidation() {
-  const objectIds = logsFiltered.value.map((log) => ({
+  if (!logs.value) {
+    return
+  }
+
+  const objectIds = logs.value.map((log) => ({
     objtype: log.objtype,
     id: log.id,
     version: log.change.version,
@@ -150,7 +154,7 @@ async function handleBulkValidation() {
 </script>
 
 <template>
-  <el-container direction="vertical">
+  <el-main>
     <!-- TODO: Improve this component for reuse -->
     <project-light v-if="project" :project="project" />
     <!-- TODO: Create a component -->
@@ -166,10 +170,24 @@ async function handleBulkValidation() {
       v-if="isProjectUser && (Object.keys(route.query).length)"
       @bulk-validation="handleBulkValidation"
     />
-    <!-- <logs
+    <h3>{{ $t('logs.data') }}</h3>
+    <p>{{ $t('logs.data_details') }}</p>
+    <ul>
+      <li>{{ $t('logs.data_details_osm') }}</li>
+      <li>{{ $t('logs.data_details_manual') }}</li>
+    </ul>
+    <log-list
+      v-if="logs?.length"
       :logs="logsFiltered"
       :project-slug="projectSlug"
       @validate="validate"
-    /> -->
-  </el-container>
+    />
+    <iframe name="hidden_josm_target" style="display: none" />
+  </el-main>
 </template>
+
+<style scope>
+.el-main {
+  overflow: initial;
+}
+</style>
