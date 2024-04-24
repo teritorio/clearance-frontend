@@ -27,9 +27,7 @@ catch (err: any) {
   <nuxt-layout>
     <el-container direction="vertical">
       <app-menu />
-      <el-main>
-        <nuxt-page />
-      </el-main>
+      <nuxt-page />
       <app-footer />
     </el-container>
   </nuxt-layout>

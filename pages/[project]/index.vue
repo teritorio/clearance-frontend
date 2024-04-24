@@ -22,5 +22,7 @@ getAsyncDataOrThrows('fetchProject', () =>
 </script>
 
 <template>
-  <ProjectCompo v-if="projectDetails" :project="projectDetails" />
+  <el-main>
+    <ProjectCompo v-if="projectDetails" :project="projectDetails" />
+  </el-main>
 </template>
