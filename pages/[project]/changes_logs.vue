@@ -141,7 +141,7 @@ function matchFilterBySelectors(selectors: string[]) {
 </script>
 
 <template>
-  <div>
+  <el-main>
     <project-light v-if="project" :project="project" />
     <el-row>
       <diff-map
@@ -167,5 +167,11 @@ function matchFilterBySelectors(selectors: string[]) {
       :logs="logsWithFilter"
       @remove-logs="removeLogs($event)"
     />
-  </div>
+  </el-main>
 </template>
+
+<style scope>
+.el-main {
+  overflow: initial;
+}
+</style>

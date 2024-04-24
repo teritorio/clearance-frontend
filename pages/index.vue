@@ -16,7 +16,7 @@ otherProjects.value = other
 </script>
 
 <template>
-  <div>
+  <el-main>
     <h1>{{ $t('app.title') }}</h1>
 
     <el-row>
@@ -72,5 +72,5 @@ otherProjects.value = other
     </template>
 
     <el-empty v-else :description="$t('page.index.empty')" :image-size="50" />
-  </div>
+  </el-main>
 </template>

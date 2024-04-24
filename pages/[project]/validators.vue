@@ -31,8 +31,8 @@ getAsyncDataOrThrows('fetchValidators', () =>
 </script>
 
 <template>
-  <div>
+  <el-main>
     <ProjectLight v-if="projectDetails" :project="projectDetails" />
     <Validators v-if="validators" :validators="validators" />
-  </div>
+  </el-main>
 </template>
