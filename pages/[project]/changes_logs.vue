@@ -2,7 +2,6 @@
 import type { Geometry } from 'geojson'
 import { intersection, uniq } from 'underscore'
 import type { Log, ObjectId, Project, User } from '~/libs/types'
-import { setLogs } from '~/libs/types'
 
 definePageMeta({
   validate({ params }) {
@@ -126,13 +125,25 @@ async function handleBulkValidation() {
   reset_filter()
 }
 
-function accept(objectIds: ObjectId[]) {
-  setLogs(useRuntimeConfig().public.API, projectSlug, 'accept', objectIds)
-    .then(() => removeLogs(objectIds))
-    .catch((error) => {
-      /* eslint no-alert: 0 */
-      alert(error)
-    })
+async function accept(objectIds: ObjectId[]) {
+  try {
+    await $fetch(
+      `${useRuntimeConfig().public.API}/projects/${projectSlug}/changes_logs/accept`,
+      {
+        credentials: 'include',
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(objectIds),
+      },
+    )
+    removeLogs(objectIds)
+  }
+  catch (err: any) {
+    ElMessage.error(err.message)
+  }
 }
 
 function matchFilterBySelectors(selectors: string[]) {
@@ -152,7 +163,7 @@ function matchFilterBySelectors(selectors: string[]) {
     </el-row>
     <log-filters />
     <log-validator-bulk
-      v-if="isProjectUser && (Object.keys(route.query).length)"
+      v-if="!isProjectUser && (Object.keys(route.query).length)"
       @bulk-validation="handleBulkValidation"
     />
     <h3>{{ $t('logs.data') }}</h3>
