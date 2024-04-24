@@ -330,7 +330,7 @@ function matchFilterBySelectors(selectors: string[]) {
     </ul>
 
     <el-space v-infinite-scroll="scroolLoad" :fill="true" wrap :size="20">
-      <LogsComponent
+      <log-item
         v-for="log in (logsWithFilter || []).slice(0, scroolCount + 1)"
         :key="log.id"
         :log="log"
