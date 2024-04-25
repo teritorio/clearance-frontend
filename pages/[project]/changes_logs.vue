@@ -158,7 +158,10 @@ async function handleAccept(identifier?: { id: number, objtype: ObjType }) {
       },
     )
     removeLogs(objectIds)
-    resetFilters()
+
+    if (!identifier || !logsWithFilter.value.length) {
+      resetFilters()
+    }
   }
   catch (err: any) {
     ElMessage.error(err.message)
