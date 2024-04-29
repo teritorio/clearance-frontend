@@ -181,6 +181,7 @@ function matchFilterBySelectors(selectors: string[]) {
 <template>
   <el-main>
     <project-light v-if="project" :project="project" title-tag="h1" />
+    <el-divider border-style="dotted" />
     <el-row>
       <diff-map
         :base-geom="baseGeoms"
