@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import type { Project } from '~/libs/types'
 
-defineProps<{
+const props = defineProps<{
   project: Project
 }>()
+
+const route = useRoute()
+const detailsLink = computed(() => {
+  let url = `/${props.project.id}`
+
+  if (route.name === 'index') {
+    url += '/changes_logs'
+  }
+  return url
+})
 </script>
 
 <template>
@@ -21,10 +31,10 @@ defineProps<{
     </el-text>
   </span>
   <el-button-group>
-    <nuxt-link class="el-button" :to="`/${project.id}/validators/`">
+    <nuxt-link class="el-button" :to="`/${project.id}/validators`">
       {{ $t('project.settings') }}
     </nuxt-link>
-    <nuxt-link class="el-button el-button--primary" :to="`/${project.id}`">
+    <nuxt-link class="el-button el-button--primary" :to="detailsLink">
       {{ $t('project.details') }}
     </nuxt-link>
   </el-button-group>
