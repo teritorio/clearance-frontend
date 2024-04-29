@@ -45,6 +45,8 @@ export interface Changeset {
   tags: Tags
 }
 
+export type HTMLTags = 'h1' | 'h2' | 'h3' | 'h4'
+
 export interface Match {
   icon: string
   name: MultilingualString

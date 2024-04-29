@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import type { Project } from '~/libs/types'
+import type { HTMLTags, Project } from '~/libs/types'
 
 const props = defineProps<{
   project: Project
+  titleTag: HTMLTags
 }>()
 
 const route = useRoute()
@@ -18,7 +19,7 @@ const detailsLink = computed(() => {
 
 <template>
   <span>
-    <span class="title">{{ $i18nHash(project.title) }}</span>
+    <component :is="titleTag" class="title">{{ $i18nHash(project.title) }}</component>
     <el-tag
       v-for="tag in project.project_tags"
       :key="tag"
