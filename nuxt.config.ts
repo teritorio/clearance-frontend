@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   // Global page headers: https://go.nuxtjs.dev/config-head
   app: {
     head: {
-      title: 'APV4OSM',
+      title: 'Clearance',
       htmlAttrs: {
         lang: 'en',
       },
