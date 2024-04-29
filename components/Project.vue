@@ -48,7 +48,7 @@ export default defineNuxtComponent({
 <template>
   <el-card>
     <template #header>
-      <project-light :project="project" />
+      <project-light :project="project" title-tag="h3" />
     </template>
     <div>
       <el-row id="stats">

@@ -32,7 +32,8 @@ getAsyncDataOrThrows('fetchValidators', () =>
 
 <template>
   <el-main>
-    <ProjectLight v-if="projectDetails" :project="projectDetails" />
+    <project-light v-if="projectDetails" :project="projectDetails" title-tag="h1" />
+    <el-divider border-style="dotted" />
     <Validators v-if="validators" :validators="validators" />
   </el-main>
 </template>
