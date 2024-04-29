@@ -18,37 +18,55 @@ const detailsLink = computed(() => {
 </script>
 
 <template>
-  <span>
-    <component :is="titleTag" class="title">{{ $i18nHash(project.title) }}</component>
-    <el-tag
-      v-for="tag in project.project_tags"
-      :key="tag"
-      class="item"
-      size="small"
-    >{{ tag }}</el-tag>
-    <br />
-    <el-text class="mx-1" type="info">
-      {{ $i18nHash(project.description) }}
-    </el-text>
-  </span>
-  <el-button-group>
-    <nuxt-link class="el-button" :to="`/${project.id}/validators`">
-      {{ $t('project.settings') }}
-    </nuxt-link>
-    <nuxt-link class="el-button el-button--primary" :to="detailsLink">
-      {{ $t('project.details') }}
-    </nuxt-link>
-  </el-button-group>
+  <header>
+    <span>
+      <component :is="titleTag" class="title">
+        {{ $i18nHash(project.title) }}
+        <el-tag
+          v-for="tag in project.project_tags"
+          :key="tag"
+          size="small"
+        >
+          {{ tag }}
+        </el-tag>
+      </component>
+      <p>{{ $i18nHash(project.description) }}</p>
+    </span>
+    <el-button-group>
+      <nuxt-link class="el-button" :to="`/${project.id}/validators`">
+        {{ $t('project.settings') }}
+      </nuxt-link>
+      <nuxt-link class="el-button el-button--primary" :to="detailsLink">
+        {{ $t('project.details') }}
+      </nuxt-link>
+    </el-button-group>
+  </header>
 </template>
 
 <style scoped>
-.title {
-  font-weight: 600;
-  padding-right: 1em;
+header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
 }
 
-.item {
-  margin-top: 0.7em;
-  margin-right: 1.3em;
+header > span {
+  justify-content: start;
+  display: flex;
+  flex-direction: column;
+}
+
+P {
+  color: var(--el-color-info);
+  margin: 0;
+}
+
+.title {
+  align-items: center;
+  display: flex;
+  margin: 0;
+  gap: 8px;
+  font-weight: 600;
+  padding-right: 1em;
 }
 </style>
