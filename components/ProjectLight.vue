@@ -1,16 +1,9 @@
-<script lang="ts">
+<script setup lang="ts">
 import type { Project } from '~/libs/types'
 
-export default defineNuxtComponent({
-  name: 'Project',
-
-  props: {
-    project: {
-      type: Object as PropType<Project>,
-      required: true,
-    },
-  },
-})
+defineProps<{
+  project: Project
+}>()
 </script>
 
 <template>
@@ -38,39 +31,6 @@ export default defineNuxtComponent({
 </template>
 
 <style scoped>
-#stats .el-col {
-  text-align: center;
-}
-
-#stats .el-statistic {
-  --el-statistic-title-font-weight: 400;
-  --el-statistic-title-font-size: var(--el-font-size-extra-small);
-  --el-statistic-title-color: var(--el-text-color-regular);
-  --el-statistic-content-font-weight: 400;
-  --el-statistic-content-font-size: var(--el-font-size-extra-large);
-  --el-statistic-content-color: var(--el-text-color-primary);
-}
-
-#stats .el-statistic__head {
-  font-weight: var(--el-statistic-title-font-weight);
-  font-size: var(--el-statistic-title-font-size);
-  color: var(--el-statistic-title-color);
-  line-height: 20px;
-  margin-bottom: 4px;
-}
-
-#stats .el-statistic__content {
-  font-weight: var(--el-statistic-content-font-weight);
-  font-size: var(--el-statistic-content-font-size);
-  color: var(--el-statistic-content-color);
-}
-
-:deep(.card-header) {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .title {
   font-weight: 600;
   padding-right: 1em;
