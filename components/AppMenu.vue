@@ -3,7 +3,7 @@ import type { User } from '~/libs/types'
 
 const user = useState<User>('user')
 
-const { locale, locales, setLocale } = useI18n()
+const { locale, locales, setLocale, localeProperties, loadLocaleMessages } = useI18n()
 
 // Function from https://dev.to/jorik/country-code-to-flag-emoji-a21
 function getFlagEmoji(countryCode: string) {
@@ -12,6 +12,11 @@ function getFlagEmoji(countryCode: string) {
     .split('')
     .map((char) => 127397 + char.charCodeAt(0))
   return String.fromCodePoint(...codePoints)
+}
+
+async function changeLocale(locale: string) {
+  await loadLocaleMessages(locale)
+  await setLocale(locale)
 }
 </script>
 
@@ -22,11 +27,10 @@ function getFlagEmoji(countryCode: string) {
     </nuxt-link>
     <div>
       <el-select
-        v-model="locale"
         class="m-2"
-        placeholder="Language"
         size="small"
-        @change="setLocale"
+        :placeholder="`${getFlagEmoji(localeProperties.flag)} ${localeProperties.name}`"
+        @change="changeLocale"
       >
         <el-option
           v-for="l in locales"
@@ -34,6 +38,7 @@ function getFlagEmoji(countryCode: string) {
           :label="`${getFlagEmoji(l.flag)} ${l.name}`"
           :value="l.code"
           :fit-input-width="true"
+          :disabled="l.code === locale"
         />
       </el-select>
       <user-profile :user="user" />
@@ -61,5 +66,9 @@ header > div {
 
 img {
   width: 68px;
+}
+
+:deep(.el-select__placeholder) {
+  color: var(--el-text-color-regular)
 }
 </style>

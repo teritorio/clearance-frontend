@@ -58,7 +58,7 @@ export default defineNuxtConfig({
 
   i18n: {
     strategy: 'no_prefix',
-    lazy: true, // lazy-load not working as expected https://i18n.nuxtjs.org/lazy-load-translations/
+    lazy: true,
     detectBrowserLanguage: {
       useCookie: false,
     },
@@ -68,6 +68,6 @@ export default defineNuxtConfig({
       { code: 'fr', name: 'Français', flag: 'FR', iso: 'fr-FR', file: 'fr.js' },
     ],
     defaultLocale: 'en',
-    langDir: 'locales/',
+    langDir: './locales',
   },
 })
