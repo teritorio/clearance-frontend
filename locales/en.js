@@ -38,6 +38,7 @@ export default {
     validate_selection: 'Validate all filtered',
   },
   project: {
+    control: 'Control',
     details: 'Details',
     seeMore: '+ See details',
     user_group_label: 'Group',

@@ -7,13 +7,16 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
-const detailsLink = computed(() => {
+const { t } = useI18n()
+const details = computed(() => {
+  let label = t('project.details')
   let url = `/${props.project.id}`
 
   if (route.name === 'index') {
+    label = t('project.control')
     url += '/changes_logs'
   }
-  return url
+  return { label, url }
 })
 </script>
 
@@ -37,8 +40,8 @@ const detailsLink = computed(() => {
       <nuxt-link class="el-button" :to="`/${project.id}/validators`">
         {{ $t('project.settings') }}
       </nuxt-link>
-      <nuxt-link class="el-button el-button--primary" :to="detailsLink">
-        {{ $t('project.details') }}
+      <nuxt-link class="el-button el-button--primary" :to="details.url">
+        {{ details.label }}
       </nuxt-link>
     </el-button-group>
   </header>
