@@ -20,7 +20,7 @@ const overpassUrl = computed(() => {
     </template>
     <el-collapse v-model="activeName" accordion>
       <el-collapse-item :title="$t('project.seeMore')" name="1">
-        <UserGroups :user-groups="Object.values(project.user_groups)" />
+        <LazyUserGroups v-if="activeName === '1'" :user-groups="Object.values(project.user_groups)" />
         <el-row>
           <ul>
             <li>
