@@ -32,6 +32,7 @@ const detailsLink = computed(() => {
       </component>
       <p>{{ $i18nHash(project.description) }}</p>
     </span>
+    <project-stats :project="project" />
     <el-button-group>
       <nuxt-link class="el-button" :to="`/${project.id}/validators`">
         {{ $t('project.settings') }}
@@ -54,6 +55,10 @@ header > span {
   justify-content: start;
   display: flex;
   flex-direction: column;
+}
+
+.el-row {
+  flex-grow: 1;
 }
 
 P {
