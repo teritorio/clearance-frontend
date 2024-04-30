@@ -18,7 +18,6 @@ otherProjects.value = other
 <template>
   <el-main>
     <h1>{{ $t('app.title') }}</h1>
-
     <el-row>
       <el-col :span="18">
         <p>

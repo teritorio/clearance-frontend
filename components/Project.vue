@@ -23,13 +23,11 @@ export default defineNuxtComponent({
 </script>
 
 <template>
-  <el-card>
+  <el-card shadow="hover">
     <template #header>
       <project-light :project="project" title-tag="h3" />
     </template>
     <div>
-      <project-stats :project="project" />
-      <el-divider border-style="dotted" />
       <el-row>
         <UserGroups :user-groups="Object.values(project.user_groups)" />
       </el-row>
@@ -62,3 +60,9 @@ export default defineNuxtComponent({
     <p>{{ $t('app.project.join') }}</p>
   </el-card>
 </template>
+
+<style scoped>
+:deep(.el-card__header) {
+  background-color: #fafafa;
+}
+</style>
