@@ -39,6 +39,7 @@ export default {
   },
   project: {
     details: 'Détails',
+    userGroups: 'Groupes d\'utilisateurs',
     user_group_label: 'Groupe',
     user_group_users: 'Utilisateurs',
     settings: '⚙ Paramètres',

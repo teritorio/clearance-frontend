@@ -11,6 +11,14 @@ export default defineNuxtComponent({
     },
   },
 
+  setup() {
+    const activeName = ref('')
+
+    return {
+      activeName,
+    }
+  },
+
   computed: {
     apiUrl(): string {
       return useRuntimeConfig().public.API
@@ -28,9 +36,11 @@ export default defineNuxtComponent({
       <project-light :project="project" title-tag="h3" />
     </template>
     <div>
-      <el-row>
-        <UserGroups :user-groups="Object.values(project.user_groups)" />
-      </el-row>
+      <el-collapse v-model="activeName" accordion>
+        <el-collapse-item :title="$t('project.userGroups')" name="1">
+          <UserGroups :user-groups="Object.values(project.user_groups)" />
+        </el-collapse-item>
+      </el-collapse>
       <el-row>
         <ul>
           <li>
