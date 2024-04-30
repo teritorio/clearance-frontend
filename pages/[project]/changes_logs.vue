@@ -109,6 +109,7 @@ function removeLogs(objectIds: ObjectId[]) {
         (objectId) => log.objtype === objectId.objtype && log.id === objectId.id,
       ) === -1,
   )
+  project.value!.to_be_validated = logs.value?.length
 }
 
 function formatAcceptedLogs(identifier?: { id: number, objtype: ObjType }): ObjectId[] {
