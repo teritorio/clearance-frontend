@@ -9,7 +9,10 @@ if (authToken.value) {
       useState<User>('user', () => user.value)
     }
     catch (err: any) {
-      ElMessage.error(err.message)
+      ElMessage.error({
+        duration: 0,
+        message: err.message,
+      })
     }
   })
 }
@@ -19,7 +22,10 @@ try {
   useState<Project[]>('projects', () => projects.value)
 }
 catch (err: any) {
-  ElMessage.error(err.message)
+  ElMessage.error({
+    duration: 0,
+    message: err.message,
+  })
 }
 </script>
 
