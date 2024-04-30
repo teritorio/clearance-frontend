@@ -20,7 +20,10 @@ try {
   useState<Project>('project', () => projectData.value)
 }
 catch (err: any) {
-  ElMessage.error(err.message)
+  ElMessage.error({
+    duration: 0,
+    message: err.message,
+  })
 }
 
 try {
@@ -29,7 +32,10 @@ try {
   useState<Log[]>('logs', () => logsData.value)
 }
 catch (err: any) {
-  ElMessage.error(err.message)
+  ElMessage.error({
+    duration: 0,
+    message: err.message,
+  })
 }
 
 const baseGeoms = computed(() => {
@@ -164,7 +170,10 @@ async function handleAccept(identifier?: { id: number, objtype: ObjType }) {
     }
   }
   catch (err: any) {
-    ElMessage.error(err.message)
+    ElMessage.error({
+      duration: 0,
+      message: err.message,
+    })
   }
 }
 
