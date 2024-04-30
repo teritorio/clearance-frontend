@@ -1,32 +1,15 @@
-<script lang="ts">
+<script setup lang="ts">
 import type { Project } from '~/libs/types'
 
-export default defineNuxtComponent({
-  name: 'Project',
+const props = defineProps<{
+  project: Project
+}>()
 
-  props: {
-    project: {
-      type: Object as PropType<Project>,
-      required: true,
-    },
-  },
+const activeName = ref('')
+const { API } = useRuntimeConfig().public
 
-  setup() {
-    const activeName = ref('')
-
-    return {
-      activeName,
-    }
-  },
-
-  computed: {
-    apiUrl(): string {
-      return useRuntimeConfig().public.API
-    },
-    overpassUrl(): string {
-      return `${this.apiUrl}/projects/${this.project.id}/overpasslike/`
-    },
-  },
+const overpassUrl = computed(() => {
+  return `${API}/projects/${props.project.id}/overpasslike/`
 })
 </script>
 
@@ -49,12 +32,12 @@ export default defineNuxtComponent({
           </li>
           <li>
             {{ $t('project.extract') }}
-            <a :href="`${apiUrl}/${project.id}/extract/${project.id}.osm.bz2`">
+            <a :href="`${API}/${project.id}/extract/${project.id}.osm.bz2`">
               {{ `${project.id}.osm.bz2` }}
             </a>
           </li>
           <li>
-            <a :href="`${apiUrl}/${project.id}/extract/update/`">{{
+            <a :href="`${API}/${project.id}/extract/update/`">{{
               $t('project.diff')
             }}</a>
           </li>
