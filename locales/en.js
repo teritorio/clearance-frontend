@@ -39,6 +39,7 @@ export default {
   },
   project: {
     details: 'Details',
+    seeMore: '+ See details',
     user_group_label: 'Group',
     user_group_users: 'Users',
     settings: '⚙ Settings',

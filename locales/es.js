@@ -39,6 +39,7 @@ export default {
   },
   project: {
     details: 'Detalle',
+    seeMore: '+ Ver los detalles',
     user_group_label: 'Groupo',
     user_group_users: 'Usuarios',
     settings: '⚙ Configuración',
