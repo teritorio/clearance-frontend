@@ -30,59 +30,36 @@ const toBeValidated = computed(() => {
 </script>
 
 <template>
-  <el-row id="stats">
+  <el-row>
     <el-col :span="12">
-      <div class="el-statistic">
-        <div class="el-statistic__head">
-          {{ $t('project.lastUpdate') }}
-        </div>
-        <div class="el-statistic__content">
-          <span class="el-statistic__number">
-            {{ lastUpdate }}
-          </span>
-        </div>
-      </div>
+      <label>{{ $t('project.lastUpdate') }}</label>
+      <time :datetime="props.project.date_last_update">{{ lastUpdate }}</time>
     </el-col>
     <el-col :span="12">
-      <div class="el-statistic">
-        <div class="el-statistic__head">
-          {{ $t('project.toBeValidated') }}
-        </div>
-        <div class="el-statistic__content">
-          <span class="el-statistic__number">
-            {{ toBeValidated }}
-          </span>
-        </div>
-      </div>
+      <label>{{ $t('project.toBeValidated') }}</label>
+      <data :value="props.project.to_be_validated">{{ toBeValidated }}</data>
     </el-col>
   </el-row>
 </template>
 
 <style scoped>
-#stats .el-col {
+.el-col {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
   text-align: center;
 }
 
-#stats .el-statistic {
-  --el-statistic-title-font-weight: 400;
-  --el-statistic-title-font-size: var(--el-font-size-extra-small);
-  --el-statistic-title-color: var(--el-text-color-regular);
-  --el-statistic-content-font-weight: 400;
-  --el-statistic-content-font-size: var(--el-font-size-extra-large);
-  --el-statistic-content-color: var(--el-text-color-primary);
-}
-
-#stats .el-statistic__head {
-  font-weight: var(--el-statistic-title-font-weight);
-  font-size: var(--el-statistic-title-font-size);
-  color: var(--el-statistic-title-color);
+label {
+  color: #606266;
+  font-size: 12px;
   line-height: 20px;
   margin-bottom: 4px;
 }
 
-#stats .el-statistic__content {
-  font-weight: var(--el-statistic-content-font-weight);
-  font-size: var(--el-statistic-content-font-size);
-  color: var(--el-statistic-content-color);
+time,
+data {
+  color: #303133;
+  font-size: 20px;
 }
 </style>
