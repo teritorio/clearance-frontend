@@ -142,7 +142,7 @@ export default defineNuxtComponent({
       <div
         ref="mapContainer"
         class="map"
-        style="width: 400px; height: 400px"
+        style="width: 400px; height: 400px; margin: 0 auto;"
       />
     </el-col>
   </el-row>
