@@ -32,7 +32,7 @@ const detailsLink = computed(() => {
       </component>
       <p>{{ $i18nHash(project.description) }}</p>
     </span>
-    <project-stats :project="project" />
+    <project-stats :last-update="project.date_last_update" :to-be-validated="project.to_be_validated" />
     <el-button-group>
       <nuxt-link class="el-button" :to="`/${project.id}/validators`">
         {{ $t('project.settings') }}

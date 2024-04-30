@@ -5,10 +5,10 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import en from 'dayjs/locale/en-gb'
 import fr from 'dayjs/locale/fr'
 import es from 'dayjs/locale/es'
-import type { Project } from '~/libs/types'
 
 const props = defineProps<{
-  project: Project
+  lastUpdate: string
+  toBeValidated?: number
 }>()
 
 dayjs.extend(localizedFormat)
@@ -18,14 +18,10 @@ dayjs.extend(relativeTime)
 const _daysjsLocale = { en, fr, es }
 
 const { locale } = useI18n()
-const lastUpdate = computed(() => {
-  return dayjs(props.project.date_last_update)
+const lastUpdateFormatted = computed(() => {
+  return dayjs(props.lastUpdate)
     .locale(locale.value)
     .fromNow()
-})
-
-const toBeValidated = computed(() => {
-  return props.project.to_be_validated?.toLocaleString(locale.value)
 })
 </script>
 
@@ -33,11 +29,11 @@ const toBeValidated = computed(() => {
   <el-row>
     <el-col :span="12">
       <label>{{ $t('project.lastUpdate') }}</label>
-      <time :datetime="props.project.date_last_update">{{ lastUpdate }}</time>
+      <time :datetime="lastUpdate">{{ lastUpdateFormatted }}</time>
     </el-col>
-    <el-col :span="12">
+    <el-col v-if="toBeValidated" :span="12">
       <label>{{ $t('project.toBeValidated') }}</label>
-      <data :value="props.project.to_be_validated">{{ toBeValidated }}</data>
+      <data :value="toBeValidated">{{ toBeValidated }}</data>
     </el-col>
   </el-row>
 </template>
