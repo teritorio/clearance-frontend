@@ -38,6 +38,7 @@ export default {
     validate_selection: 'Valider les objets filtrés',
   },
   project: {
+    control: 'Contrôle',
     details: 'Détails',
     seeMore: '+ Voir les détails',
     user_group_label: 'Groupe',
