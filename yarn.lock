@@ -16,14 +16,14 @@ __metadata:
   linkType: hard
 
 "@antfu/eslint-config@npm:^2.14.0":
-  version: 2.16.0
-  resolution: "@antfu/eslint-config@npm:2.16.0"
+  version: 2.16.1
+  resolution: "@antfu/eslint-config@npm:2.16.1"
   dependencies:
     "@antfu/install-pkg": "npm:^0.3.2"
     "@clack/prompts": "npm:^0.7.0"
     "@stylistic/eslint-plugin": "npm:^1.7.2"
-    "@typescript-eslint/eslint-plugin": "npm:^7.7.1"
-    "@typescript-eslint/parser": "npm:^7.7.1"
+    "@typescript-eslint/eslint-plugin": "npm:~7.7.1"
+    "@typescript-eslint/parser": "npm:~7.7.1"
     eslint-config-flat-gitignore: "npm:^0.1.5"
     eslint-flat-config-utils: "npm:^0.2.3"
     eslint-merge-processors: "npm:^0.1.0"
@@ -94,7 +94,7 @@ __metadata:
       optional: true
   bin:
     eslint-config: bin/index.js
-  checksum: 10c0/e1e0b3a073aaa8fa6338a7231085e56cf461bde92f96b5e4e5fde7384d885fbee6b2a5d3162fa05c977cafba2f4bd9dd5afa07d377152bb7e16d217788ff2ffd
+  checksum: 10c0/c99802208aea7bcce32baa6a3e8ec33896cba708c3c9461ba0ece7b506d4f379a4407e32e0ada708140c47a1542f578b61a65ecdd0406f9bb41393adeed6646d
   languageName: node
   linkType: hard
 
@@ -3311,7 +3311,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^7.7.1":
+"@typescript-eslint/eslint-plugin@npm:^7.7.1, @typescript-eslint/eslint-plugin@npm:~7.7.1":
   version: 7.7.1
   resolution: "@typescript-eslint/eslint-plugin@npm:7.7.1"
   dependencies:
@@ -3336,7 +3336,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^7.7.1":
+"@typescript-eslint/parser@npm:^7.7.1, @typescript-eslint/parser@npm:~7.7.1":
   version: 7.7.1
   resolution: "@typescript-eslint/parser@npm:7.7.1"
   dependencies:
