@@ -47,7 +47,7 @@ npx @eslint/config-inspector
 ```
 Visit http://localhost:7777/ to view and play with your ESLint config
 
-### Setup SEntry
+### Setup Sentry
 
 Add DSN key and environment in .env file.
 
