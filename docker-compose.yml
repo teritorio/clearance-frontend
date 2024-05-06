@@ -10,3 +10,4 @@ services:
       - API=${API}
     ports:
       - ${FRONTEND_PORT:-3000}:3000
+    restart: unless-stopped
