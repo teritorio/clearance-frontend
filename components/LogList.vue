@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Log, ObjType, User } from '~/libs/types'
+import type { Log, ObjType } from '~/libs/types'
 
 const props = defineProps<{
   projectSlug: string
@@ -10,7 +10,7 @@ defineEmits<{
   (e: 'accept', id: { id: number, objtype: ObjType }): void
 }>()
 
-const user = useState<User>('user')
+const user = useUser()
 const isProjectUser = computed(() => {
   return !!user.value?.projects?.includes(props.projectSlug)
 })
