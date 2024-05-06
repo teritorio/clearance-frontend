@@ -26,7 +26,7 @@ export default defineNuxtConfig({
       API: process.env.API,
       sentry: {
         dsn: undefined,
-        environment: 'development',
+        environment: 'production',
       },
     },
   },
