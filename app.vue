@@ -30,6 +30,7 @@ catch (err: any) {
 </script>
 
 <template>
+  <nuxt-loading-indicator :height="5" />
   <nuxt-layout>
     <el-container direction="vertical">
       <app-menu />
