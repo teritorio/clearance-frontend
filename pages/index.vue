@@ -3,7 +3,7 @@ import _ from 'underscore'
 import type { Project, User } from '~/libs/types'
 
 const user = useState<User>('user')
-const projects = useState<Project>('projects')
+const projects = useProjects()
 const myProjects = ref<Project[]>()
 const otherProjects = ref<Project[]>()
 
