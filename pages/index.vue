@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import _ from 'underscore'
-import type { Project, User } from '~/libs/types'
+import type { Project } from '~/libs/types'
 
-const user = useState<User>('user')
+const user = useUser()
 const projects = useProjects()
 const myProjects = ref<Project[]>()
 const otherProjects = ref<Project[]>()
 
 const [my, other] = _.partition(
   projects.value,
-  (project: Project) => user?.value?.projects.includes(project.id) || false,
+  (project: Project) => user.value?.projects.includes(project.id) || false,
 )
 myProjects.value = my
 otherProjects.value = other
