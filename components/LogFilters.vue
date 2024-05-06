@@ -75,11 +75,6 @@ async function applyFilter(key: string, value: string) {
   <aside>
     <h3>{{ $t('logs.filters') }}</h3>
     <el-row style="margin-top: 20px">
-      <el-badge :value="logs.length" class="item" :max="999">
-        <el-tag size="small">
-          {{ $t('logs.objects') }}
-        </el-tag>
-      </el-badge>
       <el-badge
         v-for="[key, count] in stats"
         :key="key"
