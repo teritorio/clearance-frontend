@@ -53,7 +53,7 @@ Add DSN key and environment in .env file.
 
 ```bash
 NUXT_PUBLIC_SENTRY_DSN="FILL THIS OUT"
-NUXT_PUBLIC_SENTRY_ENVIRONMENT=development
+NUXT_PUBLIC_SENTRY_ENVIRONMENT=production
 ```
 
 ## Production
