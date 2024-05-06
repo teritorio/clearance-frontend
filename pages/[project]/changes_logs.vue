@@ -12,12 +12,11 @@ definePageMeta({
 const route = useRoute()
 const projectSlug = route.params.project as string
 const project = ref<Project>()
-const logs = ref<Log[]>()
+const logs = useLogs()
 
 try {
   const projectData = await useFetchWithCache<Project>(`project-${projectSlug}`, `${useRuntimeConfig().public.API}/projects/${projectSlug}`)
   project.value = projectData.value
-  useState<Project>('project', () => projectData.value)
 }
 catch (err: any) {
   ElMessage.error({
@@ -29,7 +28,6 @@ catch (err: any) {
 try {
   const logsData = await useFetchWithCache<Log[]>(`logs-${projectSlug}`, `${useRuntimeConfig().public.API}/projects/${projectSlug}/changes_logs`)
   logs.value = logsData.value
-  useState<Log[]>('logs', () => logsData.value)
 }
 catch (err: any) {
   ElMessage.error({
