@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import type { User } from '~/libs/types'
-
-const user = useState<User>('user')
-
+const user = useUser()
 const { locale, locales, setLocale, localeProperties, loadLocaleMessages } = useI18n()
 
 // Function from https://dev.to/jorik/country-code-to-flag-emoji-a21

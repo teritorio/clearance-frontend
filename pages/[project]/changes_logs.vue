@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Geometry } from 'geojson'
 import { intersection, uniq } from 'underscore'
-import type { Log, ObjType, ObjectId, Project, User } from '~/libs/types'
+import type { Log, ObjType, ObjectId, Project } from '~/libs/types'
 
 definePageMeta({
   validate({ params }) {
@@ -54,7 +54,7 @@ const changeGeoms = computed(() => {
   return logs.value.map((log) => log.change.geom)
 })
 
-const user = useState<User>('user')
+const user = useUser()
 const isProjectUser = computed(() => {
   return !!user.value?.projects?.includes(projectSlug)
 })
