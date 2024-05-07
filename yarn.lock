@@ -16,35 +16,35 @@ __metadata:
   linkType: hard
 
 "@antfu/eslint-config@npm:^2.14.0":
-  version: 2.16.1
-  resolution: "@antfu/eslint-config@npm:2.16.1"
+  version: 2.16.2
+  resolution: "@antfu/eslint-config@npm:2.16.2"
   dependencies:
-    "@antfu/install-pkg": "npm:^0.3.2"
+    "@antfu/install-pkg": "npm:^0.3.3"
     "@clack/prompts": "npm:^0.7.0"
-    "@stylistic/eslint-plugin": "npm:^1.7.2"
+    "@stylistic/eslint-plugin": "npm:^1.8.0"
     "@typescript-eslint/eslint-plugin": "npm:~7.7.1"
     "@typescript-eslint/parser": "npm:~7.7.1"
     eslint-config-flat-gitignore: "npm:^0.1.5"
-    eslint-flat-config-utils: "npm:^0.2.3"
+    eslint-flat-config-utils: "npm:^0.2.4"
     eslint-merge-processors: "npm:^0.1.0"
-    eslint-plugin-antfu: "npm:^2.1.2"
-    eslint-plugin-command: "npm:^0.1.2"
+    eslint-plugin-antfu: "npm:^2.1.3"
+    eslint-plugin-command: "npm:^0.1.9"
     eslint-plugin-eslint-comments: "npm:^3.2.0"
     eslint-plugin-import-x: "npm:^0.5.0"
     eslint-plugin-jsdoc: "npm:^48.2.3"
     eslint-plugin-jsonc: "npm:^2.15.1"
-    eslint-plugin-markdown: "npm:^4.0.1"
-    eslint-plugin-n: "npm:^17.3.1"
+    eslint-plugin-markdown: "npm:^5.0.0"
+    eslint-plugin-n: "npm:^17.4.0"
     eslint-plugin-no-only-tests: "npm:^3.1.0"
     eslint-plugin-perfectionist: "npm:^2.10.0"
     eslint-plugin-toml: "npm:^0.11.0"
     eslint-plugin-unicorn: "npm:^52.0.0"
-    eslint-plugin-unused-imports: "npm:^3.1.0"
+    eslint-plugin-unused-imports: "npm:^3.2.0"
     eslint-plugin-vitest: "npm:^0.5.4"
     eslint-plugin-vue: "npm:^9.25.0"
     eslint-plugin-yml: "npm:^1.14.0"
     eslint-processor-vue-blocks: "npm:^0.1.2"
-    globals: "npm:^15.0.0"
+    globals: "npm:^15.1.0"
     jsonc-eslint-parser: "npm:^2.4.0"
     local-pkg: "npm:^0.5.0"
     parse-gitignore: "npm:^2.0.0"
@@ -94,11 +94,11 @@ __metadata:
       optional: true
   bin:
     eslint-config: bin/index.js
-  checksum: 10c0/c99802208aea7bcce32baa6a3e8ec33896cba708c3c9461ba0ece7b506d4f379a4407e32e0ada708140c47a1542f578b61a65ecdd0406f9bb41393adeed6646d
+  checksum: 10c0/848df6fd143db1479eb11f8730cfb049c2a7cc7f1004d31782f839762bd10c52383c45fdcd601021b11e5e9370a242276763dd78b032f909a52994c1649c8325
   languageName: node
   linkType: hard
 
-"@antfu/install-pkg@npm:^0.3.2":
+"@antfu/install-pkg@npm:^0.3.3":
   version: 0.3.3
   resolution: "@antfu/install-pkg@npm:0.3.3"
   dependencies:
@@ -3142,7 +3142,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stylistic/eslint-plugin@npm:^1.7.2":
+"@stylistic/eslint-plugin@npm:^1.7.2, @stylistic/eslint-plugin@npm:^1.8.0":
   version: 1.8.0
   resolution: "@stylistic/eslint-plugin@npm:1.8.0"
   dependencies:
@@ -6593,7 +6593,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-flat-config-utils@npm:^0.2.3":
+"eslint-flat-config-utils@npm:^0.2.3, eslint-flat-config-utils@npm:^0.2.4":
   version: 0.2.4
   resolution: "eslint-flat-config-utils@npm:0.2.4"
   dependencies:
@@ -6623,21 +6623,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-antfu@npm:^2.1.2":
-  version: 2.1.2
-  resolution: "eslint-plugin-antfu@npm:2.1.2"
+"eslint-plugin-antfu@npm:^2.1.3":
+  version: 2.1.3
+  resolution: "eslint-plugin-antfu@npm:2.1.3"
   peerDependencies:
     eslint: "*"
-  checksum: 10c0/bb64151bcdfe2135e195eceed073953f32f75e6d05d0fd697288e0988a4949962f90236fc7fc413d5755f3702a71c02642ef49654d0af581087d68af75edf5e3
+  checksum: 10c0/71b7c2ce99a67a0dd480abb6a1a9172a25174ea2c4a962a8a94390cfd57efedf7f6a468fd87cd661b3449db2afa6465fd6f25fa59e7bfb7e00a42312d1bec625
   languageName: node
   linkType: hard
 
-"eslint-plugin-command@npm:^0.1.2":
-  version: 0.1.8
-  resolution: "eslint-plugin-command@npm:0.1.8"
+"eslint-plugin-command@npm:^0.1.9":
+  version: 0.1.9
+  resolution: "eslint-plugin-command@npm:0.1.9"
   peerDependencies:
     eslint: "*"
-  checksum: 10c0/111ae643ddf8d20b3d58f7616b5f5ffc37d8d8c68ffacfe89c0ad4c7efe5846d8cb6f379b1e7fbae468f7beb413ca6e1ef66279a8d5bba444c8a333197ff68b7
+  checksum: 10c0/129965299d679719224acded0e61caa793ecf34c8da460891a6605da5616310ec34b30d4ce79b2fc86f0d71251d58844c726bbf2ef4c6b759f0e61df52a5158a
   languageName: node
   linkType: hard
 
@@ -6720,18 +6720,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-markdown@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "eslint-plugin-markdown@npm:4.0.1"
+"eslint-plugin-markdown@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "eslint-plugin-markdown@npm:5.0.0"
   dependencies:
     mdast-util-from-markdown: "npm:^0.8.5"
   peerDependencies:
     eslint: ">=8"
-  checksum: 10c0/435d8b066ba3881a32c7dbb7d9641c55d6454711f709b46372f51a7805685cf9b6d7b5167e230f841a41f2cc5c57f7d26e22d8bce4dde9b648fe9035cbb0c24b
+  checksum: 10c0/32d552b2cbb2dd76db64b41aad30256b89f933fa2c0a30aa1ce6bb2f0532999c7db1f7a4230674cd33e1b6ce749ba38f6dbe4d09c6e4abf17223e319d44f8111
   languageName: node
   linkType: hard
 
-"eslint-plugin-n@npm:^17.3.1":
+"eslint-plugin-n@npm:^17.4.0":
   version: 17.4.0
   resolution: "eslint-plugin-n@npm:17.4.0"
   dependencies:
@@ -6822,7 +6822,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-unused-imports@npm:^3.1.0":
+"eslint-plugin-unused-imports@npm:^3.2.0":
   version: 3.2.0
   resolution: "eslint-plugin-unused-imports@npm:3.2.0"
   dependencies:
@@ -7705,7 +7705,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globals@npm:^15.0.0":
+"globals@npm:^15.0.0, globals@npm:^15.1.0":
   version: 15.1.0
   resolution: "globals@npm:15.1.0"
   checksum: 10c0/ae9cd15057dc6a21d6dbafe9f47b66bd063c6d3c9215fa1e8294bd130d89f188c48370a11a9525a5a33bd8689fc4fdfd3f474d930692d7abb7459cd982503336
