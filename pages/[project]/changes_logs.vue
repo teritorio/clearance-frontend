@@ -91,9 +91,7 @@ const logsWithFilter = computed(() => {
           matchFilterBySelectors(match.selectors),
         ))
         && (route.query.filterByUsers === undefined
-        || (changesetsUsers
-        && changesetsUsers.length === 1
-        && changesetsUsers[0] === route.query.filterByUsers))
+        || (changesetsUsers && changesetsUsers.includes(route.query.filterByUsers as string)))
         && (route.query.filterByDate === undefined
         || log.change.created.substring(0, 10) === route.query.filterByDate)
     )
