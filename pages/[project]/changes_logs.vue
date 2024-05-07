@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Geometry } from 'geojson'
-import { intersection, uniq } from 'underscore'
+import { uniq } from 'underscore'
 import type { Log, ObjType, ObjectId, Project } from '~/libs/types'
 
 definePageMeta({
@@ -182,7 +182,7 @@ async function resetFilters() {
 }
 
 function matchFilterBySelectors(selectors: string[]) {
-  return route.query.filterBySelectors !== undefined && intersection(selectors, route.query.filterBySelectors as string).length > 0
+  return route.query.filterBySelectors !== undefined && selectors.includes(route.query.filterBySelectors as string)
 }
 </script>
 
