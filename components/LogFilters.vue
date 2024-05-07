@@ -40,8 +40,10 @@ const statUserGroups = computed(() => {
 const statUsers = computed(() => {
   const users = logs.value
     .map((log) =>
-      (log.base ? log.changesets.slice(1) : log.changesets).map(
-        (changeset) => changeset.user,
+      uniq(
+        (log.base ? log.changesets.slice(1) : log.changesets).map(
+          (changeset) => changeset.user,
+        ),
       ),
     )
     .flat(2)
