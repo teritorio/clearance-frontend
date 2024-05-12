@@ -1,6 +1,6 @@
-import type { Log, Project, User } from '~/libs/types'
+import type { LoCha, Project, User } from '~/libs/types'
 
-export const useLogs = () => useState<Log[]>('logs')
+export const useLoChas = () => useState<LoCha[]>('loChas')
 
 export const useProjects = () => useState<Project[]>('projects')
 

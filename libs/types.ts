@@ -71,6 +71,11 @@ export interface Log {
   diff_tags?: Actions
 }
 
+export interface LoCha {
+  id: number
+  objects: Log[]
+}
+
 export interface ObjectId {
   objtype: ObjType
   id: number

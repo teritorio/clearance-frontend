@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Geometry } from 'geojson'
 import { uniq } from 'underscore'
-import type { Log, ObjType, ObjectId, Project } from '~/libs/types'
+import type { LoCha, Log, ObjType, ObjectId, Project } from '~/libs/types'
 
 definePageMeta({
   validate({ params }) {
@@ -12,7 +12,7 @@ definePageMeta({
 const route = useRoute()
 const projectSlug = route.params.project as string
 const project = ref<Project>()
-const logs = useLogs()
+const loChas = useLoChas()
 
 try {
   const projectData = await useFetchWithCache<Project>(`project-${projectSlug}`, `${useRuntimeConfig().public.API}/projects/${projectSlug}`)
@@ -26,8 +26,8 @@ catch (err: any) {
 }
 
 try {
-  const logsData = await useFetchWithCache<Log[]>(`logs-${projectSlug}`, `${useRuntimeConfig().public.API}/projects/${projectSlug}/changes_logs`)
-  logs.value = logsData.value
+  const loChasData = await useFetchWithCache<LoCha[]>(`loChas-${projectSlug}`, `${useRuntimeConfig().public.API}/projects/${projectSlug}/changes_logs`)
+  loChas.value = loChasData.value
 }
 catch (err: any) {
   ElMessage.error({
@@ -35,6 +35,14 @@ catch (err: any) {
     message: err.message,
   })
 }
+
+const logs: Ref<Log[]> = computed(() => {
+  if (!loChas.value) {
+    return []
+  }
+
+  return loChas.value.map((loCha) => loCha.objects).flat()
+})
 
 const baseGeoms = computed(() => {
   if (!logs.value) {
@@ -59,58 +67,63 @@ const isProjectUser = computed(() => {
   return !!user.value?.projects?.includes(projectSlug)
 })
 
-const logsWithFilter = computed(() => {
-  if (!logs.value?.length) {
+const loChasWithFilter: Ref<LoCha[]> = computed(() => {
+  if (!loChas.value.length) {
     return []
   }
 
-  return logs.value.filter((log) => {
-    const changesetsUsers
+  return (loChas.value as LoCha[]).filter((loCha) =>
+    loCha.objects.some((log) => {
+      const changesetsUsers
       = route.query.filterByUsers !== undefined
       && uniq(
         (log.base ? log.changesets.slice(1) : log.changesets).map(
           (changeset) => changeset.user,
         ),
       )
-    return (
-      (route.query.filterByAction === undefined
-      || Object.values(log.diff_attribs || {})
-        .concat(Object.values(log.diff_tags || {}))
-        .some(
-          (actions) =>
-            actions?.some(
-              (action) => action[0] === route.query.filterByAction,
-            ) || false,
-        ))
-        && (route.query.filterByUserGroups === undefined
-        || log.matches.some((match) =>
-          match.user_groups.includes(route.query.filterByUserGroups as string),
-        ))
-        && (route.query.filterBySelectors === undefined
-        || log.matches.some((match) =>
-          matchFilterBySelectors(match.selectors),
-        ))
-        && (route.query.filterByUsers === undefined
-        || (changesetsUsers && changesetsUsers.includes(route.query.filterByUsers as string)))
-        && (route.query.filterByDate === undefined
-        || log.change.created.substring(0, 10) === route.query.filterByDate)
-    )
-  })
+      return (
+        (route.query.filterByAction === undefined
+        || Object.values(log.diff_attribs || {})
+          .concat(Object.values(log.diff_tags || {}))
+          .some(
+            (actions) =>
+              actions?.some(
+                (action) => action[0] === route.query.filterByAction,
+              ) || false,
+          ))
+          && (route.query.filterByUserGroups === undefined
+          || log.matches.some((match) =>
+            match.user_groups.includes(route.query.filterByUserGroups as string),
+          ))
+          && (route.query.filterBySelectors === undefined
+          || log.matches.some((match) =>
+            matchFilterBySelectors(match.selectors),
+          ))
+          && (route.query.filterByUsers === undefined
+          || (changesetsUsers && changesetsUsers.includes(route.query.filterByUsers as string)))
+          && (route.query.filterByDate === undefined
+          || log.change.created.substring(0, 10) === route.query.filterByDate)
+      )
+    }),
+  )
 })
 
 function removeLogs(objectIds: ObjectId[]) {
-  logs.value = logs.value?.filter(
-    (log) =>
-      objectIds.findIndex(
-        (objectId) => log.objtype === objectId.objtype && log.id === objectId.id,
-      ) === -1,
-  )
+  loChas.value = (loChas.value as LoCha[]).map((loCha) => {
+    loCha.objects = loCha.objects.filter(
+      (log) =>
+        objectIds.findIndex(
+          (objectId) => log.objtype === objectId.objtype && log.id === objectId.id,
+        ) === -1,
+    )
+    return loCha.objects.length > 0 ? loCha : undefined
+  }).filter((loCha) => !!loCha) as LoCha[]
   project.value!.to_be_validated = logs.value?.length
 }
 
 function formatAcceptedLogs(identifier?: { id: number, objtype: ObjType }): ObjectId[] {
   if (identifier) {
-    const log = logsWithFilter.value.find((log) => log.id === identifier.id && log.objtype === identifier.objtype)
+    const log = logs.value.find((log) => log.id === identifier.id && log.objtype === identifier.objtype)
 
     if (!log) {
       throw createError({
@@ -127,7 +140,7 @@ function formatAcceptedLogs(identifier?: { id: number, objtype: ObjType }): Obje
     }]
   }
   else {
-    const logs = logsWithFilter.value.map((log) => ({
+    const logs = loChasWithFilter.value.map((loCha) => loCha.objects).flat().map((log) => ({
       objtype: log.objtype,
       id: log.id,
       version: log.change.version,
@@ -162,7 +175,7 @@ async function handleAccept(identifier?: { id: number, objtype: ObjType }) {
     )
     removeLogs(objectIds)
 
-    if (!identifier || !logsWithFilter.value.length) {
+    if (!identifier || !loChasWithFilter.value.length) {
       resetFilters()
     }
   }
@@ -206,10 +219,10 @@ function matchFilterBySelectors(selectors: string[]) {
       <li>{{ $t('logs.data_details_osm') }}</li>
       <li>{{ $t('logs.data_details_manual') }}</li>
     </ul>
-    <log-list
-      v-if="logs?.length"
+    <lo-cha-list
+      v-if="loChas?.length"
       :project-slug="projectSlug"
-      :logs="logsWithFilter"
+      :lo-chas="loChasWithFilter"
       @accept="handleAccept($event)"
     />
   </el-main>

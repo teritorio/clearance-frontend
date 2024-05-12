@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { countBy, indexBy, sortBy, uniq } from 'underscore'
 import type { LocationQuery } from 'vue-router'
+import type { Log } from '~/libs/types'
 
 const route = useRoute()
 const filters = ref<LocationQuery>()
@@ -8,7 +9,15 @@ watchEffect(() => {
   filters.value = route.query
 })
 
-const logs = useLogs()
+const loChas = useLoChas()
+const logs: Ref<Log[]> = computed(() => {
+  if (!loChas.value) {
+    return []
+  }
+
+  return loChas.value.map((loCha) => loCha.objects).flat()
+})
+
 const stats = computed(() => {
   const actions = logs.value
     .map((log) =>
