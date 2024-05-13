@@ -31,7 +31,7 @@ const lastUpdateFormatted = computed(() => {
       <label>{{ $t('project.lastUpdate') }}</label>
       <time :datetime="lastUpdate">{{ lastUpdateFormatted }}</time>
     </el-col>
-    <el-col v-if="toBeValidated" :span="12">
+    <el-col v-if="toBeValidated !== undefined" :span="12">
       <label>{{ $t('project.toBeValidated') }}</label>
       <data :value="toBeValidated">{{ toBeValidated }}</data>
     </el-col>
