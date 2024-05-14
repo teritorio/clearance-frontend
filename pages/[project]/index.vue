@@ -9,7 +9,7 @@ import { getProject } from '~/libs/types'
 
 definePageMeta({
   validate({ params }) {
-    return /^[-_:a-zA-Z0-9]+$/.test(params.project as string)
+    return /^[-\w:]+$/.test(params.project as string)
   },
 })
 
