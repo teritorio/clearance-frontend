@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Geometry } from 'geojson'
 import { uniq } from 'underscore'
-import type { LoCha, Log, ObjType, ObjectId, Project } from '~/libs/types'
+import type { LoCha, ObjType, ObjectId, Project } from '~/libs/types'
 
 definePageMeta({
   validate({ params }) {
@@ -36,7 +36,7 @@ catch (err: any) {
   })
 }
 
-const logs: Ref<Log[]> = computed(() => {
+const logs = computed(() => {
   if (!loChas.value) {
     return []
   }
@@ -67,12 +67,12 @@ const isProjectUser = computed(() => {
   return !!user.value?.projects?.includes(projectSlug)
 })
 
-const loChasWithFilter: Ref<LoCha[]> = computed(() => {
+const loChasWithFilter = computed(() => {
   if (!loChas.value.length) {
     return []
   }
 
-  return (loChas.value as LoCha[]).filter((loCha) =>
+  return loChas.value.filter((loCha) =>
     loCha.objects.some((log) => {
       const changesetsUsers
       = route.query.filterByUsers !== undefined
@@ -109,15 +109,18 @@ const loChasWithFilter: Ref<LoCha[]> = computed(() => {
 })
 
 function removeLogs(objectIds: ObjectId[]) {
-  loChas.value = (loChas.value as LoCha[]).map((loCha) => {
-    loCha.objects = loCha.objects.filter(
-      (log) =>
-        objectIds.findIndex(
-          (objectId) => log.objtype === objectId.objtype && log.id === objectId.id,
-        ) === -1,
-    )
-    return loCha.objects.length > 0 ? loCha : undefined
-  }).filter((loCha) => !!loCha) as LoCha[]
+  loChas.value = loChas.value
+    .filter((loCha) => loCha.objects.length)
+    .map((loCha) => {
+      loCha.objects = loCha.objects.filter(
+        (log) =>
+          objectIds.findIndex(
+            (objectId) => log.objtype === objectId.objtype && log.id === objectId.id,
+          ) === -1,
+      )
+      return loCha
+    })
+
   project.value!.to_be_validated = logs.value?.length
 }
 
