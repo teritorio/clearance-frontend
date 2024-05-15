@@ -9,6 +9,7 @@ watchEffect(() => {
 })
 
 const logs = useLogs()
+
 const stats = computed(() => {
   const actions = logs.value
     .map((log) =>
