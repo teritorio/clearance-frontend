@@ -23,10 +23,10 @@ const lazyLoChas = computed(() => {
 <template>
   <div>
     <el-space v-infinite-scroll="scrollLoad" :fill="true" wrap :size="20">
-      <lo-cha
+      <lo-cha-item
         v-for="loCha in lazyLoChas"
         :key="loCha.id"
-        :logs="loCha.objects"
+        :item="loCha"
         :project-slug="projectSlug"
         @accept="$emit('accept', $event)"
       />
