@@ -13,6 +13,7 @@ const route = useRoute()
 const projectSlug = route.params.project as string
 const project = ref<Project>()
 const loChas = useLoChas()
+const logs = useLogs()
 
 try {
   const projectData = await useFetchWithCache<Project>(`project-${projectSlug}`, `${useRuntimeConfig().public.API}/projects/${projectSlug}`)
@@ -28,6 +29,10 @@ catch (err: any) {
 try {
   const loChasData = await useFetchWithCache<LoCha[]>(`loChas-${projectSlug}`, `${useRuntimeConfig().public.API}/projects/${projectSlug}/changes_logs`)
   loChas.value = loChasData.value
+
+  if (loChasData.value.length) {
+    logs.value = loChasData.value.map((loCha) => loCha.objects).flat()
+  }
 }
 catch (err: any) {
   ElMessage.error({
@@ -35,14 +40,6 @@ catch (err: any) {
     message: err.message,
   })
 }
-
-const logs = computed(() => {
-  if (!loChas.value) {
-    return []
-  }
-
-  return loChas.value.map((loCha) => loCha.objects).flat()
-})
 
 const baseGeoms = computed(() => {
   if (!logs.value) {
