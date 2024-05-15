@@ -19,15 +19,19 @@ const isProjectUser = computed(() => {
 <template>
   <el-card>
     <template #header>
-      {{ item.id }}
+      <div class="card-header">
+        {{ item.id }}
+      </div>
     </template>
-    <log-item
-      v-for="log in item.objects"
-      :key="log.id"
-      :log="log"
-      :project="projectSlug"
-      :project-user="isProjectUser"
-      @accept="$emit('accept', $event)"
-    />
+    <el-space direction="vertical" :fill="true">
+      <log-item
+        v-for="log in item.objects"
+        :key="log.id"
+        :log="log"
+        :project="projectSlug"
+        :project-user="isProjectUser"
+        @accept="$emit('accept', $event)"
+      />
+    </el-space>
   </el-card>
 </template>

@@ -22,7 +22,7 @@ const lazyLoChas = computed(() => {
 
 <template>
   <div>
-    <el-space v-infinite-scroll="scrollLoad" :fill="true" wrap :size="20">
+    <el-space v-infinite-scroll="scrollLoad" direction="vertical" :fill="true" :size="20">
       <lo-cha-item
         v-for="loCha in lazyLoChas"
         :key="loCha.id"
