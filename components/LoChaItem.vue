@@ -17,13 +17,15 @@ const isProjectUser = computed(() => {
 </script>
 
 <template>
-  <el-card>
+  <el-card style="--el-card-bg-color: #FAFAFA;" :body-style="{ padding: 0 }">
     <template #header>
       <div class="card-header">
-        {{ item.id }}
+        <el-text class="mx-1" size="large" tag="b">
+          LoCha: {{ item.id }}
+        </el-text>
       </div>
     </template>
-    <el-space direction="vertical" :fill="true">
+    <el-space wrap fill style="width: 100%">
       <log-item
         v-for="log in item.objects"
         :key="log.id"
