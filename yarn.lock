@@ -9877,8 +9877,8 @@ __metadata:
   linkType: hard
 
 "maplibre-gl@npm:^4.1.2":
-  version: 4.3.0
-  resolution: "maplibre-gl@npm:4.3.0"
+  version: 4.3.1
+  resolution: "maplibre-gl@npm:4.3.1"
   dependencies:
     "@mapbox/geojson-rewind": "npm:^0.5.2"
     "@mapbox/jsonlint-lines-primitives": "npm:^2.0.2"
@@ -9907,7 +9907,7 @@ __metadata:
     supercluster: "npm:^8.0.1"
     tinyqueue: "npm:^2.0.3"
     vt-pbf: "npm:^3.1.3"
-  checksum: 10c0/1fc17fe6fd4d3c85e8407013c7d3b992d9ecd061baf3e0f5bbc12f4e184a6e0831a2f545005250a0b600944adaad450071bca22e5a3bcf21e2449191fd076255
+  checksum: 10c0/11f6eb18dffb2392ea3fd7997eff1232467805e39fb8e5980c75eb2c9e07771bc87b92d2144a5c29f44989f9ff1dc5a6da86d44b9380c26b4b40c0e50be334b8
   languageName: node
   linkType: hard
 
