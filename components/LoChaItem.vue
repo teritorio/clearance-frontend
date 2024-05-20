@@ -19,9 +19,9 @@ const isProjectUser = computed(() => {
 <template>
   <el-card style="--el-card-bg-color: #FAFAFA;" :body-style="{ padding: 0 }">
     <template #header>
-      <div class="card-header">
+      <div v-if="item.objects.length > 1" class="card-header">
         <el-text class="mx-1" size="large" tag="b">
-          LoCha: {{ item.id }}
+          {{ $t('logs.object_numbers', { n: item.objects.length }) }}
         </el-text>
       </div>
     </template>
