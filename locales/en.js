@@ -23,7 +23,7 @@ export default {
     },
   },
   logs: {
-    object_numbers: '{n} objects',
+    object_count: '1 object | {n} objects',
     objects: 'Objects',
     created: 'created',
     deleted: 'deleted',
