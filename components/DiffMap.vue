@@ -53,7 +53,7 @@ export default defineNuxtComponent({
       style:
         'https://vecto.teritorio.xyz/styles/teritorio-basic/style.json?key=teritorio_clearance-1-ahNoohaepohy9iexoo3qua',
       bounds,
-      fitBoundsOptions: { maxZoom: 18, padding: 50 },
+      fitBoundsOptions: { maxZoom: 17, padding: 50 },
       cooperativeGestures: true,
       attributionControl: false,
     })
