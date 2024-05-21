@@ -10,6 +10,8 @@ defineEmits<{
   (e: 'accept', id: { id: number, objtype: ObjType }): void
 }>()
 
+const lochaCount = computed(() => props.item.objects.length)
+
 const user = useUser()
 const isProjectUser = computed(() => {
   return !!user.value?.projects?.includes(props.projectSlug)
@@ -18,10 +20,10 @@ const isProjectUser = computed(() => {
 
 <template>
   <el-card style="--el-card-bg-color: #FAFAFA;" :body-style="{ padding: 0 }">
-    <template #header>
+    <template v-if="lochaCount > 1" #header>
       <div class="card-header">
         <el-text class="mx-1" size="large" tag="b">
-          LoCha: {{ item.id }}
+          {{ $t('logs.object_count', { n: lochaCount }) }}
         </el-text>
       </div>
     </template>
