@@ -21,7 +21,6 @@ export default defineNuxtComponent({
   props: {
     baseGeom: {
       type: Array as PropType<Geometry[]>,
-      required: true,
     },
     changeGeom: {
       type: Array as PropType<Geometry[]>,
@@ -34,7 +33,7 @@ export default defineNuxtComponent({
   },
 
   mounted() {
-    const noChanges = this.changeGeom
+    const noChanges = this.baseGeom && this.changeGeom
       ? (
           this.baseGeom.length === 1 && this.changeGeom.length === 1
           && (
@@ -44,9 +43,9 @@ export default defineNuxtComponent({
         )
       : false
 
-    const geometries = this.baseGeom
+    const geometries = (this.baseGeom || this.changeGeom)!
 
-    if (this.changeGeom) {
+    if (this.baseGeom && this.changeGeom) {
       geometries.concat(this.changeGeom)
     }
 
