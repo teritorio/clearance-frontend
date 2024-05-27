@@ -25,7 +25,6 @@ export default defineNuxtComponent({
     },
     changeGeom: {
       type: Array as PropType<Geometry[]>,
-      required: true,
     },
   },
 
@@ -35,17 +34,25 @@ export default defineNuxtComponent({
   },
 
   mounted() {
-    const noChanges
-      = this.baseGeom.length === 1
-      && this.changeGeom.length === 1
-      && (this.baseGeom[0] === this.changeGeom[0]
-      || (this.baseGeom
-      && this.changeGeom
-      && booleanEqual(this.baseGeom[0], this.changeGeom[0])))
+    const noChanges = this.changeGeom
+      ? (
+          this.baseGeom.length === 1 && this.changeGeom.length === 1
+          && (
+            this.baseGeom[0] === this.changeGeom[0]
+            || (this.baseGeom && this.changeGeom && booleanEqual(this.baseGeom[0], this.changeGeom[0]))
+          )
+        )
+      : false
+
+    const geometries = this.baseGeom
+
+    if (this.changeGeom) {
+      geometries.concat(this.changeGeom)
+    }
 
     const bounds = new LngLatBounds(bbox({
       type: 'GeometryCollection',
-      geometries: [...this.baseGeom, ...this.changeGeom],
+      geometries,
     }) as unknown as LngLatLike)
 
     const map = new Map({
