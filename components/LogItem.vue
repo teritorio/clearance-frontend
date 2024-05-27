@@ -173,7 +173,8 @@ function objtypeFull(objtype: ObjType) {
           style="border: 1px solid lightgrey"
         >
           <diff-map
-            :base-geom="(log.base?.geom && [log.base?.geom]) || []"
+            v-if="log.base || !log.change.deleted"
+            :base-geom="log.base ? [log.base.geom] : undefined"
             :change-geom="!log.change.deleted ? [log.change.geom] : undefined"
           />
         </LazyComponent>
