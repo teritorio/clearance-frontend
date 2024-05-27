@@ -174,7 +174,7 @@ function objtypeFull(objtype: ObjType) {
         >
           <diff-map
             :base-geom="(log.base?.geom && [log.base?.geom]) || []"
-            :change-geom="[log.change.geom]"
+            :change-geom="!log.change.deleted ? [log.change.geom] : undefined"
           />
         </LazyComponent>
       </el-col>
