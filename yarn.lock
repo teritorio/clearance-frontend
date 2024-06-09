@@ -3324,14 +3324,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/bbox@npm:7.0.0-alpha.116":
-  version: 7.0.0-alpha.116
-  resolution: "@turf/bbox@npm:7.0.0-alpha.116"
+"@turf/bbox@npm:7.0.0":
+  version: 7.0.0
+  resolution: "@turf/bbox@npm:7.0.0"
   dependencies:
-    "@turf/helpers": "npm:^7.0.0-alpha.116+ce335a037"
-    "@turf/meta": "npm:^7.0.0-alpha.116+ce335a037"
+    "@turf/helpers": "npm:^7.0.0"
+    "@turf/meta": "npm:^7.0.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/126b8d6c21cc731923512dc0f0d162a9f10de6be08f01e752031a2d0559801c2eb5d45cae7c100a553aadc4492a250c7a8cca5cc15ce6df3db69f20c8dbd8a18
+  checksum: 10c0/4e6f43471db8dee93ec4ab892aa72b4d752bec3310b2f9da9602c190b47466bdd1da555b7298e041812d03af7dd0db76ea3e2b5b5e75291d86c26697d0a59b3e
   languageName: node
   linkType: hard
 
@@ -3368,6 +3368,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@turf/helpers@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "@turf/helpers@npm:7.0.0"
+  dependencies:
+    deep-equal: "npm:^2.2.3"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/33a12478c25551d8238aee6e86cb610485c95baceb725e84628c0726ffe78de809e238a4cfaf3cc8e74522e411ab84826c9090cbe7ec2b84dfc39b24cabc47da
+  languageName: node
+  linkType: hard
+
 "@turf/invariant@npm:^7.0.0-alpha.116+ce335a037":
   version: 7.0.0-alpha.116
   resolution: "@turf/invariant@npm:7.0.0-alpha.116"
@@ -3378,12 +3388,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/meta@npm:^7.0.0-alpha.116+ce335a037":
-  version: 7.0.0-alpha.116
-  resolution: "@turf/meta@npm:7.0.0-alpha.116"
+"@turf/meta@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "@turf/meta@npm:7.0.0"
   dependencies:
-    "@turf/helpers": "npm:^7.0.0-alpha.116+ce335a037"
-  checksum: 10c0/c233e57b6b70b19991e4ab01b73fc645f04d43fdf20e936cff773c30b1efc65973d7254df76073dbb50e9995bd0c8d86a98145457fc5d5bc59831ddac98e4c3d
+    "@turf/helpers": "npm:^7.0.0"
+  checksum: 10c0/0f62736eecfd9a3f2a42452a91ac95bcec3e9fc534191145a957e331828e289523772324a87e47b94244eb02ea6c345089d0c4822e41b9758cf3c9ad6a7622a3
   languageName: node
   linkType: hard
 
@@ -14341,7 +14351,7 @@ __metadata:
     "@nuxt/eslint": "npm:^0.3.7"
     "@nuxtjs/i18n": "npm:^8.3.0"
     "@sentry/vue": "npm:^7.113.0"
-    "@turf/bbox": "npm:7.0.0-alpha.116"
+    "@turf/bbox": "npm:7.0.0"
     "@turf/boolean-equal": "npm:7.0.0-alpha.116"
     "@turf/helpers": "npm:7.0.0-alpha.116"
     "@types/diff": "npm:^5.0.9"
