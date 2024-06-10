@@ -21,7 +21,7 @@
     "@sentry/vue": "^7.113.0",
     "@turf/bbox": "7.0.0-alpha.116",
     "@turf/boolean-equal": "7.0.0-alpha.116",
-    "@turf/helpers": "7.0.0-alpha.116",
+    "@turf/helpers": "7.0.0",
     "@types/diff": "^5.0.9",
     "@types/geojson": "^7946.0.14",
     "dayjs": "^1.11.10",
