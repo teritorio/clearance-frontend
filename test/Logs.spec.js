@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { describe, expect, it, mount } from '@vue/test-utils'
 import Logs from '@/components/Logs.vue'
 
 describe('logs', () => {
