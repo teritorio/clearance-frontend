@@ -3348,7 +3348,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/helpers@npm:7.0.0-alpha.116, @turf/helpers@npm:^7.0.0-alpha.116+ce335a037":
+"@turf/helpers@npm:7.0.0":
+  version: 7.0.0
+  resolution: "@turf/helpers@npm:7.0.0"
+  dependencies:
+    deep-equal: "npm:^2.2.3"
+    tslib: "npm:^2.6.2"
+  checksum: 10c0/33a12478c25551d8238aee6e86cb610485c95baceb725e84628c0726ffe78de809e238a4cfaf3cc8e74522e411ab84826c9090cbe7ec2b84dfc39b24cabc47da
+  languageName: node
+  linkType: hard
+
+"@turf/helpers@npm:^7.0.0-alpha.116+ce335a037":
   version: 7.0.0-alpha.116
   resolution: "@turf/helpers@npm:7.0.0-alpha.116"
   dependencies:
@@ -14331,7 +14341,7 @@ __metadata:
     "@sentry/vue": "npm:^7.113.0"
     "@turf/bbox": "npm:7.0.0-alpha.116"
     "@turf/boolean-equal": "npm:7.0.0-alpha.116"
-    "@turf/helpers": "npm:7.0.0-alpha.116"
+    "@turf/helpers": "npm:7.0.0"
     "@types/diff": "npm:^5.0.9"
     "@types/eslint": "npm:^8.56.9"
     "@types/geojson": "npm:^7946.0.14"
