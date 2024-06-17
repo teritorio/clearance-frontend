@@ -47,7 +47,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "lint-staged": "^15.2.2",
-    "nuxt": "^3.12.1",
+    "nuxt": "^3.12.2",
     "postcss-html": "^1.6.0",
     "simple-git-hooks": "^2.11.1",
     "typescript": "^5.4.5",
