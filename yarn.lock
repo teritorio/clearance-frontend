@@ -13559,7 +13559,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.4.5":
+"typescript@npm:~5.4.0":
   version: 5.4.5
   resolution: "typescript@npm:5.4.5"
   bin:
@@ -13569,7 +13569,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^5.4.5#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A~5.4.0#optional!builtin<compat/typescript>":
   version: 5.4.5
   resolution: "typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"
   bin:
@@ -14431,7 +14431,7 @@ __metadata:
     nuxt: "npm:^3.12.2"
     postcss-html: "npm:^1.6.0"
     simple-git-hooks: "npm:^2.11.1"
-    typescript: "npm:^5.4.5"
+    typescript: "npm:~5.4.0"
     underscore: "npm:^1.13.6"
     v-lazy-component: "npm:^3.0.9"
     vite: "npm:^5.2.9"
