@@ -6,7 +6,9 @@ await callOnce(async () => {
     const user = await useFetchWithCache<User>('user', `${useRuntimeConfig().public.API}/users/me`, { credentials: 'include' })
     useState<User>('user', () => user.value)
   }
-  catch (err: any) {}
+  catch (err: any) {
+    console.error('Clearance Error :', err.message)
+  }
 })
 
 try {
