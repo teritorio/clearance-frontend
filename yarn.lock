@@ -16,10 +16,9 @@ __metadata:
   linkType: hard
 
 "@antfu/eslint-config@npm:^2.21.1":
-  version: 2.23.1
-  resolution: "@antfu/eslint-config@npm:2.23.1"
+  version: 2.23.2
+  resolution: "@antfu/eslint-config@npm:2.23.2"
   dependencies:
-    "@antfu/eslint-plugin-unused-imports": "npm:^4.0.0"
     "@antfu/install-pkg": "npm:^0.3.3"
     "@clack/prompts": "npm:^0.7.0"
     "@stylistic/eslint-plugin": "npm:^2.6.0-beta.0"
@@ -41,6 +40,7 @@ __metadata:
     eslint-plugin-regexp: "npm:^2.6.0"
     eslint-plugin-toml: "npm:^0.11.1"
     eslint-plugin-unicorn: "npm:^54.0.0"
+    eslint-plugin-unused-imports: "npm:^4.0.1"
     eslint-plugin-vitest: "npm:^0.5.4"
     eslint-plugin-vue: "npm:^9.27.0"
     eslint-plugin-yml: "npm:^1.14.0"
@@ -98,22 +98,7 @@ __metadata:
       optional: true
   bin:
     eslint-config: bin/index.js
-  checksum: 10c0/4a9f514d6978ce3fc0b5d37912fd169bac72f374ec08a0e55d74f80cdb38034035f1af6aa31715d3037b874cbe8cb737b8311c87819acbbdd650957aa915335c
-  languageName: node
-  linkType: hard
-
-"@antfu/eslint-plugin-unused-imports@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "@antfu/eslint-plugin-unused-imports@npm:4.0.0"
-  dependencies:
-    eslint-rule-composer: "npm:^0.3.0"
-  peerDependencies:
-    "@typescript-eslint/eslint-plugin": ^8.0.0-0
-    eslint: ^9.0.0
-  peerDependenciesMeta:
-    "@typescript-eslint/eslint-plugin":
-      optional: true
-  checksum: 10c0/738e999dc34bac7f80c4346a7415bf6d66ee2c893a597273cc4d2f1d9d01b3c6200d3a3a99f8f41cdc889d1bcfc8042ac6839d0c81693c96fcf40690a1ec915c
+  checksum: 10c0/713b17d4e77a3bd7f869d724b26a275e3b2558954f14a01c1604886216d18f19e0b8e681b2e0ad857c91d156f6b5903e034060c2d873b520df7704fb6f25ca1f
   languageName: node
   linkType: hard
 
@@ -7040,6 +7025,21 @@ __metadata:
   peerDependencies:
     eslint: ">=8.56.0"
   checksum: 10c0/cca557df20f31f6a072de6eba28129ed68fff059bef7ba2d373be650bef46ba899aeba89b2be5a309657e638400eb9ae0d0cd7e2f900c22eca0a6b8e2d0f4661
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-unused-imports@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "eslint-plugin-unused-imports@npm:4.0.1"
+  dependencies:
+    eslint-rule-composer: "npm:^0.3.0"
+  peerDependencies:
+    "@typescript-eslint/eslint-plugin": ^8.0.0-0
+    eslint: ^9.0.0
+  peerDependenciesMeta:
+    "@typescript-eslint/eslint-plugin":
+      optional: true
+  checksum: 10c0/9ea3985a7be5d32cb3f58f78bf68ff2d700f63c1594abcb551571f2537c866ab8ae2d2df6001a711d661536472b1a57031d22a781addbe64d7192484b54f4a4a
   languageName: node
   linkType: hard
 
