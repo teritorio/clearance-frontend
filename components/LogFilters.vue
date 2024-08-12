@@ -42,7 +42,7 @@ const statUsers = computed(() => {
   const users = logs.value
     .map((log) =>
       uniq(
-        (log.base ? log.changesets.slice(1) : log.changesets).map(
+        (log.changesets ? log.base ? log.changesets.slice(1) : log.changesets : []).map(
           (changeset) => changeset.user,
         ),
       ),

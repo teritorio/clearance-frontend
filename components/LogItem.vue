@@ -148,7 +148,7 @@ function objtypeFull(objtype: ObjType) {
         </template>v{{
           log.change.version
         }}
-        <changesets :changesets="log.base ? log.changesets.slice(1) : log.changesets" />
+        <changesets v-if="log.changesets" :changesets="log.base ? log.changesets.slice(1) : log.changesets" />
       </el-col>
       <el-col :span="7">
         <diff

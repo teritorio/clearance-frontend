@@ -66,7 +66,7 @@ export interface Log {
   change: Subject
   matches: Match[]
   action: LogAction
-  changesets: Changeset[]
+  changesets?: Changeset[]
   diff_attribs?: Actions
   diff_tags?: Actions
 }
