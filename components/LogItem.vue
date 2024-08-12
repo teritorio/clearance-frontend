@@ -47,7 +47,7 @@ function objtypeFull(objtype: ObjType) {
             {{ $t('logs.created') }}
           </el-tag>
         </span>
-        <span v-if="log.diff_attribs && log.diff_attribs.deleted">
+        <span v-if="log.diff_attribs && log.diff_attribs.deleted?.length">
           <el-tag
             type="danger"
             size="small"
