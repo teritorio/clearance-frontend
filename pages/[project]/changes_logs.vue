@@ -74,7 +74,7 @@ const loChasWithFilter = computed(() => {
       const changesetsUsers
       = route.query.filterByUsers !== undefined
       && uniq(
-        (log.base ? log.changesets.slice(1) : log.changesets).map(
+        (log.changesets ? log.base ? log.changesets.slice(1) : log.changesets : []).map(
           (changeset) => changeset.user,
         ),
       )
