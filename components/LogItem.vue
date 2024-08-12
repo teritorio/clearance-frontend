@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import LazyComponent from 'v-lazy-component'
+import _ from 'underscore'
 import type { Log, ObjType } from '~/libs/types'
 import { objTypeFull } from '~/libs/types'
 
@@ -16,29 +17,34 @@ const logSorted = computed(() => {
 function objtypeFull(objtype: ObjType) {
   return objTypeFull(objtype)
 }
+
+function uniqHistoryIds(log: Log) {
+  return _.uniq(
+    _.compact([log.base, log.change])
+      .map((object) => ({ objtype: object.objtype, id: object.id })),
+    (object) => `${object.objtype}${object.id}`,
+  )
+}
 </script>
 
 <template>
   <el-card shadow="never">
     <template #header>
       <div class="card-header">
-        <span>
-          <a
-            :href="`https://www.openstreetmap.org/${objtypeFull(log.objtype)}/${log.id}/history`"
-            target="_blank"
-          >
-            {{ log.objtype }}{{ log.id }}
-          </a>
-          -
-          {{ log.base?.tags.name || log.change.tags.name }}
-        </span>
+        <template v-for="object in uniqHistoryIds(log)">
+          <span v-if="object" :key="`${object.objtype}${object.id}`">
+            <a
+              :href="`https://www.openstreetmap.org/${objtypeFull(object.objtype)}/${object.id}/history`"
+              target="_blank"
+            >
+              {{ object.objtype }}{{ object.id }}
+            </a>
+            -
+            {{ log.base?.tags.name || log.change.tags.name }}
+          </span>
+        </template>
         <span v-if="!log.base">
-          <el-tag
-            type="success"
-            size="small"
-            :disable-transitions="true"
-            class="item"
-          >
+          <el-tag type="success" size="small" :disable-transitions="true" class="item">
             {{ $t('logs.created') }}
           </el-tag>
         </span>
@@ -56,20 +62,11 @@ function objtypeFull(objtype: ObjType) {
           <el-tag
             v-for="text in [
               ...new Set(log.matches.map((m) => m.user_groups).flat()),
-            ].sort()"
-            :key="text"
-            size="small"
-            class="item"
+            ].sort()" :key="text" size="small" class="item"
           >
             📌 {{ text }}
           </el-tag>
-          <el-tag
-            v-for="match in logSorted"
-            :key="match.selectors.join(';')"
-            size="small"
-            type="warning"
-            class="item"
-          >
+          <el-tag v-for="match in logSorted" :key="match.selectors.join(';')" size="small" type="warning" class="item">
             <div>
               🏷️ {{ $i18nHash(match.name) }}
               <br v-if="$i18nHash(match.name) !== undefined" />
@@ -80,51 +77,45 @@ function objtypeFull(objtype: ObjType) {
             </div>
           </el-tag>
         </span>
-        <el-button-group>
-          <el-button
-            tag="a"
-            size="small"
-            :href="`https://www.openstreetmap.org/edit?editor=id&${objtypeFull(
-              log.objtype,
-            )}=${log.id}`"
-            target="_blank"
-          >
-            OSM iD
-          </el-button>
+        <template v-for="object in uniqHistoryIds(log)">
+          <el-button-group v-if="object" :key="`${object.objtype}${object.id}`">
+            <el-button
+              tag="a" size="small" :href="`https://www.openstreetmap.org/edit?editor=id&${objtypeFull(
+                object.objtype,
+              )}=${object.id}`" target="_blank"
+            >
+              OSM iD
+            </el-button>
 
-          <el-button
-            tag="a"
-            size="small"
-            :href="`http://127.0.0.1:8111/load_object?objects=${log.objtype}${log.id}`"
-            target="hidden_josm_target"
-          >
-            JOSM
-          </el-button>
+            <el-button
+              tag="a" size="small"
+              :href="`http://127.0.0.1:8111/load_object?objects=${object.objtype}${object.id}`"
+              target="hidden_josm_target"
+            >
+              JOSM
+            </el-button>
 
-          <el-button
-            tag="a"
-            size="small"
-            target="_blank"
-            :href="`https://osmlab.github.io/osm-deep-history/#/${objtypeFull(
-              log.objtype,
-            )}/${log.id}`"
-            title="OSM Deep History"
-          >
-            Deep H
-          </el-button>
+            <el-button
+              tag="a" size="small" target="_blank" :href="`https://osmlab.github.io/osm-deep-history/#/${objtypeFull(
+                object.objtype,
+              )}/${object.id}`" title="OSM Deep History"
+            >
+              Deep H
+            </el-button>
 
-          <el-button
-            tag="a"
-            size="small"
-            target="_blank"
-            :href="`https://pewu.github.io/osm-history/#/${objtypeFull(
-              log.objtype,
-            )}/${log.id}`"
-            title="OSM History Viewer"
-          >
-            OSM H
-          </el-button>
-        </el-button-group>
+            <el-button
+              tag="a"
+              size="small"
+              target="_blank"
+              :href="`https://pewu.github.io/osm-history/#/${objtypeFull(
+                object.objtype,
+              )}/${object.id}`"
+              title="OSM History Viewer"
+            >
+              OSM H
+            </el-button>
+          </el-button-group>
+        </template>
       </div>
     </template>
     <el-row :gutter="20">
@@ -152,7 +143,7 @@ function objtypeFull(objtype: ObjType) {
             'username',
             'deleted',
             'geom',
-            ...(log.objtype !== 'r' ? ['members'] : []),
+            'members',
           ]"
           :clear="['members', 'geom']"
         />

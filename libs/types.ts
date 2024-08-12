@@ -20,6 +20,8 @@ export interface Member {
 }
 
 export interface Subject extends Record<string, any> {
+  objtype: ObjType
+  id: number
   version: number
   deleted: boolean
   changeset_id: number
@@ -60,8 +62,6 @@ export type LogActionOptions = Record<string, string | string[] | object>
 export type Action = [string, LogAction | null, LogActionOptions | null]
 export type Actions = Record<Key, Action[]>
 export interface Log {
-  objtype: ObjType
-  id: number
   base?: Subject
   change: Subject
   matches: Match[]
