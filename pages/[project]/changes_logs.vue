@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Geometry } from 'geojson'
 import { uniq } from 'underscore'
-import type { LoCha, ObjType, ObjectId, Project } from '~/libs/types'
+import type { LoCha, Project } from '~/libs/types'
 
 definePageMeta({
   validate({ params }) {
@@ -105,62 +105,17 @@ const loChasWithFilter = computed(() => {
   )
 })
 
-function removeLogs(objectIds: ObjectId[]) {
+function removeLogs(loChaIds?: number[]) {
   loChas.value = loChas.value
-    .filter((loCha) => loCha.objects.length)
-    .map((loCha) => {
-      loCha.objects = loCha.objects.filter(
-        (log) =>
-          objectIds.findIndex(
-            (objectId) => log.objtype === objectId.objtype && log.id === objectId.id,
-          ) === -1,
-      )
-      return loCha
-    })
+    .filter((loCha) => !loChaIds || loChaIds.findIndex(
+      (loChaId) => loCha.id === loChaId,
+    ) === -1)
 
   project.value!.to_be_validated = logs.value?.length
 }
 
-function formatAcceptedLogs(identifier?: { id: number, objtype: ObjType }): ObjectId[] {
-  if (identifier) {
-    const log = logs.value.find((log) => log.id === identifier.id && log.objtype === identifier.objtype)
-
-    if (!log) {
-      throw createError({
-        statusCode: 404,
-        message: 'Accepted log not found',
-      })
-    }
-
-    return [{
-      objtype: log.objtype,
-      id: log.id,
-      version: log.change.version,
-      deleted: log.change.deleted,
-    }]
-  }
-  else {
-    const logs = loChasWithFilter.value.map((loCha) => loCha.objects).flat().map((log) => ({
-      objtype: log.objtype,
-      id: log.id,
-      version: log.change.version,
-      deleted: log.change.deleted,
-    }))
-
-    if (!logs.length) {
-      throw createError({
-        statusCode: 404,
-        message: 'Accepted logs not found',
-      })
-    }
-
-    return logs
-  }
-}
-
-async function handleAccept(identifier?: { id: number, objtype: ObjType }) {
+async function handleAccept(loChaIds?: number[]) {
   try {
-    const objectIds = formatAcceptedLogs(identifier)
     await $fetch(
       `${useRuntimeConfig().public.API}/projects/${projectSlug}/changes_logs/accept`,
       {
@@ -170,12 +125,12 @@ async function handleAccept(identifier?: { id: number, objtype: ObjType }) {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(objectIds),
+        body: JSON.stringify(loChaIds),
       },
     )
-    removeLogs(objectIds)
+    removeLogs(loChaIds)
 
-    if (!identifier || !loChasWithFilter.value.length) {
+    if (!loChaIds || !loChasWithFilter.value.length) {
       resetFilters()
     }
   }
@@ -223,7 +178,7 @@ function matchFilterBySelectors(selectors: string[]) {
       v-if="loChas?.length"
       :project-slug="projectSlug"
       :lo-chas="loChasWithFilter"
-      @accept="handleAccept($event)"
+      @accept="handleAccept([$event])"
     />
   </el-main>
 </template>

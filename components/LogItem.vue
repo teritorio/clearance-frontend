@@ -6,11 +6,6 @@ import { objTypeFull } from '~/libs/types'
 const props = defineProps<{
   log: Log
   project: string
-  projectUser: boolean
-}>()
-
-defineEmits<{
-  (e: 'accept', id: { id: number, objtype: ObjType }): void
 }>()
 
 const logSorted = computed(() => {
@@ -130,15 +125,6 @@ function objtypeFull(objtype: ObjType) {
             OSM H
           </el-button>
         </el-button-group>
-
-        <el-button-group v-if="projectUser">
-          <el-button
-            type="primary"
-            @click="$emit('accept', { id: log.id, objtype: log.objtype })"
-          >
-            ✓
-          </el-button>
-        </el-button-group>
       </div>
     </template>
     <el-row :gutter="20">
@@ -156,6 +142,8 @@ function objtypeFull(objtype: ObjType) {
           :dst="log.change"
           :diff="log.diff_attribs || {}"
           :exclude="[
+            'objtype',
+            'id',
             'tags',
             'version',
             'changeset_id',
