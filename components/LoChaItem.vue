@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { LoCha, ObjType } from '~/libs/types'
+import type { LoCha } from '~/libs/types'
 
 const props = defineProps<{
   projectSlug: string
@@ -7,7 +7,7 @@ const props = defineProps<{
 }>()
 
 defineEmits<{
-  (e: 'accept', id: { id: number, objtype: ObjType }): void
+  (e: 'accept', id: number): void
 }>()
 
 const lochaCount = computed(() => props.item.objects.length)
@@ -20,21 +20,24 @@ const isProjectUser = computed(() => {
 
 <template>
   <el-card style="--el-card-bg-color: #FAFAFA;" :body-style="{ padding: 0 }">
-    <template v-if="lochaCount > 1" #header>
+    <template v-if="lochaCount > 1 || isProjectUser" #header>
       <div class="card-header">
-        <el-text class="mx-1" size="large" tag="b">
+        <el-text v-if="lochaCount > 1" class="mx-1" size="large" tag="b">
           {{ $t('logs.object_count', { n: lochaCount }) }}
         </el-text>
+        <el-button-group v-if="isProjectUser">
+          <el-button type="primary" @click="$emit('accept', item.id)">
+            ✓
+          </el-button>
+        </el-button-group>
       </div>
     </template>
     <el-space wrap fill style="width: 100%">
       <log-item
-        v-for="log in item.objects"
-        :key="log.id"
+        v-for="(log, i) in item.objects"
+        :key="i"
         :log="log"
         :project="projectSlug"
-        :project-user="isProjectUser"
-        @accept="$emit('accept', $event)"
       />
     </el-space>
   </el-card>

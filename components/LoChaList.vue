@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { LoCha, ObjType } from '~/libs/types'
+import type { LoCha } from '~/libs/types'
 
 const props = defineProps<{
   projectSlug: string
@@ -7,7 +7,7 @@ const props = defineProps<{
 }>()
 
 defineEmits<{
-  (e: 'accept', id: { id: number, objtype: ObjType }): void
+  (e: 'accept', id: number): void
 }>()
 
 const scrollCount = ref<number>(10)
