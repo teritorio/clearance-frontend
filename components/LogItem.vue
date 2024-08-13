@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import LazyComponent from 'v-lazy-component'
-import _ from 'underscore'
+import { compact, uniq } from 'underscore'
 import type { Log, ObjType } from '~/libs/types'
 import { objTypeFull } from '~/libs/types'
 
@@ -19,8 +19,8 @@ function objtypeFull(objtype: ObjType) {
 }
 
 function uniqHistoryIds(log: Log) {
-  return _.uniq(
-    _.compact([log.base, log.change])
+  return uniq(
+    compact([log.base, log.change])
       .map((object) => ({ objtype: object.objtype, id: object.id })),
     (object) => `${object.objtype}${object.id}`,
   )
