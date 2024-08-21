@@ -116,6 +116,10 @@ function removeLogs(loChaIds?: number[]) {
 
 async function handleAccept(loChaIds?: number[]) {
   try {
+    if (!loChaIds) {
+      loChaIds = loChasWithFilter.value.map((loCha) => loCha.id)
+    }
+
     await $fetch(
       `${useRuntimeConfig().public.API}/projects/${projectSlug}/changes_logs/accept`,
       {
@@ -130,7 +134,7 @@ async function handleAccept(loChaIds?: number[]) {
     )
     removeLogs(loChaIds)
 
-    if (!loChaIds || !loChasWithFilter.value.length) {
+    if (!loChasWithFilter.value.length) {
       resetFilters()
     }
   }
@@ -165,7 +169,7 @@ function matchFilterBySelectors(selectors: string[]) {
     </el-row>
     <log-filters />
     <log-validator-bulk
-      v-if="isProjectUser && (Object.keys(route.query).length)"
+      v-if="isProjectUser && Object.keys(route.query).length"
       @bulk-validation="handleAccept"
     />
     <h3>{{ $t('logs.data') }}</h3>
