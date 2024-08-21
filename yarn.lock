@@ -3217,19 +3217,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/boolean-equal@npm:7.0.0":
-  version: 7.0.0
-  resolution: "@turf/boolean-equal@npm:7.0.0"
+"@turf/boolean-equal@npm:^7.1.0":
+  version: 7.1.0
+  resolution: "@turf/boolean-equal@npm:7.1.0"
   dependencies:
-    "@turf/clean-coords": "npm:^7.0.0"
-    "@turf/helpers": "npm:^7.0.0"
-    "@turf/invariant": "npm:^7.0.0"
+    "@turf/clean-coords": "npm:^7.1.0"
+    "@turf/helpers": "npm:^7.1.0"
+    "@turf/invariant": "npm:^7.1.0"
+    "@types/geojson": "npm:^7946.0.10"
+    geojson-equality-ts: "npm:^1.0.2"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/6f43fd1e3d52625329475aeb536cb4e5af9e783f40ed4a8a8e9a894c080a52a71e3a6e21a033d9c08a4c6aaabbdce2965bec404f236b58bff1be40613e177871
+  checksum: 10c0/f3417683a390f50e989f42e3334fdc768afdc8374cc2e893671ce6e752e78073fb728e1958b4f5b5c910713e4606afabcdbbc9a25c2a9d1f68a28eb252c8957a
   languageName: node
   linkType: hard
 
-"@turf/clean-coords@npm:^7.0.0":
+"@turf/clean-coords@npm:^7.1.0":
   version: 7.1.0
   resolution: "@turf/clean-coords@npm:7.1.0"
   dependencies:
@@ -3261,7 +3263,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@turf/invariant@npm:^7.0.0, @turf/invariant@npm:^7.1.0":
+"@turf/invariant@npm:^7.1.0":
   version: 7.1.0
   resolution: "@turf/invariant@npm:7.1.0"
   dependencies:
@@ -7494,6 +7496,15 @@ __metadata:
   version: 1.0.0-beta.2
   resolution: "gensync@npm:1.0.0-beta.2"
   checksum: 10c0/782aba6cba65b1bb5af3b095d96249d20edbe8df32dbf4696fd49be2583faf676173bf4809386588828e4dd76a3354fcbeb577bab1c833ccd9fc4577f26103f8
+  languageName: node
+  linkType: hard
+
+"geojson-equality-ts@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "geojson-equality-ts@npm:1.0.2"
+  dependencies:
+    "@types/geojson": "npm:^7946.0.14"
+  checksum: 10c0/f582c6a549673f238b1eb450511e7be222ded8af039924fd21d03ab201de003a5b1769c44b35ca59406533322165520d7aea77e7e1011722259a1485edb30e24
   languageName: node
   linkType: hard
 
@@ -14092,7 +14103,7 @@ __metadata:
     "@nuxtjs/i18n": "npm:^8.3.0"
     "@sentry/vue": "npm:^7.113.0"
     "@turf/bbox": "npm:7.0.0"
-    "@turf/boolean-equal": "npm:7.0.0"
+    "@turf/boolean-equal": "npm:^7.1.0"
     "@turf/helpers": "npm:7.0.0"
     "@types/diff": "npm:^5.0.9"
     "@types/eslint": "npm:^9.6.0"
