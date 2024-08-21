@@ -111,6 +111,7 @@ function removeLogs(loChaIds?: number[]) {
       (loChaId) => loCha.id === loChaId,
     ) === -1)
 
+  logs.value = loChas.value.map((loCha) => loCha.objects).flat()
   project.value!.to_be_validated = logs.value?.length
 }
 
