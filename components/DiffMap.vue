@@ -43,10 +43,10 @@ export default defineNuxtComponent({
         )
       : false
 
-    const geometries = (this.baseGeom || this.changeGeom)!
+    let geometries = (this.baseGeom || this.changeGeom)!
 
     if (this.baseGeom && this.changeGeom) {
-      geometries.concat(this.changeGeom)
+      geometries = geometries.concat(this.changeGeom)
     }
 
     const bounds = new LngLatBounds(bbox({
