@@ -1,31 +1,47 @@
 <script setup lang="ts">
 import type { LoCha } from '~/libs/types'
 
+//
+// Props
+//
 const props = defineProps<{
   projectSlug: string
   loChas: LoCha[]
 }>()
 
+//
+// Emits
+//
 defineEmits<{
   (e: 'accept', id: number): void
 }>()
 
-const scrollCount = ref<number>(10)
+//
+// Data
+//
+const scrollCount = ref(10)
+const borderColors = ['#A458E3', '#F056A1', '#01A7F3', '#01EFDD']
+
+//
+// Computed
+//
+const lazyLoChas = computed(() => props.loChas.slice(0, scrollCount.value))
+
+//
+// Methods
+//
 function scrollLoad() {
   scrollCount.value += 10
 }
-
-const lazyLoChas = computed(() => {
-  return props.loChas.slice(0, scrollCount.value)
-})
 </script>
 
 <template>
   <div>
     <el-space v-infinite-scroll="scrollLoad" fill :size="20">
       <lo-cha-item
-        v-for="loCha in lazyLoChas"
+        v-for="(loCha, index) in lazyLoChas"
         :key="loCha.id"
+        :border-color="loCha.objects.length > 1 ? borderColors[index % borderColors.length] : undefined"
         :item="loCha"
         :project-slug="projectSlug"
         @accept="$emit('accept', $event)"
