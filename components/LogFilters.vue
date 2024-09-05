@@ -129,7 +129,7 @@ async function applyFilter(key: string, value: string) {
           size="small"
           @click="applyFilter('filterBySelectors', match.selectors.join())"
         >
-          🏷️ {{ $i18nHash(match.name) || match.selectors.join(' ') }}
+          🏷️ {{ useI18nHash(match.name) || match.selectors.join(' ') }}
         </el-button>
       </el-badge>
     </el-row>

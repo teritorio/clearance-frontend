@@ -123,7 +123,7 @@ export default defineNuxtComponent({
         </el-table-column>
         <el-table-column prop="id" :label="$t('project.user_group_label')">
           <template #default="scope">
-            {{ $i18nHash(scope.row.title) }}
+            {{ useI18nHash(scope.row.title) }}
           </template>
         </el-table-column>
         <el-table-column prop="id" :label="$t('project.user_group_users')">
