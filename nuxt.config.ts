@@ -66,9 +66,9 @@ export default defineNuxtConfig({
       useCookie: false,
     },
     locales: [
-      { code: 'en', name: 'English', flag: 'GB', iso: 'en-US', file: 'en.js' },
-      { code: 'es', name: 'Español', flag: 'ES', iso: 'es-ES', file: 'es.js' },
-      { code: 'fr', name: 'Français', flag: 'FR', iso: 'fr-FR', file: 'fr.js' },
+      { code: 'en', name: 'English', flag: 'GB', language: 'en-US', file: 'en.js' },
+      { code: 'es', name: 'Español', flag: 'ES', language: 'es-ES', file: 'es.js' },
+      { code: 'fr', name: 'Français', flag: 'FR', language: 'fr-FR', file: 'fr.js' },
     ],
     defaultLocale: 'en',
     langDir: './locales',
