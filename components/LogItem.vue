@@ -68,8 +68,8 @@ function uniqHistoryIds(log: Log) {
           </el-tag>
           <el-tag v-for="match in logSorted" :key="match.selectors.join(';')" size="small" type="warning" class="item">
             <div>
-              🏷️ {{ $i18nHash(match.name) }}
-              <br v-if="$i18nHash(match.name) !== undefined" />
+              🏷️ {{ useI18nHash(match.name) }}
+              <br v-if="useI18nHash(match.name) !== undefined" />
               <span v-for="selector in match.selectors" :key="selector">
                 {{ selector }}
                 <br />

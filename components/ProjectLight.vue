@@ -24,7 +24,7 @@ const details = computed(() => {
   <header>
     <span>
       <component :is="titleTag" class="title">
-        {{ $i18nHash(project.title) }}
+        {{ useI18nHash(project.title) }}
         <el-tag
           v-for="tag in project.project_tags"
           :key="tag"
@@ -33,7 +33,7 @@ const details = computed(() => {
           {{ tag }}
         </el-tag>
       </component>
-      <p>{{ $i18nHash(project.description) }}</p>
+      <p>{{ useI18nHash(project.description) }}</p>
     </span>
     <project-stats :last-update="project.date_last_update" :to-be-validated="project.to_be_validated" />
     <el-button-group>
