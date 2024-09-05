@@ -1,25 +1,43 @@
 <script setup lang="ts">
 import type { LoCha } from '~/libs/types'
 
+//
+// Props
+//
 const props = defineProps<{
+  borderColor?: string
   projectSlug: string
   item: LoCha
 }>()
 
+//
+// Emits
+//
 defineEmits<{
   (e: 'accept', id: number): void
 }>()
 
+//
+// Composables
+//
+const user = useUser()
+
+//
+// Computed
+//
 const lochaCount = computed(() => props.item.objects.length)
 
-const user = useUser()
-const isProjectUser = computed(() => {
-  return !!user.value?.projects?.includes(props.projectSlug)
-})
+const isProjectUser = computed(() => !!user.value?.projects?.includes(props.projectSlug))
 </script>
 
 <template>
-  <el-card style="--el-card-bg-color: #FAFAFA;" :body-style="{ padding: 0 }">
+  <el-card
+    style="--el-card-bg-color: #FAFAFA;"
+    :body-style="{
+      padding: 0,
+      borderLeft: lochaCount > 1 ? `8px solid ${borderColor}` : 'initial',
+    }"
+  >
     <template v-if="lochaCount > 1 || isProjectUser" #header>
       <div class="card-header">
         <el-text v-if="lochaCount > 1" class="mx-1" size="large" tag="b">
