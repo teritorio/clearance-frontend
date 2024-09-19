@@ -80,26 +80,26 @@ const loChasWithFilter = computed(() => {
       )
       return (
         (route.query.filterByAction === undefined
-        || Object.values(log.diff_attribs || {})
-          .concat(Object.values(log.diff_tags || {}))
-          .some(
-            (actions) =>
-              actions?.some(
-                (action) => action[0] === route.query.filterByAction,
-              ) || false,
-          ))
-          && (route.query.filterByUserGroups === undefined
-          || log.matches.some((match) =>
-            match.user_groups.includes(route.query.filterByUserGroups as string),
-          ))
-          && (route.query.filterBySelectors === undefined
-          || log.matches.some((match) =>
-            matchFilterBySelectors(match.selectors),
-          ))
-          && (route.query.filterByUsers === undefined
-          || (changesetsUsers && changesetsUsers.includes(route.query.filterByUsers as string)))
-          && (route.query.filterByDate === undefined
-          || log.change.created.substring(0, 10) === route.query.filterByDate)
+          || Object.values(log.diff_attribs || {})
+            .concat(Object.values(log.diff_tags || {}))
+            .some(
+              (actions) =>
+                actions?.some(
+                  (action) => action[0] === route.query.filterByAction,
+                ) || false,
+            ))
+            && (route.query.filterByUserGroups === undefined
+              || log.matches.some((match) =>
+                match.user_groups.includes(route.query.filterByUserGroups as string),
+              ))
+              && (route.query.filterBySelectors === undefined
+                || log.matches.some((match) =>
+                  matchFilterBySelectors(match.selectors),
+                ))
+                && (route.query.filterByUsers === undefined
+                  || (changesetsUsers && changesetsUsers.includes(route.query.filterByUsers as string)))
+                  && (route.query.filterByDate === undefined
+                    || log.change.created.substring(0, 10) === route.query.filterByDate)
       )
     }),
   )

@@ -1,14 +1,14 @@
 <script lang="ts">
+import type { Feature, FeatureCollection, MultiPolygon, Polygon } from 'geojson'
 import type {
   FillLayerSpecification,
   LineLayerSpecification,
 } from 'maplibre-gl'
+import bbox from '@turf/bbox'
 import {
   LngLatBounds,
   Map,
 } from 'maplibre-gl'
-import type { Feature, FeatureCollection, MultiPolygon, Polygon } from 'geojson'
-import bbox from '@turf/bbox'
 import _ from 'underscore'
 import type { UserGroup } from '~/libs/types'
 

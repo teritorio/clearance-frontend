@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import ProjectCompo from '~/components/Project.vue'
 import {
   getAsyncDataOrThrows,
   setAsyncRef,
 } from '~/libs/getAsyncData'
-import ProjectCompo from '~/components/Project.vue'
 import type { Project } from '~/libs/types'
 import { getProject } from '~/libs/types'
 

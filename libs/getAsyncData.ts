@@ -1,10 +1,10 @@
-import type { AsyncData, AsyncDataOptions } from 'nuxt/app'
 import type {
-  KeysOf,
   _AsyncData,
   _Transform,
+  KeysOf,
 } from '#app/composables/asyncData'
 import type { NuxtApp } from '#app/nuxt'
+import type { AsyncData, AsyncDataOptions } from 'nuxt/app'
 
 import { useAsyncData } from '#imports'
 

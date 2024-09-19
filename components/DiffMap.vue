@@ -1,19 +1,19 @@
 <script lang="ts">
-import type { PropType } from 'vue'
-import { shallowRef } from 'vue'
 import type { Geometry } from 'geojson'
 import type {
   CircleLayerSpecification,
   LineLayerSpecification,
   LngLatLike,
 } from 'maplibre-gl'
+import type { PropType } from 'vue'
+import bbox from '@turf/bbox'
+import booleanEqual from '@turf/boolean-equal'
 import {
   FullscreenControl,
   LngLatBounds,
   Map,
 } from 'maplibre-gl'
-import bbox from '@turf/bbox'
-import booleanEqual from '@turf/boolean-equal'
+import { shallowRef } from 'vue'
 
 export default defineNuxtComponent({
   name: 'DiffMap',
