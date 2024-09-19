@@ -20,7 +20,7 @@ defineEmits<{
 // Data
 //
 const scrollCount = ref(10)
-const borderColors = ['#A458E3', '#F056A1', '#01A7F3', '#01EFDD']
+const borderColors = ['#363637', '#636466', '#A3A6AD', '#E5EAF3']
 
 //
 // Computed
