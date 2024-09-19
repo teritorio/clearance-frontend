@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import dayjs from 'dayjs'
+import en from 'dayjs/locale/en-gb'
+import es from 'dayjs/locale/es'
+import fr from 'dayjs/locale/fr'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import en from 'dayjs/locale/en-gb'
-import fr from 'dayjs/locale/fr'
-import es from 'dayjs/locale/es'
 
 const props = defineProps<{
   lastUpdate: string

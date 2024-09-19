@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import LazyComponent from 'v-lazy-component'
 import { compact, uniq } from 'underscore'
+import LazyComponent from 'v-lazy-component'
 import type { Log, ObjType } from '~/libs/types'
 import { objTypeFull } from '~/libs/types'
 

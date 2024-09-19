@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { countBy, indexBy, sortBy, uniq } from 'underscore'
 import type { LocationQuery } from 'vue-router'
+import { countBy, indexBy, sortBy, uniq } from 'underscore'
 
 const route = useRoute()
 const filters = ref<LocationQuery>()

@@ -1,8 +1,8 @@
 <script lang="ts">
-import type { PropType } from 'vue'
-import _ from 'underscore'
 import type { Change } from 'diff'
+import type { PropType } from 'vue'
 import { diffChars } from 'diff'
+import _ from 'underscore'
 import type { Actions, Key } from '~/libs/types'
 import { maxActionPriority } from '~/libs/types'
 
