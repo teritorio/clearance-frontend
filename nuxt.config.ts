@@ -49,7 +49,7 @@ export default defineNuxtConfig({
   },
 
   typescript: {
-    typeCheck: true,
+    typeCheck: 'build',
   },
 
   eslint: {
