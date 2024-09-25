@@ -58,6 +58,7 @@
     "preserveUnused": true
   },
   "lint-staged": {
-    "*": "nuxi typecheck && eslint --fix"
+    "*": "yarn nuxi typecheck .",
+    "*.{vue,ts,js}": "yarn lint:fix"
   }
 }
