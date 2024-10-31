@@ -8,6 +8,8 @@ services:
         NODE_VERSION: 20.13.1-alpine3.19
     environment:
       - API=${API}
+      - NUXT_PUBLIC_SENTRY_DSN=${SENTRY_DSN}
+      - NUXT_PUBLIC_SENTRY_ENVIRONMENT=${SENTRY_ENVIRONMENT}
     ports:
       - ${FRONTEND_PORT:-3000}:3000
     restart: unless-stopped
