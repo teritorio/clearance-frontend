@@ -1,5 +1,5 @@
 ARG  NODE_VERSION
-FROM node:${NODE_VERSION}
+FROM node:${NODE_VERSION:-20.13.1-alpine3.19}
 
 WORKDIR /app
 RUN corepack enable
