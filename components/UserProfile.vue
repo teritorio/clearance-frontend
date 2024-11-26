@@ -15,12 +15,13 @@ export default defineNuxtComponent({
 
   setup() {
     const form = shallowRef<HTMLFormElement>()
+
     return { form }
   },
 
   computed: {
     loginUrl(): string {
-      return `${useRuntimeConfig().public.API}../../../users/auth/osm_oauth2`
+      return `${this.$config.public.api}../../../users/auth/osm_oauth2`
     },
   },
 
@@ -29,7 +30,7 @@ export default defineNuxtComponent({
       this.form?.submit()
     },
     logout(): void {
-      userLogout(useRuntimeConfig().public.API)
+      userLogout(this.$config.public.api)
     },
   },
 })
