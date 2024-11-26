@@ -22,12 +22,13 @@ const params = useRoute().params
 const project: string = params.project as string
 const projectDetails = ref<Project>()
 const validators = ref<ValidatorsType>()
+const config = useRuntimeConfig()
 
 getAsyncDataOrThrows('fetchProject', () =>
-  getProject(useRuntimeConfig().public.API, project)).then(setAsyncRef(projectDetails))
+  getProject(config.public.api, project)).then(setAsyncRef(projectDetails))
 
 getAsyncDataOrThrows('fetchValidators', () =>
-  getValidators(useRuntimeConfig().public.API, project)).then(setAsyncRef(validators))
+  getValidators(config.public.api, project)).then(setAsyncRef(validators))
 </script>
 
 <template>

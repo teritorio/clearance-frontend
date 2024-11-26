@@ -23,10 +23,10 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      API: process.env.API,
+      api: process.env.NUXT_PUBLIC_API,
       sentry: {
-        dsn: undefined,
-        environment: 'production',
+        dsn: process.env.NUXT_PUBLIC_SENTRY_DSN,
+        environment: process.env.NUXT_PUBLIC_SENTRY_ENVIRONMENT,
       },
     },
   },

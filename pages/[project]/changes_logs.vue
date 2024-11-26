@@ -14,9 +14,10 @@ const projectSlug = route.params.project as string
 const project = ref<Project>()
 const loChas = useLoChas()
 const logs = useLogs()
+const config = useRuntimeConfig()
 
 try {
-  const projectData = await useFetchWithCache<Project>(`project-${projectSlug}`, `${useRuntimeConfig().public.API}/projects/${projectSlug}`)
+  const projectData = await useFetchWithCache<Project>(`project-${projectSlug}`, `${config.public.api}/projects/${projectSlug}`)
   project.value = projectData.value
 }
 catch (err: any) {
@@ -27,7 +28,7 @@ catch (err: any) {
 }
 
 try {
-  const loChasData = await useFetchWithCache<LoCha[]>(`loChas-${projectSlug}`, `${useRuntimeConfig().public.API}/projects/${projectSlug}/changes_logs`)
+  const loChasData = await useFetchWithCache<LoCha[]>(`loChas-${projectSlug}`, `${config.public.api}/projects/${projectSlug}/changes_logs`)
   loChas.value = loChasData.value
 
   if (loChasData.value.length) {
@@ -122,7 +123,7 @@ async function handleAccept(loChaIds?: number[]) {
     }
 
     await $fetch(
-      `${useRuntimeConfig().public.API}/projects/${projectSlug}/changes_logs/accept`,
+      `${config.public.api}/projects/${projectSlug}/changes_logs/accept`,
       {
         credentials: 'include',
         method: 'POST',

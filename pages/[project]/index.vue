@@ -16,9 +16,10 @@ definePageMeta({
 const params = useRoute().params
 const project: string = params.project as string
 const projectDetails = ref<Project>()
+const config = useRuntimeConfig()
 
 getAsyncDataOrThrows('fetchProject', () =>
-  getProject(useRuntimeConfig().public.API, project)).then(setAsyncRef(projectDetails))
+  getProject(config.public.api, project)).then(setAsyncRef(projectDetails))
 </script>
 
 <template>

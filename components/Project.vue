@@ -6,10 +6,10 @@ const props = defineProps<{
 }>()
 
 const activeName = ref('')
-const { API } = useRuntimeConfig().public
+const config = useRuntimeConfig()
 
 const overpassUrl = computed(() => {
-  return `${API}/projects/${props.project.id}/overpasslike/`
+  return `${config.public.api}/projects/${props.project.id}/overpasslike/`
 })
 </script>
 
@@ -29,12 +29,12 @@ const overpassUrl = computed(() => {
             </li>
             <li>
               {{ $t('project.extract') }}
-              <a :href="`${API}/${project.id}/extract/${project.id}.osm.pbf`">
+              <a :href="`${config.public.api}/${project.id}/extract/${project.id}.osm.pbf`">
                 {{ `${project.id}.osm.pbf` }}
               </a>
             </li>
             <li>
-              <a :href="`${API}/${project.id}/extract/update/`">{{
+              <a :href="`${config.public.api}/${project.id}/extract/update/`">{{
                 $t('project.diff')
               }}</a>
             </li>
