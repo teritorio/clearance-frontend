@@ -98,8 +98,8 @@ const loChasWithFilter = computed(() => {
                 ))
                 && (route.query.filterByUsers === undefined
                   || (changesetsUsers && changesetsUsers.includes(route.query.filterByUsers as string)))
-                  && (route.query.filterByDate === undefined
-                    || log.change.created.substring(0, 10) === route.query.filterByDate)
+                && (route.query.filterByDate === undefined
+                  || log.change.created.substring(0, 10) === route.query.filterByDate)
       )
     }),
   )
