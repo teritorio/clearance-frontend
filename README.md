@@ -45,10 +45,17 @@ yarn install
 
 ### Development Server
 
-Start the development server on `http://localhost:3000`
-
+Create a fresh environment variable file
 ```bash
+cp .env.template .env # Set your variables accordingly
+```
+Start development server on `http://localhost:3000`
+```bash
+# On local computer
 yarn dev
+
+# Or with Docker Compose
+docker compose up
 ```
 
 #### ESLint config inspector
