@@ -1,0 +1,9 @@
+volumes:
+  node_modules:
+services:
+  frontend:
+    build:
+      dockerfile: ./Dockerfile.dev
+    volumes:
+      - .:/src
+      - node_modules:/src/node_modules

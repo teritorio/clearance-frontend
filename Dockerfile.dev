@@ -4,7 +4,7 @@ ARG ALPINE_VERSION=${ALPINE_VERSION:-3.19}
 
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS base
 
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 
 # Set working directory
 WORKDIR /src
@@ -19,20 +19,15 @@ FROM base AS build
 COPY --link package.json yarn.lock .yarnrc.yml ./
 
 # Install project dependencies
-RUN yarn install --immutable
-
-COPY --link . ./
-
-# Build Nuxt app for production
-RUN yarn build
+RUN yarn install
 
 # Run
 FROM base
 
-COPY --from=build /src/.output /src/.output
+COPY --from=build /src/node_modules /src/node_modules
 
-# Expose production port
+# Expose development port
 EXPOSE 3000
 
-# Start Nuxt in production mode
-CMD ["node", ".output/server/index.mjs"]
+# Run application in development (with Hot Module Replacement)
+CMD ["yarn", "dev"]
