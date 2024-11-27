@@ -1,0 +1,51 @@
+<div style="height: 100vh; display: flex; gap: 24px; flex-direction: column; align-items: center; justify-content: center;">
+  <h1 style="display: inline-flex; align-items: center;">
+    <img width="100px" src="/favicon.svg" alt="Clearance" />
+    Clearance
+  </h1>
+  <div class="loader"></div>
+</div>
+
+<!-- https://github.com/barelyhuman/snips/blob/dev/pages/css-loader.md -->
+<style>
+body {
+  margin: 0;
+}
+
+.loader {
+  display: block;
+  /* position: fixed; */
+  z-index: 1031;
+  /* top: 50%;
+  left: 50%; */
+  /* transform: translate(-50%, -50%); */
+  width: 24px;
+  height: 24px;
+  box-sizing: border-box;
+  border: solid 2px transparent;
+  border-top-color: #000;
+  border-left-color: #000;
+  border-bottom-color: #efefef;
+  border-right-color: #efefef;
+  border-radius: 50%;
+  -webkit-animation: loader 400ms linear infinite;
+  animation: loader 400ms linear infinite;
+}
+
+@-webkit-keyframes loader {
+  0% {
+    -webkit-transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    -webkit-transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+@keyframes loader {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+</style>
