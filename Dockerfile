@@ -16,12 +16,12 @@ RUN corepack enable
 FROM base AS build
 
 # Copy necessary files for dependency installation
-COPY --link package.json yarn.lock .yarnrc.yml ./
+COPY package.json yarn.lock .yarnrc.yml ./
 
 # Install project dependencies
 RUN yarn install --immutable
 
-COPY --link . ./
+COPY . ./
 
 # Build Nuxt app for production
 RUN yarn build
