@@ -47,8 +47,9 @@ jobs:
             date -u &&
             cd ${{vars.DEPLOY_SSH_PATH}} &&
             git fetch &&
-            git checkout -f origin/develop &&
-            docker compose build &&
-            docker compose up -d &&
+            git pull -f origin develop &&
+            cd .. &&
+            docker compose --profile "*" build frontend &&
+            docker compose up -d frontend &&
             echo -n 'Deployment completed at: ' &&
             date -u
