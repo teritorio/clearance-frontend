@@ -4,13 +4,13 @@ import type {
   FillLayerSpecification,
   LineLayerSpecification,
 } from 'maplibre-gl'
+import type { UserGroup } from '~/libs/types'
 import bbox from '@turf/bbox'
 import {
   LngLatBounds,
   Map,
 } from 'maplibre-gl'
 import _ from 'underscore'
-import type { UserGroup } from '~/libs/types'
 
 const colors = ['#2364AA', '#EA7317', '#73BFB8', '#FEC601', '#3DA5D9']
 

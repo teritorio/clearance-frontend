@@ -1,9 +1,9 @@
 <script lang="ts">
 import type { Change } from 'diff'
 import type { PropType } from 'vue'
+import type { Actions, Key } from '~/libs/types'
 import { diffChars } from 'diff'
 import _ from 'underscore'
-import type { Actions, Key } from '~/libs/types'
 import { maxActionPriority } from '~/libs/types'
 
 export default defineNuxtComponent({

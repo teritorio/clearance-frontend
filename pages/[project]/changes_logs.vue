@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Geometry } from 'geojson'
-import { uniq } from 'underscore'
 import type { LoCha, Project } from '~/libs/types'
+import { uniq } from 'underscore'
 
 definePageMeta({
   validate({ params }) {

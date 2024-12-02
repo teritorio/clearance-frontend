@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import {
-  getAsyncDataOrThrows,
-  setAsyncRef,
-} from '~/libs/getAsyncData'
 import type {
   Project,
   Validators as ValidatorsType,
 } from '~/libs/types'
+import {
+  getAsyncDataOrThrows,
+  setAsyncRef,
+} from '~/libs/getAsyncData'
 import {
   getProject,
   getValidators,
