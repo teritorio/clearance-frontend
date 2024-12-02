@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import _ from 'underscore'
 import type { Project } from '~/libs/types'
+import _ from 'underscore'
 
 const user = useUser()
 const projects = useProjects()

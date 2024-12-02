@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import type { Log, ObjType } from '~/libs/types'
 import { compact, uniq } from 'underscore'
 import LazyComponent from 'v-lazy-component'
-import type { Log, ObjType } from '~/libs/types'
 import { objTypeFull } from '~/libs/types'
 
 const props = defineProps<{
