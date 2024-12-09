@@ -22,38 +22,20 @@ const props = defineProps<{
 // Data
 //
 const mapContainerRef = shallowRef<InstanceType<typeof HTMLDivElement>>()
+const noChanges = ref(false)
+const bounds = ref<LngLatBounds>()
+const geometries = ref<Geometry[]>()
 
 //
 // Hooks
 //
 onMounted(() => {
-  const noChanges = props.baseGeom && props.changeGeom
-    ? (
-        props.baseGeom.length === 1 && props.changeGeom.length === 1
-        && (
-          props.baseGeom[0] === props.changeGeom[0]
-          || (props.baseGeom && props.changeGeom && booleanEqual(props.baseGeom[0], props.changeGeom[0]))
-        )
-      )
-    : false
-
-  let geometries = (props.baseGeom || props.changeGeom)!
-
-  if (props.baseGeom && props.changeGeom) {
-    geometries = geometries.concat(props.changeGeom)
-  }
-
-  const bounds = new LngLatBounds(bbox({
-    type: 'GeometryCollection',
-    geometries,
-  }) as unknown as LngLatLike)
-
   if (mapContainerRef.value) {
     const map = new Map({
       container: mapContainerRef.value,
       style:
       'https://vecto.teritorio.xyz/styles/teritorio-basic/style.json?key=teritorio_clearance-1-ahNoohaepohy9iexoo3qua',
-      bounds,
+      bounds: bounds.value,
       fitBoundsOptions: { maxZoom: 17, padding: 50 },
       cooperativeGestures: true,
       attributionControl: false,
@@ -87,7 +69,7 @@ onMounted(() => {
           source: 'baseGeom',
           filter: ['==', '$type', 'Point'],
           paint: {
-            'circle-color': noChanges ? '#F0F0F0' : '#FF0000',
+            'circle-color': noChanges.value ? '#F0F0F0' : '#FF0000',
             'circle-radius': 8,
           },
         } as CircleLayerSpecification)
@@ -108,13 +90,13 @@ onMounted(() => {
           source: 'baseGeom',
           filter: ['==', '$type', 'LineString'],
           paint: {
-            'line-color': noChanges ? '#F0F0F0' : '#FF0000',
+            'line-color': noChanges.value ? '#F0F0F0' : '#FF0000',
             'line-width': 3,
           },
         } as LineLayerSpecification)
       }
 
-      if (props.changeGeom && !noChanges) {
+      if (props.changeGeom && !noChanges.value) {
         map.addSource('changeGeom', {
           type: 'geojson',
           data: {
@@ -168,6 +150,27 @@ onMounted(() => {
     })
   }
 })
+
+geometries.value = (props.baseGeom || props.changeGeom)!
+
+if (props.baseGeom && props.changeGeom) {
+  noChanges.value = (
+    props.baseGeom.length === 1 && props.changeGeom.length === 1
+    && (
+      props.baseGeom[0] === props.changeGeom[0]
+      || (props.baseGeom && props.changeGeom && booleanEqual(props.baseGeom[0], props.changeGeom[0]))
+    )
+  )
+
+  geometries.value = geometries.value.concat(props.changeGeom)
+}
+
+if (geometries.value.length) {
+  bounds.value = new LngLatBounds(bbox({
+    type: 'GeometryCollection',
+    geometries: geometries.value,
+  }) as unknown as LngLatLike)
+}
 </script>
 
 <template>
