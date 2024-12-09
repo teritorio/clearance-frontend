@@ -19,6 +19,7 @@ const router = useRouter()
 const route = useRoute()
 const config = useRuntimeConfig()
 const user = useUser()
+const nuxtApp = useNuxtApp()
 
 //
 // Data
@@ -55,6 +56,9 @@ const { data, status, refresh } = useAsyncData(
     }
   },
   {
+    getCachedData(key) {
+      return nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+    },
     transform: ({ project, loChas }) => {
       return {
         project,
