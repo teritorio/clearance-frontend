@@ -3,74 +3,99 @@ import type { Geometry } from 'geojson'
 import type { LoCha, Project } from '~/libs/types'
 import { uniq } from 'underscore'
 
+//
+// Validators
+//
 definePageMeta({
   validate({ params }) {
     return /^[-\w:]+$/.test(params.project as string)
   },
 })
 
+//
+// Composables
+//
+const router = useRouter()
 const route = useRoute()
-const projectSlug = route.params.project as string
-const project = ref<Project>()
-const loChas = useLoChas()
-const logs = useLogs()
 const config = useRuntimeConfig()
+const user = useUser()
 
-try {
-  const projectData = await useFetchWithCache<Project>(`project-${projectSlug}`, `${config.public.api}/projects/${projectSlug}`)
-  project.value = projectData.value
-}
-catch (err: any) {
-  ElMessage.error({
-    duration: 0,
-    message: err.message,
-  })
-}
+//
+// Data
+//
+const projectSlug = route.params.project as string
 
-try {
-  const loChasData = await useFetchWithCache<LoCha[]>(`loChas-${projectSlug}`, `${config.public.api}/projects/${projectSlug}/changes_logs`)
-  loChas.value = loChasData.value
+//
+// Data Fetching
+//
+// TODO: Invalid cache key based on data refresh-timing (set on API-side)
+const { data, status, refresh } = useAsyncData(
+  `changes_logs-${projectSlug}`,
+  async () => {
+    try {
+      const [project, loChas] = await Promise.all([
+        $fetch<Project>(`${config.public.api}/projects/${projectSlug}`),
+        $fetch<LoCha[]>(`${config.public.api}/projects/${projectSlug}/changes_logs`),
+      ])
 
-  if (loChasData.value.length) {
-    logs.value = loChasData.value.map((loCha) => loCha.objects).flat()
-  }
-}
-catch (err: any) {
-  ElMessage.error({
-    duration: 0,
-    message: err.message,
-  })
-}
+      return { project, loChas }
+    }
+    catch (err) {
+      if (err instanceof Error) {
+        ElMessage.error({
+          duration: 0,
+          message: err.message,
+        })
 
+        throw new Error(err.message)
+      }
+      else {
+        throw new TypeError('Failed to fetch data')
+      }
+    }
+  },
+  {
+    transform: ({ project, loChas }) => {
+      return {
+        project,
+        loChas,
+        logs: loChas.map((loCha) => loCha.objects).flat(),
+      }
+    },
+  },
+)
+
+//
+// Computed
+//
 const baseGeoms = computed(() => {
-  if (!logs.value) {
+  if (!data.value?.logs) {
     return []
   }
 
-  return logs.value
+  return data.value.logs
     .map((log) => log.base?.geom)
     .filter((geom): geom is Geometry => !!geom)
 })
 
 const changeGeoms = computed(() => {
-  if (!logs.value) {
+  if (!data.value?.logs) {
     return []
   }
 
-  return logs.value.map((log) => log.change.geom)
+  return data.value.logs.map((log) => log.change.geom)
 })
 
-const user = useUser()
 const isProjectUser = computed(() => {
   return !!user.value?.projects?.includes(projectSlug)
 })
 
 const loChasWithFilter = computed(() => {
-  if (!loChas.value.length) {
+  if (!data.value?.loChas.length) {
     return []
   }
 
-  return loChas.value.filter((loCha) =>
+  return data.value?.loChas.filter((loCha) =>
     loCha.objects.some((log) => {
       const changesetsUsers
       = route.query.filterByUsers !== undefined
@@ -106,15 +131,9 @@ const loChasWithFilter = computed(() => {
   )
 })
 
-function removeLogs(loChaIds?: number[]) {
-  loChas.value = loChas.value
-    .filter((loCha) => !loChaIds || loChaIds.findIndex(
-      (loChaId) => loCha.id === loChaId,
-    ) === -1)
-
-  logs.value = loChas.value.map((loCha) => loCha.objects).flat()
-  project.value!.to_be_validated = logs.value?.length
-}
+//
+// Methods
+//
 
 async function handleAccept(loChaIds?: number[]) {
   try {
@@ -122,9 +141,8 @@ async function handleAccept(loChaIds?: number[]) {
       loChaIds = loChasWithFilter.value.map((loCha) => loCha.id)
     }
 
-    await $fetch(
-      `${config.public.api}/projects/${projectSlug}/changes_logs/accept`,
-      {
+    try {
+      await $fetch(`${config.public.api}/projects/${projectSlug}/changes_logs/accept`, {
         credentials: 'include',
         method: 'POST',
         headers: {
@@ -132,12 +150,25 @@ async function handleAccept(loChaIds?: number[]) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(loChaIds),
-      },
-    )
-    removeLogs(loChaIds)
+      })
+      await refresh()
 
-    if (!loChasWithFilter.value.length) {
-      resetFilters()
+      if (!loChasWithFilter.value.length) {
+        resetFilters()
+      }
+    }
+    catch (err) {
+      if (err instanceof Error) {
+        ElMessage.error({
+          duration: 0,
+          message: err.message,
+        })
+
+        throw new Error(err.message)
+      }
+      else {
+        throw new TypeError('Failed to fetch data')
+      }
     }
   }
   catch (err: any) {
@@ -148,7 +179,6 @@ async function handleAccept(loChaIds?: number[]) {
   }
 }
 
-const router = useRouter()
 async function resetFilters() {
   await router.replace({ ...route, query: undefined })
 }
@@ -159,33 +189,39 @@ function matchFilterBySelectors(selectors: string[]) {
 </script>
 
 <template>
-  <el-main>
-    <project-light v-if="project" :project="project" title-tag="h1" />
-    <el-divider border-style="dotted" />
-    <el-row>
-      <diff-map
-        :base-geom="baseGeoms"
-        :change-geom="changeGeoms"
-        style="resize: vertical"
+  <el-main
+    v-loading.lock="status === 'pending'"
+    element-loading-background="#FAFAFA"
+    element-loading-text="Loading..."
+  >
+    <el-alert v-if="status === 'idle' && !data" title="No data available at the moment." type="warning" />
+    <el-container v-if="data && status === 'success'" direction="vertical">
+      <project-light :project="data.project" title-tag="h1" />
+      <el-row>
+        <diff-map
+          :base-geom="baseGeoms"
+          :change-geom="changeGeoms"
+          style="resize: vertical"
+        />
+      </el-row>
+      <log-filters :logs="data.logs" />
+      <log-validator-bulk
+        v-if="isProjectUser && Object.keys(route.query).length"
+        @bulk-validation="handleAccept"
       />
-    </el-row>
-    <log-filters v-if="logs" />
-    <log-validator-bulk
-      v-if="isProjectUser && Object.keys(route.query).length"
-      @bulk-validation="handleAccept"
-    />
-    <h3>{{ $t('logs.data') }}</h3>
-    <p>{{ $t('logs.data_details') }}</p>
-    <ul>
-      <li>{{ $t('logs.data_details_osm') }}</li>
-      <li>{{ $t('logs.data_details_manual') }}</li>
-    </ul>
-    <lo-cha-list
-      v-if="loChas?.length"
-      :project-slug="projectSlug"
-      :lo-chas="loChasWithFilter"
-      @accept="handleAccept([$event])"
-    />
+      <h3>{{ $t('logs.data') }}</h3>
+      <p>{{ $t('logs.data_details') }}</p>
+      <ul>
+        <li>{{ $t('logs.data_details_osm') }}</li>
+        <li>{{ $t('logs.data_details_manual') }}</li>
+      </ul>
+      <lo-cha-list
+        v-if="data.loChas.length"
+        :project-slug="projectSlug"
+        :lo-chas="loChasWithFilter"
+        @accept="handleAccept([$event])"
+      />
+    </el-container>
   </el-main>
 </template>
 
