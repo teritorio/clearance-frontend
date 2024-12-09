@@ -38,6 +38,9 @@ export default {
     tags_more: '(y mas)',
     validate_selection: 'Validar objetos filtrados',
   },
+  loChas: {
+    noData: 'Ningún grupo de datos',
+  },
   project: {
     control: 'Control',
     details: 'Detalle',

@@ -181,7 +181,6 @@ function matchFilterBySelectors(selectors: string[]) {
       <li>{{ $t('logs.data_details_manual') }}</li>
     </ul>
     <lo-cha-list
-      v-if="loChas?.length"
       :project-slug="projectSlug"
       :lo-chas="loChasWithFilter"
       @accept="handleAccept([$event])"

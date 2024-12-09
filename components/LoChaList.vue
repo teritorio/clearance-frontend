@@ -36,7 +36,7 @@ function scrollLoad() {
 </script>
 
 <template>
-  <div>
+  <div v-if="loChas.length">
     <el-space v-infinite-scroll="scrollLoad" fill :size="20">
       <lo-cha-item
         v-for="(loCha, index) in lazyLoChas"
@@ -50,4 +50,15 @@ function scrollLoad() {
 
     <iframe name="hidden_josm_target" style="display: none" />
   </div>
+  <el-empty
+    v-else
+    :description="$t('loChas.noData')"
+    :image-size="50"
+  >
+    <nuxt-link to="/">
+      <el-button type="info">
+        {{ $t('app.back') }}
+      </el-button>
+    </nuxt-link>
+  </el-empty>
 </template>
