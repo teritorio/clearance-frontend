@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Geometry } from 'geojson'
-import type { LoCha, Project } from '~/libs/types'
 import { uniq } from 'underscore'
 
 //
@@ -17,71 +16,10 @@ definePageMeta({
 //
 const router = useRouter()
 const route = useRoute()
+const projectSlug = route.params.project.toString()
 const config = useRuntimeConfig()
 const user = useUser()
-const nuxtApp = useNuxtApp()
-
-//
-// Data
-//
-const projectSlug = route.params.project as string
-
-//
-// Data Fetching
-//
-const { data, status, refresh } = useAsyncData(
-  `changes_logs-${projectSlug}`,
-  async () => {
-    try {
-      const [project, loChas] = await Promise.all([
-        $fetch<Project>(`${config.public.api}/projects/${projectSlug}`),
-        $fetch<LoCha[]>(`${config.public.api}/projects/${projectSlug}/changes_logs`),
-      ])
-
-      return { project, loChas }
-    }
-    catch (err) {
-      if (err instanceof Error) {
-        ElMessage.error({
-          duration: 0,
-          message: err.message,
-        })
-
-        throw new Error(err.message)
-      }
-      else {
-        throw new TypeError('Failed to fetch data')
-      }
-    }
-  },
-  {
-    getCachedData(key) {
-      const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
-
-      if (!data) {
-        return null
-      }
-
-      const expirationDate = new Date(data.fetchedAt)
-      expirationDate.setTime(expirationDate.getTime() + 30 * 1000)
-      const isExpired = expirationDate.getTime() < Date.now()
-
-      if (isExpired) {
-        return null
-      }
-
-      return data
-    },
-    transform: ({ project, loChas }) => {
-      return {
-        project,
-        loChas,
-        logs: loChas.map((loCha) => loCha.objects).flat(),
-        fetchedAt: new Date(),
-      }
-    },
-  },
-)
+const { data, status, refresh } = useChangesLogs(projectSlug)
 
 //
 // Computed
