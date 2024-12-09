@@ -169,7 +169,7 @@ function matchFilterBySelectors(selectors: string[]) {
         style="resize: vertical"
       />
     </el-row>
-    <log-filters />
+    <log-filters v-if="logs" />
     <log-validator-bulk
       v-if="isProjectUser && Object.keys(route.query).length"
       @bulk-validation="handleAccept"
