@@ -1,17 +1,37 @@
 <script setup lang="ts">
 import type { LocationQuery } from 'vue-router'
+import type { Log } from '~/libs/types'
 import { countBy, indexBy, sortBy, uniq } from 'underscore'
 
+//
+// Props
+//
+const props = defineProps<{
+  logs: Log[]
+}>()
+
+//
+// Composables
+//
 const route = useRoute()
+
+//
+// Data
+//
 const filters = ref<LocationQuery>()
+
+//
+// Watchers
+//
 watchEffect(() => {
   filters.value = route.query
 })
 
-const logs = useLogs()
-
+//
+// Computed
+//
 const stats = computed(() => {
-  const actions = logs.value
+  const actions = props.logs
     .map((log) =>
       uniq(
         [
@@ -27,19 +47,19 @@ const stats = computed(() => {
 })
 
 const statSelectors = computed(() => {
-  const matches = logs.value.map((log) => uniq(log.matches).flat()).flat(1)
+  const matches = props.logs.map((log) => uniq(log.matches).flat()).flat(1)
   return getStats(matches, (m) => m.selectors.join(';'))
 })
 
 const statUserGroups = computed(() => {
-  const userGroups = logs.value
+  const userGroups = props.logs
     .map((log) => uniq(log.matches.map((m) => m.user_groups).flat(2)))
     .flat(1)
   return getStats(userGroups)
 })
 
 const statUsers = computed(() => {
-  const users = logs.value
+  const users = props.logs
     .map((log) =>
       uniq(
         (log.changesets ? log.base ? log.changesets.slice(1) : log.changesets : []).map(
@@ -52,7 +72,7 @@ const statUsers = computed(() => {
 })
 
 const statDates = computed(() => {
-  const dates = logs.value.map((log) => log.change.created.substring(0, 10))
+  const dates = props.logs.map((log) => log.change.created.substring(0, 10))
   return getStats(dates).sort()
 })
 
