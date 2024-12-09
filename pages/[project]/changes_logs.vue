@@ -29,7 +29,6 @@ const projectSlug = route.params.project as string
 //
 // Data Fetching
 //
-// TODO: Invalid cache key based on data refresh-timing (set on API-side)
 const { data, status, refresh } = useAsyncData(
   `changes_logs-${projectSlug}`,
   async () => {
@@ -57,13 +56,28 @@ const { data, status, refresh } = useAsyncData(
   },
   {
     getCachedData(key) {
-      return nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+      const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
+
+      if (!data) {
+        return null
+      }
+
+      const expirationDate = new Date(data.fetchedAt)
+      expirationDate.setTime(expirationDate.getTime() + 30 * 1000)
+      const isExpired = expirationDate.getTime() < Date.now()
+
+      if (isExpired) {
+        return null
+      }
+
+      return data
     },
     transform: ({ project, loChas }) => {
       return {
         project,
         loChas,
         logs: loChas.map((loCha) => loCha.objects).flat(),
+        fetchedAt: new Date(),
       }
     },
   },
