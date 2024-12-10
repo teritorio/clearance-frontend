@@ -29,12 +29,12 @@ const overpassUrl = computed(() => {
             </li>
             <li>
               {{ $t('project.extract') }}
-              <a :href="`${config.public.api}/${project.id}/extract/${project.id}.osm.pbf`">
+              <a :href="`${config.public.api}/${project.id}/export/${project.id}.osm.pbf`">
                 {{ `${project.id}.osm.pbf` }}
               </a>
             </li>
             <li>
-              <a :href="`${config.public.api}/${project.id}/extract/update/`">{{
+              <a :href="`${config.public.api}/${project.id}/export/update/`">{{
                 $t('project.diff')
               }}</a>
             </li>
