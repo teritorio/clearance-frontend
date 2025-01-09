@@ -824,7 +824,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commitlint/types@npm:^19.0.3, @commitlint/types@npm:^19.5.0":
+"@commitlint/types@npm:^19.5.0":
   version: 19.5.0
   resolution: "@commitlint/types@npm:19.5.0"
   dependencies:
@@ -14109,7 +14109,6 @@ __metadata:
     "@babel/core": "npm:^7.24.4"
     "@commitlint/cli": "npm:^19.2.2"
     "@commitlint/config-conventional": "npm:^19.2.2"
-    "@commitlint/types": "npm:^19.0.3"
     "@element-plus/icons-vue": "npm:^2.3.1"
     "@element-plus/nuxt": "npm:^1.0.9"
     "@nuxt/eslint": "npm:^0.5.7"
