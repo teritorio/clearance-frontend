@@ -14,7 +14,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "@commitlint/types": "^19.0.3",
     "@element-plus/icons-vue": "^2.3.1",
     "@element-plus/nuxt": "^1.0.9",
     "@sentry/vue": "^8.35.0",
@@ -53,7 +52,7 @@
     "vue-tsc": "^2.0.29"
   },
   "simple-git-hooks": {
-    "commit-msg": "npx commitlint --edit $1",
+    "commit-msg": "yarn dlx commitlint --edit $1",
     "pre-commit": "yarn dlx lint-staged",
     "preserveUnused": true
   },
