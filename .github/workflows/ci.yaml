@@ -25,31 +25,18 @@ jobs:
       - run: yarn lint
       - run: yarn build
 
-  deploy_dev:
-    needs:
-      - build
-    if: github.ref == 'refs/heads/develop'
-    name: Deploy Dev
+  docker:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 🛎
-        uses: actions/checkout@v4
+    needs: [build]
+    if: github.ref == 'refs/heads/develop'
 
-      - name: Deploy
-        uses: appleboy/ssh-action@v1.0.3
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Docker Build and Push
+        uses: cartoway/docker-compose-build-push-action@main
         with:
-          host: ${{vars.DEPLOY_SSH_HOST}}
-          username: ${{vars.DEPLOY_SSH_USERNAME}}
-          key: ${{secrets.DEPLOY_SSH_KEY_DEV}}
-          port: 2222
-          script: |
-            echo -n 'Deployment started at: ' &&
-            date -u &&
-            cd ${{vars.DEPLOY_SSH_PATH}} &&
-            git fetch &&
-            git pull -f origin develop &&
-            cd .. &&
-            docker compose --profile "*" build frontend &&
-            docker compose up -d frontend &&
-            echo -n 'Deployment completed at: ' &&
-            date -u
+          registry_password: ${{ secrets.GITHUB_TOKEN }}

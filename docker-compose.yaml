@@ -1,15 +1,16 @@
 services:
   frontend:
-    restart: unless-stopped
     build:
       context: .
       dockerfile: ./Dockerfile
       args:
         NODE_VERSION: 20.13.1
         ALPINE_VERSION: 3.19
+    image: ghcr.io/teritorio/clearance-frontend:develop
     environment:
       - NUXT_PUBLIC_API=${API}
       - NUXT_PUBLIC_SENTRY_DSN=${SENTRY_DSN}
       - NUXT_PUBLIC_SENTRY_ENVIRONMENT=${SENTRY_ENVIRONMENT}
     ports:
       - 3000:3000
+    restart: unless-stopped
