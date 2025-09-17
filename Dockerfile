@@ -34,5 +34,13 @@ COPY --from=build /src/.output /src/.output
 # Expose production port
 EXPOSE 3000
 
+HEALTHCHECK \
+    --start-interval=1s \
+    --start-period=30s \
+    --interval=30s \
+    --timeout=20s \
+    --retries=5 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1
+
 # Start Nuxt in production mode
 CMD ["node", ".output/server/index.mjs"]
