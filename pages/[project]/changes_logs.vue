@@ -87,6 +87,18 @@ const loChasWithFilter = computed(() => {
   )
 })
 
+const atomUrl = computed(() => `${config.public.api}/projects/${projectSlug}/changes_logs.atom`)
+
+useHead({
+  link: [
+    {
+      rel: 'alternate',
+      type: 'application/atom+xml',
+      href: atomUrl.value,
+    },
+  ],
+})
+
 //
 // Methods
 //

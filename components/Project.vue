@@ -11,6 +11,8 @@ const config = useRuntimeConfig()
 const overpassUrl = computed(() => {
   return `${config.public.api}/projects/${props.project.id}/overpasslike/`
 })
+
+const atomUrl = computed(() => `${config.public.api}/projects/${props.project.id}/changes_logs.atom`)
 </script>
 
 <template>
@@ -37,6 +39,9 @@ const overpassUrl = computed(() => {
               <a :href="`${config.public.api}/${project.id}/export/update/`">{{
                 $t('project.diff')
               }}</a>
+            </li>
+            <li>
+              <a :href="atomUrl" target="_blank">{{ $t('atomFeed') }}</a>
             </li>
           </ul>
         </el-row>

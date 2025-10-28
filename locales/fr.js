@@ -63,4 +63,5 @@ export default {
     description: 'Description',
     other: 'Autre',
   },
+  atomFeed: 'Flux Atom',
 }
