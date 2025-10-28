@@ -63,4 +63,5 @@ export default {
     description: 'Descripción',
     other: 'Otro',
   },
+  atomFeed: 'Fuente Atom',
 }
