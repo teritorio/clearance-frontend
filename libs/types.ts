@@ -151,7 +151,7 @@ export interface Project {
   id: string
   title: MultilingualString
   description: MultilingualString
-  date_last_update: string
+  date_last_update?: string
   to_be_validated?: number
   main_contacts: string[]
   user_groups: UserGroup[]
