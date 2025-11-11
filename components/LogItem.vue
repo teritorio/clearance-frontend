@@ -153,7 +153,7 @@ function uniqHistoryIds(log: Log) {
         >
           <diff-map
             v-if="log.base || !log.change.deleted"
-            :base-geom="log.base ? [log.base.geom] : undefined"
+            :base-geom="log.base ? [log.base.geom].filter(Boolean) : undefined"
             :change-geom="!log.change.deleted ? [log.change.geom] : undefined"
           />
         </LazyComponent>
