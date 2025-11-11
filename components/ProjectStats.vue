@@ -7,7 +7,7 @@ import localizedFormat from 'dayjs/plugin/localizedFormat'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
 const props = defineProps<{
-  lastUpdate: string
+  lastUpdate?: string
   toBeValidated?: number
 }>()
 
