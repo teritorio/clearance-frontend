@@ -20,10 +20,17 @@ export function useChangesLogs(projectSlug: string) {
           $fetch<LoCha[]>(`${config.public.api}/projects/${projectSlug}/changes_logs`),
         ])
 
+        const filteredLoChas = loChas
+          .map((loCha) => ({
+            ...loCha,
+            objects: loCha.objects.filter((log) => log.change.created !== null),
+          }))
+          .filter((loCha) => loCha.objects.length > 0)
+
         return {
           project,
-          loChas,
-          logs: loChas.map((loCha) => loCha.objects).flat(),
+          loChas: filteredLoChas,
+          logs: filteredLoChas.map((loCha) => loCha.objects).flat(),
           fetchedAt: new Date(),
         }
       }
