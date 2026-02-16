@@ -72,7 +72,7 @@ const statUsers = computed(() => {
 })
 
 const statDates = computed(() => {
-  const dates = props.logs.map((log) => log.change.created.substring(0, 10))
+  const dates = props.logs.map((log) => log.change.created?.substring(0, 10)).filter((d): d is string => !!d)
   return getStats(dates).sort()
 })
 
