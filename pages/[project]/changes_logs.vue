@@ -39,7 +39,7 @@ const changeGeoms = computed(() => {
     return []
   }
 
-  return data.value.logs.map((log) => log.change.geom)
+  return data.value.logs.map((log) => log.change.geom).filter((geom): geom is Geometry => !!geom)
 })
 
 const isProjectUser = computed(() => {
@@ -81,7 +81,7 @@ const loChasWithFilter = computed(() => {
                 && (route.query.filterByUsers === undefined
                   || (changesetsUsers && changesetsUsers.includes(route.query.filterByUsers as string)))
                 && (route.query.filterByDate === undefined
-                  || log.change.created.substring(0, 10) === route.query.filterByDate)
+                  || log.change.created?.substring(0, 10) === route.query.filterByDate)
       )
     }),
   )

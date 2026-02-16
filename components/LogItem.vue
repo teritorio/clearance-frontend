@@ -21,6 +21,7 @@ function objtypeFull(objtype: ObjType) {
 function uniqHistoryIds(log: Log) {
   return uniq(
     compact([log.base, log.change])
+      .filter((object) => object.id !== null)
       .map((object) => ({ objtype: object.objtype, id: object.id })),
     (object) => `${object.objtype}${object.id}`,
   )
@@ -40,7 +41,7 @@ function uniqHistoryIds(log: Log) {
               {{ object.objtype }}{{ object.id }}
             </a>
             -
-            {{ log.base?.tags.name || log.change.tags.name }}
+            {{ log.base?.tags.name || log.change.tags?.name }}
           </span>
         </template>
         <span v-if="!log.base">
@@ -161,7 +162,7 @@ function uniqHistoryIds(log: Log) {
       <el-col :span="10">
         <diff
           :src="log.base?.tags"
-          :dst="log.change.tags"
+          :dst="log.change.tags || undefined"
           :diff="log.diff_tags || {}"
         />
       </el-col>
