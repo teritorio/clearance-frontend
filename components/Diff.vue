@@ -3,7 +3,6 @@ import type { Change } from 'diff'
 import type { PropType } from 'vue'
 import type { Actions, Key } from '~/libs/types'
 import { diffChars } from 'diff'
-import _ from 'underscore'
 import { maxActionPriority } from '~/libs/types'
 
 export default defineNuxtComponent({
@@ -34,15 +33,19 @@ export default defineNuxtComponent({
 
   computed: {
     groupedKeys(): string[][] {
-      const keys: string[] = _.sortBy(
-        _.uniq([...Object.keys(this.src || {}), ...Object.keys(this.dst)]),
-        (key) => (this.diff[key] ? -maxActionPriority(this.diff[key]) : 0),
-      )
+      const keys: string[] = [...new Set([...Object.keys(this.src || {}), ...Object.keys(this.dst)])]
+        .toSorted((a, b) => {
+          const pa = this.diff[a] ? -maxActionPriority(this.diff[a]) : 0
+          const pb = this.diff[b] ? -maxActionPriority(this.diff[b]) : 0
+          return pa - pb
+        })
 
-      return Object.values(
-        _.groupBy(keys, (key) =>
-          this.diff[key]?.map((diff) => `${diff}`)?.join('||')),
-      )
+      const grouped: Record<string, string[]> = {}
+      for (const key of keys) {
+        const groupKey = this.diff[key]?.map((diff) => `${diff}`)?.join('||') ?? ''
+        ;(grouped[groupKey] ??= []).push(key)
+      }
+      return Object.values(grouped)
     },
   },
 
