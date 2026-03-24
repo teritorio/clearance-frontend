@@ -1,4 +1,4 @@
-<script lang="ts">
+<script setup lang="ts">
 import type { Feature, FeatureCollection, MultiPolygon, Polygon } from 'geojson'
 import type {
   FillLayerSpecification,
@@ -12,104 +12,92 @@ import {
 } from 'maplibre-gl'
 import _ from 'underscore'
 
+const props = defineProps<{
+  userGroups: UserGroup[]
+}>()
+
 const colors = ['#2364AA', '#EA7317', '#73BFB8', '#FEC601', '#3DA5D9']
 
-export default defineNuxtComponent({
-  name: 'UserGroup',
+const mapContainer = useTemplateRef<HTMLDivElement>('mapContainer')
 
-  props: {
-    userGroups: {
-      type: Object as PropType<UserGroup[]>,
-      required: true,
-    },
-  },
-
-  setup() {
-    const mapContainer = shallowRef(null)
-    return { mapContainer }
-  },
-
-  mounted() {
-    const fetchAllPolygons: Promise<
-      Feature<Polygon | MultiPolygon> | undefined
-    >[] = this.userGroups
-      .map((userGroup, index) => {
-        return {
-          ...userGroup,
-          color: colors[index % colors.length],
-        }
-      })
-      .filter((userGroup) => !!userGroup.polygon)
-      .map((userGroup) => {
-        return fetch(userGroup.polygon!).then(async (data) => {
-          if (data.ok) {
-            const geojson: Feature<Polygon | MultiPolygon> = {
-              type: 'Feature',
-              geometry: await data.json(),
-              properties: { color: userGroup.color },
-            }
-            return Promise.resolve(geojson)
+onMounted(() => {
+  const fetchAllPolygons: Promise<
+    Feature<Polygon | MultiPolygon> | undefined
+  >[] = props.userGroups
+    .map((userGroup, index) => {
+      return {
+        ...userGroup,
+        color: colors[index % colors.length],
+      }
+    })
+    .filter((userGroup) => !!userGroup.polygon)
+    .map((userGroup) => {
+      return fetch(userGroup.polygon!).then(async (data) => {
+        if (data.ok) {
+          const geojson: Feature<Polygon | MultiPolygon> = {
+            type: 'Feature',
+            geometry: await data.json(),
+            properties: { color: userGroup.color },
           }
-        })
-      })
-
-    Promise.all(fetchAllPolygons).then((allPolygons) => {
-      const geojson = {
-        type: 'FeatureCollection',
-        features: _.compact(allPolygons),
-      } as FeatureCollection
-      const bounds = new LngLatBounds(
-        bbox(geojson) as [number, number, number, number],
-      )
-
-      const map = new Map({
-        container: this.mapContainer!,
-        style:
-          'https://vecto.teritorio.xyz/styles/teritorio-basic/style.json?key=teritorio_clearance-1-ahNoohaepohy9iexoo3qua',
-        bounds,
-        fitBoundsOptions: { maxZoom: 20, padding: 50 },
-        cooperativeGestures: true,
-        attributionControl: false,
-      })
-
-      map.on('load', () => {
-        map.addSource('geojson', { type: 'geojson', data: geojson })
-
-        map.addLayer({
-          id: 'geojsonFill',
-          type: 'fill',
-          source: 'geojson',
-          filter: ['==', '$type', 'Polygon'],
-          paint: {
-            'fill-color': ['get', 'color'],
-            'fill-opacity': 0.3,
-          },
-        } as FillLayerSpecification)
-        map.addLayer({
-          id: 'geojsonBorder',
-          type: 'line',
-          source: 'geojson',
-          filter: ['==', '$type', 'Polygon'],
-          paint: {
-            'line-color': ['get', 'color'],
-            'line-width': 2,
-          },
-        } as LineLayerSpecification)
+          return Promise.resolve(geojson)
+        }
       })
     })
-  },
 
-  computed: {
-    groups() {
-      return Object.values(this.userGroups).map((userGroup, index) => {
-        return {
-          ...userGroup,
-          color: colors[index % colors.length],
-        }
-      })
-    },
-  },
+  Promise.all(fetchAllPolygons).then((allPolygons) => {
+    const geojson = {
+      type: 'FeatureCollection',
+      features: _.compact(allPolygons),
+    } as FeatureCollection
+    const bounds = new LngLatBounds(
+      bbox(geojson) as [number, number, number, number],
+    )
+
+    const map = new Map({
+      container: mapContainer.value!,
+      style:
+        'https://vecto.teritorio.xyz/styles/teritorio-basic/style.json?key=teritorio_clearance-1-ahNoohaepohy9iexoo3qua',
+      bounds,
+      fitBoundsOptions: { maxZoom: 20, padding: 50 },
+      cooperativeGestures: true,
+      attributionControl: false,
+    })
+
+    map.on('load', () => {
+      map.addSource('geojson', { type: 'geojson', data: geojson })
+
+      map.addLayer({
+        id: 'geojsonFill',
+        type: 'fill',
+        source: 'geojson',
+        filter: ['==', '$type', 'Polygon'],
+        paint: {
+          'fill-color': ['get', 'color'],
+          'fill-opacity': 0.3,
+        },
+      } as FillLayerSpecification)
+      map.addLayer({
+        id: 'geojsonBorder',
+        type: 'line',
+        source: 'geojson',
+        filter: ['==', '$type', 'Polygon'],
+        paint: {
+          'line-color': ['get', 'color'],
+          'line-width': 2,
+        },
+      } as LineLayerSpecification)
+    })
+  })
 })
+
+const groups = computed(() =>
+  Object.values(props.userGroups).map((userGroup, index) => {
+    return {
+      ...userGroup,
+      color: colors[index % colors.length],
+    }
+  }),
+)
 </script>
 
 <template>

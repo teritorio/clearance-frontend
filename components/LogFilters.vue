@@ -3,33 +3,18 @@ import type { LocationQuery } from 'vue-router'
 import type { Log } from '~/libs/types'
 import { countBy, indexBy, sortBy, uniq } from 'underscore'
 
-//
-// Props
-//
 const props = defineProps<{
   logs: Log[]
 }>()
 
-//
-// Composables
-//
 const route = useRoute()
 
-//
-// Data
-//
 const filters = ref<LocationQuery>()
 
-//
-// Watchers
-//
 watchEffect(() => {
   filters.value = route.query
 })
 
-//
-// Computed
-//
 const stats = computed(() => {
   const actions = props.logs
     .map((log) =>
