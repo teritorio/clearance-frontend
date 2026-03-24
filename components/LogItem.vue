@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Log, ObjType } from '~/libs/types'
+import { compact, uniq } from 'underscore'
 import LazyComponent from 'v-lazy-component'
 import { objTypeFull } from '~/libs/types'
 
@@ -18,19 +19,12 @@ function objtypeFull(objtype: ObjType) {
 }
 
 function uniqHistoryIds(log: Log) {
-  const items = [log.base, log.change]
-    .filter((object): object is NonNullable<typeof object> => !!object)
-    .filter((object) => object.id !== null)
-    .map((object) => ({ objtype: object.objtype, id: object.id }))
-  const seen = new Set<string>()
-  return items.filter((object) => {
-    const key = `${object.objtype}${object.id}`
-    if (seen.has(key)) {
-      return false
-    }
-    seen.add(key)
-    return true
-  })
+  return uniq(
+    compact([log.base, log.change])
+      .filter((object) => object.id !== null)
+      .map((object) => ({ objtype: object.objtype, id: object.id })),
+    (object) => `${object.objtype}${object.id}`,
+  )
 }
 </script>
 

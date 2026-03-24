@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Geometry } from 'geojson'
+import { uniq } from 'underscore'
 
 //
 // Validators
@@ -54,11 +55,11 @@ const loChasWithFilter = computed(() => {
     loCha.objects.some((log) => {
       const changesetsUsers
       = route.query.filterByUsers !== undefined
-      && [...new Set(
+      && uniq(
         (log.changesets ? log.base ? log.changesets.slice(1) : log.changesets : []).map(
           (changeset) => changeset.user,
         ),
-      )]
+      )
       return (
         (route.query.filterByAction === undefined
           || Object.values(log.diff_attribs || {})
