@@ -3,9 +3,6 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-      args:
-        NODE_VERSION: 20.13.1
-        ALPINE_VERSION: 3.19
     image: ghcr.io/teritorio/clearance-frontend:develop
     environment:
       - NUXT_PUBLIC_API=${NUXT_PUBLIC_API}
