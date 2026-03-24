@@ -1,35 +1,20 @@
 <script setup lang="ts">
 import type { LoCha } from '~/libs/types'
 
-//
-// Props
-//
 const props = defineProps<{
   projectSlug: string
   loChas: LoCha[]
 }>()
 
-//
-// Emits
-//
 defineEmits<{
   (e: 'accept', id: number): void
 }>()
 
-//
-// Data
-//
 const scrollCount = ref(10)
 const borderColors = ['#363637', '#636466', '#A3A6AD', '#E5EAF3']
 
-//
-// Computed
-//
 const lazyLoChas = computed(() => props.loChas.slice(0, scrollCount.value))
 
-//
-// Methods
-//
 function scrollLoad() {
   scrollCount.value += 10
 }

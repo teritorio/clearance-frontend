@@ -1,25 +1,11 @@
-<script lang="ts">
-import type { PropType } from 'vue'
+<script setup lang="ts">
 import type { Changeset } from '~/libs/types'
 
-export default defineNuxtComponent({
-  name: 'Changesets',
+defineProps<{
+  changesets: Changeset[]
+}>()
 
-  props: {
-    changesets: {
-      type: Array as PropType<Changeset[]>,
-      required: true,
-    },
-  },
-
-  data(): {
-    accordion: Ref<string>
-  } {
-    return {
-      accordion: ref('0'),
-    }
-  },
-})
+const accordion = ref('0')
 </script>
 
 <template>

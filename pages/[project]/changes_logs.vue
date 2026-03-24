@@ -2,18 +2,12 @@
 import type { Geometry } from 'geojson'
 import { uniq } from 'underscore'
 
-//
-// Validators
-//
 definePageMeta({
   validate({ params }) {
     return /^[-\w:]+$/.test(params.project as string)
   },
 })
 
-//
-// Composables
-//
 const router = useRouter()
 const route = useRoute()
 const projectSlug = route.params.project.toString()
@@ -21,9 +15,6 @@ const config = useRuntimeConfig()
 const user = useUser()
 const { data, status, refresh } = useChangesLogs(projectSlug)
 
-//
-// Computed
-//
 const baseGeoms = computed(() => {
   if (!data.value?.logs) {
     return []
@@ -99,9 +90,6 @@ useHead({
   ],
 })
 
-//
-// Methods
-//
 async function handleAccept(loChaIds?: number[]) {
   try {
     if (!loChaIds) {
