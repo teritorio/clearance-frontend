@@ -10,7 +10,6 @@ import {
   LngLatBounds,
   Map,
 } from 'maplibre-gl'
-import _ from 'underscore'
 
 const colors = ['#2364AA', '#EA7317', '#73BFB8', '#FEC601', '#3DA5D9']
 
@@ -56,7 +55,7 @@ export default defineNuxtComponent({
     Promise.all(fetchAllPolygons).then((allPolygons) => {
       const geojson = {
         type: 'FeatureCollection',
-        features: _.compact(allPolygons),
+        features: allPolygons.filter(Boolean),
       } as FeatureCollection
       const bounds = new LngLatBounds(
         bbox(geojson) as [number, number, number, number],
