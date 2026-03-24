@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import type { Project } from '~/libs/types'
+import _ from 'underscore'
 
 const user = useUser()
 const projects = useProjects()
 const myProjects = ref<Project[]>()
 const otherProjects = ref<Project[]>()
 
-const my = (projects.value || []).filter(
+const [my, other] = _.partition(
+  projects.value,
   (project: Project) => user.value?.projects.includes(project.id) || false,
-)
-const other = (projects.value || []).filter(
-  (project: Project) => !(user.value?.projects.includes(project.id) || false),
 )
 myProjects.value = my
 otherProjects.value = other

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { LocationQuery } from 'vue-router'
 import type { Log } from '~/libs/types'
+import { countBy, indexBy, sortBy, uniq } from 'underscore'
 
 //
 // Props
@@ -32,27 +33,27 @@ watchEffect(() => {
 const stats = computed(() => {
   const actions = props.logs
     .map((log) =>
-      [...new Set(
+      uniq(
         [
           ...Object.values(log.diff_attribs || {}),
           ...Object.values(log.diff_tags || {}),
         ]
           .flat(1)
           .map((action) => action[0]),
-      )],
+      ),
     )
     .flat(1)
   return getStats(actions)
 })
 
 const statSelectors = computed(() => {
-  const matches = props.logs.map((log) => [...new Set(log.matches)].flat()).flat(1)
+  const matches = props.logs.map((log) => uniq(log.matches).flat()).flat(1)
   return getStats(matches, (m) => m.selectors.join(';'))
 })
 
 const statUserGroups = computed(() => {
   const userGroups = props.logs
-    .map((log) => [...new Set(log.matches.map((m) => m.user_groups).flat(2))])
+    .map((log) => uniq(log.matches.map((m) => m.user_groups).flat(2)))
     .flat(1)
   return getStats(userGroups)
 })
@@ -60,11 +61,11 @@ const statUserGroups = computed(() => {
 const statUsers = computed(() => {
   const users = props.logs
     .map((log) =>
-      [...new Set(
+      uniq(
         (log.changesets ? log.base ? log.changesets.slice(1) : log.changesets : []).map(
           (changeset) => changeset.user,
         ),
-      )],
+      ),
     )
     .flat(2)
   return getStats(users)
@@ -76,18 +77,11 @@ const statDates = computed(() => {
 })
 
 function getStats<Type>(data: Type[], key: (o: Type) => string = (i) => `${i}`): [Type, number][] {
-  const index = new Map<string, Type>()
-  const counts = new Map<string, number>()
-  for (const item of data) {
-    const k = key(item)
-    if (!index.has(k)) {
-      index.set(k, item)
-    }
-    counts.set(k, (counts.get(k) || 0) + 1)
-  }
-  return [...counts.entries()]
-    .toSorted(([, a], [, b]) => b - a)
-    .map(([k, count]) => [index.get(k)!, count])
+  const index = indexBy(data, key)
+  return sortBy(
+    Object.entries(countBy(data, key)) as [string, number][],
+    ([_key, count]) => -count,
+  ).map(([key, count]) => [index[key], count])
 }
 
 const router = useRouter()
