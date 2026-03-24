@@ -1,84 +1,63 @@
-<script lang="ts">
+<script setup lang="ts">
 import type { Change } from 'diff'
-import type { PropType } from 'vue'
 import type { Actions, Key } from '~/libs/types'
 import { diffChars } from 'diff'
 import _ from 'underscore'
 import { maxActionPriority } from '~/libs/types'
 
-export default defineNuxtComponent({
-  name: 'Diff',
-
-  props: {
-    src: {
-      type: Object as PropType<Record<string, any>>,
-      required: false,
-    },
-    dst: {
-      type: Object as PropType<Record<string, any>>,
-      required: true,
-    },
-    diff: {
-      type: Object as PropType<Actions>,
-      required: true,
-    },
-    exclude: {
-      type: Array as PropType<Key[]>,
-      default: () => [],
-    },
-    clear: {
-      type: Array as PropType<Key[]>,
-      default: () => [],
-    },
-  },
-
-  computed: {
-    groupedKeys(): string[][] {
-      const keys: string[] = _.sortBy(
-        _.uniq([...Object.keys(this.src || {}), ...Object.keys(this.dst)]),
-        (key) => (this.diff[key] ? -maxActionPriority(this.diff[key]) : 0),
-      )
-
-      return Object.values(
-        _.groupBy(keys, (key) =>
-          this.diff[key]?.map((diff) => `${diff}`)?.join('||')),
-      )
-    },
-  },
-
-  methods: {
-    backgroundClass(key: string): string {
-      return (
-        this.diff[key]
-        && (!this.src || !(key in this.src)
-          ? 'attribute-added'
-          : !(key in this.dst)
-              ? 'attribute-removed'
-              : 'attribute-changed')
-      )
-    },
-
-    actionIcon(key: string): string {
-      return (
-        this.diff[key]
-        && (!this.src || !(key in this.src)
-          ? '➕'
-          : !(key in this.dst)
-              ? '✖'
-              : '~')
-      )
-    },
-
-    showTextDiff(before: string, after: string): boolean {
-      const d = this.diffText(before, after)
-      return d.length <= 2
-    },
-
-    diffText(before: string, after: string): Change[] {
-      return diffChars(before, after)
-    },
-  },
+const props = withDefaults(defineProps<{
+  src?: Record<string, any>
+  dst: Record<string, any>
+  diff: Actions
+  exclude?: Key[]
+  clear?: Key[]
+}>(), {
+  exclude: () => [],
+  clear: () => [],
 })
+
+const groupedKeys = computed((): string[][] => {
+  const keys: string[] = _.sortBy(
+    _.uniq([...Object.keys(props.src || {}), ...Object.keys(props.dst)]),
+    (key) => (props.diff[key] ? -maxActionPriority(props.diff[key]) : 0),
+  )
+
+  return Object.values(
+    _.groupBy(keys, (key) =>
+      props.diff[key]?.map((diff) => `${diff}`)?.join('||')),
+  )
+})
+
+function backgroundClass(key: string): string {
+  return (
+    props.diff[key]
+    && (!props.src || !(key in props.src)
+      ? 'attribute-added'
+      : !(key in props.dst)
+          ? 'attribute-removed'
+          : 'attribute-changed')
+  )
+}
+
+function actionIcon(key: string): string {
+  return (
+    props.diff[key]
+    && (!props.src || !(key in props.src)
+      ? '➕'
+      : !(key in props.dst)
+          ? '✖'
+          : '~')
+  )
+}
+
+function showTextDiff(before: string, after: string): boolean {
+  const d = diffText(before, after)
+  return d.length <= 2
+}
+
+function diffText(before: string, after: string): Change[] {
+  return diffChars(before, after)
+}
 </script>
 
 <template>

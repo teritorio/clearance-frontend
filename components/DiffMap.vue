@@ -18,17 +18,11 @@ const props = defineProps<{
   changeGeom?: Geometry[]
 }>()
 
-//
-// Data
-//
 const mapContainerRef = shallowRef<InstanceType<typeof HTMLDivElement>>()
 const noChanges = ref(false)
 const bounds = ref<LngLatBounds>()
 const geometries = ref<Geometry[]>()
 
-//
-// Hooks
-//
 onMounted(() => {
   if (mapContainerRef.value) {
     const map = new Map({

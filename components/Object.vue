@@ -1,28 +1,16 @@
-<script lang="ts">
-import type { PropType } from 'vue'
-
-export default defineNuxtComponent({
-  name: 'DiffCompinent',
-
-  props: {
-    object: {
-      type: Object as PropType<Record<string, any>>,
-      required: true,
-    },
-    exclude: {
-      type: Array as PropType<string[]>,
-      default: () => [],
-    },
-  },
-
-  computed: {
-    keys(): string[] {
-      return Object.keys(this.object).filter(
-        (key) => !this.exclude.includes(key),
-      )
-    },
-  },
+<script setup lang="ts">
+const props = withDefaults(defineProps<{
+  object: Record<string, any>
+  exclude?: string[]
+}>(), {
+  exclude: () => [],
 })
+
+const keys = computed(() =>
+  Object.keys(props.object).filter(
+    (key) => !props.exclude.includes(key),
+  ),
+)
 </script>
 
 <template>

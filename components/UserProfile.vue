@@ -1,39 +1,26 @@
-<script lang="ts">
-import type { PropType } from 'vue'
+<script setup lang="ts">
 import type { User } from '~/libs/types'
 import { userLogout } from '~/libs/apiTypes'
 
-export default defineNuxtComponent({
-  name: 'User',
-
-  props: {
-    user: {
-      type: Object as PropType<User | null>,
-      default: null,
-    },
-  },
-
-  setup() {
-    const form = shallowRef<HTMLFormElement>()
-
-    return { form }
-  },
-
-  computed: {
-    loginUrl(): string {
-      return `${this.$config.public.api}../../../users/auth/osm_oauth2`
-    },
-  },
-
-  methods: {
-    submit(): void {
-      this.form?.submit()
-    },
-    logout(): void {
-      userLogout(this.$config.public.api)
-    },
-  },
+withDefaults(defineProps<{
+  user?: User | null
+}>(), {
+  user: null,
 })
+
+const form = useTemplateRef<HTMLFormElement>('form')
+
+const { public: { api } } = useRuntimeConfig()
+
+const loginUrl = computed(() => `${api}../../../users/auth/osm_oauth2`)
+
+function submit(): void {
+  form.value?.submit()
+}
+
+function logout(): void {
+  userLogout(api)
+}
 </script>
 
 <template>

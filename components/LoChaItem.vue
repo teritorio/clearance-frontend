@@ -1,30 +1,18 @@
 <script setup lang="ts">
 import type { LoCha } from '~/libs/types'
 
-//
-// Props
-//
 const props = defineProps<{
   borderColor?: string
   projectSlug: string
   item: LoCha
 }>()
 
-//
-// Emits
-//
 defineEmits<{
   (e: 'accept', id: number): void
 }>()
 
-//
-// Composables
-//
 const user = useUser()
 
-//
-// Computed
-//
 const lochaCount = computed(() => props.item.objects.length)
 
 const isProjectUser = computed(() => !!user.value?.projects?.includes(props.projectSlug))
