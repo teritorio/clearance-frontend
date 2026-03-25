@@ -54,6 +54,10 @@ export default defineNuxtConfig({
 
   i18n: {
     strategy: 'no_prefix',
+    experimental: {
+      // Disable server redirect detection — incompatible with ssr: false
+      nitroContextDetection: false,
+    },
     detectBrowserLanguage: {
       useCookie: false,
     },
