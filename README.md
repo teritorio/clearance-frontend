@@ -9,7 +9,7 @@ It is based on partial and local updates incoming from OpenStreetMap changes. Ch
 
 See on the [Clearance project](https://github.com/teritorio/clearance?tab=readme-ov-file#What-Clearance-Does-and-How-It-Works) how it works.
 
-![](./public/Clearance-process.svg)
+![Clearance process overview](./public/Clearance-process.svg)
 
 ## Clearance Projects
 The frontend home page lists all available projects. A project is a community based on a territory and a theme, sharing the same interest and agreeing to share the work of maintaining quality on some OpenStreetMap object types with the same quality rule set.

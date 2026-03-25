@@ -4,6 +4,7 @@ import { uniq } from 'underscore'
 
 definePageMeta({
   validate({ params }) {
+    // eslint-disable-next-line e18e/prefer-static-regex -- definePageMeta is a compiler macro, cannot reference outer scope
     return /^[-\w:]+$/.test(params.project as string)
   },
 })
@@ -45,12 +46,12 @@ const loChasWithFilter = computed(() => {
   return data.value?.loChas.filter((loCha) =>
     loCha.objects.some((log) => {
       const changesetsUsers
-      = route.query.filterByUsers !== undefined
-      && uniq(
-        (log.changesets ? log.base ? log.changesets.slice(1) : log.changesets : []).map(
-          (changeset) => changeset.user,
-        ),
-      )
+        = route.query.filterByUsers !== undefined
+          && uniq(
+            (log.changesets ? log.base ? log.changesets.slice(1) : log.changesets : []).map(
+              (changeset) => changeset.user,
+            ),
+          )
       return (
         (route.query.filterByAction === undefined
           || Object.values(log.diff_attribs || {})

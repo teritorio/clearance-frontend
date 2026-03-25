@@ -2,20 +2,19 @@
 import antfu from '@antfu/eslint-config'
 import withNuxt from './.nuxt/eslint.config.mjs'
 
-export default withNuxt({
-  files: ['**/*.{js,ts,vue,json,yml,markdown,mjs}', '.vscode'],
-  rules: {
-    '@stylistic/arrow-parens': ['error', 'always'],
+export default withNuxt(antfu({
+  vue: {
+    overrides: {
+      'vue/html-self-closing': ['error', {
+        html: {
+          void: 'always',
+        },
+      }],
+      'vue/no-unused-refs': 0,
+    },
   },
-}, antfu({
   rules: {
     'curly': ['error', 'all'],
     'style/arrow-parens': ['error', 'always'],
-    'vue/html-self-closing': ['error', {
-      html: {
-        void: 'always',
-      },
-    }],
-    'vue/no-unused-refs': 0,
   },
 }))
