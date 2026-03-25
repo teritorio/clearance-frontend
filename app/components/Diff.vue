@@ -16,38 +16,42 @@ const props = withDefaults(defineProps<{
   clear: () => [],
 })
 
-const groupedKeys = computed((): string[][] => {
+const groupedKeys = computed((): [string, ...string[]][] => {
   const keys: string[] = _.sortBy(
     _.uniq([...Object.keys(props.src || {}), ...Object.keys(props.dst)]),
-    (key) => (props.diff[key] ? -maxActionPriority(props.diff[key]) : 0),
+    (key) => (props.diff[key] ? -maxActionPriority(props.diff[key]!) : 0),
   )
 
   return Object.values(
     _.groupBy(keys, (key) =>
-      props.diff[key]?.map((diff) => `${diff}`)?.join('||')),
-  )
+      props.diff[key]?.map((diff) => `${diff}`)?.join('||') ?? ''),
+  ) as [string, ...string[]][]
 })
 
 function backgroundClass(key: string): string {
-  return (
-    props.diff[key]
-    && (!props.src || !(key in props.src)
-      ? 'attribute-added'
-      : !(key in props.dst)
-          ? 'attribute-removed'
-          : 'attribute-changed')
-  )
+  if (!props.diff[key]) {
+    return ''
+  }
+  if (!props.src || !(key in props.src)) {
+    return 'attribute-added'
+  }
+  if (!(key in props.dst)) {
+    return 'attribute-removed'
+  }
+  return 'attribute-changed'
 }
 
 function actionIcon(key: string): string {
-  return (
-    props.diff[key]
-    && (!props.src || !(key in props.src)
-      ? '➕'
-      : !(key in props.dst)
-          ? '✖'
-          : '~')
-  )
+  if (!props.diff[key]) {
+    return ''
+  }
+  if (!props.src || !(key in props.src)) {
+    return '➕'
+  }
+  if (!(key in props.dst)) {
+    return '✖'
+  }
+  return '~'
 }
 
 function showTextDiff(before: string, after: string): boolean {
@@ -67,7 +71,7 @@ function diffText(before: string, after: string): Change[] {
         <th colspan="4">
           <template v-if="diff[groupedKey[0]] !== undefined">
             <el-tag
-              v-if="diff[groupedKey[0]].length === 0"
+              v-if="diff[groupedKey[0]]?.length === 0"
               type="warning"
               size="small"
               :disable-transitions="true"
@@ -131,8 +135,8 @@ function diffText(before: string, after: string): Change[] {
           v-if="!exclude.includes(key)"
           :class="
             (diff[groupedKey[0]] === undefined
-              || diff[groupedKey[0]][0] === undefined
-              || diff[groupedKey[0]][0][1]) !== 'reject' && 'no_changes'
+              || diff[groupedKey[0]]?.[0] === undefined
+              || diff[groupedKey[0]]?.[0]?.[1]) !== 'reject' && 'no_changes'
           "
         >
           <td class="key" :class="[backgroundClass(key)]">
@@ -141,8 +145,8 @@ function diffText(before: string, after: string): Change[] {
           <td
             :class="
               (diff[groupedKey[0]] === undefined
-                || diff[groupedKey[0]][0] === undefined
-                || diff[groupedKey[0]][0][1]) !== 'reject' || [
+                || diff[groupedKey[0]]?.[0] === undefined
+                || diff[groupedKey[0]]?.[0]?.[1]) !== 'reject' || [
                 backgroundClass(key),
                 'key',
               ]
@@ -153,8 +157,8 @@ function diffText(before: string, after: string): Change[] {
           <td
             :class="
               (diff[groupedKey[0]] === undefined
-                || diff[groupedKey[0]][0] === undefined
-                || diff[groupedKey[0]][0][1]) !== 'reject' || [
+                || diff[groupedKey[0]]?.[0] === undefined
+                || diff[groupedKey[0]]?.[0]?.[1]) !== 'reject' || [
                 backgroundClass(key),
                 'value',
               ]
