@@ -17,7 +17,7 @@ export default defineNuxtConfig({
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { hid: 'description', name: 'description', content: '' },
+        { name: 'description', content: '' },
         { name: 'format-detection', content: 'telephone=no' },
       ],
       link: [{ rel: 'icon', href: '/favicon.ico' }],
@@ -40,7 +40,7 @@ export default defineNuxtConfig({
     transpile: [/lodash.*/],
   },
 
-  compatibilityDate: '2024-07-16',
+  compatibilityDate: '2025-01-01',
 
   typescript: {
     typeCheck: 'build',
