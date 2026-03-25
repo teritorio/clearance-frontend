@@ -1,6 +1,10 @@
 import process from 'node:process'
 
 export default defineNuxtConfig({
+  future: {
+    compatibilityVersion: 4,
+  },
+
   modules: ['@nuxt/eslint', '@element-plus/nuxt', '@nuxtjs/i18n'],
 
   plugins: [],
