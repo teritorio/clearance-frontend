@@ -1,19 +1,13 @@
 import process from 'node:process'
 
 export default defineNuxtConfig({
-  // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-
-  // Modules: https://go.nuxtjs.dev/config-modules
   modules: ['@nuxt/eslint', '@element-plus/nuxt', '@nuxtjs/i18n'],
 
-  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [],
   ssr: false,
 
-  // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
-  // Global page headers: https://go.nuxtjs.dev/config-head
   app: {
     head: {
       title: 'Clearance',
@@ -30,7 +24,6 @@ export default defineNuxtConfig({
     },
   },
 
-  // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
   runtimeConfig: {
@@ -43,7 +36,6 @@ export default defineNuxtConfig({
     },
   },
 
-  // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     transpile: [/lodash.*/],
   },

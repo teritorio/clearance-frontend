@@ -12,6 +12,7 @@ function getFlagEmoji(countryCode: string) {
 }
 
 async function changeLocale(code: string) {
+  // Keep locale union in sync with nuxt.config.ts i18n.locales
   await setLocale(code as 'en' | 'es' | 'fr')
 }
 </script>

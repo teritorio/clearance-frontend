@@ -12,11 +12,10 @@ import {
   getValidators,
 } from '~/libs/types'
 
-const projectSlugPattern = /^[-\w:]+$/
-
 definePageMeta({
   validate({ params }) {
-    return projectSlugPattern.test(params.project as string)
+    // eslint-disable-next-line e18e/prefer-static-regex -- definePageMeta is a compiler macro, cannot reference outer scope
+    return /^[-\w:]+$/.test(params.project as string)
   },
 })
 
