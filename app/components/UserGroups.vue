@@ -24,14 +24,14 @@ onMounted(() => {
   const fetchAllPolygons: Promise<
     Feature<Polygon | MultiPolygon> | undefined
   >[] = props.userGroups
-    .map((userGroup, index) => {
+    .map((userGroup: UserGroup, index: number) => {
       return {
         ...userGroup,
-        color: colors[index % colors.length],
+        color: colors[index % colors.length]!,
       }
     })
-    .filter((userGroup) => !!userGroup.polygon)
-    .map((userGroup) => {
+    .filter((userGroup: UserGroup & { color: string }) => !!userGroup.polygon)
+    .map((userGroup: UserGroup & { color: string }) => {
       return fetch(userGroup.polygon!).then(async (data) => {
         if (data.ok) {
           const geojson: Feature<Polygon | MultiPolygon> = {
@@ -91,10 +91,10 @@ onMounted(() => {
 })
 
 const groups = computed(() =>
-  Object.values(props.userGroups).map((userGroup, index) => {
+  props.userGroups.map((userGroup: UserGroup, index: number) => {
     return {
       ...userGroup,
-      color: colors[index % colors.length],
+      color: colors[index % colors.length]!,
     }
   }),
 )

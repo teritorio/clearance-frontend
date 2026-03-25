@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Log, ObjType } from '~/libs/types'
+import type { Log, Match, ObjType } from '~/libs/types'
 import { compact, uniq } from 'underscore'
 import LazyComponent from 'v-lazy-component'
 import { objTypeFull } from '~/libs/types'
@@ -62,7 +62,7 @@ function uniqHistoryIds(log: Log) {
         <span>
           <el-tag
             v-for="text in [
-              ...new Set(log.matches.map((m) => m.user_groups).flat()),
+              ...new Set(log.matches.map((m: Match) => m.user_groups).flat()),
             ].sort()" :key="text" size="small" class="item"
           >
             📌 {{ text }}

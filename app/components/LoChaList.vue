@@ -13,10 +13,14 @@ defineEmits<{
 const scrollCount = ref(10)
 const borderColors = ['#363637', '#636466', '#A3A6AD', '#E5EAF3']
 
-const lazyLoChas = computed(() => props.loChas.slice(0, scrollCount.value))
+const lazyLoChas = computed((): LoCha[] => props.loChas.slice(0, scrollCount.value))
 
 function scrollLoad() {
   scrollCount.value += 10
+}
+
+function getBorderColor(loCha: LoCha, index: number): string | undefined {
+  return loCha.objects.length > 1 ? borderColors[index % borderColors.length] : undefined
 }
 </script>
 
@@ -26,7 +30,7 @@ function scrollLoad() {
       <lo-cha-item
         v-for="(loCha, index) in lazyLoChas"
         :key="loCha.id"
-        :border-color="loCha.objects.length > 1 ? borderColors[index % borderColors.length] : undefined"
+        :border-color="getBorderColor(loCha, index)"
         :item="loCha"
         :project-slug="projectSlug"
         @accept="$emit('accept', $event)"
