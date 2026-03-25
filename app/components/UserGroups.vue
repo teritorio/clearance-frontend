@@ -21,17 +21,16 @@ const colors = ['#2364AA', '#EA7317', '#73BFB8', '#FEC601', '#3DA5D9']
 const mapContainer = useTemplateRef<HTMLDivElement>('mapContainer')
 
 onMounted(() => {
+  type ColoredGroup = UserGroup & { color: string }
+  const coloredGroups: ColoredGroup[] = props.userGroups.map((userGroup: UserGroup, index: number) => ({
+    ...userGroup,
+    color: colors[index % colors.length]!,
+  }))
   const fetchAllPolygons: Promise<
     Feature<Polygon | MultiPolygon> | undefined
-  >[] = props.userGroups
-    .map((userGroup: UserGroup, index: number) => {
-      return {
-        ...userGroup,
-        color: colors[index % colors.length]!,
-      }
-    })
-    .filter((userGroup: UserGroup & { color: string }) => !!userGroup.polygon)
-    .map((userGroup: UserGroup & { color: string }) => {
+  >[] = coloredGroups
+    .filter((userGroup) => !!userGroup.polygon)
+    .map((userGroup) => {
       return fetch(userGroup.polygon!).then(async (data) => {
         if (data.ok) {
           const geojson: Feature<Polygon | MultiPolygon> = {
