@@ -2,9 +2,11 @@
 import type { Geometry } from 'geojson'
 import { uniq } from 'underscore'
 
+const projectSlugPattern = /^[-\w:]+$/
+
 definePageMeta({
   validate({ params }) {
-    return /^[-\w:]+$/.test(params.project as string)
+    return projectSlugPattern.test(params.project as string)
   },
 })
 
@@ -45,12 +47,12 @@ const loChasWithFilter = computed(() => {
   return data.value?.loChas.filter((loCha) =>
     loCha.objects.some((log) => {
       const changesetsUsers
-      = route.query.filterByUsers !== undefined
-      && uniq(
-        (log.changesets ? log.base ? log.changesets.slice(1) : log.changesets : []).map(
-          (changeset) => changeset.user,
-        ),
-      )
+        = route.query.filterByUsers !== undefined
+          && uniq(
+            (log.changesets ? log.base ? log.changesets.slice(1) : log.changesets : []).map(
+              (changeset) => changeset.user,
+            ),
+          )
       return (
         (route.query.filterByAction === undefined
           || Object.values(log.diff_attribs || {})

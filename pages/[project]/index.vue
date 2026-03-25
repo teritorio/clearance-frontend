@@ -7,9 +7,11 @@ import {
 } from '~/libs/getAsyncData'
 import { getProject } from '~/libs/types'
 
+const projectSlugPattern = /^[-\w:]+$/
+
 definePageMeta({
   validate({ params }) {
-    return /^[-\w:]+$/.test(params.project as string)
+    return projectSlugPattern.test(params.project as string)
   },
 })
 
