@@ -11,7 +11,7 @@ definePageMeta({
 
 const router = useRouter()
 const route = useRoute()
-const projectSlug = route.params.project.toString()
+const projectSlug = route.params.project as string
 const config = useRuntimeConfig()
 const user = useUser()
 const { data, status, refresh } = useChangesLogs(projectSlug)

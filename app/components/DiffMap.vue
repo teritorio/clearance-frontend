@@ -152,7 +152,7 @@ if (props.baseGeom && props.changeGeom) {
     props.baseGeom.length === 1 && props.changeGeom.length === 1
     && (
       props.baseGeom[0] === props.changeGeom[0]
-      || (props.baseGeom && props.changeGeom && booleanEqual(props.baseGeom[0], props.changeGeom[0]))
+      || (props.baseGeom && props.changeGeom && booleanEqual(props.baseGeom[0]!, props.changeGeom[0]!))
     )
   )
 

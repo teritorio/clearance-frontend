@@ -66,7 +66,7 @@ function getStats<Type>(data: Type[], key: (o: Type) => string = (i) => `${i}`):
   return sortBy(
     Object.entries(countBy(data, key)) as [string, number][],
     ([_key, count]) => -count,
-  ).map(([key, count]) => [index[key], count])
+  ).map(([key, count]) => [index[key]!, count])
 }
 
 const router = useRouter()
