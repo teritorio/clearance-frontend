@@ -14,6 +14,7 @@ import {
 
 definePageMeta({
   validate({ params }) {
+    // eslint-disable-next-line e18e/prefer-static-regex -- definePageMeta is a compiler macro, cannot reference outer scope
     return /^[-\w:]+$/.test(params.project as string)
   },
 })

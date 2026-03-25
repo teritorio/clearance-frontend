@@ -1,10 +1,13 @@
 import process from 'node:process'
 
 export default defineNuxtConfig({
-  // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
+  modules: ['@nuxt/eslint', '@element-plus/nuxt', '@nuxtjs/i18n'],
+
+  plugins: [],
   ssr: false,
 
-  // Global page headers: https://go.nuxtjs.dev/config-head
+  components: true,
+
   app: {
     head: {
       title: 'Clearance',
@@ -21,6 +24,8 @@ export default defineNuxtConfig({
     },
   },
 
+  css: [],
+
   runtimeConfig: {
     public: {
       api: process.env.NUXT_PUBLIC_API,
@@ -31,22 +36,11 @@ export default defineNuxtConfig({
     },
   },
 
-  // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
-
-  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
-
-  // Auto import components: https://go.nuxtjs.dev/config-components
-  components: true,
-
-  // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxt/eslint', '@element-plus/nuxt', '@nuxtjs/i18n'],
-
-  // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     transpile: [/lodash.*/],
   },
+
+  compatibilityDate: '2024-07-16',
 
   typescript: {
     typeCheck: 'build',
@@ -55,13 +49,11 @@ export default defineNuxtConfig({
   eslint: {
     config: {
       standalone: false,
-      stylistic: true,
     },
   },
 
   i18n: {
     strategy: 'no_prefix',
-    lazy: true,
     detectBrowserLanguage: {
       useCookie: false,
     },
@@ -71,8 +63,6 @@ export default defineNuxtConfig({
       { code: 'fr', name: 'Français', flag: 'FR', language: 'fr-FR', file: 'fr.js' },
     ],
     defaultLocale: 'en',
-    langDir: './locales',
+    langDir: 'locales',
   },
-
-  compatibilityDate: '2024-07-16',
 })

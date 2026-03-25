@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const user = useUser()
-const { locale, locales, setLocale, localeProperties, loadLocaleMessages } = useI18n()
+const { locale, locales, setLocale, localeProperties } = useI18n()
 
 // Function from https://dev.to/jorik/country-code-to-flag-emoji-a21
 function getFlagEmoji(countryCode: string) {
@@ -11,9 +11,9 @@ function getFlagEmoji(countryCode: string) {
   return String.fromCodePoint(...codePoints)
 }
 
-async function changeLocale(locale: string) {
-  await loadLocaleMessages(locale)
-  await setLocale(locale)
+async function changeLocale(code: string) {
+  // Keep locale union in sync with nuxt.config.ts i18n.locales
+  await setLocale(code as 'en' | 'es' | 'fr')
 }
 </script>
 
@@ -26,13 +26,13 @@ async function changeLocale(locale: string) {
       <el-select
         class="m-2"
         size="small"
-        :placeholder="`${getFlagEmoji(localeProperties.flag)} ${localeProperties.name}`"
+        :placeholder="`${getFlagEmoji(localeProperties.flag as string)} ${localeProperties.name}`"
         @change="changeLocale"
       >
         <el-option
           v-for="l in locales"
           :key="l.code"
-          :label="`${getFlagEmoji(l.flag)} ${l.name}`"
+          :label="`${getFlagEmoji(l.flag as string)} ${l.name}`"
           :value="l.code"
           :fit-input-width="true"
           :disabled="l.code === locale"
