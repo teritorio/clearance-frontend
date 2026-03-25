@@ -42,11 +42,11 @@ export function useChangesLogs(projectSlug: string) {
       }
     },
     {
-      getCachedData(key) {
+      getCachedData(key): ChangesLogsData | undefined {
         const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
 
         if (!data) {
-          return null
+          return undefined
         }
 
         // Check if the cached data has expired
@@ -55,7 +55,7 @@ export function useChangesLogs(projectSlug: string) {
         const isExpired = expirationDate.getTime() < Date.now()
 
         if (isExpired) {
-          return null
+          return undefined
         }
 
         return data
