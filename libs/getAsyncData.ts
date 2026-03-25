@@ -19,7 +19,7 @@ export function getAsyncDataOrThrows<
   options?: AsyncDataOptions<DataT, Transform, PickKeys>,
 ): AsyncData<DataT, DataE> {
   return useAsyncData(key, handler, options).then((asyncData) => {
-    if (asyncData.error != null && asyncData.error.value) {
+    if (asyncData.error.value) {
       throw asyncData.error
     }
     else {
@@ -39,7 +39,7 @@ export function getAsyncDataOrNull<
   options?: AsyncDataOptions<DataT, Transform, PickKeys>,
 ): AsyncData<DataT, DataE> {
   return useAsyncData(key, handler, options).then((asyncData) => {
-    if (asyncData.error != null && asyncData.error.value) {
+    if (asyncData.error.value) {
       return undefined
     }
     else {
