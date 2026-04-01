@@ -6,18 +6,11 @@ const props = defineProps<{
   titleTag: HTMLTags
 }>()
 
-const route = useRoute()
 const { t } = useI18n()
-const details = computed(() => {
-  let label = t('project.details')
-  let url = `/${props.project.id}`
-
-  if (route.name === 'index') {
-    label = t('project.control')
-    url += '/changes_logs'
-  }
-  return { label, url }
-})
+const details = computed(() => ({
+  label: t('project.details'),
+  url: `/${props.project.id}/changes_logs`,
+}))
 </script>
 
 <template>
