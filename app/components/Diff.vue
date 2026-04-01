@@ -38,6 +38,9 @@ function backgroundClass(key: string): string {
   if (!(key in props.dst)) {
     return 'attribute-removed'
   }
+  if (props.src[key] === props.dst[key]) {
+    return ''
+  }
   return 'attribute-changed'
 }
 
@@ -50,6 +53,9 @@ function actionIcon(key: string): string {
   }
   if (!(key in props.dst)) {
     return '✖'
+  }
+  if (props.src[key] === props.dst[key]) {
+    return ''
   }
   return '~'
 }
