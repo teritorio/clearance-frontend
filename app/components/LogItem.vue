@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { Log, Match, ObjType } from '~/libs/types'
 import { compact, uniq } from 'underscore'
-import LazyComponent from 'v-lazy-component'
 import { objTypeFull } from '~/libs/types'
 
 const props = defineProps<{
@@ -148,16 +147,16 @@ function uniqHistoryIds(log: Log) {
           ]"
           :clear="['members', 'geom']"
         />
-        <LazyComponent
+        <div
           v-if="log.base?.geom || log.change.geom"
           style="border: 1px solid lightgrey"
         >
-          <diff-map
+          <lazy-diff-map
             v-if="log.base || !log.change.deleted"
             :base-geom="log.base ? [log.base.geom].filter(Boolean) : undefined"
             :change-geom="!log.change.deleted ? [log.change.geom] : undefined"
           />
-        </LazyComponent>
+        </div>
       </el-col>
       <el-col :span="10">
         <diff
