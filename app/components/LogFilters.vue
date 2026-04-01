@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { LocationQuery } from 'vue-router'
-import type { Log } from '~/libs/types'
+import type { Action, Changeset, Log, Match } from '~/libs/types'
 import { countBy, indexBy, sortBy, uniq } from 'underscore'
 
 const props = defineProps<{
@@ -17,14 +17,14 @@ watchEffect(() => {
 
 const stats = computed(() => {
   const actions = props.logs
-    .map((log) =>
+    .map((log: Log) =>
       uniq(
         [
           ...Object.values(log.diff_attribs || {}),
           ...Object.values(log.diff_tags || {}),
         ]
           .flat(1)
-          .map((action) => action[0]),
+          .map((action: Action) => action[0]),
       ),
     )
     .flat(1)
@@ -32,23 +32,23 @@ const stats = computed(() => {
 })
 
 const statSelectors = computed(() => {
-  const matches = props.logs.map((log) => uniq(log.matches).flat()).flat(1)
-  return getStats(matches, (m) => m.selectors.join(';'))
+  const matches = props.logs.map((log: Log) => uniq(log.matches).flat()).flat(1)
+  return getStats(matches, (m: Match) => m.selectors.join(';'))
 })
 
 const statUserGroups = computed(() => {
   const userGroups = props.logs
-    .map((log) => uniq(log.matches.map((m) => m.user_groups).flat(2)))
+    .map((log: Log) => uniq(log.matches.map((m: Match) => m.user_groups).flat(2)))
     .flat(1)
   return getStats(userGroups)
 })
 
 const statUsers = computed(() => {
   const users = props.logs
-    .map((log) =>
+    .map((log: Log) =>
       uniq(
         (log.changesets ? log.base ? log.changesets.slice(1) : log.changesets : []).map(
-          (changeset) => changeset.user,
+          (changeset: Changeset) => changeset.user,
         ),
       ),
     )
@@ -57,7 +57,7 @@ const statUsers = computed(() => {
 })
 
 const statDates = computed(() => {
-  const dates = props.logs.map((log) => log.change.created?.substring(0, 10)).filter((d): d is string => !!d)
+  const dates = props.logs.map((log: Log) => log.change.created?.substring(0, 10)).filter((d: string | undefined): d is string => !!d)
   return getStats(dates).sort()
 })
 

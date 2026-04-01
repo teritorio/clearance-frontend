@@ -1,17 +1,9 @@
-<script lang="ts">
-import type { PropType } from 'vue'
+<script setup lang="ts">
 import type { Validators } from '~/libs/types'
 
-export default defineNuxtComponent({
-  name: 'ValidatorsCompo',
-
-  props: {
-    validators: {
-      type: Object as PropType<Validators>,
-      required: true,
-    },
-  },
-})
+defineProps<{
+  validators: Validators
+}>()
 </script>
 
 <template>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Geometry } from 'geojson'
+import type { Action, Changeset, LoCha, Log, Match } from '~/libs/types'
 import { uniq } from 'underscore'
 
 definePageMeta({
@@ -22,8 +23,8 @@ const baseGeoms = computed(() => {
   }
 
   return data.value.logs
-    .map((log) => log.base?.geom)
-    .filter((geom): geom is Geometry => !!geom)
+    .map((log: Log) => log.base?.geom)
+    .filter((geom: Geometry | undefined): geom is Geometry => !!geom)
 })
 
 const changeGeoms = computed(() => {
@@ -31,7 +32,7 @@ const changeGeoms = computed(() => {
     return []
   }
 
-  return data.value.logs.map((log) => log.change.geom).filter((geom): geom is Geometry => !!geom)
+  return data.value.logs.map((log: Log) => log.change.geom).filter((geom: Geometry | undefined): geom is Geometry => !!geom)
 })
 
 const isProjectUser = computed(() => {
@@ -43,31 +44,33 @@ const loChasWithFilter = computed(() => {
     return []
   }
 
-  return data.value?.loChas.filter((loCha) =>
-    loCha.objects.some((log) => {
+  return data.value?.loChas.filter((loCha: LoCha) =>
+    loCha.objects.some((log: Log) => {
       const changesetsUsers
         = route.query.filterByUsers !== undefined
           && uniq(
             (log.changesets ? log.base ? log.changesets.slice(1) : log.changesets : []).map(
-              (changeset) => changeset.user,
+              (changeset: Changeset) => changeset.user,
             ),
           )
       return (
         (route.query.filterByAction === undefined
-          || Object.values(log.diff_attribs || {})
-            .concat(Object.values(log.diff_tags || {}))
+          || [
+            ...Object.values(log.diff_attribs || {}),
+            ...Object.values(log.diff_tags || {}),
+          ]
             .some(
-              (actions) =>
+              (actions: Action[]) =>
                 actions?.some(
-                  (action) => action[0] === route.query.filterByAction,
+                  (action: Action) => action[0] === route.query.filterByAction,
                 ) || false,
             ))
             && (route.query.filterByUserGroups === undefined
-              || log.matches.some((match) =>
+              || log.matches.some((match: Match) =>
                 match.user_groups.includes(route.query.filterByUserGroups as string),
               ))
               && (route.query.filterBySelectors === undefined
-                || log.matches.some((match) =>
+                || log.matches.some((match: Match) =>
                   matchFilterBySelectors(match.selectors),
                 ))
                 && (route.query.filterByUsers === undefined
@@ -94,7 +97,7 @@ useHead({
 async function handleAccept(loChaIds?: number[]) {
   try {
     if (!loChaIds) {
-      loChaIds = loChasWithFilter.value.map((loCha) => loCha.id)
+      loChaIds = loChasWithFilter.value.map((loCha: LoCha) => loCha.id)
     }
 
     try {
