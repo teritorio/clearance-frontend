@@ -37,6 +37,8 @@ export default {
       'Si después de la comprobación es correcto, utiliza ✓ para integrar los cambios.',
     tags_more: '(y mas)',
     validate_selection: 'Validar objetos filtrados',
+    no_data: 'No hay datos disponibles en este momento.',
+    no_results: 'Ningún resultado coincide con los filtros actuales.',
   },
   project: {
     control: 'Control',

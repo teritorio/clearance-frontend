@@ -37,6 +37,8 @@ export default {
       'Si, après examen, tout est bon, utilisez le contrôle ✓ pour intégrer les modifications.',
     tags_more: '(et plus)',
     validate_selection: 'Valider les objets filtrés',
+    no_data: 'Aucune donnée disponible pour le moment.',
+    no_results: 'Aucun résultat ne correspond aux filtres actuels.',
   },
   project: {
     control: 'Contrôle',

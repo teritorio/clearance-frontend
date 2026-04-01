@@ -153,7 +153,7 @@ function matchFilterBySelectors(selectors: string[]) {
     element-loading-background="#FAFAFA"
     element-loading-text="Loading..."
   >
-    <el-alert v-if="status === 'idle' && !data" title="No data available at the moment." type="warning" />
+    <el-alert v-if="status === 'idle' && !data" :title="$t('logs.no_data')" type="warning" />
     <el-container v-if="data && status === 'success'" direction="vertical">
       <project-light :project="data.project" title-tag="h1" />
       <el-row>
@@ -179,6 +179,10 @@ function matchFilterBySelectors(selectors: string[]) {
         :project-slug="projectSlug"
         :lo-chas="loChasWithFilter"
         @accept="handleAccept([$event])"
+      />
+      <el-empty
+        v-if="data.loChas.length && !loChasWithFilter.length"
+        :description="$t('logs.no_results')"
       />
     </el-container>
   </el-main>

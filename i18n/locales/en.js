@@ -37,6 +37,8 @@ export default {
       'If after review it is ok, use the ✓ check to integrate the changes.',
     tags_more: '(and more)',
     validate_selection: 'Validate all filtered',
+    no_data: 'No data available at the moment.',
+    no_results: 'No results match the current filters.',
   },
   project: {
     control: 'Control',
