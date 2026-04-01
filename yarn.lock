@@ -14674,13 +14674,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"v-lazy-component@npm:^3.0.9":
-  version: 3.0.9
-  resolution: "v-lazy-component@npm:3.0.9"
-  checksum: 10c0/352c9235959b1e172f20ca74fc98189fe203ef9319fd0e4c0ba0e4fd7e6de3e72a5250f16057f1aef7ebb3e9db7b8cc577bc1a21d5fe6fd516c34a7659aa7683
-  languageName: node
-  linkType: hard
-
 "v8-to-istanbul@npm:^9.0.1":
   version: 9.3.0
   resolution: "v8-to-istanbul@npm:9.3.0"
@@ -15074,7 +15067,6 @@ __metadata:
     simple-git-hooks: "npm:^2.13.1"
     typescript: "npm:5.8.3"
     underscore: "npm:^1.13.6"
-    v-lazy-component: "npm:^3.0.9"
     vue: "npm:^3.5.13"
     vue-tsc: "npm:^3.2.6"
   languageName: unknown
