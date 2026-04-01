@@ -7,7 +7,7 @@ import localizedFormat from 'dayjs/plugin/localizedFormat'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
 const props = defineProps<{
-  lastUpdate?: string
+  lastUpdate?: string | null
   toBeValidated?: number
 }>()
 
@@ -19,6 +19,9 @@ const _daysjsLocale = { en, fr, es }
 
 const { locale } = useI18n()
 const lastUpdateFormatted = computed(() => {
+  if (!props.lastUpdate) {
+    return null
+  }
   return dayjs(props.lastUpdate)
     .locale(locale.value)
     .fromNow()
@@ -27,9 +30,9 @@ const lastUpdateFormatted = computed(() => {
 
 <template>
   <el-row>
-    <el-col :span="12">
+    <el-col v-if="lastUpdateFormatted" :span="12">
       <label>{{ $t('project.lastUpdate') }}</label>
-      <time :datetime="lastUpdate">{{ lastUpdateFormatted }}</time>
+      <time :datetime="lastUpdate ?? undefined">{{ lastUpdateFormatted }}</time>
     </el-col>
     <el-col v-if="toBeValidated !== undefined" :span="12">
       <label>{{ $t('project.toBeValidated') }}</label>
