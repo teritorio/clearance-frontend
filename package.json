@@ -24,7 +24,7 @@
     "dayjs": "^1.11.20",
     "diff": "^8.0.4",
     "element-plus": "^2.13.6",
-    "maplibre-gl": "^4.1.2",
+    "maplibre-gl": "^5.0.0",
     "underscore": "^1.13.6",
     "vue": "^3.5.13"
   },
