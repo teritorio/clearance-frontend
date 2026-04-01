@@ -1,10 +1,6 @@
 import process from 'node:process'
 
 export default defineNuxtConfig({
-  future: {
-    compatibilityVersion: 4,
-  },
-
   modules: ['@nuxt/eslint', '@element-plus/nuxt', '@nuxtjs/i18n'],
 
   plugins: [],
@@ -44,7 +40,7 @@ export default defineNuxtConfig({
     transpile: [/lodash.*/],
   },
 
-  compatibilityDate: '2025-01-01',
+  compatibilityDate: '2026-03-25',
 
   typescript: {
     typeCheck: 'build',

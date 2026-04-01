@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Change } from 'diff'
-import type { Actions, Key } from '~/libs/types'
+import type { Action, Actions, Key } from '~/libs/types'
 import { diffChars } from 'diff'
 import _ from 'underscore'
 import { maxActionPriority } from '~/libs/types'
@@ -24,7 +24,7 @@ const groupedKeys = computed((): [string, ...string[]][] => {
 
   return Object.values(
     _.groupBy(keys, (key) =>
-      props.diff[key]?.map((diff) => `${diff}`)?.join('||') ?? ''),
+      props.diff[key]?.map((diff: Action) => `${diff}`)?.join('||') ?? ''),
   ) as [string, ...string[]][]
 })
 
@@ -146,7 +146,7 @@ function diffText(before: string, after: string): Change[] {
             :class="
               (diff[groupedKey[0]] === undefined
                 || diff[groupedKey[0]]?.[0] === undefined
-                || diff[groupedKey[0]]?.[0]?.[1]) !== 'reject' || [
+                || diff[groupedKey[0]]?.[0]?.[1]) === 'reject' && [
                 backgroundClass(key),
                 'key',
               ]
@@ -158,7 +158,7 @@ function diffText(before: string, after: string): Change[] {
             :class="
               (diff[groupedKey[0]] === undefined
                 || diff[groupedKey[0]]?.[0] === undefined
-                || diff[groupedKey[0]]?.[0]?.[1]) !== 'reject' || [
+                || diff[groupedKey[0]]?.[0]?.[1]) === 'reject' && [
                 backgroundClass(key),
                 'value',
               ]
