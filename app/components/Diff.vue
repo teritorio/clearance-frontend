@@ -146,7 +146,7 @@ function diffText(before: string, after: string): Change[] {
             :class="
               (diff[groupedKey[0]] === undefined
                 || diff[groupedKey[0]]?.[0] === undefined
-                || diff[groupedKey[0]]?.[0]?.[1]) !== 'reject' || [
+                || diff[groupedKey[0]]?.[0]?.[1]) === 'reject' && [
                 backgroundClass(key),
                 'key',
               ]
@@ -158,7 +158,7 @@ function diffText(before: string, after: string): Change[] {
             :class="
               (diff[groupedKey[0]] === undefined
                 || diff[groupedKey[0]]?.[0] === undefined
-                || diff[groupedKey[0]]?.[0]?.[1]) !== 'reject' || [
+                || diff[groupedKey[0]]?.[0]?.[1]) === 'reject' && [
                 backgroundClass(key),
                 'value',
               ]

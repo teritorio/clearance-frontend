@@ -9,9 +9,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   }
 
   Sentry.init({
-    // @sentry/vue's Vue interface expects mixin() => void, but Vue 3.5's
-    // App has mixin() => this. No upstream fix as of @sentry/vue 10.46.0.
-    app: nuxtApp.vueApp as any,
+    app: nuxtApp.vueApp,
     dsn: sentry.dsn,
     environment: sentry.environment,
     integrations: [
