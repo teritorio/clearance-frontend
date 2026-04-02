@@ -151,7 +151,7 @@ function matchFilterBySelectors(selectors: string[]) {
   <el-main
     v-loading.lock="status === 'pending'"
     element-loading-background="#FAFAFA"
-    element-loading-text="Loading..."
+    :element-loading-text="$t('common.loading')"
   >
     <el-alert v-if="status === 'idle' && !data" :title="$t('logs.no_data')" type="warning" />
     <el-container v-if="data && status === 'success'" direction="vertical">
@@ -175,14 +175,18 @@ function matchFilterBySelectors(selectors: string[]) {
         <li>{{ $t('logs.data_details_manual') }}</li>
       </ul>
       <lo-cha-list
-        v-if="data.loChas.length"
+        v-if="loChasWithFilter.length"
         :project-slug="projectSlug"
         :lo-chas="loChasWithFilter"
         @accept="handleAccept([$event])"
       />
       <el-empty
-        v-if="data.loChas.length && !loChasWithFilter.length"
+        v-else-if="data.loChas.length"
         :description="$t('logs.no_results')"
+      />
+      <el-empty
+        v-else
+        :description="$t('logs.no_data')"
       />
     </el-container>
   </el-main>

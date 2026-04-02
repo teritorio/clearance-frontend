@@ -1,4 +1,7 @@
 export default {
+  common: {
+    loading: 'Chargement...',
+  },
   app: {
     title: '"Clearance" pour les données OSM',
     summary:
