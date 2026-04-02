@@ -1,7 +1,7 @@
 import process from 'node:process'
 
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@element-plus/nuxt', '@nuxtjs/i18n'],
+  modules: ['@nuxt/eslint', '@element-plus/nuxt', '@nuxtjs/i18n', '@sentry/nuxt/module'],
 
   plugins: [],
   ssr: false,
