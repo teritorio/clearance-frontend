@@ -1,7 +1,7 @@
 import process from 'node:process'
 
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@element-plus/nuxt', '@nuxtjs/i18n'],
+  modules: ['@nuxt/eslint', '@element-plus/nuxt', '@nuxtjs/i18n', '@sentry/nuxt/module'],
 
   plugins: [],
   ssr: false,
@@ -29,11 +29,20 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       api: process.env.NUXT_PUBLIC_API,
-      sentry: {
-        dsn: process.env.NUXT_PUBLIC_SENTRY_DSN,
-        environment: process.env.NUXT_PUBLIC_SENTRY_ENVIRONMENT,
-      },
+      sentryDsn: process.env.NUXT_PUBLIC_SENTRY_DSN,
+      sentryEnvironment: process.env.NUXT_PUBLIC_SENTRY_ENVIRONMENT,
     },
+  },
+
+  sentry: {
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
+    sentryUrl: process.env.SENTRY_URL,
+    telemetry: false,
+  },
+
+  sourcemap: {
+    client: 'hidden',
   },
 
   build: {
