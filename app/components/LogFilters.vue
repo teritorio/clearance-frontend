@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import type { Action } from '@teritorio/openstreetmap-logical-history-component'
 import type { LocationQuery } from 'vue-router'
-import type { Action, Changeset, Log, Match } from '~/libs/types'
+import type { ClearanceApiLink, ClearanceApiResponse, ClearanceMatch } from '~/composables/useChangesLogs'
 import { countBy, indexBy, sortBy, uniq } from 'underscore'
 
 const props = defineProps<{
-  logs: Log[]
+  loChas: ClearanceApiResponse[]
 }>()
 
 const route = useRoute()
@@ -15,49 +16,58 @@ watchEffect(() => {
   filters.value = route.query
 })
 
+function allLinks(loChas: ClearanceApiResponse[]): ClearanceApiLink[] {
+  return loChas.flatMap((loCha) =>
+    loCha.metadata.links.flat(),
+  )
+}
+
 const stats = computed(() => {
-  const actions = props.logs
-    .map((log: Log) =>
+  const actions = props.loChas
+    .flatMap((loCha) =>
       uniq(
-        [
-          ...Object.values(log.diff_attribs || {}),
-          ...Object.values(log.diff_tags || {}),
-        ]
-          .flat(1)
+        allLinks([loCha])
+          .flatMap((link: ClearanceApiLink) => [
+            ...Object.values(link.diff_attribs || {}),
+            ...Object.values(link.diff_tags || {}),
+          ])
+          .flat()
           .map((action: Action) => action[0]),
       ),
     )
-    .flat(1)
   return getStats(actions)
 })
 
 const statSelectors = computed(() => {
-  const matches = props.logs.map((log: Log) => uniq(log.matches).flat()).flat(1)
-  return getStats(matches, (m: Match) => m.selectors.join(';'))
+  const matches = props.loChas.flatMap((loCha) =>
+    uniq(allLinks([loCha]).flatMap((link: ClearanceApiLink) => link.matches)).flat(),
+  )
+  return getStats(matches, (m: ClearanceMatch) => m.selectors.join(';'))
 })
 
 const statUserGroups = computed(() => {
-  const userGroups = props.logs
-    .map((log: Log) => uniq(log.matches.map((m: Match) => m.user_groups).flat(2)))
-    .flat(1)
+  const userGroups = props.loChas
+    .flatMap((loCha) =>
+      uniq(allLinks([loCha]).flatMap((link: ClearanceApiLink) => link.matches.flatMap((m) => m.user_groups))),
+    )
   return getStats(userGroups)
 })
 
 const statUsers = computed(() => {
-  const users = props.logs
-    .map((log: Log) =>
-      uniq(
-        (log.changesets ? log.base ? log.changesets.slice(1) : log.changesets : []).map(
-          (changeset: Changeset) => changeset.user,
-        ),
-      ),
+  const users = props.loChas
+    .flatMap((loCha) =>
+      uniq(loCha.metadata.changesets.map((changeset) => changeset.user)),
     )
-    .flat(2)
   return getStats(users)
 })
 
 const statDates = computed(() => {
-  const dates = props.logs.map((log: Log) => log.change.created?.substring(0, 10)).filter((d: string | undefined): d is string => !!d)
+  const dates = props.loChas.flatMap((loCha) =>
+    loCha.features
+      .filter((f) => !f.properties.is_before)
+      .map((f) => f.properties.created?.substring(0, 10))
+      .filter((d): d is string => !!d),
+  )
   return getStats(dates).sort()
 })
 
@@ -115,7 +125,7 @@ async function applyFilter(key: string, value: string) {
           size="small"
           @click="applyFilter('filterByUserGroups', key)"
         >
-          📌 {{ key }}
+          {{ key }}
         </el-button>
       </el-badge>
     </el-row>
@@ -134,7 +144,7 @@ async function applyFilter(key: string, value: string) {
           size="small"
           @click="applyFilter('filterBySelectors', match.selectors.join())"
         >
-          🏷️ {{ useI18nHash(match.name) || match.selectors.join(' ') }}
+          {{ match.selectors.join(' ') }}
         </el-button>
       </el-badge>
     </el-row>
@@ -153,7 +163,7 @@ async function applyFilter(key: string, value: string) {
           size="small"
           @click="applyFilter('filterByUsers', key)"
         >
-          👤 {{ key }}
+          {{ key }}
         </el-button>
       </el-badge>
       <span v-if="statUsers.length > 20">{{ $t('logs.tags_more') }}</span>
@@ -173,7 +183,7 @@ async function applyFilter(key: string, value: string) {
           size="small"
           @click="applyFilter('filterByDate', key)"
         >
-          📅 {{ key }}
+          {{ key }}
         </el-button>
       </el-badge>
     </el-row>

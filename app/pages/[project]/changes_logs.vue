@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { Action } from '@teritorio/openstreetmap-logical-history-component'
 import type { Geometry } from 'geojson'
-import type { Action, Changeset, LoCha, Log, Match } from '~/libs/types'
+import type { ClearanceApiLink, ClearanceApiResponse } from '~/composables/useChangesLogs'
+import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
 import { uniq } from 'underscore'
 
 definePageMeta({
@@ -18,68 +20,78 @@ const user = useUser()
 const { data, status, refresh } = useChangesLogs(projectSlug)
 
 const baseGeoms = computed(() => {
-  if (!data.value?.logs) {
+  if (!data.value?.loChas) {
     return []
   }
 
-  return data.value.logs
-    .map((log: Log) => log.base?.geom)
-    .filter((geom: Geometry | undefined): geom is Geometry => !!geom)
+  return data.value.loChas
+    .flatMap((loCha) => loCha.features)
+    .filter((f) => f.properties.is_before)
+    .map((f) => f.geometry)
+    .filter((geom): geom is Geometry => !!geom)
 })
 
 const changeGeoms = computed(() => {
-  if (!data.value?.logs) {
+  if (!data.value?.loChas) {
     return []
   }
 
-  return data.value.logs.map((log: Log) => log.change.geom).filter((geom: Geometry | undefined): geom is Geometry => !!geom)
+  return data.value.loChas
+    .flatMap((loCha) => loCha.features)
+    .filter((f) => !f.properties.is_before)
+    .map((f) => f.geometry)
+    .filter((geom): geom is Geometry => !!geom)
 })
 
 const isProjectUser = computed(() => {
   return !!user.value?.projects?.includes(projectSlug)
 })
 
+function getAllLinks(loCha: ClearanceApiResponse): ClearanceApiLink[] {
+  return loCha.metadata.links.flat()
+}
+
 const loChasWithFilter = computed(() => {
   if (!data.value?.loChas.length) {
     return []
   }
 
-  return data.value?.loChas.filter((loCha: LoCha) =>
-    loCha.objects.some((log: Log) => {
+  return data.value.loChas.filter((loCha: ClearanceApiResponse) => {
+    const links = getAllLinks(loCha)
+
+    return links.some((link: ClearanceApiLink) => {
       const changesetsUsers
         = route.query.filterByUsers !== undefined
-          && uniq(
-            (log.changesets ? log.base ? log.changesets.slice(1) : log.changesets : []).map(
-              (changeset: Changeset) => changeset.user,
-            ),
-          )
+          && uniq(loCha.metadata.changesets.map((changeset) => changeset.user))
+
       return (
         (route.query.filterByAction === undefined
           || [
-            ...Object.values(log.diff_attribs || {}),
-            ...Object.values(log.diff_tags || {}),
-          ]
-            .some(
-              (actions: Action[]) =>
-                actions?.some(
-                  (action: Action) => action[0] === route.query.filterByAction,
-                ) || false,
+            ...Object.values(link.diff_attribs || {}),
+            ...Object.values(link.diff_tags || {}),
+          ].some(
+            (actions: Action[]) =>
+              actions?.some(
+                (action: Action) => action[0] === route.query.filterByAction,
+              ) || false,
+          ))
+          && (route.query.filterByUserGroups === undefined
+            || link.matches.some((match) =>
+              match.user_groups.includes(route.query.filterByUserGroups as string),
             ))
-            && (route.query.filterByUserGroups === undefined
-              || log.matches.some((match: Match) =>
-                match.user_groups.includes(route.query.filterByUserGroups as string),
+            && (route.query.filterBySelectors === undefined
+              || link.matches.some((match) =>
+                matchFilterBySelectors(match.selectors),
               ))
-              && (route.query.filterBySelectors === undefined
-                || log.matches.some((match: Match) =>
-                  matchFilterBySelectors(match.selectors),
+              && (route.query.filterByUsers === undefined
+                || (changesetsUsers && changesetsUsers.includes(route.query.filterByUsers as string)))
+              && (route.query.filterByDate === undefined
+                || loCha.features.some((f) =>
+                  !f.properties.is_before && f.properties.created?.substring(0, 10) === route.query.filterByDate,
                 ))
-                && (route.query.filterByUsers === undefined
-                  || (changesetsUsers && changesetsUsers.includes(route.query.filterByUsers as string)))
-                && (route.query.filterByDate === undefined
-                  || log.change.created?.substring(0, 10) === route.query.filterByDate)
       )
-    }),
-  )
+    })
+  })
 })
 
 const atomUrl = computed(() => `${config.public.api}/projects/${projectSlug}/changes_logs.atom`)
@@ -97,7 +109,7 @@ useHead({
 async function handleAccept(loChaIds?: number[]) {
   try {
     if (!loChaIds) {
-      loChaIds = loChasWithFilter.value.map((loCha: LoCha) => loCha.id)
+      loChaIds = loChasWithFilter.value.map((loCha: ClearanceApiResponse) => loCha.metadata.locha_id)
     }
 
     try {
@@ -163,7 +175,7 @@ function matchFilterBySelectors(selectors: string[]) {
           style="resize: vertical"
         />
       </el-row>
-      <log-filters :logs="data.logs" />
+      <log-filters :lo-chas="data.loChas" />
       <log-validator-bulk
         v-if="isProjectUser && Object.keys(route.query).length"
         @bulk-validation="handleAccept"
@@ -174,12 +186,26 @@ function matchFilterBySelectors(selectors: string[]) {
         <li>{{ $t('logs.data_details_osm') }}</li>
         <li>{{ $t('logs.data_details_manual') }}</li>
       </ul>
-      <lo-cha-list
-        v-if="loChasWithFilter.length"
-        :project-slug="projectSlug"
-        :lo-chas="loChasWithFilter"
-        @accept="handleAccept([$event])"
-      />
+      <template v-if="loChasWithFilter.length">
+        <el-space fill :size="20">
+          <el-card
+            v-for="loCha in loChasWithFilter"
+            :key="loCha.metadata.locha_id"
+            style="--el-card-bg-color: #FAFAFA;"
+          >
+            <template v-if="isProjectUser" #header>
+              <div class="card-header">
+                <el-button-group>
+                  <el-button type="primary" @click="handleAccept([loCha.metadata.locha_id])">
+                    ✓
+                  </el-button>
+                </el-button-group>
+              </div>
+            </template>
+            <LoCha :data="loCha" />
+          </el-card>
+        </el-space>
+      </template>
       <el-empty
         v-else-if="data.loChas.length"
         :description="$t('logs.no_results')"
@@ -195,5 +221,11 @@ function matchFilterBySelectors(selectors: string[]) {
 <style scope>
 .el-main {
   overflow: initial;
+}
+
+.card-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 </style>
