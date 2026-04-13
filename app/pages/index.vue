@@ -32,7 +32,7 @@ otherProjects.value = other
           <p v-if="admin">
             {{ $t('app.project.new') }}
             <a
-              :href="`https://www.openstreetmap.org/user/${admin}`"
+              :href="`https://www.openstreetmap.org/user/${encodeURIComponent(admin)}`"
               target="_blank"
             >{{ admin }}</a>
           </p>
