@@ -24,7 +24,7 @@ export default defineNuxtConfig({
     },
   },
 
-  css: [],
+  css: ['@teritorio/openstreetmap-logical-history-component/style.css'],
 
   runtimeConfig: {
     public: {
@@ -47,6 +47,27 @@ export default defineNuxtConfig({
 
   build: {
     transpile: [/lodash.*/],
+  },
+
+  vite: {
+    resolve: {
+      dedupe: ['vue'],
+    },
+    optimizeDeps: {
+      include: [
+        '@vue/devtools-core',
+        '@vue/devtools-kit',
+        'underscore',
+        '@turf/bbox',
+        '@turf/boolean-equal',
+        'maplibre-gl',
+        'dayjs/locale/en-gb',
+        'dayjs/locale/es',
+        'dayjs/locale/fr',
+        'dayjs/plugin/localizedFormat',
+        'dayjs/plugin/relativeTime',
+      ],
+    },
   },
 
   compatibilityDate: '2026-03-25',
