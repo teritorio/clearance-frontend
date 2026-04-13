@@ -4,6 +4,8 @@ export const useLoChas = () => useState<LoCha[]>('loChas')
 
 export const useLogs = () => useState<Log[]>('logs')
 
+export const useAdmin = () => useState<string | null>('admin', () => null)
+
 export const useProjects = () => useState<Project[]>('projects')
 
 export const useUser = () => useState<User | null>('user', () => null)
