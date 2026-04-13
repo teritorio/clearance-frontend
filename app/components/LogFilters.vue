@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { Action } from '@teritorio/openstreetmap-logical-history-component'
 import type { LocationQuery } from 'vue-router'
-import type { ClearanceApiLink, ClearanceApiResponse, ClearanceMatch } from '~/composables/useChangesLogs'
+import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
 import { countBy, indexBy, sortBy, uniq } from 'underscore'
 
 const props = defineProps<{
-  loChas: ClearanceApiResponse[]
+  loChas: ClearanceLoChaData[]
 }>()
 
 const route = useRoute()
@@ -16,7 +16,7 @@ watchEffect(() => {
   filters.value = route.query
 })
 
-function allLinks(loChas: ClearanceApiResponse[]): ClearanceApiLink[] {
+function allLinks(loChas: ClearanceLoChaData[]): ClearanceApiLink[] {
   return loChas.flatMap((loCha) =>
     loCha.metadata.links.flat(),
   )
