@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Action } from '@teritorio/openstreetmap-logical-history-component'
 import type { Geometry } from 'geojson'
-import type { ClearanceApiLink, ClearanceApiResponse } from '~/composables/useChangesLogs'
+import type { ClearanceApiLink, ClearanceApiResponse, ClearanceMatch } from '~/composables/useChangesLogs'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
 import { uniq } from 'underscore'
 
@@ -49,6 +49,18 @@ const isProjectUser = computed(() => {
 
 function getAllLinks(loCha: ClearanceApiResponse): ClearanceApiLink[] {
   return loCha.metadata.links.flat()
+}
+
+function uniqMatches(links: ClearanceApiLink[]): ClearanceMatch[] {
+  const seen = new Set<string>()
+  return links.flatMap((link) => link.matches).filter((match) => {
+    const key = match.selectors.join(';')
+    if (seen.has(key)) {
+      return false
+    }
+    seen.add(key)
+    return true
+  })
 }
 
 const loChasWithFilter = computed(() => {
@@ -202,7 +214,29 @@ function matchFilterBySelectors(selectors: string[]) {
                 </el-button-group>
               </div>
             </template>
-            <LoCha :data="loCha" />
+            <LoCha :data="loCha">
+              <template #link-metadata="{ links }">
+                <div v-if="links" class="link-metadata">
+                  <el-tag
+                    v-for="userGroup in uniq(links.flatMap((link: ClearanceApiLink) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"
+                    :key="userGroup"
+                    size="small"
+                    class="match-tag"
+                  >
+                    {{ userGroup }}
+                  </el-tag>
+                  <el-tag
+                    v-for="match in uniqMatches(links)"
+                    :key="match.selectors.join(';')"
+                    size="small"
+                    type="warning"
+                    class="match-tag"
+                  >
+                    {{ match.selectors.join(' ') }}
+                  </el-tag>
+                </div>
+              </template>
+            </LoCha>
           </el-card>
         </el-space>
       </template>
@@ -227,5 +261,14 @@ function matchFilterBySelectors(selectors: string[]) {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+}
+
+.link-metadata {
+  margin-bottom: 0.5em;
+}
+
+.match-tag {
+  margin-right: 0.5em;
+  margin-bottom: 0.3em;
 }
 </style>
