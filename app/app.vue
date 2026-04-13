@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Project, User } from '~/libs/types'
+import type { Project, ProjectsResponse, User } from '~/libs/types'
 
 const config = useRuntimeConfig()
 
@@ -14,8 +14,9 @@ await callOnce(async () => {
 })
 
 try {
-  const projects = await useFetchWithCache<Project[]>('projects', `${config.public.api}/projects`)
-  useState<Project[]>('projects', () => projects.value)
+  const response = await useFetchWithCache<ProjectsResponse>('projectsResponse', `${config.public.api}/projects`)
+  useState<string | null>('admin', () => response.value?.admin ?? null)
+  useState<Project[]>('projects', () => response.value?.projects ?? [])
 }
 catch (err: any) {
   ElMessage.error({

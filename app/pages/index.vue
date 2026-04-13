@@ -2,6 +2,7 @@
 import type { Project } from '~/libs/types'
 import _ from 'underscore'
 
+const admin = useAdmin()
 const user = useUser()
 const projects = useProjects()
 const myProjects = ref<Project[]>()
@@ -28,12 +29,12 @@ otherProjects.value = other
               $t('app.github')
             }}</a>
           </p>
-          <p>
+          <p v-if="admin">
             {{ $t('app.project.new') }}
             <a
-              href="https://www.openstreetmap.org/user/frodrigo"
+              :href="`https://www.openstreetmap.org/user/${admin}`"
               target="_blank"
-            >frodrigo</a>
+            >{{ admin }}</a>
           </p>
         </el-col>
         <el-col :span="6">
