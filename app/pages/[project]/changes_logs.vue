@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Action } from '@teritorio/openstreetmap-logical-history-component'
 import type { Geometry } from 'geojson'
-import type { ClearanceApiLink, ClearanceApiResponse, ClearanceMatch } from '~/composables/useChangesLogs'
+import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
 import { uniq } from 'underscore'
 
@@ -47,7 +47,7 @@ const isProjectUser = computed(() => {
   return !!user.value?.projects?.includes(projectSlug)
 })
 
-function getAllLinks(loCha: ClearanceApiResponse): ClearanceApiLink[] {
+function getAllLinks(loCha: ClearanceLoChaData): ClearanceApiLink[] {
   return loCha.metadata.links.flat()
 }
 
@@ -68,7 +68,7 @@ const loChasWithFilter = computed(() => {
     return []
   }
 
-  return data.value.loChas.filter((loCha: ClearanceApiResponse) => {
+  return data.value.loChas.filter((loCha: ClearanceLoChaData) => {
     const links = getAllLinks(loCha)
 
     return links.some((link: ClearanceApiLink) => {
@@ -121,7 +121,7 @@ useHead({
 async function handleAccept(loChaIds?: number[]) {
   try {
     if (!loChaIds) {
-      loChaIds = loChasWithFilter.value.map((loCha: ClearanceApiResponse) => loCha.metadata.locha_id)
+      loChaIds = loChasWithFilter.value.map((loCha: ClearanceLoChaData) => loCha.metadata.locha_id)
     }
 
     try {
@@ -218,7 +218,7 @@ function matchFilterBySelectors(selectors: string[]) {
               <template #link-metadata="{ links }">
                 <div v-if="links" class="link-metadata">
                   <el-tag
-                    v-for="userGroup in uniq(links.flatMap((link: ClearanceApiLink) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"
+                    v-for="userGroup in uniq((links as ClearanceApiLink[]).flatMap((link) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"
                     :key="userGroup"
                     size="small"
                     class="match-tag"
@@ -226,7 +226,7 @@ function matchFilterBySelectors(selectors: string[]) {
                     {{ userGroup }}
                   </el-tag>
                   <el-tag
-                    v-for="match in uniqMatches(links)"
+                    v-for="match in uniqMatches(links as ClearanceApiLink[])"
                     :key="match.selectors.join(';')"
                     size="small"
                     type="warning"

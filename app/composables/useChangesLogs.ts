@@ -1,4 +1,4 @@
-import type { ApiLink, ApiResponse } from '@teritorio/openstreetmap-logical-history-component'
+import type { ApiLink, LoChaData } from '@teritorio/openstreetmap-logical-history-component'
 import type { Project } from '~/libs/types'
 
 export interface ClearanceMatch {
@@ -11,8 +11,8 @@ export interface ClearanceApiLink extends ApiLink {
   matches: ClearanceMatch[]
 }
 
-export interface ClearanceApiResponse extends ApiResponse {
-  metadata: ApiResponse['metadata'] & {
+export interface ClearanceLoChaData extends LoChaData {
+  metadata: LoChaData['metadata'] & {
     locha_id: number
     links: ClearanceApiLink[][]
   }
@@ -20,7 +20,7 @@ export interface ClearanceApiResponse extends ApiResponse {
 
 interface ChangesLogsData {
   project: Project
-  loChas: ClearanceApiResponse[]
+  loChas: ClearanceLoChaData[]
   fetchedAt: Date
 }
 
@@ -34,7 +34,7 @@ export function useChangesLogs(projectSlug: string) {
       try {
         const [project, loChas] = await Promise.all([
           $fetch<Project>(`${config.public.api}/projects/${projectSlug}`),
-          $fetch<ClearanceApiResponse[]>(`${config.public.api}/projects/${projectSlug}/changes_logs`),
+          $fetch<ClearanceLoChaData[]>(`${config.public.api}/projects/${projectSlug}/changes_logs`),
         ])
 
         return {
