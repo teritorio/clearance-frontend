@@ -1,11 +1,29 @@
-import type { LoCha, Log, Project } from '~/libs/types'
+import type { ApiLink, ApiResponse } from '@teritorio/openstreetmap-logical-history-component'
+import type { Project } from '~/libs/types'
+
+export interface ClearanceMatch {
+  sources: string[]
+  selectors: string[]
+  user_groups: string[]
+}
+
+export interface ClearanceApiLink extends ApiLink {
+  matches: ClearanceMatch[]
+}
+
+export interface ClearanceApiResponse extends ApiResponse {
+  metadata: ApiResponse['metadata'] & {
+    locha_id: number
+    links: ClearanceApiLink[][]
+  }
+}
 
 interface ChangesLogsData {
   project: Project
-  loChas: LoCha[]
-  logs: Log[]
+  loChas: ClearanceApiResponse[]
   fetchedAt: Date
 }
+
 export function useChangesLogs(projectSlug: string) {
   const nuxtApp = useNuxtApp()
   const config = useRuntimeConfig()
@@ -14,23 +32,14 @@ export function useChangesLogs(projectSlug: string) {
     `changes_logs-${projectSlug}`,
     async () => {
       try {
-        // Fetch project and change logs data concurrently
         const [project, loChas] = await Promise.all([
           $fetch<Project>(`${config.public.api}/projects/${projectSlug}`),
-          $fetch<LoCha[]>(`${config.public.api}/projects/${projectSlug}/changes_logs`),
+          $fetch<ClearanceApiResponse[]>(`${config.public.api}/projects/${projectSlug}/changes_logs`),
         ])
-
-        const filteredLoChas = loChas
-          .map((loCha) => ({
-            ...loCha,
-            objects: loCha.objects.filter((log) => log.change.created !== null),
-          }))
-          .filter((loCha) => loCha.objects.length > 0)
 
         return {
           project,
-          loChas: filteredLoChas,
-          logs: filteredLoChas.map((loCha) => loCha.objects).flat(),
+          loChas,
           fetchedAt: new Date(),
         }
       }
@@ -56,7 +65,6 @@ export function useChangesLogs(projectSlug: string) {
           return undefined
         }
 
-        // Check if the cached data has expired
         const expirationDate = new Date(data.fetchedAt)
         expirationDate.setTime(expirationDate.getTime() + 30 * 1000)
         const isExpired = expirationDate.getTime() < Date.now()
