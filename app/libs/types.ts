@@ -158,10 +158,15 @@ export interface Project {
   project_tags: string[]
 }
 
-export function getProjects(apiEndpoint: string): Promise<Project[]> {
+export interface ProjectsResponse {
+  admin?: string
+  projects: Project[]
+}
+
+export function getProjects(apiEndpoint: string): Promise<ProjectsResponse> {
   return fetch(`${apiEndpoint}/projects`).then((data) => {
     if (data.ok) {
-      return data.json() as unknown as Project[]
+      return data.json() as unknown as ProjectsResponse
     }
     else {
       return Promise.reject(
