@@ -1,5 +1,9 @@
 import process from 'node:process'
 
+if (!process.env.NUXT_PUBLIC_MAP_STYLE_URL) {
+  console.warn('WARNING: NUXT_PUBLIC_MAP_STYLE_URL is not set. Map tiles will not load.')
+}
+
 export default defineNuxtConfig({
   modules: ['@nuxt/eslint', '@element-plus/nuxt', '@nuxtjs/i18n', '@sentry/nuxt/module'],
 
@@ -29,6 +33,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       api: process.env.NUXT_PUBLIC_API,
+      mapStyleUrl: process.env.NUXT_PUBLIC_MAP_STYLE_URL,
       sentryDsn: process.env.NUXT_PUBLIC_SENTRY_DSN,
       sentryEnvironment: process.env.NUXT_PUBLIC_SENTRY_ENVIRONMENT,
     },
