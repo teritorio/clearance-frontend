@@ -23,12 +23,13 @@ const noChanges = ref(false)
 const bounds = ref<LngLatBounds>()
 const geometries = ref<Geometry[]>()
 
+const config = useRuntimeConfig()
+
 onMounted(() => {
   if (mapContainerRef.value) {
     const map = new Map({
       container: mapContainerRef.value,
-      style:
-      'https://vecto.teritorio.xyz/styles/teritorio-basic/style.json?key=teritorio_clearance-1-ahNoohaepohy9iexoo3qua',
+      style: config.public.mapStyleUrl as string,
       bounds: bounds.value,
       fitBoundsOptions: { maxZoom: 17, padding: 50 },
       cooperativeGestures: true,

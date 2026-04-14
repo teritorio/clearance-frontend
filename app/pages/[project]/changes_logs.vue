@@ -214,7 +214,7 @@ function matchFilterBySelectors(selectors: string[]) {
                 </el-button-group>
               </div>
             </template>
-            <LoCha :data="loCha">
+            <LoCha :data="loCha" :map-style-url="config.public.mapStyleUrl as string">
               <template #tags-diff="{ title, date, diff, dst, src }">
                 <div v-if="title || (dst?.is_after && src)" class="locha-infos">
                   <span v-if="title" class="locha-title">🔗 {{ title }}</span>
