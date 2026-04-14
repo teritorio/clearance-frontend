@@ -27,7 +27,8 @@ onMounted(() => {
   if (mapContainerRef.value) {
     const map = new Map({
       container: mapContainerRef.value,
-      style: 'https://maps.cartoway.com/styles/positron/style.json',
+      style:
+      'https://vecto.teritorio.xyz/styles/teritorio-basic/style.json?key=teritorio_clearance-1-ahNoohaepohy9iexoo3qua',
       bounds: bounds.value,
       fitBoundsOptions: { maxZoom: 17, padding: 50 },
       cooperativeGestures: true,
