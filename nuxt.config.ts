@@ -1,7 +1,9 @@
 import process from 'node:process'
 
+const defaultMapStyleUrl = 'https://vecto.teritorio.xyz/styles/teritorio-basic/style.json?key=teritorio_clearance-1-ahNoohaepohy9iexoo3qua'
+
 if (!process.env.NUXT_PUBLIC_MAP_STYLE_URL) {
-  console.warn('WARNING: NUXT_PUBLIC_MAP_STYLE_URL is not set. Map tiles will not load.')
+  console.warn(`WARNING: NUXT_PUBLIC_MAP_STYLE_URL is not set. Falling back to ${defaultMapStyleUrl}`)
 }
 
 export default defineNuxtConfig({
@@ -33,7 +35,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       api: process.env.NUXT_PUBLIC_API,
-      mapStyleUrl: process.env.NUXT_PUBLIC_MAP_STYLE_URL,
+      mapStyleUrl: process.env.NUXT_PUBLIC_MAP_STYLE_URL || defaultMapStyleUrl,
       sentryDsn: process.env.NUXT_PUBLIC_SENTRY_DSN,
       sentryEnvironment: process.env.NUXT_PUBLIC_SENTRY_ENVIRONMENT,
     },
