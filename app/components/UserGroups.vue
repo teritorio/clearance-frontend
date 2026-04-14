@@ -16,6 +16,7 @@ const props = defineProps<{
   userGroups: UserGroup[]
 }>()
 
+const runtimeConfig = useRuntimeConfig()
 const colors = ['#2364AA', '#EA7317', '#73BFB8', '#FEC601', '#3DA5D9']
 
 const mapContainer = useTemplateRef<HTMLDivElement>('mapContainer')
@@ -54,8 +55,7 @@ onMounted(() => {
 
     const map = new Map({
       container: mapContainer.value!,
-      style:
-        'https://vecto.teritorio.xyz/styles/teritorio-basic/style.json?key=teritorio_clearance-1-ahNoohaepohy9iexoo3qua',
+      style: runtimeConfig.public.mapStyleUrl as string,
       bounds,
       fitBoundsOptions: { maxZoom: 20, padding: 50 },
       cooperativeGestures: true,
