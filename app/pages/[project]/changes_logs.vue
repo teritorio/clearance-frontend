@@ -228,25 +228,23 @@ function matchFilterBySelectors(selectors: string[]) {
                 />
               </template>
               <template #link-metadata="{ links }">
-                <div v-if="links" class="link-metadata">
-                  <el-tag
-                    v-for="userGroup in uniq((links as ClearanceApiLink[]).flatMap((link) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"
-                    :key="userGroup"
-                    size="small"
-                    class="match-tag"
-                  >
-                    {{ userGroup }}
-                  </el-tag>
-                  <el-tag
-                    v-for="match in uniqMatches(links as ClearanceApiLink[])"
-                    :key="match.selectors.join(';')"
-                    size="small"
-                    type="warning"
-                    class="match-tag"
-                  >
-                    {{ match.selectors.join(' ') }}
-                  </el-tag>
-                </div>
+                <el-tag
+                  v-for="userGroup in uniq((links as ClearanceApiLink[]).flatMap((link) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"
+                  :key="userGroup"
+                  size="small"
+                  class="match-tag"
+                >
+                  {{ userGroup }}
+                </el-tag>
+                <el-tag
+                  v-for="match in uniqMatches(links as ClearanceApiLink[])"
+                  :key="match.selectors.join(';')"
+                  size="small"
+                  type="warning"
+                  class="match-tag"
+                >
+                  {{ match.selectors.join(' ') }}
+                </el-tag>
               </template>
             </LoCha>
           </el-card>
@@ -276,7 +274,7 @@ function matchFilterBySelectors(selectors: string[]) {
 }
 
 .link-metadata {
-  margin-bottom: 0.5em;
+  text-align: center;
 }
 
 .match-tag {
