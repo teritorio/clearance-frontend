@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Actions, IFeature } from '@teritorio/openstreetmap-logical-history-component'
+import type { Action, Actions, IFeature } from '@teritorio/openstreetmap-logical-history-component'
 import type { Change } from 'diff'
 import { diffChars } from 'diff'
 import { groupBy, sortBy, uniq } from 'underscore'
@@ -101,6 +101,14 @@ function getRowClass(key: string): string | undefined {
   return isRejected(key) ? undefined : 'no_changes'
 }
 
+function getGroupActions(groupedKey: string[]): Action[] | undefined {
+  const key = groupedKey[0]
+  if (!key) {
+    return undefined
+  }
+  return props.diff?.[key] as Action[] | undefined
+}
+
 function showTextDiff(before: string, after: string): boolean {
   return diffText(before, after).length <= 2
 }
@@ -117,6 +125,34 @@ function diffText(before: string, after: string): Change[] {
       :key="groupIndex"
     >
       <table v-if="groupedTagKeys.length">
+        <thead v-if="dst">
+          <template v-for="(actions, ai) in [getGroupActions(groupedKey)]" :key="ai">
+            <tr v-if="actions">
+              <th colspan="3">
+                <el-tag
+                  v-if="actions.length === 0"
+                  type="warning"
+                  size="small"
+                  :disable-transitions="true"
+                >
+                  ?
+                </el-tag>
+                <template v-else>
+                  <el-tag
+                    v-for="(action, actionIndex) in actions"
+                    :key="actionIndex"
+                    :type="action[1] === 'reject' ? 'danger' : 'info'"
+                    size="small"
+                    :disable-transitions="true"
+                    class="action-tag"
+                  >
+                    {{ action[0] }}
+                  </el-tag>
+                </template>
+              </th>
+            </tr>
+          </template>
+        </thead>
         <tbody>
           <template v-for="key in groupedKey" :key="key">
             <tr :class="getRowClass(key)">
@@ -234,5 +270,9 @@ td.key {
 
 tr.no_changes {
   font-size: 70%;
+}
+
+.action-tag {
+  margin-right: 0.3em;
 }
 </style>
