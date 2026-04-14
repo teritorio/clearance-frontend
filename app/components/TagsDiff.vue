@@ -70,12 +70,9 @@ function isRejectGroup(groupedKey: [string, ...string[]]): boolean {
   return actions?.[0]?.[1] === 'reject'
 }
 
-function showTextDiff(before: string, after: string): boolean {
-  return diffText(before, after).length <= 2
-}
-
-function diffText(before: string, after: string): Change[] {
-  return diffChars(before, after)
+function computeDiff(before: string, after: string): { parts: Change[], isInline: boolean } {
+  const parts = diffChars(before, after)
+  return { parts, isInline: parts.length <= 2 }
 }
 </script>
 
@@ -163,28 +160,31 @@ function diffText(before: string, after: string): Change[] {
             <template v-if="diff[key]">
               <span v-if="!srcTags || !(key in srcTags)">{{ dstTags?.[key] }}</span>
               <span v-else-if="!dstTags || !(key in dstTags)">{{ srcTags[key] }}</span>
-              <span
-                v-else-if="
-                  typeof srcTags[key] === 'string'
-                    && showTextDiff(srcTags[key]!, dstTags![key]!)
-                "
-                class="attribute-changed"
-              >
-                <span
-                  v-for="(part, i) in diffText(srcTags[key]!, dstTags![key]!)"
-                  :key="i"
-                >
-                  <span
-                    :class="
-                      part.removed
-                        ? 'diff-text-removed'
-                        : part.added
-                          ? 'diff-text-added'
-                          : 'diff-text-same'
-                    "
-                  >{{ part.value }}</span>
-                </span>
-              </span>
+              <template v-else-if="typeof srcTags[key] === 'string'">
+                <template v-for="(result, ri) in [computeDiff(srcTags[key]!, dstTags![key]!)]" :key="ri">
+                  <span v-if="result.isInline" class="attribute-changed">
+                    <span
+                      v-for="(part, i) in result.parts"
+                      :key="i"
+                    >
+                      <span
+                        :class="
+                          part.removed
+                            ? 'diff-text-removed'
+                            : part.added
+                              ? 'diff-text-added'
+                              : 'diff-text-same'
+                        "
+                      >{{ part.value }}</span>
+                    </span>
+                  </span>
+                  <span v-else>
+                    <span class="diff-text-removed">{{ srcTags[key] }}</span>
+                    <br />
+                    <span class="diff-text-added">{{ dstTags?.[key] }}</span>
+                  </span>
+                </template>
+              </template>
               <span v-else>
                 <span class="diff-text-removed">{{ srcTags[key] }}</span>
                 <br />
