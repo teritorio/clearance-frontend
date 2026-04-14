@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import type { Actions } from '@teritorio/openstreetmap-logical-history-component'
+import type { Action, Actions } from '@teritorio/openstreetmap-logical-history-component'
 import type { Change } from 'diff'
 import { diffChars } from 'diff'
 import { groupBy, sortBy, uniq } from 'underscore'
-
-type Action = [string, string | null, Record<string, string | string[] | object> | null]
 
 const props = defineProps<{
   srcTags?: Record<string, string>
@@ -65,6 +63,11 @@ function actionIcon(key: string): string {
     return ''
   }
   return '~'
+}
+
+function isRejectGroup(groupedKey: [string, ...string[]]): boolean {
+  const actions = props.diff[groupedKey[0]] as Action[] | undefined
+  return actions?.[0]?.[1] === 'reject'
 }
 
 function showTextDiff(before: string, after: string): boolean {
@@ -144,36 +147,18 @@ function diffText(before: string, after: string): Change[] {
       </tr>
       <template v-for="key in groupedKey" :key="key">
         <tr
-          :class="
-            (diff[groupedKey[0]] === undefined
-              || (diff[groupedKey[0]] as Action[])?.[0] === undefined
-              || (diff[groupedKey[0]] as Action[])?.[0]?.[1]) !== 'reject' && 'no_changes'
-          "
+          :class="!isRejectGroup(groupedKey) && 'no_changes'"
         >
           <td class="key" :class="[backgroundClass(key)]">
             {{ actionIcon(key) }}
           </td>
           <td
-            :class="
-              (diff[groupedKey[0]] === undefined
-                || (diff[groupedKey[0]] as Action[])?.[0] === undefined
-                || (diff[groupedKey[0]] as Action[])?.[0]?.[1]) === 'reject' && [
-                backgroundClass(key),
-                'key',
-              ]
-            "
+            :class="isRejectGroup(groupedKey) && [backgroundClass(key), 'key']"
           >
             {{ key }}
           </td>
           <td
-            :class="
-              (diff[groupedKey[0]] === undefined
-                || (diff[groupedKey[0]] as Action[])?.[0] === undefined
-                || (diff[groupedKey[0]] as Action[])?.[0]?.[1]) === 'reject' && [
-                backgroundClass(key),
-                'value',
-              ]
-            "
+            :class="isRejectGroup(groupedKey) && [backgroundClass(key), 'value']"
           >
             <template v-if="diff[key]">
               <span v-if="!srcTags || !(key in srcTags)">{{ dstTags?.[key] }}</span>
@@ -183,7 +168,7 @@ function diffText(before: string, after: string): Change[] {
                   typeof srcTags[key] === 'string'
                     && showTextDiff(srcTags[key]!, dstTags![key]!)
                 "
-                class="attribut-changed"
+                class="attribute-changed"
               >
                 <span
                   v-for="(part, i) in diffText(srcTags[key]!, dstTags![key]!)"
