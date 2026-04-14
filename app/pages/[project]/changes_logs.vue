@@ -217,9 +217,9 @@ function matchFilterBySelectors(selectors: string[]) {
             <LoCha :data="loCha">
               <template #tags-diff="{ diff, src, dst }">
                 <tags-diff
-                  v-if="diff && dst"
+                  v-if="diff"
                   :src-tags="src?.tags"
-                  :dst-tags="dst.tags"
+                  :dst-tags="dst?.tags"
                   :diff="diff"
                 />
               </template>
