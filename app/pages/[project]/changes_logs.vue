@@ -278,4 +278,9 @@ function matchFilterBySelectors(selectors: string[]) {
   margin-right: 0.5em;
   margin-bottom: 0.3em;
 }
+
+:deep(.locha-object) h3,
+:deep(.locha-object) p {
+  margin: 0;
+}
 </style>
