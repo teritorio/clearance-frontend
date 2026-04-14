@@ -125,31 +125,33 @@ function diffText(before: string, after: string): Change[] {
       :key="groupIndex"
     >
       <table v-if="groupedTagKeys.length">
-        <thead v-if="dst && getGroupActions(groupedKey)">
-          <tr>
-            <th colspan="3">
-              <el-tag
-                v-if="getGroupActions(groupedKey)?.length === 0"
-                type="warning"
-                size="small"
-                :disable-transitions="true"
-              >
-                ?
-              </el-tag>
-              <template v-else>
+        <thead v-if="dst">
+          <template v-for="(actions, ai) in [getGroupActions(groupedKey)]" :key="ai">
+            <tr v-if="actions">
+              <th colspan="3">
                 <el-tag
-                  v-for="(action, actionIndex) in getGroupActions(groupedKey)"
-                  :key="actionIndex"
-                  :type="action[1] === 'reject' ? 'danger' : 'info'"
+                  v-if="actions.length === 0"
+                  type="warning"
                   size="small"
                   :disable-transitions="true"
-                  class="action-tag"
                 >
-                  {{ action[0] }}
+                  ?
                 </el-tag>
-              </template>
-            </th>
-          </tr>
+                <template v-else>
+                  <el-tag
+                    v-for="(action, actionIndex) in actions"
+                    :key="actionIndex"
+                    :type="action[1] === 'reject' ? 'danger' : 'info'"
+                    size="small"
+                    :disable-transitions="true"
+                    class="action-tag"
+                  >
+                    {{ action[0] }}
+                  </el-tag>
+                </template>
+              </th>
+            </tr>
+          </template>
         </thead>
         <tbody>
           <template v-for="key in groupedKey" :key="key">
