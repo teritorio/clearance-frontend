@@ -284,8 +284,8 @@ function matchFilterBySelectors(selectors: string[]) {
   margin-bottom: 0.3em;
 }
 
-:deep(.locha-object) h3,
-:deep(.locha-object) p {
+.locha-object h3,
+.locha-object p {
   margin: 0;
 }
 
