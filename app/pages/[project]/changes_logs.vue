@@ -215,8 +215,13 @@ function matchFilterBySelectors(selectors: string[]) {
               </div>
             </template>
             <LoCha :data="loCha">
-              <template #tags-diff="{ diff, src, dst }">
+              <template #tags-diff="{ title, date, diff, dst, src }">
+                <div v-if="title || (dst?.is_after && src)" class="locha-infos">
+                  <span v-if="title" class="locha-title">🔗 {{ title }}</span>
+                  <span v-if="dst?.is_after && src" class="locha-date">📅 {{ date }}</span>
+                </div>
                 <tags-diff
+                  v-if="!dst?.deleted"
                   :diff="diff"
                   :src="src"
                   :dst="dst"
@@ -282,5 +287,16 @@ function matchFilterBySelectors(selectors: string[]) {
 :deep(.locha-object) h3,
 :deep(.locha-object) p {
   margin: 0;
+}
+
+.locha-infos {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.locha-title,
+.locha-date {
+  font-size: 12px;
+  color: grey;
 }
 </style>
