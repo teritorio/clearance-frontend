@@ -237,7 +237,7 @@ table {
 }
 
 .col-key {
-  width: 130px;
+  width: 80px;
 }
 
 table,
