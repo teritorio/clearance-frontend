@@ -18,7 +18,10 @@ const loChaColors = {
 }
 
 function actionPriority(actionType: ActionType | null): number {
-  return actionType ? { reject: 2, accept: 0 }[actionType] : 1
+  if (!actionType) {
+    return 1
+  }
+  return { reject: 2, accept: 0 }[actionType] ?? 1
 }
 
 function maxActionPriority(actions: Action[]): number {
