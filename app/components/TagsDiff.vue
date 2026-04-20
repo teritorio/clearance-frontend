@@ -240,10 +240,6 @@ table {
   width: 130px;
 }
 
-.col-value {
-  width: auto;
-}
-
 table,
 th,
 td {
