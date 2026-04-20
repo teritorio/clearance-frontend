@@ -220,7 +220,10 @@ function diffText(before: string, after: string): Change[] {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  width: fit-content;
+}
+
+table {
+  width: 100%;
 }
 
 table,
