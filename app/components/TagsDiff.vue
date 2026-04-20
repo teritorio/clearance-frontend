@@ -128,11 +128,6 @@ function diffText(before: string, after: string): Change[] {
       :key="groupIndex"
     >
       <table v-if="groupedTagKeys.length">
-        <colgroup>
-          <col class="col-icon" />
-          <col class="col-key" />
-          <col class="col-value" />
-        </colgroup>
         <thead v-if="dst">
           <template v-for="(actions, ai) in [getGroupActions(groupedKey)]" :key="ai">
             <tr v-if="actions">
@@ -226,18 +221,6 @@ function diffText(before: string, after: string): Change[] {
   flex-direction: column;
   gap: 0.75rem;
   width: fit-content;
-}
-
-table {
-  table-layout: fixed;
-}
-
-.col-icon {
-  width: 25px;
-}
-
-.col-key {
-  width: 80px;
 }
 
 table,
