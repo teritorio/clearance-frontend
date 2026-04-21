@@ -146,50 +146,54 @@ function diffText(before: string, after: string): Change[] {
                   ?
                 </el-tag>
                 <template v-else>
-                  <el-dropdown
-                    v-for="(action, actionIndex) in actions"
-                    :key="actionIndex"
-                    :show-timeout="0"
-                    class="action-tag"
-                  >
-                    <span class="el-dropdown-link">
-                      <el-badge
-                        :value="
-                          (action && action[2] && Object.keys(action[2]).length)
-                            || undefined
-                        "
-                        :type="action[1] === 'reject' ? 'danger' : 'info'"
-                      >
-                        <el-tag
+                  <template v-for="(action, actionIndex) in actions" :key="actionIndex">
+                    <el-dropdown
+                      v-if="action[2]"
+                      :show-timeout="0"
+                      class="action-tag"
+                    >
+                      <span class="el-dropdown-link">
+                        <el-badge
+                          :value="Object.keys(action[2]).length || undefined"
                           :type="action[1] === 'reject' ? 'danger' : 'info'"
-                          size="small"
-                          :disable-transitions="true"
                         >
-                          {{ action[0] }}
-                          <template v-if="action && action[2]">
-                            ⮟
-                          </template>
-                        </el-tag>
-                      </el-badge>
-                    </span>
-                    <template v-if="action && action[2]" #dropdown>
-                      <el-dropdown-menu v-for="(option, i) in action[2]" :key="i">
-                        <el-dropdown-item>
-                          {{ i }}
-                          <template v-if="Array.isArray(option)">
-                            <ul>
-                              <li v-for="op in option" :key="op">
-                                {{ op }}
-                              </li>
-                            </ul>
-                          </template>
-                          <template v-else>
-                            {{ option }}
-                          </template>
-                        </el-dropdown-item>
-                      </el-dropdown-menu>
-                    </template>
-                  </el-dropdown>
+                          <el-tag
+                            :type="action[1] === 'reject' ? 'danger' : 'info'"
+                            size="small"
+                            :disable-transitions="true"
+                          >
+                            {{ action[0] }} ⮟
+                          </el-tag>
+                        </el-badge>
+                      </span>
+                      <template #dropdown>
+                        <el-dropdown-menu>
+                          <el-dropdown-item v-for="(option, i) in action[2]" :key="i">
+                            {{ i }}
+                            <template v-if="Array.isArray(option)">
+                              <ul>
+                                <li v-for="op in option" :key="op">
+                                  {{ op }}
+                                </li>
+                              </ul>
+                            </template>
+                            <template v-else>
+                              {{ option }}
+                            </template>
+                          </el-dropdown-item>
+                        </el-dropdown-menu>
+                      </template>
+                    </el-dropdown>
+                    <el-tag
+                      v-else
+                      :type="action[1] === 'reject' ? 'danger' : 'info'"
+                      size="small"
+                      :disable-transitions="true"
+                      class="action-tag"
+                    >
+                      {{ action[0] }}
+                    </el-tag>
+                  </template>
                 </template>
               </th>
             </tr>
