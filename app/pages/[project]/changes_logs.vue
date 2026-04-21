@@ -110,6 +110,7 @@ const loChasWithFilter = computed(() => {
 
 const visibleCount = ref(BATCH_SIZE)
 const sentinelRef = useTemplateRef<HTMLElement>('sentinel')
+let loading = false
 
 watch(loChasWithFilter, () => {
   visibleCount.value = BATCH_SIZE
@@ -124,28 +125,35 @@ const hasMore = computed(() => {
 })
 
 function loadMore() {
-  if (hasMore.value) {
-    visibleCount.value += BATCH_SIZE
+  if (loading || !hasMore.value) {
+    return
   }
+  loading = true
+  requestAnimationFrame(() => {
+    visibleCount.value += BATCH_SIZE
+    loading = false
+  })
 }
 
+let observer: IntersectionObserver | undefined
+
 onMounted(() => {
-  const observer = new IntersectionObserver((entries) => {
+  observer = new IntersectionObserver((entries) => {
     if (entries[0]?.isIntersecting) {
       loadMore()
     }
   })
 
   watch(sentinelRef, (el) => {
-    observer.disconnect()
+    observer!.disconnect()
     if (el) {
-      observer.observe(el)
+      observer!.observe(el)
     }
   }, { immediate: true })
+})
 
-  onUnmounted(() => {
-    observer.disconnect()
-  })
+onUnmounted(() => {
+  observer?.disconnect()
 })
 
 const atomUrl = computed(() => `${config.public.api}/projects/${projectSlug}/changes_logs.atom`)
@@ -342,6 +350,6 @@ function matchFilterBySelectors(selectors: string[]) {
 }
 
 .sentinel {
-  height: 1px;
+  min-height: 1px;
 }
 </style>
