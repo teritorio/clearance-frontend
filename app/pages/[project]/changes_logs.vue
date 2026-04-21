@@ -12,6 +12,8 @@ definePageMeta({
   },
 })
 
+const BATCH_SIZE = 3
+
 const router = useRouter()
 const route = useRoute()
 const projectSlug = route.params.project as string
@@ -103,6 +105,46 @@ const loChasWithFilter = computed(() => {
                 ))
       )
     })
+  })
+})
+
+const visibleCount = ref(BATCH_SIZE)
+const sentinelRef = useTemplateRef<HTMLElement>('sentinel')
+
+watch(loChasWithFilter, () => {
+  visibleCount.value = BATCH_SIZE
+})
+
+const visibleLoChas = computed(() => {
+  return loChasWithFilter.value.slice(0, visibleCount.value)
+})
+
+const hasMore = computed(() => {
+  return visibleCount.value < loChasWithFilter.value.length
+})
+
+function loadMore() {
+  if (hasMore.value) {
+    visibleCount.value += BATCH_SIZE
+  }
+}
+
+onMounted(() => {
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0]?.isIntersecting) {
+      loadMore()
+    }
+  })
+
+  watch(sentinelRef, (el) => {
+    observer.disconnect()
+    if (el) {
+      observer.observe(el)
+    }
+  }, { immediate: true })
+
+  onUnmounted(() => {
+    observer.disconnect()
   })
 })
 
@@ -201,7 +243,7 @@ function matchFilterBySelectors(selectors: string[]) {
       <template v-if="loChasWithFilter.length">
         <el-space fill :size="20">
           <el-card
-            v-for="loCha in loChasWithFilter"
+            v-for="loCha in visibleLoChas"
             :key="loCha.metadata.locha_id"
             style="--el-card-bg-color: #FAFAFA;"
           >
@@ -249,6 +291,7 @@ function matchFilterBySelectors(selectors: string[]) {
             </LoCha>
           </el-card>
         </el-space>
+        <div v-if="hasMore" ref="sentinel" class="sentinel" />
       </template>
       <el-empty
         v-else-if="data.loChas.length"
@@ -296,5 +339,9 @@ function matchFilterBySelectors(selectors: string[]) {
 .locha-date {
   font-size: 12px;
   color: grey;
+}
+
+.sentinel {
+  height: 1px;
 }
 </style>
