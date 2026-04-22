@@ -20,7 +20,7 @@ try {
 }
 catch (err: any) {
   ElMessage.error({
-    duration: 0,
+    duration: 5000,
     message: err.message,
   })
 }
