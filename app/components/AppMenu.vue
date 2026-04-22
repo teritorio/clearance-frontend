@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const user = useUser()
 const { locale, locales, setLocale, localeProperties } = useI18n()
 
 // Function from https://dev.to/jorik/country-code-to-flag-emoji-a21
@@ -38,7 +37,7 @@ async function changeLocale(code: string) {
           :disabled="l.code === locale"
         />
       </el-select>
-      <user-profile :user="user" />
+      <user-profile />
     </div>
   </el-header>
 </template>
