@@ -193,7 +193,7 @@ async function handleAccept(loChaIds?: number[]) {
     catch (err) {
       if (err instanceof Error) {
         ElMessage.error({
-          duration: 0,
+          duration: 5000,
           message: err.message,
         })
 
@@ -206,7 +206,7 @@ async function handleAccept(loChaIds?: number[]) {
   }
   catch (err: any) {
     ElMessage.error({
-      duration: 0,
+      duration: 5000,
       message: err.message,
     })
   }

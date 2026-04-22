@@ -46,7 +46,7 @@ export function useChangesLogs(projectSlug: string) {
       catch (err) {
         if (err instanceof Error) {
           ElMessage.error({
-            duration: 0,
+            duration: 5000,
             message: err.message,
           })
 
