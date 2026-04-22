@@ -13,6 +13,7 @@ definePageMeta({
 })
 
 const BATCH_SIZE = 3
+const LOCHA_HASH_PATTERN = /^#locha-(-?\d+)-group-/
 
 const router = useRouter()
 const route = useRoute()
@@ -108,12 +109,31 @@ const loChasWithFilter = computed(() => {
   })
 })
 
-const visibleCount = ref(BATCH_SIZE)
 const sentinelRef = useTemplateRef<HTMLElement>('sentinel')
 let loading = false
 
-watch(loChasWithFilter, () => {
-  visibleCount.value = BATCH_SIZE
+function visibleCountForHash(loChas: ClearanceLoChaData[]): number {
+  if (!route.hash) {
+    return BATCH_SIZE
+  }
+  const match = route.hash.match(LOCHA_HASH_PATTERN)
+  if (!match) {
+    return BATCH_SIZE
+  }
+  const loChaId = Number(match[1])
+  const index = loChas.findIndex(
+    (l: ClearanceLoChaData) => l.metadata.locha_id === loChaId,
+  )
+  if (index === -1) {
+    return BATCH_SIZE
+  }
+  return Math.max(BATCH_SIZE, index + 1)
+}
+
+const visibleCount = ref(BATCH_SIZE)
+
+watch(loChasWithFilter, (loChas) => {
+  visibleCount.value = visibleCountForHash(loChas)
 })
 
 const visibleLoChas = computed(() => {
@@ -249,7 +269,7 @@ function matchFilterBySelectors(selectors: string[]) {
                 </el-button-group>
               </div>
             </template>
-            <LoCha :data="loCha" :map-style-url="config.public.mapStyleUrl as string">
+            <LoCha :id="String(loCha.metadata.locha_id)" :data="loCha" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
               <template #tags-diff="{ title, date, diff, dst, src }">
                 <div v-if="title || (dst?.is_after && src)" class="locha-infos">
                   <span v-if="title" class="locha-title">🔗 {{ title }}</span>
