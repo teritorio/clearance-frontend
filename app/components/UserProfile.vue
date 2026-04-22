@@ -1,19 +1,11 @@
 <script setup lang="ts">
-import type { User } from '~/libs/types'
-
-withDefaults(defineProps<{
-  user?: User | null
-}>(), {
-  user: null,
-})
-
 const form = useTemplateRef<HTMLFormElement>('form')
 
 const { public: { api } } = useRuntimeConfig()
 
 const loginUrl = computed(() => `${api}../../../users/auth/osm_oauth2`)
 
-const { logout } = useAuth()
+const { user, logout } = useAuth()
 
 function submit(): void {
   form.value?.submit()

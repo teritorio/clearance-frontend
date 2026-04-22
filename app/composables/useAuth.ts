@@ -20,15 +20,17 @@ export function useAuth() {
   }
 
   async function logout(): Promise<void> {
-    await $fetch(`${apiBase}/../../../users`, {
-      method: 'DELETE',
-      credentials: 'include',
-    })
-    user.value = null
-    await navigateTo('/')
+    try {
+      await $fetch(`${apiBase}/../../../users`, {
+        method: 'DELETE',
+        credentials: 'include',
+      })
+    }
+    finally {
+      user.value = null
+      await navigateTo('/')
+    }
   }
 
-  const isAuthenticated = computed(() => user.value !== null)
-
-  return { user: readonly(user), isAuthenticated, fetchUser, logout }
+  return { user: readonly(user), fetchUser, logout }
 }

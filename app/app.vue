@@ -4,7 +4,7 @@ import type { Project, ProjectsResponse } from '~/libs/types'
 const config = useRuntimeConfig()
 
 const { fetchUser } = useAuth()
-await fetchUser()
+await callOnce(() => fetchUser())
 
 try {
   const response = await useFetchWithCache<ProjectsResponse>('projectsResponse', `${config.public.api}/projects`)
