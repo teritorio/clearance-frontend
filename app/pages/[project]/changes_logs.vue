@@ -174,34 +174,19 @@ async function handleAccept(loChaIds?: number[]) {
       loChaIds = loChasWithFilter.value.map((loCha: ClearanceLoChaData) => loCha.metadata.locha_id)
     }
 
-    try {
-      await $fetch(`${config.public.api}/projects/${projectSlug}/changes_logs/accept`, {
-        credentials: 'include',
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(loChaIds),
-      })
-      await refresh()
+    await $fetch(`${config.public.api}/projects/${projectSlug}/changes_logs/accept`, {
+      credentials: 'include',
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(loChaIds),
+    })
+    await refresh()
 
-      if (!loChasWithFilter.value.length) {
-        resetFilters()
-      }
-    }
-    catch (err) {
-      if (err instanceof Error) {
-        ElMessage.error({
-          duration: 5000,
-          message: err.message,
-        })
-
-        throw new Error(err.message)
-      }
-      else {
-        throw new TypeError('Failed to fetch data')
-      }
+    if (!loChasWithFilter.value.length) {
+      resetFilters()
     }
   }
   catch (err: any) {
