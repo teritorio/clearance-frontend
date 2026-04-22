@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { User } from '~/libs/types'
-import { userLogout } from '~/libs/apiTypes'
 
 withDefaults(defineProps<{
   user?: User | null
@@ -14,12 +13,10 @@ const { public: { api } } = useRuntimeConfig()
 
 const loginUrl = computed(() => `${api}../../../users/auth/osm_oauth2`)
 
+const { logout } = useAuth()
+
 function submit(): void {
   form.value?.submit()
-}
-
-function logout(): void {
-  userLogout(api)
 }
 </script>
 

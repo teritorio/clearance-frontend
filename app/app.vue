@@ -1,17 +1,10 @@
 <script setup lang="ts">
-import type { Project, ProjectsResponse, User } from '~/libs/types'
+import type { Project, ProjectsResponse } from '~/libs/types'
 
 const config = useRuntimeConfig()
 
-await callOnce(async () => {
-  try {
-    const user = await useFetchWithCache<User>('user', `${config.public.api}/users/me`, { credentials: 'include' })
-    useState<User>('user', () => user.value)
-  }
-  catch (err: any) {
-    console.error('Clearance Error :', err.message)
-  }
-})
+const { fetchUser } = useAuth()
+await fetchUser()
 
 try {
   const response = await useFetchWithCache<ProjectsResponse>('projectsResponse', `${config.public.api}/projects`)
