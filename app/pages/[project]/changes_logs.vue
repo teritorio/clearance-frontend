@@ -270,6 +270,13 @@ function matchFilterBySelectors(selectors: string[]) {
               </div>
             </template>
             <LoCha :id="String(loCha.metadata.locha_id)" :data="loCha" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
+              <template v-if="isProjectUser" #group-actions>
+                <el-button-group>
+                  <el-button type="primary" size="small" @click="handleAccept([loCha.metadata.locha_id])">
+                    ✓
+                  </el-button>
+                </el-button-group>
+              </template>
               <template #tags-diff="{ title, date, diff, dst, src }">
                 <div v-if="title || (dst?.is_after && src)" class="locha-infos">
                   <span v-if="title" class="locha-title">🔗 {{ title }}</span>
