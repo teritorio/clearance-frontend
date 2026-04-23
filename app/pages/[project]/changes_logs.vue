@@ -256,9 +256,9 @@ function matchFilterBySelectors(selectors: string[]) {
       <template v-if="loChasWithFilter.length">
         <el-space fill :size="20">
           <el-card
-            v-for="loCha in visibleLoChas"
+            v-for="(loCha, index) in visibleLoChas"
             :key="loCha.metadata.locha_id"
-            style="--el-card-bg-color: #FAFAFA;"
+            :style="{ '--el-card-bg-color': index % 2 === 0 ? '#f5f5f8' : '#e0e0e4' }"
           >
             <template v-if="isProjectUser" #header>
               <div class="card-header">
