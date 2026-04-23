@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Action } from '@teritorio/openstreetmap-logical-history-component'
+import type { Action, IFeature } from '@teritorio/openstreetmap-logical-history-component'
 import type { Geometry } from 'geojson'
 import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
@@ -52,6 +52,19 @@ const isProjectUser = computed(() => {
 
 function getAllLinks(loCha: ClearanceLoChaData): ClearanceApiLink[] {
   return loCha.metadata.links.flat()
+}
+
+function getFeatureLinks(loCha: ClearanceLoChaData, feature: IFeature, groupIndex: number): ClearanceApiLink[] {
+  const links = loCha.metadata.links[groupIndex] as ClearanceApiLink[]
+  if (feature.properties.is_before) {
+    const link = links.find((l) => l.before === feature.id || l.after === feature.id)
+    return link ? [link] : []
+  }
+  return links.filter((l) => l.before === feature.id || l.after === feature.id)
+}
+
+function getBeforeFeature(loCha: ClearanceLoChaData, link: ClearanceApiLink): IFeature | undefined {
+  return loCha.features.find((f) => f.id === link.before) as IFeature | undefined
 }
 
 function uniqMatches(links: ClearanceApiLink[]): ClearanceMatch[] {
@@ -278,6 +291,29 @@ function matchFilterBySelectors(selectors: string[]) {
                   </el-button>
                 </el-button-group>
               </template>
+              <template #object-detail="{ feature, index: groupIndex }">
+                <template v-for="(link, i) in getFeatureLinks(loCha, feature, groupIndex)" :key="i">
+                  <template v-if="feature.properties.is_after">
+                    <template v-for="(src, _) in [getBeforeFeature(loCha, link)?.properties]" :key="_">
+                      <div v-if="src" class="locha-infos">
+                        <span class="locha-date">📅 {{ feature.properties.created }}</span>
+                      </div>
+                      <TagsDiff
+                        v-if="!feature.properties.deleted"
+                        :diff="link.diff_tags"
+                        :src="src"
+                        :dst="feature.properties"
+                      />
+                    </template>
+                  </template>
+                  <template v-else>
+                    <TagsDiff
+                      :diff="link.diff_tags"
+                      :src="feature.properties"
+                    />
+                  </template>
+                </template>
+              </template>
               <template #content-start>
                 <Changesets :changesets="loCha.metadata.changesets" />
               </template>
@@ -335,6 +371,16 @@ function matchFilterBySelectors(selectors: string[]) {
 :deep(.locha-object h3),
 :deep(.locha-object p) {
   margin: 0;
+}
+
+.locha-infos {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.locha-date {
+  font-size: 12px;
+  color: grey;
 }
 
 .locha-card-even {
