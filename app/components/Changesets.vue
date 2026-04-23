@@ -1,19 +1,5 @@
 <script setup lang="ts">
-interface Changeset {
-  id: number
-  created_at: string
-  closed_at: string
-  open: boolean
-  user: string
-  uid: number
-  minlat: number
-  minlon: number
-  maxlat: number
-  maxlon: number
-  comments_count: number
-  changes_count: number
-  tags: Record<string, string>
-}
+import type { Changeset } from '~/libs/types'
 
 defineProps<{
   changesets: Changeset[]
