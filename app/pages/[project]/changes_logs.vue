@@ -259,6 +259,7 @@ function matchFilterBySelectors(selectors: string[]) {
             v-for="(loCha, index) in visibleLoChas"
             :key="loCha.metadata.locha_id"
             :class="index % 2 === 0 ? 'locha-card-even' : 'locha-card-odd'"
+            style="--el-card-padding-body: 0;"
           >
             <template v-if="isProjectUser" #header>
               <div class="card-header">
@@ -328,13 +329,9 @@ function matchFilterBySelectors(selectors: string[]) {
   </el-main>
 </template>
 
-<style scope>
+<style scoped>
 .el-main {
   overflow: initial;
-}
-
-.el-card__body {
-  padding: 0;
 }
 
 .card-header {
@@ -343,22 +340,22 @@ function matchFilterBySelectors(selectors: string[]) {
   align-items: center;
 }
 
-.link-metadata {
+:deep(.link-metadata) {
   text-align: center;
 }
 
-.locha-object h3,
-.locha-object p {
+:deep(.locha-object h3),
+:deep(.locha-object p) {
   margin: 0;
 }
 
-.locha-infos {
+:deep(.locha-infos) {
   display: flex;
   gap: 0.5rem;
 }
 
-.locha-title,
-.locha-date {
+:deep(.locha-title),
+:deep(.locha-date) {
   font-size: 12px;
   color: grey;
 }
