@@ -289,7 +289,7 @@ function matchFilterBySelectors(selectors: string[]) {
                   size="small"
                   class="match-tag"
                 >
-                  {{ userGroup }}
+                  📌 {{ userGroup }}
                 </el-tag>
                 <el-tag
                   v-for="match in uniqMatches(links as ClearanceApiLink[])"
@@ -298,7 +298,7 @@ function matchFilterBySelectors(selectors: string[]) {
                   type="warning"
                   class="match-tag"
                 >
-                  {{ match.selectors.join(' ') }}
+                  🏷️ {{ match.selectors.join(' ') }}
                 </el-tag>
               </template>
             </LoCha>
@@ -331,11 +331,6 @@ function matchFilterBySelectors(selectors: string[]) {
 
 .link-metadata {
   text-align: center;
-}
-
-.match-tag {
-  margin-right: 0.5em;
-  margin-bottom: 0.3em;
 }
 
 .locha-object h3,
