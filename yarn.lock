@@ -4628,9 +4628,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@teritorio/openstreetmap-logical-history-component@npm:^0.3.1":
-  version: 0.3.1
-  resolution: "@teritorio/openstreetmap-logical-history-component@npm:0.3.1"
+"@teritorio/openstreetmap-logical-history-component@portal:/home/wazolab/Projects/teritorio/openstreetmap-logical-history-component::locator=web%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@teritorio/openstreetmap-logical-history-component@portal:/home/wazolab/Projects/teritorio/openstreetmap-logical-history-component::locator=web%40workspace%3A."
   dependencies:
     "@sentry/vue": "npm:^10.44.0"
     "@turf/area": "npm:^7.3.4"
@@ -4647,9 +4647,8 @@ __metadata:
   peerDependencies:
     maplibre-gl: ^5.0.0
     vue: ^3.5.13
-  checksum: 10c0/f4ab51bc877ae439dded9079b279d854cb5eab13344f7c5de4498fd3de3de08ac88057ee1c2ee7a6d4fc773e542706c50e06091dd9d8b0096796c87ecb8702ad
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "@turf/area@npm:^7.3.4":
   version: 7.3.5
@@ -7255,17 +7254,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"diff@npm:*, diff@npm:^9.0.0":
+"diff@npm:^9.0.0":
   version: 9.0.0
   resolution: "diff@npm:9.0.0"
   checksum: 10c0/a971cc88f66071a33bd3942db2f51b57d484e9856265ae45cf44fb28ab2fde91f132d9c26d8be0fb6082d2be94d29e1295c1adb251b7461935d6a2dd304cd161
-  languageName: node
-  linkType: hard
-
-"diff@npm:^8.0.3":
-  version: 8.0.4
-  resolution: "diff@npm:8.0.4"
-  checksum: 10c0/7ee5d03926db4039be7252ac3b0abaae1bd122a2ca971e5ca7270e444e36ff83dd906fad1a719740ca347e97ed5dc8f458a76a8391dbcd7aff363bdafb348a00
   languageName: node
   linkType: hard
 
@@ -14387,7 +14379,7 @@ __metadata:
     "@nuxt/test-utils": "npm:^3.19.1"
     "@nuxtjs/i18n": "npm:^10.2.4"
     "@sentry/nuxt": "npm:^10.47.0"
-    "@teritorio/openstreetmap-logical-history-component": "npm:^0.3.1"
+    "@teritorio/openstreetmap-logical-history-component": "npm:^0.4.0"
     "@turf/bbox": "npm:^7.3.4"
     "@turf/boolean-equal": "npm:^7.3.4"
     "@turf/helpers": "npm:^7.3.4"
