@@ -271,31 +271,19 @@ function matchFilterBySelectors(selectors: string[]) {
               </div>
             </template>
             <LoCha :id="String(loCha.metadata.locha_id)" :data="loCha" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
-              <template v-if="isProjectUser" #group-actions>
+              <template v-if="isProjectUser" #header-end>
                 <el-button-group>
                   <el-button type="primary" size="small" @click="handleAccept([loCha.metadata.locha_id])">
                     ✓
                   </el-button>
                 </el-button-group>
               </template>
-              <template #tags-diff="{ title, date, diff, dst, src }">
-                <div v-if="title || (dst?.is_after && src)" class="locha-infos">
-                  <span v-if="title" class="locha-title">🔗 {{ title }}</span>
-                  <span v-if="dst?.is_after && src" class="locha-date">📅 {{ date }}</span>
-                </div>
-                <tags-diff
-                  v-if="!dst?.deleted"
-                  :diff="diff"
-                  :src="src"
-                  :dst="dst"
-                />
+              <template #content-start>
+                <Changesets :changesets="loCha.metadata.changesets" />
               </template>
-              <template #changesets="{ changesets }">
-                <Changesets :changesets="changesets" />
-              </template>
-              <template #link-metadata="{ links }">
+              <template #header-center="{ index: groupIndex }">
                 <el-tag
-                  v-for="userGroup in uniq((links as ClearanceApiLink[]).flatMap((link) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"
+                  v-for="userGroup in uniq((loCha.metadata.links[groupIndex] as ClearanceApiLink[]).flatMap((link) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"
                   :key="userGroup"
                   size="small"
                   class="match-tag"
@@ -303,7 +291,7 @@ function matchFilterBySelectors(selectors: string[]) {
                   📌 {{ userGroup }}
                 </el-tag>
                 <el-tag
-                  v-for="match in uniqMatches(links as ClearanceApiLink[])"
+                  v-for="match in uniqMatches(loCha.metadata.links[groupIndex] as ClearanceApiLink[])"
                   :key="match.selectors.join(';')"
                   size="small"
                   type="warning"
@@ -340,24 +328,13 @@ function matchFilterBySelectors(selectors: string[]) {
   align-items: center;
 }
 
-:deep(.link-metadata) {
+:deep(.header-center) {
   text-align: center;
 }
 
 :deep(.locha-object h3),
 :deep(.locha-object p) {
   margin: 0;
-}
-
-:deep(.locha-infos) {
-  display: flex;
-  gap: 0.5rem;
-}
-
-:deep(.locha-title),
-:deep(.locha-date) {
-  font-size: 12px;
-  color: grey;
 }
 
 .locha-card-even {
