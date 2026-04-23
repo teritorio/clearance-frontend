@@ -289,6 +289,9 @@ function matchFilterBySelectors(selectors: string[]) {
                   :dst="dst"
                 />
               </template>
+              <template #changesets="{ changesets }">
+                <Changesets :changesets="changesets" />
+              </template>
               <template #link-metadata="{ links }">
                 <el-tag
                   v-for="userGroup in uniq((links as ClearanceApiLink[]).flatMap((link) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"

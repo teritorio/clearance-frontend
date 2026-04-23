@@ -28,6 +28,22 @@ export interface ObjectId {
   deleted: boolean
 }
 
+export interface Changeset {
+  id: number
+  created_at: string
+  closed_at: string
+  open: boolean
+  user: string
+  uid: number
+  minlat: number
+  minlon: number
+  maxlat: number
+  maxlon: number
+  comments_count: number
+  changes_count: number
+  tags: Record<string, string>
+}
+
 export interface User {
   osm_uid: number
   osm_name: string
