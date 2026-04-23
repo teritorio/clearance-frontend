@@ -258,7 +258,7 @@ function matchFilterBySelectors(selectors: string[]) {
           <el-card
             v-for="(loCha, index) in visibleLoChas"
             :key="loCha.metadata.locha_id"
-            :style="{ '--el-card-bg-color': index % 2 === 0 ? '#f5f5f8' : '#e0e0e4' }"
+            :class="index % 2 === 0 ? 'locha-card-even' : 'locha-card-odd'"
           >
             <template v-if="isProjectUser" #header>
               <div class="card-header">
@@ -358,6 +358,14 @@ function matchFilterBySelectors(selectors: string[]) {
 .locha-date {
   font-size: 12px;
   color: grey;
+}
+
+.locha-card-even {
+  --el-card-bg-color: #f5f5f8;
+}
+
+.locha-card-odd {
+  --el-card-bg-color: #e0e0e4;
 }
 
 .sentinel {
