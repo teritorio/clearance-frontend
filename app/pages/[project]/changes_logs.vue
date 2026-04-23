@@ -330,6 +330,10 @@ function matchFilterBySelectors(selectors: string[]) {
   overflow: initial;
 }
 
+.el-card__body {
+  padding: 0;
+}
+
 .card-header {
   display: flex;
   justify-content: flex-end;
