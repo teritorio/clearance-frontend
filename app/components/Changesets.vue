@@ -21,7 +21,6 @@ const accordion = ref('0')
         <br />
         <template v-if="changeset.tags.source">
           <span class="source">📷 {{ changeset.tags.source }}</span>
-          <br />
         </template>
         <span class="user">
           👤&nbsp;<a
@@ -82,7 +81,9 @@ ul.el-timeline {
 }
 
 .source {
+  display: block;
   background-color: #f7fff7;
+  overflow-wrap: break-word;
 }
 
 .user {
