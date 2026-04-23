@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { HTMLTags, Project } from '~/libs/types'
+import type { HTMLTags, InitializedProject } from '~/libs/types'
 
 const props = defineProps<{
-  project: Project
+  project: InitializedProject
   titleTag: HTMLTags
 }>()
 
