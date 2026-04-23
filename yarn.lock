@@ -4628,9 +4628,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@teritorio/openstreetmap-logical-history-component@portal:/home/wazolab/Projects/teritorio/openstreetmap-logical-history-component::locator=web%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@teritorio/openstreetmap-logical-history-component@portal:/home/wazolab/Projects/teritorio/openstreetmap-logical-history-component::locator=web%40workspace%3A."
+"@teritorio/openstreetmap-logical-history-component@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@teritorio/openstreetmap-logical-history-component@npm:0.4.0"
   dependencies:
     "@sentry/vue": "npm:^10.44.0"
     "@turf/area": "npm:^7.3.4"
@@ -4647,8 +4647,9 @@ __metadata:
   peerDependencies:
     maplibre-gl: ^5.0.0
     vue: ^3.5.13
+  checksum: 10c0/81f0aaccc99e8cdf3c7d75d90c07639d9fbdf07ec2eb6fd3ecc30a640534d5a55b3be2f43a19f79697d87a0b83b900ec76837901124d76869318d9b92525cdeb
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "@turf/area@npm:^7.3.4":
   version: 7.3.5
