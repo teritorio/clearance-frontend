@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Project } from '~/libs/types'
+import type { InitializedProject } from '~/libs/types'
 import ProjectCompo from '~/components/Project.vue'
 import {
   getAsyncDataOrThrows,
@@ -16,7 +16,7 @@ definePageMeta({
 
 const params = useRoute().params
 const project: string = params.project as string
-const projectDetails = ref<Project>()
+const projectDetails = ref<InitializedProject>()
 const config = useRuntimeConfig()
 
 getAsyncDataOrThrows('fetchProject', () =>

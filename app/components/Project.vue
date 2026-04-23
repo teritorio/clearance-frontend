@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Project } from '~/libs/types'
+import type { InitializedProject } from '~/libs/types'
 
 const props = defineProps<{
-  project: Project
+  project: InitializedProject
 }>()
 
 const activeName = ref('')

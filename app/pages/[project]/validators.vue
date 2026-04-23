@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type {
-  Project,
+  InitializedProject,
   Validators as ValidatorsType,
 } from '~/libs/types'
 import {
@@ -21,7 +21,7 @@ definePageMeta({
 
 const params = useRoute().params
 const project: string = params.project as string
-const projectDetails = ref<Project>()
+const projectDetails = ref<InitializedProject>()
 const validators = ref<ValidatorsType>()
 const config = useRuntimeConfig()
 

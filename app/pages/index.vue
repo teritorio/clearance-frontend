@@ -1,16 +1,24 @@
 <script setup lang="ts">
-import type { Project } from '~/libs/types'
+import type { InitializedProject, Project, UninitializedProject } from '~/libs/types'
 import _ from 'underscore'
+import { isInitializedProject } from '~/libs/types'
 
 const admin = useAdmin()
 const user = useUser()
 const projects = useProjects()
-const myProjects = ref<Project[]>()
-const otherProjects = ref<Project[]>()
+const myProjects = ref<InitializedProject[]>()
+const otherProjects = ref<InitializedProject[]>()
+const uninitializedProjects = ref<UninitializedProject[]>()
+
+const [initialized, uninitialized] = _.partition(
+  projects.value,
+  (project: Project) => isInitializedProject(project),
+)
+uninitializedProjects.value = uninitialized as UninitializedProject[]
 
 const [my, other] = _.partition(
-  projects.value,
-  (project: Project) => user.value?.projects.includes(project.id) || false,
+  initialized as InitializedProject[],
+  (project: InitializedProject) => user.value?.projects.includes(project.id) || false,
 )
 myProjects.value = my
 otherProjects.value = other
@@ -74,6 +82,15 @@ otherProjects.value = other
       </template>
 
       <el-empty v-else :description="$t('page.index.empty')" :image-size="50" />
+
+      <template v-if="uninitializedProjects?.length">
+        <h2>{{ $t('page.index.uninitializedProjects') }}</h2>
+        <ul>
+          <li v-for="project in uninitializedProjects" :key="project.id">
+            {{ project.id }}
+          </li>
+        </ul>
+      </template>
     </el-container>
   </el-main>
 </template>
