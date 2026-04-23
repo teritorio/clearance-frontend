@@ -259,7 +259,7 @@ function matchFilterBySelectors(selectors: string[]) {
             v-for="(loCha, index) in visibleLoChas"
             :key="loCha.metadata.locha_id"
             :class="index % 2 === 0 ? 'locha-card-even' : 'locha-card-odd'"
-            style="--el-card-padding-body: 0;"
+            style="--el-card-padding: 0;"
           >
             <template v-if="isProjectUser" #header>
               <div class="card-header">
