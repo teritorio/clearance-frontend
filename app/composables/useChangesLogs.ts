@@ -1,5 +1,5 @@
 import type { ApiLink, LoChaData } from '@teritorio/openstreetmap-logical-history-component'
-import type { Project } from '~/libs/types'
+import type { InitializedProject } from '~/libs/types'
 
 export interface ClearanceMatch {
   sources: string[]
@@ -19,7 +19,7 @@ export interface ClearanceLoChaData extends LoChaData {
 }
 
 interface ChangesLogsData {
-  project: Project
+  project: InitializedProject
   loChas: ClearanceLoChaData[]
   fetchedAt: Date
 }
@@ -33,7 +33,7 @@ export function useChangesLogs(projectSlug: string) {
     async () => {
       try {
         const [project, loChas] = await Promise.all([
-          $fetch<Project>(`${config.public.api}/projects/${projectSlug}`),
+          $fetch<InitializedProject>(`${config.public.api}/projects/${projectSlug}`),
           $fetch<ClearanceLoChaData[]>(`${config.public.api}/projects/${projectSlug}/changes_logs`),
         ])
 

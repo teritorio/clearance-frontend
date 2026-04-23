@@ -69,7 +69,12 @@ export interface UserGroup {
   users: string[]
 }
 
-export interface Project {
+export interface UninitializedProject {
+  id: string
+  initialized: false
+}
+
+export interface InitializedProject {
   id: string
   title: MultilingualString
   description: MultilingualString
@@ -78,6 +83,12 @@ export interface Project {
   main_contacts: string[]
   user_groups: UserGroup[]
   project_tags: string[]
+}
+
+export type Project = UninitializedProject | InitializedProject
+
+export function isInitializedProject(project: Project): project is InitializedProject {
+  return !('initialized' in project && project.initialized === false)
 }
 
 export interface ProjectsResponse {
@@ -101,10 +112,10 @@ export function getProjects(apiEndpoint: string): Promise<ProjectsResponse> {
 export function getProject(
   apiEndpoint: string,
   project: string,
-): Promise<Project> {
+): Promise<InitializedProject> {
   return fetch(`${apiEndpoint}/projects/${project}`).then((data) => {
     if (data.ok) {
-      return data.json() as unknown as Project
+      return data.json() as unknown as InitializedProject
     }
     else {
       return Promise.reject(

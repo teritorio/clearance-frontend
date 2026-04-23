@@ -22,6 +22,7 @@ export default {
     index: {
       myProjects: 'My projects',
       publicProjects: 'Public projects',
+      uninitializedProjects: 'Uninitialized projects',
       empty: 'No project',
     },
   },
