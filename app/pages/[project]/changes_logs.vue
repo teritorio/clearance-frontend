@@ -256,9 +256,9 @@ function matchFilterBySelectors(selectors: string[]) {
       <template v-if="loChasWithFilter.length">
         <el-space fill :size="20">
           <el-card
-            v-for="loCha in visibleLoChas"
+            v-for="(loCha, index) in visibleLoChas"
             :key="loCha.metadata.locha_id"
-            style="--el-card-bg-color: #FAFAFA;"
+            :class="index % 2 === 0 ? 'locha-card-even' : 'locha-card-odd'"
           >
             <template v-if="isProjectUser" #header>
               <div class="card-header">
@@ -358,6 +358,14 @@ function matchFilterBySelectors(selectors: string[]) {
 .locha-date {
   font-size: 12px;
   color: grey;
+}
+
+.locha-card-even {
+  --el-card-bg-color: #f5f5f8;
+}
+
+.locha-card-odd {
+  --el-card-bg-color: #e0e0e4;
 }
 
 .sentinel {
