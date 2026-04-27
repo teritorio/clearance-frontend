@@ -69,5 +69,8 @@ export default {
     description: 'Descripción',
     other: 'Otro',
   },
+  changesets: {
+    no_changesets: 'No hay changeset para este grupo.',
+  },
   atomFeed: 'Fuente Atom',
 }

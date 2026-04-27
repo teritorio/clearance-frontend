@@ -1,4 +1,4 @@
-import type { ApiLink, LoChaData } from '@teritorio/openstreetmap-logical-history-component'
+import type { ApiLink, IFeature, LoChaData } from '@teritorio/openstreetmap-logical-history-component'
 import type { InitializedProject } from '~/libs/types'
 
 export interface ClearanceMatch {
@@ -11,7 +11,14 @@ export interface ClearanceApiLink extends ApiLink {
   matches: ClearanceMatch[]
 }
 
+export interface ClearanceIFeature extends IFeature {
+  properties: IFeature['properties'] & {
+    changeset_id: number
+  }
+}
+
 export interface ClearanceLoChaData extends LoChaData {
+  features: ClearanceIFeature[]
   metadata: LoChaData['metadata'] & {
     locha_id: number
     links: ClearanceApiLink[][]

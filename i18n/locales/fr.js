@@ -69,5 +69,8 @@ export default {
     description: 'Description',
     other: 'Autre',
   },
+  changesets: {
+    no_changesets: 'Aucun changeset pour ce groupe.',
+  },
   atomFeed: 'Flux Atom',
 }
