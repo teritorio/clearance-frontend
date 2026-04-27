@@ -90,7 +90,7 @@ const loChasWithFilter = computed(() => {
     return links.some((link: ClearanceApiLink) => {
       const changesetsUsers
         = route.query.filterByUsers !== undefined
-          && uniq(loCha.metadata.changesets.map((changeset) => changeset.user))
+          && uniq((loCha.metadata.changesets ?? []).map((changeset) => changeset.user))
 
       return (
         (route.query.filterByAction === undefined
@@ -244,7 +244,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
       .filter((f) => f.properties.links === groupIndex)
       .map((f) => f.properties.changeset_id),
   )
-  return loCha.metadata.changesets.filter((c) => changesetIds.has(c.id))
+  return (loCha.metadata.changesets ?? []).filter((c) => changesetIds.has(c.id))
 }
 </script>
 

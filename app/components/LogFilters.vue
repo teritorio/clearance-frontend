@@ -56,7 +56,7 @@ const statUserGroups = computed(() => {
 const statUsers = computed(() => {
   const users = props.loChas
     .flatMap((loCha) =>
-      uniq(loCha.metadata.changesets.map((changeset) => changeset.user)),
+      uniq((loCha.metadata.changesets ?? []).map((changeset) => changeset.user)),
     )
   return getStats(users)
 })
