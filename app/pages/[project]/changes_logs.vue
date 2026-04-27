@@ -306,13 +306,12 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                     <template v-for="(src, _) in [getBeforeFeature(loCha, link)?.properties]" :key="_">
                       <div v-if="src" class="locha-infos">
                         <span class="locha-date">📅 {{ feature.properties.created }}</span>
+                        <template v-for="(_, key) in link.diff_attribs" :key="key">
+                          <el-tag v-if="key !== 'deleted'" size="small" type="info" :disable-transitions="true">
+                            📐 {{ key }}
+                          </el-tag>
+                        </template>
                       </div>
-                      <AttribsDiff
-                        v-if="link.diff_attribs"
-                        :diff="link.diff_attribs"
-                        :src="src"
-                        :dst="feature.properties"
-                      />
                       <TagsDiff
                         v-if="!feature.properties.deleted"
                         :diff="link.diff_tags"
@@ -322,11 +321,6 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                     </template>
                   </template>
                   <template v-else>
-                    <AttribsDiff
-                      v-if="link.diff_attribs"
-                      :diff="link.diff_attribs"
-                      :src="feature.properties"
-                    />
                     <TagsDiff
                       :diff="link.diff_tags"
                       :src="feature.properties"
