@@ -9,7 +9,10 @@ const accordion = ref('0')
 </script>
 
 <template>
-  <el-timeline>
+  <p v-if="changesets.length === 0" class="no-changesets">
+    {{ $t('changesets.no_changesets') }}
+  </p>
+  <el-timeline v-else>
     <el-timeline-item
       v-for="(changeset, index) in changesets"
       :key="index"
@@ -92,5 +95,11 @@ ul.el-timeline {
 
 .created_by {
   background-color: #fffff7;
+}
+
+.no-changesets {
+  color: grey;
+  font-size: 12px;
+  margin: 0;
 }
 </style>

@@ -2,6 +2,7 @@
 import type { Action, IFeature } from '@teritorio/openstreetmap-logical-history-component'
 import type { Geometry } from 'geojson'
 import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
+import type { Changeset } from '~/libs/types'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
 import { uniq } from 'underscore'
 
@@ -237,6 +238,15 @@ async function resetFilters() {
 function matchFilterBySelectors(selectors: string[]) {
   return route.query.filterBySelectors !== undefined && selectors.includes(route.query.filterBySelectors as string)
 }
+
+function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number): Changeset[] {
+  const changesetIds = new Set(
+    loCha.features
+      .filter((f) => f.properties.links === groupIndex)
+      .map((f) => f.properties.changeset_id),
+  )
+  return loCha.metadata.changesets.filter((c) => changesetIds.has(c.id))
+}
 </script>
 
 <template>
@@ -314,8 +324,8 @@ function matchFilterBySelectors(selectors: string[]) {
                   </template>
                 </template>
               </template>
-              <template #content-start>
-                <Changesets :changesets="loCha.metadata.changesets" />
+              <template #content-start="{ index: groupIndex }">
+                <Changesets :changesets="getGroupChangesets(loCha, groupIndex)" />
               </template>
               <template #header-center="{ index: groupIndex }">
                 <el-tag

@@ -69,5 +69,8 @@ export default {
     description: 'Description',
     other: 'Other',
   },
+  changesets: {
+    no_changesets: 'No changeset for this group.',
+  },
   atomFeed: 'Atom Feed',
 }
