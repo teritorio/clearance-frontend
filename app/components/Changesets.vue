@@ -98,7 +98,7 @@ ul.el-timeline {
 }
 
 .no-changesets {
-  color: grey;
+  color: var(--el-text-color-secondary);
   font-size: 12px;
   margin: 0;
 }

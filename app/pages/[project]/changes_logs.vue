@@ -2,7 +2,6 @@
 import type { Action, IFeature } from '@teritorio/openstreetmap-logical-history-component'
 import type { Geometry } from 'geojson'
 import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
-import type { Changeset } from '~/libs/types'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
 import { uniq } from 'underscore'
 
@@ -239,7 +238,7 @@ function matchFilterBySelectors(selectors: string[]) {
   return route.query.filterBySelectors !== undefined && selectors.includes(route.query.filterBySelectors as string)
 }
 
-function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number): Changeset[] {
+function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   const changesetIds = new Set(
     loCha.features
       .filter((f) => f.properties.links === groupIndex)
