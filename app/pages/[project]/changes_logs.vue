@@ -329,7 +329,10 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                 </template>
               </template>
               <template #content-start="{ index: groupIndex }">
-                <Changesets :changesets="getGroupChangesets(loCha, groupIndex)" />
+                <Changesets
+                  v-if="getGroupChangesets(loCha, groupIndex).length"
+                  :changesets="getGroupChangesets(loCha, groupIndex)"
+                />
               </template>
               <template #header-center="{ index: groupIndex }">
                 <el-tag
