@@ -202,7 +202,7 @@ function diffText(before: string, after: string): Change[] {
         <tbody>
           <template v-for="key in groupedKey" :key="key">
             <tr :class="getRowClass(key)">
-              <td class="key" :class="[backgroundClass(key)]">
+              <td class="key" :class="isRejected(key) ? backgroundClass(key) : undefined">
                 {{ actionIcon(key) }}
               </td>
               <td
@@ -281,8 +281,6 @@ table {
 table,
 th,
 td {
-  border: 1px solid #000000;
-  border-collapse: collapse;
   padding: 0.15rem;
 }
 
@@ -316,6 +314,7 @@ td {
 
 td {
   vertical-align: top;
+  overflow-wrap: break-word;
 }
 
 td.key {
