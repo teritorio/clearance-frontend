@@ -238,6 +238,12 @@ function matchFilterBySelectors(selectors: string[]) {
   return route.query.filterBySelectors !== undefined && selectors.includes(route.query.filterBySelectors as string)
 }
 
+const osmTypeMap: Record<IFeature['properties']['objtype'], string> = { n: 'node', w: 'way', r: 'relation' }
+
+function osmUrl(objtype: IFeature['properties']['objtype'], id: number, version: number): string {
+  return `https://www.openstreetmap.org/${osmTypeMap[objtype]}/${id}?version=${version}`
+}
+
 function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   const changesetIds = new Set(
     loCha.features
@@ -305,6 +311,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                   <template v-if="feature.properties.is_after">
                     <template v-for="(src, _) in [getBeforeFeature(loCha, link)?.properties]" :key="_">
                       <div v-if="src" class="locha-infos">
+                        <a :href="osmUrl(src.objtype, src.id, src.version)" target="_blank" class="locha-osm-link">🔗 {{ src.objtype }}{{ src.id }}-v{{ src.version }}</a>
                         <span class="locha-date">📅 {{ feature.properties.created }}</span>
                         <template v-for="(actions, key) in link.diff_attribs" :key="key">
                           <el-tag v-if="key !== 'deleted'" size="small" :type="actions.length === 0 ? 'warning' : 'info'" :disable-transitions="true">
@@ -400,6 +407,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   gap: 0.5rem;
 }
 
+.locha-osm-link,
 .locha-date {
   font-size: 12px;
   color: grey;
