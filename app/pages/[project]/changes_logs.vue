@@ -387,10 +387,6 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   animation: none !important;
 }
 
-:deep(.group-header) {
-  background-color: white;
-}
-
 :deep(.locha-object h3),
 :deep(.locha-object p) {
   margin: 0;
