@@ -97,7 +97,7 @@ export interface InitializedProject {
   date_last_update?: string | null
   to_be_validated?: number
   main_contacts: string[]
-  user_groups: UserGroup[]
+  user_groups: Record<string, UserGroup>
   project_tags: string[]
 }
 
