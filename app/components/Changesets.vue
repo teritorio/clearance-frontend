@@ -78,6 +78,7 @@ ul.el-timeline {
 
 .comment {
   background-color: #f7f7ff;
+  overflow-wrap: break-word;
 }
 
 .source {
