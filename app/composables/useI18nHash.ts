@@ -1,6 +1,6 @@
 import type { MultilingualString } from '~/libs/types'
 
-export function useI18nHash(messages: MultilingualString): string | undefined {
+export function useI18nHash(messages: MultilingualString | null | undefined): string | undefined {
   const { locale } = useI18n()
 
   if (messages == null) {
