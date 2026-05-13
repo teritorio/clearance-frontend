@@ -266,7 +266,7 @@ function diffText(before: string, after: string): Change[] {
 }
 
 table {
-  table-layout: fixed;
+  table-layout: auto;
   width: 100%;
 }
 
