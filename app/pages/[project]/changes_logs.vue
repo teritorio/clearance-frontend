@@ -284,9 +284,9 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
       <template v-if="loChasWithFilter.length">
         <el-space fill :size="20">
           <el-card
-            v-for="(loCha, index) in visibleLoChas"
+            v-for="loCha in visibleLoChas"
             :key="loCha.metadata.locha_id"
-            :class="index % 2 === 0 ? 'locha-card-even' : 'locha-card-odd'"
+            class="locha-card"
             style="--el-card-padding: 0;"
           >
             <template v-if="isProjectUser" #header>
@@ -414,11 +414,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   color: grey;
 }
 
-.locha-card-even {
-  --el-card-bg-color: #f5f5f8;
-}
-
-.locha-card-odd {
+.locha-card {
   --el-card-bg-color: #e0e0e4;
 }
 
