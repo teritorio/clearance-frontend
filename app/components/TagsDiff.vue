@@ -314,7 +314,7 @@ td {
 
 td {
   vertical-align: top;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 td.key {
