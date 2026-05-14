@@ -17,7 +17,7 @@
     "@element-plus/icons-vue": "^2.3.2",
     "@element-plus/nuxt": "^1.1.5",
     "@sentry/nuxt": "^10.47.0",
-    "@teritorio/openstreetmap-logical-history-component": "0.4.6",
+    "@teritorio/openstreetmap-logical-history-component": "0.4.7",
     "@turf/bbox": "^7.3.4",
     "@turf/boolean-equal": "^7.3.4",
     "@turf/helpers": "^7.3.4",
