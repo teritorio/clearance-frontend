@@ -51,7 +51,6 @@
     "vue-tsc": "^3.2.6"
   },
   "resolutions": {
-    "@teritorio/openstreetmap-logical-history-component": "portal:../openstreetmap-logical-history-component",
     "diff": "^9.0.0",
     "vue-router": "^5.0.0"
   },
