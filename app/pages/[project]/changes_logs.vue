@@ -67,6 +67,10 @@ function getBeforeFeature(loCha: ClearanceLoChaData, link: ClearanceApiLink): IF
   return loCha.features.find((f) => f.id === link.before) as IFeature | undefined
 }
 
+function getObjectCount(loCha: ClearanceLoChaData): number {
+  return loCha.metadata.links.flat().length
+}
+
 function uniqMatches(links: ClearanceApiLink[]): ClearanceMatch[] {
   const seen = new Set<string>()
   return links.flatMap((link) => link.matches).filter((match) => {
@@ -292,6 +296,9 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                 </el-button-group>
               </div>
             </template>
+            <div v-if="getObjectCount(loCha) > 1" class="object-count">
+              <strong>{{ $t('logs.object_count', { n: getObjectCount(loCha) }) }}</strong>
+            </div>
             <LoCha :id="String(loCha.metadata.locha_id)" :data="loCha" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
               <template v-if="isProjectUser" #header-end>
                 <el-button-group>
@@ -390,6 +397,11 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 
 .locha-card {
   --el-card-bg-color: #e0e0e4;
+}
+
+.object-count {
+  padding: 1rem 1rem 0;
+  font-size: 1rem;
 }
 
 .sentinel {
