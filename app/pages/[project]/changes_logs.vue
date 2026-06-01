@@ -310,11 +310,14 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
               <template #object-detail="{ feature, index: groupIndex }">
                 <template v-for="(link, i) in getFeatureLinks(loCha, feature, groupIndex)" :key="i">
                   <template v-if="feature.properties.is_after">
-                    <template v-for="(src, _) in [getBeforeFeature(loCha, link)?.properties]" :key="_">
+                    <template v-for="(before, _) in [getBeforeFeature(loCha, link)]" :key="_">
+                      <span v-if="before && (loCha.metadata.links[groupIndex]?.length ?? 0) > 1" class="before-link">
+                        🔗 {{ `${before.properties.objtype}${before.properties.id}-v${before.properties.version}` }}
+                      </span>
                       <TagsDiff
                         v-if="!feature.properties.deleted"
                         :diff="link.diff_tags"
-                        :src="src"
+                        :src="before?.properties"
                         :dst="feature.properties"
                       />
                     </template>
@@ -406,5 +409,10 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 
 .sentinel {
   min-height: 1px;
+}
+
+.before-link {
+  font-size: 0.75em;
+  color: #888;
 }
 </style>
