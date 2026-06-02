@@ -322,6 +322,12 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                       />
                     </template>
                   </template>
+                  <template v-else-if="feature.properties.is_new">
+                    <TagsDiff
+                      :diff="link.diff_tags"
+                      :dst="feature.properties"
+                    />
+                  </template>
                   <template v-else>
                     <TagsDiff
                       :diff="link.diff_tags"
