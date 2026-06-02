@@ -29,10 +29,6 @@ function maxActionPriority(actions: Action[]): number {
 }
 
 const groupedTagKeys = computed((): string[][] => {
-  if (props.src && !props.dst) {
-    return [Object.keys(props.src.tags)]
-  }
-
   const keys: string[] = sortBy(
     uniq([
       ...Object.keys(props.src?.tags || {}),
@@ -50,10 +46,6 @@ const groupedTagKeys = computed((): string[][] => {
 })
 
 function actionIcon(key: string): string | undefined {
-  if (props.src && !props.dst) {
-    return undefined
-  }
-
   if (!props.diff?.[key]) {
     return undefined
   }
@@ -62,7 +54,7 @@ function actionIcon(key: string): string | undefined {
     return '➕'
   }
 
-  if (props.dst && !props.dst.tags[key]) {
+  if (!props.dst || !props.dst.tags[key]) {
     return '✖'
   }
 
@@ -70,10 +62,6 @@ function actionIcon(key: string): string | undefined {
 }
 
 function backgroundClass(key: string): string | undefined {
-  if (props.src && !props.dst) {
-    return undefined
-  }
-
   if (!props.diff?.[key]) {
     return undefined
   }
@@ -82,7 +70,7 @@ function backgroundClass(key: string): string | undefined {
     return 'attribute-new'
   }
 
-  if (props.dst && !props.dst.tags[key]) {
+  if (!props.dst || !props.dst.tags[key]) {
     return 'attribute-deleted'
   }
 
@@ -98,9 +86,6 @@ function isRejected(key: string): boolean {
 }
 
 function getRowClass(key: string): string | undefined {
-  if (props.src && !props.dst) {
-    return 'no_changes'
-  }
   return isRejected(key) ? undefined : 'no_changes'
 }
 
