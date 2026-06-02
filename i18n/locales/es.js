@@ -27,7 +27,7 @@ export default {
     },
   },
   logs: {
-    object_count: '{n} objetos',
+    rapprochements_count: '{n} correspondencias',
     objects: 'Objetos',
     created: 'creado',
     deleted: 'borrado',
