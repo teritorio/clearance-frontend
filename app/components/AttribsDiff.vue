@@ -16,21 +16,67 @@ function formatOption(key: string, value: unknown): string {
 <template>
   <div class="attribs-diff">
     <template v-for="(actions, key) in diff" :key="key">
-      <template v-for="(action, i) in (actions as Action[])" :key="i">
-        <el-tag
-          type="warning"
-          effect="plain"
-          size="small"
-          :disable-transitions="true"
-          class="action-tag"
-        >
-          {{ action[0] }}
-          <template v-if="action[2]">
-            <span v-for="(option, k) in action[2]" :key="k" class="action-option">
-              — {{ formatOption(String(k), option) }}
+      <el-tag
+        v-if="(actions as Action[]).length === 0"
+        type="warning"
+        effect="plain"
+        size="small"
+        :disable-transitions="true"
+        class="action-tag"
+      >
+        ?
+      </el-tag>
+      <template v-else>
+        <template v-for="(action, i) in (actions as Action[])" :key="i">
+          <el-dropdown
+            v-if="action[2]"
+            :show-timeout="0"
+            class="action-tag"
+          >
+            <span class="el-dropdown-link">
+              <el-badge
+                :value="Object.keys(action[2]).length || undefined"
+                type="warning"
+              >
+                <el-tag
+                  type="warning"
+                  effect="plain"
+                  size="small"
+                  :disable-transitions="true"
+                >
+                  {{ action[0] }} ⮟
+                </el-tag>
+              </el-badge>
             </span>
-          </template>
-        </el-tag>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item v-for="(option, k) in action[2]" :key="k">
+                  {{ k }}
+                  <template v-if="Array.isArray(option)">
+                    <ul>
+                      <li v-for="op in option" :key="op">
+                        {{ op }}
+                      </li>
+                    </ul>
+                  </template>
+                  <template v-else>
+                    {{ formatOption(String(k), option) }}
+                  </template>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+          <el-tag
+            v-else
+            type="warning"
+            effect="plain"
+            size="small"
+            :disable-transitions="true"
+            class="action-tag"
+          >
+            {{ action[0] }}
+          </el-tag>
+        </template>
       </template>
     </template>
   </div>
@@ -39,10 +85,5 @@ function formatOption(key: string, value: unknown): string {
 <style scoped>
 .action-tag {
   margin-right: 0.3em;
-  font-weight: bold;
-}
-
-.action-option {
-  opacity: 0.85;
 }
 </style>
