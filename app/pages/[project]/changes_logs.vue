@@ -311,9 +311,6 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                 <template v-for="(link, i) in getFeatureLinks(loCha, feature, groupIndex)" :key="i">
                   <template v-if="feature.properties.is_after">
                     <template v-for="(before, _) in [getBeforeFeature(loCha, link)]" :key="_">
-                      <span v-if="before && (loCha.metadata.links[groupIndex]?.length ?? 0) > 1" class="before-link">
-                        🔗 {{ `${before.properties.objtype}${before.properties.id}-v${before.properties.version}` }}
-                      </span>
                       <div class="diff-section">
                         <TagsDiff
                           v-if="!feature.properties.deleted"
@@ -419,11 +416,6 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 
 .sentinel {
   min-height: 1px;
-}
-
-.before-link {
-  font-size: 0.75em;
-  color: #888;
 }
 
 .diff-section {
