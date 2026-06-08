@@ -4,13 +4,6 @@ import type { Action, Actions } from '@teritorio/openstreetmap-logical-history-c
 defineProps<{
   diff: Actions
 }>()
-
-function formatOption(key: string, value: unknown): string {
-  if (key === 'dist' && typeof value === 'number') {
-    return `${Math.round(value)} m`
-  }
-  return String(value)
-}
 </script>
 
 <template>
@@ -36,10 +29,10 @@ function formatOption(key: string, value: unknown): string {
             <span class="el-dropdown-link">
               <el-badge
                 :value="Object.keys(action[2]).length || undefined"
-                type="warning"
+                :type="action[1] === 'reject' ? 'danger' : 'info'"
               >
                 <el-tag
-                  type="warning"
+                  :type="action[1] === 'reject' ? 'danger' : 'info'"
                   effect="plain"
                   size="small"
                   :disable-transitions="true"
@@ -60,7 +53,7 @@ function formatOption(key: string, value: unknown): string {
                     </ul>
                   </template>
                   <template v-else>
-                    {{ formatOption(String(k), option) }}
+                    {{ option }}
                   </template>
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -68,7 +61,7 @@ function formatOption(key: string, value: unknown): string {
           </el-dropdown>
           <el-tag
             v-else
-            type="warning"
+            :type="action[1] === 'reject' ? 'danger' : 'info'"
             effect="plain"
             size="small"
             :disable-transitions="true"
