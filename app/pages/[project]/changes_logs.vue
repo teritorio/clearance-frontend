@@ -314,16 +314,17 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                       <span v-if="before && (loCha.metadata.links[groupIndex]?.length ?? 0) > 1" class="before-link">
                         🔗 {{ `${before.properties.objtype}${before.properties.id}-v${before.properties.version}` }}
                       </span>
-                      <AttribsDiff
-                        v-if="link.diff_attribs && Object.keys(link.diff_attribs).length"
-                        :diff="link.diff_attribs"
-                      />
-                      <TagsDiff
-                        v-if="!feature.properties.deleted"
-                        :diff="link.diff_tags"
-                        :src="before?.properties"
-                        :dst="feature.properties"
-                      />
+                      <div class="diff-section">
+                        <TagsDiff
+                          v-if="!feature.properties.deleted"
+                          :diff="link.diff_tags"
+                          :src="before?.properties"
+                          :dst="feature.properties"
+                        />
+                      </div>
+                      <div v-if="link.diff_attribs && Object.keys(link.diff_attribs).length" class="diff-section diff-section--centered">
+                        <AttribsDiff :diff="link.diff_attribs" />
+                      </div>
                     </template>
                   </template>
                   <template v-else-if="feature.properties.is_new">
@@ -423,5 +424,15 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 .before-link {
   font-size: 0.75em;
   color: #888;
+}
+
+.diff-section {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #e4e7ed;
+}
+
+.diff-section--centered {
+  text-align: center;
 }
 </style>
