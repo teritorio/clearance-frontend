@@ -334,7 +334,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                   </template>
                   <template v-else>
                     <TagsDiff
-                      :diff="link.diff_tags"
+                      v-if="!link.after"
                       :src="feature.properties"
                     />
                   </template>
