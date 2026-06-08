@@ -314,6 +314,10 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                       <span v-if="before && (loCha.metadata.links[groupIndex]?.length ?? 0) > 1" class="before-link">
                         🔗 {{ `${before.properties.objtype}${before.properties.id}-v${before.properties.version}` }}
                       </span>
+                      <AttribsDiff
+                        v-if="link.diff_attribs && Object.keys(link.diff_attribs).length"
+                        :diff="link.diff_attribs"
+                      />
                       <TagsDiff
                         v-if="!feature.properties.deleted"
                         :diff="link.diff_tags"
