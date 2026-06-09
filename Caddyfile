@@ -1,18 +1,15 @@
-{
-	local_certs
-}
-
 clearance-dev.teritorio.xyz {
+	tls /certs/cert.pem /certs/key.pem
+
 	@backend path /api/* /users/* /up
 	handle @backend {
-		reverse_proxy https://164.132.128.58 {
-			header_up Host clearance-dev.teritorio.xyz
+		reverse_proxy https://clearance-dev.teritorio.xyz {
 			transport http {
 				tls_server_name clearance-dev.teritorio.xyz
 			}
 		}
 	}
 	handle {
-		reverse_proxy localhost:3000
+		reverse_proxy frontend:3000
 	}
 }
