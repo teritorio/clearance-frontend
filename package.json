@@ -11,7 +11,9 @@
     "preview": "nuxi preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "vitest"
+    "test": "vitest",
+    "proxy:start": "sudo caddy start --config Caddyfile",
+    "proxy:stop": "sudo caddy stop"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",

@@ -58,6 +58,40 @@ yarn dev
 docker compose up
 ```
 
+#### Local development with OSM OAuth (clearance-dev API)
+
+To use OSM OAuth authentication locally against the `clearance-dev` API, you need a local HTTPS reverse proxy so the browser stays on the `clearance-dev.teritorio.xyz` domain (required for the session cookie and OAuth redirect to work).
+
+**One-time setup:**
+
+1. Install [Caddy](https://caddyserver.com/) and trust its local CA:
+   ```bash
+   sudo pacman -S caddy   # Arch Linux
+   sudo caddy trust       # install Caddy's CA in system trust stores (run after first caddy start)
+   ```
+
+2. Add to `/etc/hosts`:
+   ```
+   127.0.0.1 clearance-dev.teritorio.xyz
+   ```
+
+3. A `Caddyfile` is already present at the project root.
+
+**Each session:**
+
+```bash
+yarn dev             # Nuxt dev server on :3000
+yarn proxy:start     # Caddy reverse proxy on :443
+```
+
+Then open `https://clearance-dev.teritorio.xyz` instead of `http://localhost:3000`.
+
+```bash
+yarn proxy:stop      # stop Caddy when done
+```
+
+Caddy routes `/api/*` and `/users/*` to the real clearance-dev server and everything else to the Nuxt dev server.
+
 #### ESLint config inspector
 
 [Docs](https://github.com/eslint/config-inspector)

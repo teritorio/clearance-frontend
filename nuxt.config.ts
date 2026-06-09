@@ -57,6 +57,9 @@ export default defineNuxtConfig({
   },
 
   vite: {
+    server: {
+      allowedHosts: ['clearance-dev.teritorio.xyz'],
+    },
     resolve: {
       dedupe: ['vue'],
     },
