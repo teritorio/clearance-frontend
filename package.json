@@ -5,7 +5,7 @@
   "packageManager": "yarn@4.5.0",
   "scripts": {
     "build": "nuxi build",
-    "dev": "docker compose -f docker-compose.dev.yaml up",
+    "dev": "UID=$(id -u) GID=$(id -g) docker compose -f docker-compose.dev.yaml up --build",
     "generate": "nuxi generate",
     "prepare": "simple-git-hooks && nuxi prepare",
     "preview": "nuxi preview",
