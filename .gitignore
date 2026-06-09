@@ -10,6 +10,7 @@ dist
 .eslintcache
 .claude/
 .certs/
+docker-compose.portal.yaml
 
 # Yarn
 .pnp.*
