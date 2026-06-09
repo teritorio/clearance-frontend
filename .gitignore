@@ -9,6 +9,7 @@ dist
 .DS_Store
 .eslintcache
 .claude/
+.certs/
 
 # Yarn
 .pnp.*
