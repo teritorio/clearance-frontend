@@ -6,6 +6,7 @@
   "scripts": {
     "build": "nuxi build",
     "dev": "UID=$(id -u) GID=$(id -g) docker compose -f docker-compose.dev.yaml up --build",
+    "dev:portal": "UID=$(id -u) GID=$(id -g) docker compose -f docker-compose.dev.yaml -f docker-compose.portal.yaml up",
     "generate": "nuxi generate",
     "prepare": "simple-git-hooks && nuxi prepare",
     "preview": "nuxi preview",
