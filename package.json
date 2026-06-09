@@ -5,15 +5,13 @@
   "packageManager": "yarn@4.5.0",
   "scripts": {
     "build": "nuxi build",
-    "dev": "nuxi dev",
+    "dev": "docker compose -f docker-compose.dev.yaml up",
     "generate": "nuxi generate",
     "prepare": "simple-git-hooks && nuxi prepare",
     "preview": "nuxi preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "vitest",
-    "proxy:start": "sudo caddy start --config Caddyfile",
-    "proxy:stop": "sudo caddy stop"
+    "test": "vitest"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",

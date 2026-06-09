@@ -35,39 +35,30 @@ In case the incoming changes from OpenStreetMap are desirable, the data can be a
 
 ## Installation
 
-### Setup
+### Requirements
 
-Make sure to install the dependencies:
+- [Docker](https://docs.docker.com/get-docker/)
 
-```bash
-yarn install
-```
+### Common Setup
 
-### Development Server
+Copy and configure the environment file (required for both dev and production):
 
-Create a fresh environment variable file
 ```bash
 cp .env.template .env # Set your variables accordingly
 ```
-Start development server on `http://localhost:3000`
-```bash
-# On local computer
-yarn dev
 
-# Or with Docker Compose
-docker compose up
-```
+### Development
 
-#### Local development with OSM OAuth (clearance-dev API)
+The dev workflow includes a Caddy reverse proxy for OSM OAuth support.
 
-To use OSM OAuth authentication locally against the `clearance-dev` API, you need a local HTTPS reverse proxy so the browser stays on the `clearance-dev.teritorio.xyz` domain (required for the session cookie and OAuth redirect to work).
+#### One-time setup
 
-**One-time setup:**
-
-1. Install [Caddy](https://caddyserver.com/) and trust its local CA:
+1. Install [mkcert](https://github.com/FiloSottile/mkcert) and generate a local certificate:
    ```bash
-   sudo pacman -S caddy   # Arch Linux
-   sudo caddy trust       # install Caddy's CA in system trust stores (run after first caddy start)
+   sudo pacman -S mkcert   # Arch Linux
+   mkcert -install         # installs the local CA in system trust stores
+   mkdir .certs
+   mkcert -cert-file .certs/cert.pem -key-file .certs/key.pem clearance-dev.teritorio.xyz
    ```
 
 2. Add to `/etc/hosts`:
@@ -75,22 +66,15 @@ To use OSM OAuth authentication locally against the `clearance-dev` API, you nee
    127.0.0.1 clearance-dev.teritorio.xyz
    ```
 
-3. A `Caddyfile` is already present at the project root.
-
-**Each session:**
+#### Each session
 
 ```bash
-yarn dev             # Nuxt dev server on :3000
-yarn proxy:start     # Caddy reverse proxy on :443
+yarn dev
 ```
 
-Then open `https://clearance-dev.teritorio.xyz` instead of `http://localhost:3000`.
+Then open `https://clearance-dev.teritorio.xyz` in your browser.
 
-```bash
-yarn proxy:stop      # stop Caddy when done
-```
-
-Caddy routes `/api/*` and `/users/*` to the real clearance-dev server and everything else to the Nuxt dev server.
+Caddy routes `/api/*` and `/users/*` to the remote clearance-dev server and everything else to the Nuxt dev server (with hot module replacement).
 
 #### ESLint config inspector
 
@@ -103,7 +87,7 @@ Visit http://localhost:7777/ to view and play with your ESLint config
 
 #### Setup Sentry
 
-Add DSN key and environment in .env file.
+Add DSN key and environment in `.env`:
 
 ```bash
 NUXT_PUBLIC_SENTRY_DSN="FILL THIS OUT"
@@ -112,16 +96,8 @@ NUXT_PUBLIC_SENTRY_ENVIRONMENT=production
 
 ### Production
 
-Build the application for production:
+Build and run with Docker Compose:
 
 ```bash
-yarn generate
-yarn start
-
-```
-
-Locally preview production build:
-
-```bash
-yarn preview
+docker compose up
 ```
