@@ -5,16 +5,17 @@ services:
   frontend:
     build:
       dockerfile: ./Dockerfile.dev
+      # Forwarded from the dev script via UID=$(id -u) GID=$(id -g) so the
+      # image is built with a user matching the developer running the stack.
+      args:
+        UID: '${UID:-1000}'
+        GID: '${GID:-1000}'
+    # Runtime guard: ensures the process user matches the host even if the
+    # image was built by a different developer.
+    user: '${UID:-1000}:${GID:-1000}'
     volumes:
       - .:/src
       - node_modules:/src/node_modules
-    command: npx nuxi dev --host 0.0.0.0
-    healthcheck:
-      test: [CMD-SHELL, 'node -e "require(''http'').get(''http://localhost:3000'', r => process.exit(r.statusCode < 500 ? 0 : 1)).on(''error'', () => process.exit(1))"']
-      interval: 3s
-      timeout: 5s
-      retries: 20
-      start_period: 15s
 
   caddy:
     image: caddy:2-alpine
@@ -25,6 +26,5 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - ./.certs:/certs:ro
     depends_on:
-      frontend:
-        condition: service_healthy
+      - frontend
     restart: unless-stopped

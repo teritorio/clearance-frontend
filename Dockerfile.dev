@@ -1,33 +1,41 @@
 # Set ARG variables with default values
-ARG NODE_VERSION=${NODE_VERSION:-20.13.1}
-ARG ALPINE_VERSION=${ALPINE_VERSION:-3.19}
+ARG NODE_VERSION=${NODE_VERSION:-22.22.1}
+ARG ALPINE_VERSION=${ALPINE_VERSION:-3.23}
 
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS base
 
 ENV NODE_ENV=development
 
-# Set working directory
 WORKDIR /src
 
-# Install Yarn v2 (Berry)
 RUN corepack enable
 
 # Build
 FROM base AS build
 
-# Copy necessary files for dependency installation
 COPY package.json yarn.lock .yarnrc.yml ./
 
-# Install project dependencies
 RUN yarn install
 
 # Run
 FROM base
 
-COPY --from=build /src/node_modules /src/node_modules
+# Mirror the host developer's UID/GID inside the container so that files
+# written at runtime (node_modules/.cache, .nuxt/) are owned by the host
+# user rather than root. This keeps pre-commit hooks and local tooling
+# functional without requiring sudo. The base image already ships a 'node'
+# user at 1000:1000; only create a new one when the host differs.
+ARG UID=1000
+ARG GID=1000
+RUN if [ "${UID}" != "1000" ] || [ "${GID}" != "1000" ]; then \
+      addgroup -g "${GID}" devgroup \
+      && adduser -u "${UID}" -G devgroup -D devuser; \
+    fi
 
-# Expose development port
+COPY --from=build --chown=${UID}:${GID} /src/node_modules /src/node_modules
+
+USER ${UID}:${GID}
+
 EXPOSE 3000
 
-# Run application in development (with Hot Module Replacement)
-CMD ["yarn", "dev"]
+CMD ["npx", "nuxi", "dev", "--host", "0.0.0.0"]
