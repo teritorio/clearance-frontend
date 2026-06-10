@@ -12,7 +12,6 @@ defineProps<{
       <el-tag
         v-if="(actions as Action[]).length === 0"
         type="warning"
-        effect="plain"
         size="small"
         :disable-transitions="true"
         class="action-tag"
@@ -33,7 +32,6 @@ defineProps<{
               >
                 <el-tag
                   :type="action[1] === 'reject' ? 'danger' : 'info'"
-                  effect="plain"
                   size="small"
                   :disable-transitions="true"
                 >
@@ -62,7 +60,6 @@ defineProps<{
           <el-tag
             v-else
             :type="action[1] === 'reject' ? 'danger' : 'info'"
-            effect="plain"
             size="small"
             :disable-transitions="true"
             class="action-tag"
@@ -78,5 +75,6 @@ defineProps<{
 <style scoped>
 .action-tag {
   margin-right: 0.3em;
+  font-weight: bold;
 }
 </style>
