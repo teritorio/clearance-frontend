@@ -15,12 +15,14 @@ definePageMeta({
 const BATCH_SIZE = 3
 const LOCHA_HASH_PATTERN = /^#locha-(-?\d+)-group-/
 
+const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()
 const projectSlug = route.params.project as string
 const config = useRuntimeConfig()
 const user = useUser()
-const { data, status, refresh } = useChangesLogs(projectSlug)
+const { data, status } = useChangesLogs(projectSlug)
+const pendingAcceptIds = ref(new Set<number>())
 
 const baseGeoms = computed(() => {
   if (!data.value?.loChas) {
@@ -206,11 +208,13 @@ useHead({
 })
 
 async function handleAccept(loChaIds?: number[]) {
-  try {
-    if (!loChaIds) {
-      loChaIds = loChasWithFilter.value.map((loCha: ClearanceLoChaData) => loCha.metadata.locha_id)
-    }
+  if (!loChaIds) {
+    loChaIds = loChasWithFilter.value.map((loCha: ClearanceLoChaData) => loCha.metadata.locha_id)
+  }
 
+  loChaIds.forEach((id) => pendingAcceptIds.value.add(id))
+
+  try {
     await $fetch(`${config.public.api}/projects/${projectSlug}/changes_logs/accept`, {
       credentials: 'include',
       method: 'POST',
@@ -220,16 +224,27 @@ async function handleAccept(loChaIds?: number[]) {
       },
       body: JSON.stringify(loChaIds),
     })
-    await refresh()
+
+    if (data.value) {
+      data.value.loChas = data.value.loChas.filter(
+        (loCha) => !loChaIds!.includes(loCha.metadata.locha_id),
+      )
+    }
+
+    ElMessage.success({
+      duration: 3000,
+      message: t('logs.accept_success'),
+    })
 
     if (!loChasWithFilter.value.length) {
       resetFilters()
     }
   }
-  catch (err: any) {
+  catch {
+    loChaIds.forEach((id) => pendingAcceptIds.value.delete(id))
     ElMessage.error({
       duration: 5000,
-      message: err.message,
+      message: t('logs.accept_error'),
     })
   }
 }
@@ -285,6 +300,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
             v-for="loCha in visibleLoChas"
             :key="loCha.metadata.locha_id"
             class="locha-card"
+            :class="{ 'locha-card--pending': pendingAcceptIds.has(loCha.metadata.locha_id) }"
             style="--el-card-padding: 0;"
           >
             <template v-if="getRapprochementsCount(loCha) > 1" #header>
@@ -411,6 +427,11 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 
 .locha-card {
   --el-card-bg-color: #e0e0e4;
+}
+
+.locha-card--pending {
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 .locha-card :deep(.locha) {
