@@ -29,6 +29,8 @@ export default {
   logs: {
     rapprochements_count: '{n} rapprochements',
     validate_locha: 'Valider le LoCha',
+    accept_success: 'Validation enregistrée',
+    accept_error: 'Erreur lors de la validation',
     objects: 'Objets',
     created: 'ajouté',
     deleted: 'supprimé',
