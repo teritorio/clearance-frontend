@@ -287,9 +287,9 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
             class="locha-card"
             style="--el-card-padding: 0;"
           >
-            <template #header>
+            <template v-if="getRapprochementsCount(loCha) > 1" #header>
               <div class="card-header">
-                <strong v-if="getRapprochementsCount(loCha) > 1" class="object-count">
+                <strong class="object-count">
                   {{ $t('logs.rapprochements_count', { n: getRapprochementsCount(loCha) }) }}
                 </strong>
                 <el-button-group v-if="isProjectUser">
@@ -386,9 +386,12 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 
 .card-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 0.5rem 1rem;
+}
+
+.card-header .el-button-group {
+  margin-left: auto;
 }
 
 :deep(.header-center) {
