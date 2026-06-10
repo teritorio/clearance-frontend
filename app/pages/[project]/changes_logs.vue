@@ -294,7 +294,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                 </strong>
                 <el-button-group v-if="isProjectUser">
                   <el-button type="primary" @click="handleAccept([loCha.metadata.locha_id])">
-                    ✓
+                    ✓ {{ $t('logs.validate_locha') }}
                   </el-button>
                 </el-button-group>
               </div>
@@ -302,7 +302,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
             <LoCha :id="String(loCha.metadata.locha_id)" :data="loCha" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
               <template v-if="isProjectUser" #header-end>
                 <el-button-group>
-                  <el-button type="primary" size="small" @click="handleAccept([loCha.metadata.locha_id])">
+                  <el-button type="primary" @click="handleAccept([loCha.metadata.locha_id])">
                     ✓
                   </el-button>
                 </el-button-group>

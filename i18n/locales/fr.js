@@ -28,6 +28,7 @@ export default {
   },
   logs: {
     rapprochements_count: '{n} rapprochements',
+    validate_locha: 'Valider le LoCha',
     objects: 'Objets',
     created: 'ajouté',
     deleted: 'supprimé',
