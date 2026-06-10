@@ -287,18 +287,18 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
             class="locha-card"
             style="--el-card-padding: 0;"
           >
-            <template v-if="isProjectUser" #header>
+            <template #header>
               <div class="card-header">
-                <el-button-group>
+                <strong v-if="getRapprochementsCount(loCha) > 1" class="object-count">
+                  {{ $t('logs.rapprochements_count', { n: getRapprochementsCount(loCha) }) }}
+                </strong>
+                <el-button-group v-if="isProjectUser">
                   <el-button type="primary" @click="handleAccept([loCha.metadata.locha_id])">
                     ✓
                   </el-button>
                 </el-button-group>
               </div>
             </template>
-            <div v-if="getRapprochementsCount(loCha) > 1" class="object-count">
-              <strong>{{ $t('logs.rapprochements_count', { n: getRapprochementsCount(loCha) }) }}</strong>
-            </div>
             <LoCha :id="String(loCha.metadata.locha_id)" :data="loCha" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
               <template v-if="isProjectUser" #header-end>
                 <el-button-group>
@@ -386,8 +386,9 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 
 .card-header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
+  padding: 0.5rem 1rem;
 }
 
 :deep(.header-center) {
@@ -409,9 +410,8 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   --el-card-bg-color: #e0e0e4;
 }
 
-.object-count {
-  padding: 1rem 1rem 0;
-  font-size: 1rem;
+.locha-card :deep(.locha) {
+  padding-top: 0;
 }
 
 .sentinel {
