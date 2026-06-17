@@ -3,6 +3,7 @@ import type { Action } from '@teritorio/openstreetmap-logical-history-component'
 import type { LocationQuery } from 'vue-router'
 import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
 import { countBy, indexBy, sortBy, uniq } from 'underscore'
+import { getAfterUsers } from '~/composables/useChangesLogs'
 
 const props = defineProps<{
   loChas: ClearanceLoChaData[]
@@ -16,17 +17,11 @@ watchEffect(() => {
   filters.value = route.query
 })
 
-function allLinks(loChas: ClearanceLoChaData[]): ClearanceApiLink[] {
-  return loChas.flatMap((loCha) =>
-    loCha.metadata.links.flat(),
-  )
-}
-
 const stats = computed(() => {
   const actions = props.loChas
     .flatMap((loCha) =>
       uniq(
-        allLinks([loCha])
+        loCha.metadata.links.flat()
           .flatMap((link: ClearanceApiLink) => [
             ...Object.values(link.diff_attribs || {}),
             ...Object.values(link.diff_tags || {}),
@@ -40,7 +35,7 @@ const stats = computed(() => {
 
 const statSelectors = computed(() => {
   const matches = props.loChas.flatMap((loCha) =>
-    uniq(allLinks([loCha]).flatMap((link: ClearanceApiLink) => link.matches)).flat(),
+    uniq(loCha.metadata.links.flat().flatMap((link: ClearanceApiLink) => link.matches)).flat(),
   )
   return getStats(matches, (m: ClearanceMatch) => m.selectors.join(';'))
 })
@@ -48,18 +43,12 @@ const statSelectors = computed(() => {
 const statUserGroups = computed(() => {
   const userGroups = props.loChas
     .flatMap((loCha) =>
-      uniq(allLinks([loCha]).flatMap((link: ClearanceApiLink) => link.matches.flatMap((m) => m.user_groups))),
+      uniq(loCha.metadata.links.flat().flatMap((link: ClearanceApiLink) => link.matches.flatMap((m) => m.user_groups))),
     )
   return getStats(userGroups)
 })
 
-const statUsers = computed(() => {
-  const users = props.loChas
-    .flatMap((loCha) =>
-      uniq((loCha.metadata.changesets ?? []).map((changeset) => changeset.user)),
-    )
-  return getStats(users)
-})
+const statUsers = computed(() => getStats(props.loChas.flatMap(getAfterUsers)))
 
 const statDates = computed(() => {
   const dates = props.loChas.flatMap((loCha) =>

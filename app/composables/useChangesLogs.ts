@@ -1,5 +1,6 @@
 import type { ApiLink, IFeature, LoChaData } from '@teritorio/openstreetmap-logical-history-component'
 import type { InitializedProject } from '~/libs/types'
+import { uniq } from 'underscore'
 
 export interface ClearanceMatch {
   sources: string[]
@@ -23,6 +24,22 @@ export interface ClearanceLoChaData extends LoChaData {
     locha_id: number
     links: ClearanceApiLink[][]
   }
+}
+
+export function getAfterUsers(loCha: ClearanceLoChaData): string[] {
+  const afterFeatureIds = new Set(
+    loCha.metadata.links.flat().map((link) => link.after).filter(Boolean) as string[],
+  )
+  const afterChangesetIds = new Set(
+    loCha.features
+      .filter((f) => afterFeatureIds.has(f.id as string))
+      .map((f) => f.properties.changeset_id),
+  )
+  return uniq(
+    (loCha.metadata.changesets ?? [])
+      .filter((c) => afterChangesetIds.has(c.id))
+      .map((c) => c.user),
+  )
 }
 
 interface ChangesLogsData {
