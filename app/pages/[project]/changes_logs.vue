@@ -308,18 +308,18 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
           >
             <template v-if="getRapprochementsCount(loCha) > 1" #header>
               <div class="card-header">
-                <strong class="object-count">
-                  {{ $t('logs.rapprochements_count', { n: getRapprochementsCount(loCha) }) }}
-                </strong>
                 <el-button-group v-if="isProjectUser">
                   <el-button type="primary" @click="handleAccept([loCha.metadata.locha_id])">
                     ✓ {{ $t('logs.validate_locha') }}
                   </el-button>
                 </el-button-group>
+                <strong class="object-count">
+                  {{ $t('logs.rapprochements_count', { n: getRapprochementsCount(loCha) }) }}
+                </strong>
               </div>
             </template>
             <LoCha :id="String(loCha.metadata.locha_id)" :data="loCha" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
-              <template v-if="isProjectUser" #header-end>
+              <template v-if="isProjectUser" #header-start-end>
                 <el-button-group>
                   <el-button type="primary" @click="handleAccept([loCha.metadata.locha_id])">
                     ✓
@@ -409,7 +409,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   padding: 0.5rem 1rem;
 }
 
-.card-header .el-button-group {
+.object-count {
   margin-left: auto;
 }
 
