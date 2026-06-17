@@ -5,7 +5,13 @@ const projects = useProjects()
 const { fetchUser } = useAuth()
 await callOnce(() => fetchUser())
 
-const { data } = await useProjectsData()
+const { data, error } = await useProjectsData()
+
+watchEffect(() => {
+  if (error.value) {
+    ElMessage.error({ duration: 5000, message: error.value.message })
+  }
+})
 
 watch(data, (val) => {
   admin.value = val?.admin ?? null

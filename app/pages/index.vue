@@ -8,13 +8,12 @@ const user = useUser()
 
 const { data } = await useProjectsData()
 
-const uninitializedProjects = computed<UninitializedProject[]>(() =>
-  _.partition(data.value?.projects ?? [], isInitializedProject)[1] as UninitializedProject[],
+const partitionedProjects = computed(() =>
+  _.partition(data.value?.projects ?? [], isInitializedProject),
 )
 
-const initializedProjects = computed<InitializedProject[]>(() =>
-  _.partition(data.value?.projects ?? [], isInitializedProject)[0] as InitializedProject[],
-)
+const initializedProjects = computed<InitializedProject[]>(() => partitionedProjects.value[0] as InitializedProject[])
+const uninitializedProjects = computed<UninitializedProject[]>(() => partitionedProjects.value[1] as UninitializedProject[])
 
 const myProjects = computed<InitializedProject[]>(() =>
   initializedProjects.value.filter((p) => user.value?.projects.includes(p.id) ?? false),
@@ -51,7 +50,7 @@ const otherProjects = computed<InitializedProject[]>(() =>
         </el-col>
       </el-row>
 
-      <template v-if="myProjects !== undefined && myProjects?.length > 0">
+      <template v-if="myProjects.length > 0">
         <h2>{{ $t('page.index.myProjects') }}</h2>
         <el-space :fill="true" wrap :size="20">
           <Project
@@ -64,15 +63,7 @@ const otherProjects = computed<InitializedProject[]>(() =>
 
       <h2>{{ $t('page.index.publicProjects') }}</h2>
 
-      <template v-if="otherProjects === undefined">
-        <el-empty
-          v-loading="true"
-          :description="$t('page.index.empty')"
-          :image-size="50"
-        />
-      </template>
-
-      <template v-else-if="otherProjects.length > 0">
+      <template v-if="otherProjects.length > 0">
         <el-space :fill="true" wrap :size="20">
           <Project
             v-for="project in otherProjects"
