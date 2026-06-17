@@ -4628,9 +4628,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@teritorio/openstreetmap-logical-history-component@npm:0.6.0":
-  version: 0.6.0
-  resolution: "@teritorio/openstreetmap-logical-history-component@npm:0.6.0"
+"@teritorio/openstreetmap-logical-history-component@npm:0.6.2":
+  version: 0.6.2
+  resolution: "@teritorio/openstreetmap-logical-history-component@npm:0.6.2"
   dependencies:
     "@sentry/vue": "npm:^10.44.0"
     "@turf/area": "npm:^7.3.4"
@@ -4647,7 +4647,7 @@ __metadata:
   peerDependencies:
     maplibre-gl: ^5.0.0
     vue: ^3.5.13
-  checksum: 10c0/29e5204b581cadd791de117166610d518d3bc6aa1f7ba25f23ef526ccd1586fb3a237b5a8cf1a1c722ae0f88f89e6e05ea69bb301f4ed0b86d95a7ad2189daa5
+  checksum: 10c0/4a9406d906c57d7e31f4458cec5489e4760d50d913a5c088fed9a2d548ad65eb8da849e16c87962d01c24d6cc9c559881bf1954e24f02f118b3c1eeae2b933f3
   languageName: node
   linkType: hard
 
@@ -14380,7 +14380,7 @@ __metadata:
     "@nuxt/test-utils": "npm:^3.19.1"
     "@nuxtjs/i18n": "npm:^10.2.4"
     "@sentry/nuxt": "npm:^10.47.0"
-    "@teritorio/openstreetmap-logical-history-component": "npm:0.6.0"
+    "@teritorio/openstreetmap-logical-history-component": "npm:0.6.2"
     "@turf/bbox": "npm:^7.3.4"
     "@turf/boolean-equal": "npm:^7.3.4"
     "@turf/helpers": "npm:^7.3.4"
