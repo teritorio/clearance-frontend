@@ -409,10 +409,6 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   padding: 0.5rem 1rem;
 }
 
-.object-count {
-  margin-left: auto;
-}
-
 :deep(.header-center) {
   text-align: center;
 }
