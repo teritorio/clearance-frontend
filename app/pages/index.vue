@@ -5,23 +5,23 @@ import { isInitializedProject } from '~/libs/types'
 
 const admin = useAdmin()
 const user = useUser()
-const projects = useProjects()
-const myProjects = ref<InitializedProject[]>()
-const otherProjects = ref<InitializedProject[]>()
-const uninitializedProjects = ref<UninitializedProject[]>()
 
-const [initialized, uninitialized] = _.partition(
-  projects.value,
-  (project: Project) => isInitializedProject(project),
-)
-uninitializedProjects.value = uninitialized as UninitializedProject[]
+const { data } = await useProjectsData()
 
-const [my, other] = _.partition(
-  initialized as InitializedProject[],
-  (project: InitializedProject) => user.value?.projects.includes(project.id) || false,
+const partitionedProjects = computed(() =>
+  _.partition(data.value?.projects ?? [], isInitializedProject),
 )
-myProjects.value = my
-otherProjects.value = other
+
+const initializedProjects = computed<InitializedProject[]>(() => partitionedProjects.value[0] as InitializedProject[])
+const uninitializedProjects = computed<UninitializedProject[]>(() => partitionedProjects.value[1] as UninitializedProject[])
+
+const myProjects = computed<InitializedProject[]>(() =>
+  initializedProjects.value.filter((p) => user.value?.projects.includes(p.id) ?? false),
+)
+
+const otherProjects = computed<InitializedProject[]>(() =>
+  initializedProjects.value.filter((p) => !user.value?.projects.includes(p.id)),
+)
 </script>
 
 <template>
@@ -50,7 +50,7 @@ otherProjects.value = other
         </el-col>
       </el-row>
 
-      <template v-if="myProjects !== undefined && myProjects?.length > 0">
+      <template v-if="myProjects.length > 0">
         <h2>{{ $t('page.index.myProjects') }}</h2>
         <el-space :fill="true" wrap :size="20">
           <Project
@@ -63,15 +63,7 @@ otherProjects.value = other
 
       <h2>{{ $t('page.index.publicProjects') }}</h2>
 
-      <template v-if="otherProjects === undefined">
-        <el-empty
-          v-loading="true"
-          :description="$t('page.index.empty')"
-          :image-size="50"
-        />
-      </template>
-
-      <template v-else-if="otherProjects.length > 0">
+      <template v-if="otherProjects.length > 0">
         <el-space :fill="true" wrap :size="20">
           <Project
             v-for="project in otherProjects"
