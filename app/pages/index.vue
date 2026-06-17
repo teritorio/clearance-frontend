@@ -5,23 +5,24 @@ import { isInitializedProject } from '~/libs/types'
 
 const admin = useAdmin()
 const user = useUser()
-const projects = useProjects()
-const myProjects = ref<InitializedProject[]>()
-const otherProjects = ref<InitializedProject[]>()
-const uninitializedProjects = ref<UninitializedProject[]>()
 
-const [initialized, uninitialized] = _.partition(
-  projects.value,
-  (project: Project) => isInitializedProject(project),
-)
-uninitializedProjects.value = uninitialized as UninitializedProject[]
+const { data } = await useProjectsData()
 
-const [my, other] = _.partition(
-  initialized as InitializedProject[],
-  (project: InitializedProject) => user.value?.projects.includes(project.id) || false,
+const uninitializedProjects = computed<UninitializedProject[]>(() =>
+  _.partition(data.value?.projects ?? [], isInitializedProject)[1] as UninitializedProject[],
 )
-myProjects.value = my
-otherProjects.value = other
+
+const initializedProjects = computed<InitializedProject[]>(() =>
+  _.partition(data.value?.projects ?? [], isInitializedProject)[0] as InitializedProject[],
+)
+
+const myProjects = computed<InitializedProject[]>(() =>
+  initializedProjects.value.filter((p) => user.value?.projects.includes(p.id) ?? false),
+)
+
+const otherProjects = computed<InitializedProject[]>(() =>
+  initializedProjects.value.filter((p) => !user.value?.projects.includes(p.id)),
+)
 </script>
 
 <template>

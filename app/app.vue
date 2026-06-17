@@ -1,22 +1,16 @@
 <script setup lang="ts">
-import type { Project, ProjectsResponse } from '~/libs/types'
-
-const config = useRuntimeConfig()
+const admin = useAdmin()
+const projects = useProjects()
 
 const { fetchUser } = useAuth()
 await callOnce(() => fetchUser())
 
-try {
-  const response = await useFetchWithCache<ProjectsResponse>('projectsResponse', `${config.public.api}/projects`)
-  useState<string | null>('admin', () => response.value?.admin ?? null)
-  useState<Project[]>('projects', () => response.value?.projects ?? [])
-}
-catch (err: any) {
-  ElMessage.error({
-    duration: 5000,
-    message: err.message,
-  })
-}
+const { data } = await useProjectsData()
+
+watch(data, (val) => {
+  admin.value = val?.admin ?? null
+  projects.value = val?.projects ?? []
+}, { immediate: true })
 </script>
 
 <template>
