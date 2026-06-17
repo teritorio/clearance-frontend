@@ -406,6 +406,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 .card-header {
   display: flex;
   align-items: center;
+  gap: 0.75rem;
   padding: 0.5rem 1rem;
 }
 
