@@ -4,6 +4,7 @@ import type { Geometry } from 'geojson'
 import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
 import { uniq } from 'underscore'
+import { getAfterUsers } from '~/composables/useChangesLogs'
 
 definePageMeta({
   validate({ params }) {
@@ -52,10 +53,6 @@ const isProjectUser = computed(() => {
   return !!user.value?.projects?.includes(projectSlug)
 })
 
-function getAllLinks(loCha: ClearanceLoChaData): ClearanceApiLink[] {
-  return loCha.metadata.links.flat()
-}
-
 function getFeatureLinks(loCha: ClearanceLoChaData, feature: IFeature, groupIndex: number): ClearanceApiLink[] {
   const links = loCha.metadata.links[groupIndex] as ClearanceApiLink[]
   if (feature.properties.is_before) {
@@ -91,40 +88,36 @@ const loChasWithFilter = computed(() => {
   }
 
   return data.value.loChas.filter((loCha: ClearanceLoChaData) => {
-    const links = getAllLinks(loCha)
-
-    return links.some((link: ClearanceApiLink) => {
-      const changesetsUsers
-        = route.query.filterByUsers !== undefined
-          && uniq((loCha.metadata.changesets ?? []).map((changeset) => changeset.user))
-
-      return (
-        (route.query.filterByAction === undefined
-          || [
-            ...Object.values(link.diff_attribs || {}),
-            ...Object.values(link.diff_tags || {}),
-          ].some(
-            (actions: Action[]) =>
-              actions?.some(
-                (action: Action) => action[0] === route.query.filterByAction,
-              ) || false,
+    if (route.query.filterByUsers !== undefined
+      && !getAfterUsers(loCha).includes(route.query.filterByUsers as string)) {
+      return false
+    }
+    if (route.query.filterByDate !== undefined
+      && !loCha.features.some((f) =>
+        !f.properties.is_before && f.properties.created?.substring(0, 10) === route.query.filterByDate,
+      )) {
+      return false
+    }
+    return loCha.metadata.links.flat().some((link: ClearanceApiLink) =>
+      (route.query.filterByAction === undefined
+        || [
+          ...Object.values(link.diff_attribs || {}),
+          ...Object.values(link.diff_tags || {}),
+        ].some(
+          (actions: Action[]) =>
+            actions?.some(
+              (action: Action) => action[0] === route.query.filterByAction,
+            ) || false,
+        ))
+        && (route.query.filterByUserGroups === undefined
+          || link.matches.some((match) =>
+            match.user_groups.includes(route.query.filterByUserGroups as string),
           ))
-          && (route.query.filterByUserGroups === undefined
+          && (route.query.filterBySelectors === undefined
             || link.matches.some((match) =>
-              match.user_groups.includes(route.query.filterByUserGroups as string),
-            ))
-            && (route.query.filterBySelectors === undefined
-              || link.matches.some((match) =>
-                matchFilterBySelectors(match.selectors),
-              ))
-              && (route.query.filterByUsers === undefined
-                || (changesetsUsers && changesetsUsers.includes(route.query.filterByUsers as string)))
-              && (route.query.filterByDate === undefined
-                || loCha.features.some((f) =>
-                  !f.properties.is_before && f.properties.created?.substring(0, 10) === route.query.filterByDate,
-                ))
-      )
-    })
+              matchFilterBySelectors(match.selectors),
+            )),
+    )
   })
 })
 
