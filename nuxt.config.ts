@@ -45,6 +45,7 @@ export default defineNuxtConfig({
     org: process.env.SENTRY_ORG,
     project: process.env.SENTRY_PROJECT,
     sentryUrl: process.env.SENTRY_URL,
+    authToken: process.env.SENTRY_AUTH_TOKEN,
     telemetry: false,
   },
 
