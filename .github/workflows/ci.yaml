@@ -50,5 +50,5 @@ jobs:
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          SENTRY_PROJECT: ${{ startsWith(github.event.ref, 'refs/tags/v') && secrets.SENTRY_PROJECT_PROD || secrets.SENTRY_PROJECT_DEV }}
+          SENTRY_PROJECT: ${{ startsWith(github.ref, 'refs/tags/v') && secrets.SENTRY_PROJECT_PROD || secrets.SENTRY_PROJECT_DEV }}
           SENTRY_URL: ${{ secrets.SENTRY_URL }}
