@@ -3,6 +3,11 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+      args:
+        SENTRY_AUTH_TOKEN: ${SENTRY_AUTH_TOKEN:-}
+        SENTRY_ORG: ${SENTRY_ORG:-}
+        SENTRY_PROJECT: ${SENTRY_PROJECT:-}
+        SENTRY_URL: ${SENTRY_URL:-}
     image: ghcr.io/teritorio/clearance-frontend:develop
     environment:
       - NUXT_PUBLIC_API=${NUXT_PUBLIC_API}

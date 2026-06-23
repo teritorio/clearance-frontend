@@ -23,6 +23,11 @@ RUN yarn install --immutable
 
 COPY . ./
 
+ARG SENTRY_AUTH_TOKEN
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+ARG SENTRY_URL
+
 # Build Nuxt app for production
 RUN yarn build
 
