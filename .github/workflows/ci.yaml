@@ -30,6 +30,11 @@ jobs:
       - run: yarn prepare
       - run: yarn lint
       - run: yarn build
+        env:
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_URL: ${{ secrets.SENTRY_URL }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
   docker:
     runs-on: ubuntu-latest
