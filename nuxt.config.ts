@@ -2,11 +2,15 @@ import process from 'node:process'
 
 const defaultMapStyleUrl = 'https://vecto.teritorio.xyz/styles/teritorio-basic/style.json?key=teritorio_clearance-1-ahNoohaepohy9iexoo3qua'
 
-if (!process.env.NUXT_PUBLIC_MAP_STYLE_URL) {
-  console.warn(`WARNING: NUXT_PUBLIC_MAP_STYLE_URL is not set. Falling back to ${defaultMapStyleUrl}`)
-}
-
 export default defineNuxtConfig({
+  hooks: {
+    ready(nuxt) {
+      if (!nuxt.options.runtimeConfig.public.mapStyleUrl) {
+        console.warn(`WARNING: NUXT_PUBLIC_MAP_STYLE_URL is not set. Falling back to ${defaultMapStyleUrl}`)
+      }
+    },
+  },
+
   modules: ['@nuxt/eslint', '@element-plus/nuxt', '@nuxtjs/i18n', '@sentry/nuxt/module'],
 
   plugins: [],
