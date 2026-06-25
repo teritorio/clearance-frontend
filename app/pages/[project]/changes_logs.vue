@@ -219,12 +219,9 @@ async function handleAccept(loChaIds?: number[]) {
     })
 
     if (data.value) {
-      data.value = {
-        ...data.value,
-        loChas: data.value.loChas.filter(
-          (loCha) => !loChaIds!.includes(loCha.metadata.locha_id),
-        ),
-      }
+      data.value.loChas = data.value.loChas.filter(
+        (loCha) => !loChaIds!.includes(loCha.metadata.locha_id),
+      )
     }
 
     ElMessage.success({

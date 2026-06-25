@@ -82,6 +82,7 @@ export function useChangesLogs(projectSlug: string) {
       }
     },
     {
+      deep: true,
       getCachedData(key): ChangesLogsData | undefined {
         const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key]
 
