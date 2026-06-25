@@ -41,6 +41,9 @@ onMounted(() => {
           }
           return Promise.resolve(geojson)
         }
+        else {
+          console.error(`Failed to fetch polygon "${userGroup.polygon}": HTTP ${data.status}`)
+        }
       })
     })
 
@@ -49,18 +52,24 @@ onMounted(() => {
       type: 'FeatureCollection',
       features: _.compact(allPolygons),
     } as FeatureCollection
-    const bounds = new LngLatBounds(
-      bbox(geojson) as [number, number, number, number],
-    )
 
-    const map = new Map({
+    const mapOptions: ConstructorParameters<typeof Map>[0] = {
       container: mapContainer.value!,
       style: runtimeConfig.public.mapStyleUrl as string,
-      bounds,
-      fitBoundsOptions: { maxZoom: 20, padding: 50 },
       cooperativeGestures: true,
       attributionControl: false,
-    })
+    }
+
+    if (geojson.features.length > 0) {
+      mapOptions.bounds = new LngLatBounds(bbox(geojson) as [number, number, number, number])
+      mapOptions.fitBoundsOptions = { maxZoom: 20, padding: 50 }
+    }
+    else {
+      mapOptions.center = [0, 20]
+      mapOptions.zoom = 1
+    }
+
+    const map = new Map(mapOptions)
 
     map.on('load', () => {
       map.addSource('geojson', { type: 'geojson', data: geojson })
