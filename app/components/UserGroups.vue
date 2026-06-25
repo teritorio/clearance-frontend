@@ -39,11 +39,14 @@ onMounted(() => {
             geometry: await data.json(),
             properties: { color: userGroup.color },
           }
-          return Promise.resolve(geojson)
+          return geojson
         }
         else {
           console.error(`Failed to fetch polygon "${userGroup.polygon}": HTTP ${data.status}`)
         }
+      }).catch((err) => {
+        console.error(`Failed to fetch polygon "${userGroup.polygon}":`, err)
+        return undefined
       })
     })
 
