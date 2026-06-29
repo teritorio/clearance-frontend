@@ -44,7 +44,6 @@ const accordion = ref('0')
                 :href="`https://www.openstreetmap.org/changeset/${changeset.id}#comments`"
                 target="_blank"
                 class="comments-link"
-                :title="`${changeset.comments_count} comment${changeset.comments_count > 1 ? 's' : ''}`"
               >💬</a>
             </template>
 
