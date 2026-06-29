@@ -39,6 +39,13 @@ const accordion = ref('0')
                 :href="`https://www.openstreetmap.org/changeset/${changeset.id}`"
                 target="_blank"
               >{{ changeset.id }}</a>
+              <a
+                v-if="changeset.comments_count > 0"
+                :href="`https://www.openstreetmap.org/changeset/${changeset.id}#comments`"
+                target="_blank"
+                class="comments-link"
+                :title="`${changeset.comments_count} comment${changeset.comments_count > 1 ? 's' : ''}`"
+              >💬</a>
             </template>
 
             <table>
@@ -93,5 +100,11 @@ ul.el-timeline {
 
 .created_by {
   background-color: #fffff7;
+}
+
+.comments-link {
+  margin-left: 0.4em;
+  text-decoration: none;
+  font-size: 0.9em;
 }
 </style>
