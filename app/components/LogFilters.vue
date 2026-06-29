@@ -3,7 +3,7 @@ import type { Action } from '@teritorio/openstreetmap-logical-history-component'
 import type { LocationQuery } from 'vue-router'
 import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
 import { countBy, indexBy, sortBy, uniq } from 'underscore'
-import { getAfterUsers } from '~/composables/useChangesLogs'
+import { getAfterDates, getAfterUsers } from '~/composables/useChangesLogs'
 
 const props = defineProps<{
   loChas: ClearanceLoChaData[]
@@ -51,12 +51,7 @@ const statUserGroups = computed(() => {
 const statUsers = computed(() => getStats(props.loChas.flatMap(getAfterUsers)))
 
 const statDates = computed(() => {
-  const dates = props.loChas.flatMap((loCha) =>
-    loCha.features
-      .filter((f) => !f.properties.is_before)
-      .map((f) => f.properties.created?.substring(0, 10))
-      .filter((d): d is string => !!d),
-  )
+  const dates = props.loChas.flatMap(getAfterDates)
   return getStats(dates).sort()
 })
 

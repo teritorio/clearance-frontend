@@ -26,7 +26,7 @@ export interface ClearanceLoChaData extends LoChaData {
   }
 }
 
-export function getAfterUsers(loCha: ClearanceLoChaData): string[] {
+function getAfterChangesets(loCha: ClearanceLoChaData) {
   const afterFeatureIds = new Set(
     loCha.metadata.links.flat().map((link) => link.after).filter(Boolean) as string[],
   )
@@ -35,11 +35,15 @@ export function getAfterUsers(loCha: ClearanceLoChaData): string[] {
       .filter((f) => afterFeatureIds.has(f.id as string))
       .map((f) => f.properties.changeset_id),
   )
-  return uniq(
-    (loCha.metadata.changesets ?? [])
-      .filter((c) => afterChangesetIds.has(c.id))
-      .map((c) => c.user),
-  )
+  return (loCha.metadata.changesets ?? []).filter((c) => afterChangesetIds.has(c.id))
+}
+
+export function getAfterUsers(loCha: ClearanceLoChaData): string[] {
+  return uniq(getAfterChangesets(loCha).map((c) => c.user))
+}
+
+export function getAfterDates(loCha: ClearanceLoChaData): string[] {
+  return uniq(getAfterChangesets(loCha).map((c) => c.created_at.substring(0, 10)))
 }
 
 interface ChangesLogsData {

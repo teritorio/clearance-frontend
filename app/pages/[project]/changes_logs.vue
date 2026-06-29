@@ -4,7 +4,7 @@ import type { Geometry } from 'geojson'
 import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
 import { uniq } from 'underscore'
-import { getAfterUsers } from '~/composables/useChangesLogs'
+import { getAfterDates, getAfterUsers } from '~/composables/useChangesLogs'
 
 definePageMeta({
   validate({ params }) {
@@ -93,9 +93,7 @@ const loChasWithFilter = computed(() => {
       return false
     }
     if (route.query.filterByDate !== undefined
-      && !loCha.features.some((f) =>
-        !f.properties.is_before && f.properties.created?.substring(0, 10) === route.query.filterByDate,
-      )) {
+      && !getAfterDates(loCha).includes(route.query.filterByDate as string)) {
       return false
     }
     return loCha.metadata.links.flat().some((link: ClearanceApiLink) =>
