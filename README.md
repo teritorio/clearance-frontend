@@ -2,7 +2,7 @@
 
 "Clearance" is a tool for producing OpenStreetMap data extracts and keeping them up to date while respecting quality rules.
 
-[Online Clearance Demo](https://clearance.teritorio.xyz)
+[Online Clearance Demo](https://clearance-dev.teritorio.xyz)
 
 ## What Clearance Is
 It is based on partial and local updates incoming from OpenStreetMap changes. Changes may be rejected as not respecting quality rules. Thus, data must be fixed in OpenStreetMap, or accepted as is. This project helps to review the rejected data and accept changes when considered OK.
