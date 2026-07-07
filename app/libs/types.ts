@@ -35,10 +35,10 @@ export interface Changeset {
   open: boolean
   user: string
   uid: number
-  minlat: number
-  minlon: number
-  maxlat: number
-  maxlon: number
+  min_lat: number
+  min_lon: number
+  max_lat: number
+  max_lon: number
   comments_count: number
   changes_count: number
   tags: Record<string, string>
