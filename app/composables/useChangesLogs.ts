@@ -32,7 +32,7 @@ function getAfterChangesets(loCha: ClearanceLoChaData) {
   )
   const afterChangesetIds = new Set(
     loCha.features
-      .filter((f) => afterFeatureIds.has(f.id as string))
+      .filter((f) => afterFeatureIds.has(f.id as string) && !f.properties.is_before)
       .map((f) => f.properties.changeset_id),
   )
   return (loCha.metadata.changesets ?? []).filter((c) => afterChangesetIds.has(c.id))
