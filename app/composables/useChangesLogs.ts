@@ -27,14 +27,25 @@ export interface ClearanceLoChaData extends LoChaData {
 }
 
 function getAfterChangesets(loCha: ClearanceLoChaData) {
-  const afterFeatureIds = new Set(
-    loCha.metadata.links.flat().map((link) => link.after).filter(Boolean) as string[],
-  )
-  const afterChangesetIds = new Set(
-    loCha.features
-      .filter((f) => afterFeatureIds.has(f.id as string) && !f.properties.is_before)
-      .map((f) => f.properties.changeset_id),
-  )
+  const featuresById = new Map(loCha.features.map((f) => [f.id as string, f]))
+  const afterChangesetIds = new Set<number>()
+  for (const link of loCha.metadata.links.flat()) {
+    if (!link.after) {
+      continue
+    }
+    const afterFeature = featuresById.get(link.after)
+    if (!afterFeature) {
+      continue
+    }
+    const afterChangesetId = afterFeature.properties.changeset_id
+    if (link.before) {
+      const beforeFeature = featuresById.get(link.before)
+      if (beforeFeature?.properties.changeset_id === afterChangesetId) {
+        continue
+      }
+    }
+    afterChangesetIds.add(afterChangesetId)
+  }
   return (loCha.metadata.changesets ?? []).filter((c) => afterChangesetIds.has(c.id))
 }
 
