@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Changeset } from '@teritorio/openstreetmap-logical-history-component'
+import type { Changeset } from '~/libs/types'
 
 defineProps<{
   changesets: Changeset[]
