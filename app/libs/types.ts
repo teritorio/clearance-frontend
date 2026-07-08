@@ -32,13 +32,14 @@ export interface Changeset {
   id: number
   created_at: string
   closed_at: string
+  updated_at: string
   open: boolean
   user: string
   uid: number
-  min_lat: number
-  min_lon: number
-  max_lat: number
-  max_lon: number
+  min_lat: number | null
+  min_lon: number | null
+  max_lat: number | null
+  max_lon: number | null
   comments_count: number
   changes_count: number
   tags: Record<string, string> | null
