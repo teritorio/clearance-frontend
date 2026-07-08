@@ -41,7 +41,7 @@ export interface Changeset {
   max_lon: number
   comments_count: number
   changes_count: number
-  tags: Record<string, string>
+  tags: Record<string, string> | null
 }
 
 export interface User {

@@ -17,9 +17,9 @@ const accordion = ref('0')
       placement="top"
     >
       <p>
-        <span class="comment">✎ {{ changeset.tags.comment }}</span>
+        <span class="comment">✎ {{ changeset.tags?.comment }}</span>
         <br />
-        <template v-if="changeset.tags.source">
+        <template v-if="changeset.tags?.source">
           <span class="source">📷 {{ changeset.tags.source }}</span>
         </template>
         <span class="user">
@@ -28,7 +28,7 @@ const accordion = ref('0')
             target="_blank"
           >{{ changeset.user }}</a>
         </span>
-        <template v-if="changeset.tags.created_by">
+        <template v-if="changeset.tags?.created_by">
           <span class="created_by">🛠 {{ changeset.tags.created_by }}</span>
           <br />
         </template>
@@ -59,7 +59,7 @@ const accordion = ref('0')
 
             <table>
               <tr
-                v-for="[key, value] in Object.entries(changeset.tags)"
+                v-for="[key, value] in Object.entries(changeset.tags ?? {})"
                 :key="key"
               >
                 <td>{{ key }}</td>
