@@ -106,4 +106,9 @@ ul.el-timeline {
   text-decoration: none;
   font-size: 0.9em;
 }
+
+table td {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
 </style>
