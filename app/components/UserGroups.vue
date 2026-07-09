@@ -51,13 +51,17 @@ onMounted(() => {
     })
 
   Promise.all(fetchAllPolygons).then((allPolygons) => {
+    if (!mapContainer.value) {
+      return
+    }
+
     const geojson = {
       type: 'FeatureCollection',
       features: _.compact(allPolygons),
     } as FeatureCollection
 
     const mapOptions: ConstructorParameters<typeof Map>[0] = {
-      container: mapContainer.value!,
+      container: mapContainer.value,
       style: runtimeConfig.public.mapStyleUrl as string,
       cooperativeGestures: true,
       attributionControl: false,
