@@ -155,11 +155,18 @@ function toggleTag(tag: string, checked: boolean) {
 
       <template v-if="uninitializedProjects?.length">
         <h2>{{ $t('page.index.uninitializedProjects') }}</h2>
-        <ul>
-          <li v-for="project in uninitializedProjects" :key="project.id">
-            {{ project.id }}
-          </li>
-        </ul>
+        <el-row :gutter="20" class="project-grid">
+          <el-col v-for="project in uninitializedProjects" :key="project.id" :xs="24" :md="12" :lg="8">
+            <el-card shadow="never" class="ghost-card">
+              <div class="ghost-card-inner">
+                <span class="project-id">{{ project.id }}</span>
+                <el-tag type="info" effect="plain" size="small" disable-transitions>
+                  {{ $t('page.index.pendingInit') }}
+                </el-tag>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
       </template>
     </el-container>
   </el-main>
@@ -296,5 +303,27 @@ function toggleTag(tag: string, checked: boolean) {
 
 .project-grid :deep(.el-col) {
   margin-bottom: 20px;
+}
+
+.ghost-card {
+  background-color: var(--el-fill-color-lighter);
+  border-style: dashed;
+  opacity: 0.65;
+  cursor: default;
+}
+
+.ghost-card-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.project-id {
+  font-weight: 600;
+  color: var(--el-text-color-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
