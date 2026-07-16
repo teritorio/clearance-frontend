@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { InitializedProject, UninitializedProject } from '~/libs/types'
+import { RefreshLeft } from '@element-plus/icons-vue'
 import _ from 'underscore'
 import { isInitializedProject } from '~/libs/types'
 
@@ -111,7 +112,8 @@ function toggleTag(tag: string, checked: boolean) {
             {{ tag }}
           </el-check-tag>
           <el-button v-if="selectedTags.length" link size="small" class="reset-tags" @click="selectedTags = []">
-            × {{ $t('page.index.resetFilters') }}
+            <el-icon><RefreshLeft /></el-icon>
+            {{ $t('page.index.resetFilters') }}
           </el-button>
         </div>
       </div>
@@ -138,7 +140,7 @@ function toggleTag(tag: string, checked: boolean) {
           :description="hasActiveFilters ? $t('page.index.noResults') : $t('page.index.empty')"
           :image-size="80"
         >
-          <el-button v-if="hasActiveFilters" type="primary" plain @click="resetSearch">
+          <el-button v-if="hasActiveFilters" type="primary" plain :icon="RefreshLeft" @click="resetSearch">
             {{ $t('page.index.resetSearch') }}
           </el-button>
         </el-empty>
