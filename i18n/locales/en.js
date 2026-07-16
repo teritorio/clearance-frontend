@@ -11,7 +11,7 @@ export default {
       data: 'All data and maps',
       osm: '© OpenStreetMap contributors',
       madeBy: 'Made by',
-      webApp: 'Web app:',
+      website: 'Website:',
     },
     project: {
       new: 'To add a new project contact administrator:',

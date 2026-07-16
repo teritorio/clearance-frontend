@@ -19,7 +19,7 @@ const config = useRuntimeConfig()
     </span>
     <span class="sep">·</span>
     <span>
-      {{ $t('app.attribution.webApp') }}
+      {{ $t('app.attribution.website') }}
       <a href="https://clearance.teritorio.xyz" target="_blank" rel="noopener noreferrer">clearance.teritorio.xyz</a>
     </span>
   </el-footer>
