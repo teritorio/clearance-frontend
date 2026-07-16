@@ -59,7 +59,7 @@ const lastUpdateTitle = computed(() => {
         >{{ tag }}</span>
       </span>
       <span class="row-stats">
-        <span v-if="lastUpdateCompact" class="stat-badge" :title="lastUpdateTitle">
+        <span v-if="lastUpdateCompact" class="stat-badge stat-time" :title="lastUpdateTitle">
           <el-icon><Clock /></el-icon>{{ lastUpdateCompact }}
         </span>
         <span v-if="project.to_be_validated" class="stat-badge stat-pending" :title="$t('project.toBeValidated')">
@@ -149,6 +149,11 @@ const lastUpdateTitle = computed(() => {
 
 .stat-badge .el-icon {
   font-size: 0.9rem;
+}
+
+.stat-time {
+  color: var(--el-color-info);
+  background: var(--el-color-info-light-9);
 }
 
 .stat-pending {
