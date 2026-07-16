@@ -2,7 +2,7 @@ name: Continuous Integration
 
 on:
   push:
-    branches: [master, develop]
+    branches: [master, develop, staging]
     tags:
       - 'v*'
   pull_request:
@@ -34,7 +34,7 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     needs: [build]
-    if: github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/v')
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || startsWith(github.ref, 'refs/tags/v')
 
     permissions:
       contents: read
