@@ -24,6 +24,8 @@ export default {
       publicProjects: 'Public projects',
       uninitializedProjects: 'Uninitialized projects',
       empty: 'No project',
+      noResults: 'No results for your search',
+      resetSearch: 'Clear search',
       search: 'Search a project…',
       totalProjects: 'Active projects',
       totalPending: 'To validate',
