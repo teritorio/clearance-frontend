@@ -24,6 +24,10 @@ export default {
       publicProjects: 'Proyectos públicos',
       uninitializedProjects: 'Proyectos no inicializados',
       empty: 'Sin proyecto',
+      search: 'Buscar un proyecto…',
+      totalProjects: 'Proyectos activos',
+      totalPending: 'Por validar',
+      resetFilters: 'Restablecer',
     },
   },
   logs: {
@@ -35,6 +39,12 @@ export default {
     created: 'creado',
     deleted: 'borrado',
     filters: 'Filtros',
+    filterAction: 'Acción',
+    filterUserGroups: 'Grupos',
+    filterSelectors: 'Selectores',
+    filterUsers: 'Usuarios',
+    filterDates: 'Fechas',
+    resetFilters: 'Restablecer filtros',
     data: 'Grupo de datos a examinar',
     data_details:
       'Datos incluidos aquí porque se han selectivo y no cumplan las reglas de validación.',
