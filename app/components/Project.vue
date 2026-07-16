@@ -1,16 +1,50 @@
 <script setup lang="ts">
 import type { InitializedProject } from '~/libs/types'
-import { ArrowDown, Link, Setting } from '@element-plus/icons-vue'
+import { ArrowDown, CircleCheck, Clock, Link, Setting } from '@element-plus/icons-vue'
+import dayjs from 'dayjs'
+import en from 'dayjs/locale/en-gb'
+import es from 'dayjs/locale/es'
+import fr from 'dayjs/locale/fr'
+import relativeTime from 'dayjs/plugin/relativeTime'
 
 const props = defineProps<{
   project: InitializedProject
 }>()
 
+dayjs.extend(relativeTime)
+
+const _daysjsLocale = { en, fr, es }
+
 const expanded = ref(false)
 const config = useRuntimeConfig()
+const { locale } = useI18n()
 
 const overpassUrl = computed(() => `${config.public.api}/projects/${props.project.id}/overpasslike/`)
 const atomUrl = computed(() => `${config.public.api}/projects/${props.project.id}/changes_logs.atom`)
+
+const lastUpdateCompact = computed(() => {
+  if (!props.project.date_last_update) {
+    return null
+  }
+  const diff = dayjs().diff(dayjs(props.project.date_last_update), 'minute')
+  if (diff < 60) {
+    return `${diff}m`
+  }
+  if (diff < 60 * 24) {
+    return `${Math.floor(diff / 60)}h`
+  }
+  if (diff < 60 * 24 * 30) {
+    return `${Math.floor(diff / (60 * 24))}d`
+  }
+  return `${Math.floor(diff / (60 * 24 * 30))}mo`
+})
+
+const lastUpdateTitle = computed(() => {
+  if (!props.project.date_last_update) {
+    return undefined
+  }
+  return dayjs(props.project.date_last_update).locale(locale.value).fromNow()
+})
 </script>
 
 <template>
@@ -20,6 +54,14 @@ const atomUrl = computed(() => `${config.public.api}/projects/${props.project.id
         <nuxt-link :to="`/${project.id}/changes_logs`" class="title-link">
           <project-light :project="project" title-tag="h3" />
         </nuxt-link>
+        <div class="header-stats">
+          <span v-if="lastUpdateCompact" class="stat-badge" :title="lastUpdateTitle">
+            <el-icon><Clock /></el-icon>{{ lastUpdateCompact }}
+          </span>
+          <span v-if="project.to_be_validated" class="stat-badge stat-pending" :title="$t('project.toBeValidated')">
+            <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
+          </span>
+        </div>
         <nuxt-link :to="`/${project.id}/validators`" class="settings-icon" :title="$t('project.settings')">
           <el-icon><Setting /></el-icon>
         </nuxt-link>
@@ -32,10 +74,6 @@ const atomUrl = computed(() => `${config.public.api}/projects/${props.project.id
     </template>
 
     <div v-show="expanded" class="card-body">
-      <div class="stats-row">
-        <project-stats :last-update="project.date_last_update" :to-be-validated="project.to_be_validated" />
-      </div>
-
       <LazyUserGroups v-if="expanded" :user-groups="Object.values(project.user_groups)" />
 
       <div class="collapse-section">
@@ -105,19 +143,49 @@ const atomUrl = computed(() => `${config.public.api}/projects/${props.project.id
 }
 
 .card-header {
-  position: relative;
-  padding-right: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.header-stats {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.stat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--el-text-color-secondary);
+  background: var(--el-fill-color);
+  border-radius: 10px;
+  padding: 2px 6px;
+  white-space: nowrap;
+}
+
+.stat-badge .el-icon {
+  font-size: 0.75rem;
+}
+
+.stat-pending {
+  color: var(--el-color-primary);
+  background: var(--el-color-primary-light-9);
 }
 
 .settings-icon {
-  position: absolute;
-  top: 0;
-  right: 0;
+  flex-shrink: 0;
   color: var(--el-text-color-placeholder);
   text-decoration: none;
   font-size: 1.25rem;
   line-height: 1;
   transition: color 0.15s;
+  padding-top: 2px;
 }
 
 .settings-icon:hover {
@@ -157,11 +225,6 @@ const atomUrl = computed(() => `${config.public.api}/projects/${props.project.id
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-
-.stats-row {
-  padding: 8px 0;
-  border-bottom: 1px solid var(--el-border-color-lighter);
 }
 
 .collapse-section {
@@ -254,6 +317,7 @@ const atomUrl = computed(() => `${config.public.api}/projects/${props.project.id
   color: inherit;
   flex: 1;
   min-width: 0;
+  overflow: hidden;
 }
 
 .title-link:hover :deep(.title) {
