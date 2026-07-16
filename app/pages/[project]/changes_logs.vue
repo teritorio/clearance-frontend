@@ -233,17 +233,20 @@ async function handleAccept(loChaIds?: number[]) {
     }
   }
   catch {
-    loChaIds.forEach((id) => pendingAcceptIds.value.delete(id))
     ElMessage.error({
       duration: 5000,
       message: t('logs.accept_error'),
     })
+  }
+  finally {
+    loChaIds.forEach((id) => pendingAcceptIds.value.delete(id))
   }
 }
 
 async function handleAcceptGroup(loCha: ClearanceLoChaData, groupIndex: number) {
   const loChaId = loCha.metadata.locha_id
   const key = `${loChaId}-${groupIndex}`
+  pendingAcceptIds.value.add(loChaId)
   pendingAcceptGroupKeys.value.add(key)
 
   try {
@@ -291,6 +294,7 @@ async function handleAcceptGroup(loCha: ClearanceLoChaData, groupIndex: number) 
   }
   finally {
     pendingAcceptGroupKeys.value.delete(key)
+    pendingAcceptIds.value.delete(loChaId)
   }
 }
 
@@ -404,10 +408,9 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                 </template>
               </template>
               <template #content-start="{ index: groupIndex }">
-                <Changesets
-                  v-if="getGroupChangesets(loCha, groupIndex).length"
-                  :changesets="getGroupChangesets(loCha, groupIndex)"
-                />
+                <template v-for="(changesets, i) in [getGroupChangesets(loCha, groupIndex)]" :key="i">
+                  <Changesets v-if="changesets.length" :changesets="changesets" />
+                </template>
               </template>
               <template #header-center="{ index: groupIndex }">
                 <el-tag
