@@ -72,10 +72,14 @@ function toggleTag(tag: string, checked: boolean) {
 }
 
 function tagFilterStyle(tag: string, checked: boolean) {
-  const c = useTagColor(tag)
   if (checked) {
-    return { background: c.color, borderColor: c.color, color: '#fff' }
+    return {
+      background: 'var(--el-color-primary)',
+      borderColor: 'var(--el-color-primary)',
+      color: '#fff',
+    }
   }
+  const c = useTagColor(tag)
   return { background: c.bg, borderColor: c.border, color: c.color }
 }
 </script>
