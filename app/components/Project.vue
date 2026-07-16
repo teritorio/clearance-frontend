@@ -215,26 +215,9 @@ const lastUpdateTitle = computed(() => {
   transition: color 0.15s, background 0.15s;
 }
 
-.expand-trigger::after {
-  content: '';
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--el-border-color-light);
-  transition: background 0.15s;
-}
-
 .expand-trigger:hover {
   background: var(--el-fill-color-light);
   color: var(--el-text-color-secondary);
-}
-
-.expand-trigger:hover::after {
-  background: var(--el-color-primary-light-5);
 }
 
 .expand-icon {
