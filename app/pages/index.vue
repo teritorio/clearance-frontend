@@ -340,6 +340,7 @@ function tagFilterStyle(tag: string, checked: boolean) {
   flex-direction: column;
   gap: 8px;
   margin-bottom: 2rem;
+  max-width: 720px;
 }
 
 .uninitialized-section {
