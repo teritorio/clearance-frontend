@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import type { InitializedProject, UninitializedProject } from '~/libs/types'
-import { CircleCheck, CircleClose, RefreshLeft, Search } from '@element-plus/icons-vue'
+import { CircleClose, RefreshLeft, Search } from '@element-plus/icons-vue'
 import _ from 'underscore'
 import { isInitializedProject } from '~/libs/types'
 
-const admin = useAdmin()
 const user = useUser()
 
 const { data } = await useProjectsData()
@@ -22,10 +21,6 @@ const myProjects = computed<InitializedProject[]>(() =>
 
 const otherProjects = computed<InitializedProject[]>(() =>
   initializedProjects.value.filter((p) => !user.value?.projects.includes(p.id)),
-)
-
-const totalPending = computed(() =>
-  initializedProjects.value.reduce((sum, p) => sum + (p.to_be_validated ?? 0), 0),
 )
 
 const searchQuery = ref('')
@@ -87,28 +82,6 @@ function tagFilterStyle(tag: string, checked: boolean) {
 <template>
   <el-main>
     <el-container direction="vertical">
-      <div class="hero">
-        <h1 class="hero-title">
-          {{ $t('app.title') }}
-        </h1>
-        <div class="hero-stats">
-          <span class="hero-stat">
-            <span class="hero-stat-value">{{ initializedProjects.length }}</span>
-            <span class="hero-stat-label">{{ $t('page.index.totalProjects') }}</span>
-          </span>
-          <span class="hero-stat-sep">·</span>
-          <span class="hero-stat hero-stat-pending">
-            <el-icon><CircleCheck /></el-icon>
-            <span class="hero-stat-value">{{ totalPending.toLocaleString() }}</span>
-            <span class="hero-stat-label">{{ $t('page.index.totalPending') }}</span>
-          </span>
-        </div>
-        <p v-if="admin" class="hero-admin">
-          {{ $t('app.project.new') }}
-          <a :href="`https://www.openstreetmap.org/user/${encodeURIComponent(admin)}`" target="_blank">{{ admin }}</a>
-        </p>
-      </div>
-
       <div class="search-bar">
         <el-input
           v-model="searchQuery"
@@ -202,63 +175,6 @@ function tagFilterStyle(tag: string, checked: boolean) {
 </template>
 
 <style scoped>
-.hero {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 1rem 0;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid var(--el-border-color-lighter);
-  flex-wrap: wrap;
-}
-
-.hero-title {
-  margin: 0;
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--el-text-color-primary);
-}
-
-.hero-stats {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-left: auto;
-}
-
-.hero-stat {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.9rem;
-  color: var(--el-text-color-secondary);
-}
-
-.hero-stat-value {
-  font-weight: 700;
-  color: var(--el-text-color-primary);
-}
-
-.hero-stat-pending {
-  color: var(--el-color-primary);
-}
-
-.hero-stat-pending .hero-stat-value {
-  color: var(--el-color-primary);
-}
-
-.hero-stat-sep {
-  color: var(--el-text-color-placeholder);
-}
-
-.hero-admin {
-  width: 100%;
-  font-size: 0.875rem;
-  color: var(--el-text-color-secondary);
-  margin: 0;
-  padding-top: 0.25rem;
-}
-
 .search-bar {
   display: flex;
   flex-direction: column;
