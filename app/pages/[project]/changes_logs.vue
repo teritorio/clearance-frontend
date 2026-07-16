@@ -143,8 +143,8 @@ function visibleCountForHash(loChas: ClearanceLoChaData[]): number {
 
 const visibleCount = ref(BATCH_SIZE)
 
-watch(loChasWithFilter, (loChas) => {
-  visibleCount.value = visibleCountForHash(loChas)
+watch(() => loChasWithFilter.value.length, () => {
+  visibleCount.value = visibleCountForHash(loChasWithFilter.value)
 })
 
 const visibleLoChas = computed(() => {
