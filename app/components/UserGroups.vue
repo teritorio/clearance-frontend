@@ -116,39 +116,31 @@ const groups = computed(() =>
 </script>
 
 <template>
-  <el-row>
-    <el-col :span="12">
-      <el-table :data="groups" stripe style="width: 100%">
-        <el-table-column prop="id" width="30">
-          <template #default="scope">
-            <span :style="`color:${scope.row.color}`">⬤</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="id" :label="$t('project.user_group_label')">
-          <template #default="scope">
-            {{ useI18nHash(scope.row.title) }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="id" :label="$t('project.user_group_users')">
-          <template #default="scope">
-            <span v-for="user in scope.row.users" :key="user" class="user">
-              <a
-                :href="`https://www.openstreetmap.org/user/${user}`"
-                target="_blank"
-              >👤&nbsp;{{ user }}</a>
-            </span>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-col>
-    <el-col :span="12">
-      <div
-        ref="mapContainer"
-        class="map"
-        style="width: 400px; height: 400px; margin: 0 auto;"
-      />
-    </el-col>
-  </el-row>
+  <div class="user-groups">
+    <el-table :data="groups" stripe style="width: 100%">
+      <el-table-column prop="id" width="30">
+        <template #default="scope">
+          <span :style="`color:${scope.row.color}`">⬤</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="id" :label="$t('project.user_group_label')">
+        <template #default="scope">
+          {{ useI18nHash(scope.row.title) }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="id" :label="$t('project.user_group_users')">
+        <template #default="scope">
+          <span v-for="user in scope.row.users" :key="user" class="user">
+            <a
+              :href="`https://www.openstreetmap.org/user/${user}`"
+              target="_blank"
+            >👤&nbsp;{{ user }}</a>
+          </span>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div ref="mapContainer" class="map" />
+  </div>
 </template>
 
 <style>
@@ -156,6 +148,17 @@ const groups = computed(() =>
 </style>
 
 <style scoped>
+.user-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.map {
+  width: 100%;
+  height: 200px;
+}
+
 .user + .user {
   margin-left: 0.5em;
 }
