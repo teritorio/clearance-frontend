@@ -20,6 +20,7 @@ const runtimeConfig = useRuntimeConfig()
 const colors = ['#2364AA', '#EA7317', '#73BFB8', '#FEC601', '#3DA5D9']
 
 const mapContainer = useTemplateRef<HTMLDivElement>('mapContainer')
+const mapLoaded = ref(false)
 
 onMounted(() => {
   type ColoredGroup = UserGroup & { color: string }
@@ -79,6 +80,7 @@ onMounted(() => {
     const map = new Map(mapOptions)
 
     map.on('load', () => {
+      mapLoaded.value = true
       map.addSource('geojson', { type: 'geojson', data: geojson })
 
       map.addLayer({
@@ -132,7 +134,10 @@ const groups = computed(() =>
         </span>
       </li>
     </ul>
-    <div ref="mapContainer" class="map" />
+    <div class="map-wrapper">
+      <div v-if="!mapLoaded" class="map-skeleton" />
+      <div ref="mapContainer" class="map" :class="{ 'map-hidden': !mapLoaded }" />
+    </div>
   </div>
 </template>
 
@@ -209,8 +214,34 @@ const groups = computed(() =>
   color: var(--el-color-primary);
 }
 
-.map {
+.map-wrapper {
+  position: relative;
   width: 100%;
   height: 200px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+}
+
+.map-hidden {
+  visibility: hidden;
+}
+
+.map-skeleton {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--el-fill-color) 25%, var(--el-fill-color-light) 50%, var(--el-fill-color) 75%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 6px;
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
 }
 </style>
