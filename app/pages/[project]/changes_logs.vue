@@ -265,9 +265,7 @@ async function handleAcceptGroup(loCha: ClearanceLoChaData, groupIndex: number) 
             ...f,
             properties: {
               ...f.properties,
-              links: (f.properties.links as number) > groupIndex
-                ? (f.properties.links as number) - 1
-                : f.properties.links,
+              links: f.properties.links > groupIndex ? f.properties.links - 1 : f.properties.links,
             },
           }))
         if (locha.metadata.links.length === 0) {
@@ -368,6 +366,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                   <el-button
                     type="primary"
                     :loading="pendingAcceptGroupKeys.has(`${loCha.metadata.locha_id}-${groupIndex}`)"
+                    :disabled="pendingAcceptIds.has(loCha.metadata.locha_id)"
                     @click="handleAcceptGroup(loCha, groupIndex)"
                   >
                     ✓

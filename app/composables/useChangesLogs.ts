@@ -15,6 +15,7 @@ export interface ClearanceApiLink extends ApiLink {
 export interface ClearanceIFeature extends IFeature {
   properties: IFeature['properties'] & {
     changeset_id: number
+    links: number
   }
 }
 
