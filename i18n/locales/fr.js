@@ -24,6 +24,10 @@ export default {
       publicProjects: 'Projets publics',
       uninitializedProjects: 'Projets non initialisés',
       empty: 'Aucun projet',
+      search: 'Rechercher un projet…',
+      totalProjects: 'Projets actifs',
+      totalPending: 'À valider',
+      resetFilters: 'Réinitialiser',
     },
   },
   logs: {
@@ -35,6 +39,12 @@ export default {
     created: 'ajouté',
     deleted: 'supprimé',
     filters: 'Filtres',
+    filterAction: 'Action',
+    filterUserGroups: 'Groupes',
+    filterSelectors: 'Sélecteurs',
+    filterUsers: 'Utilisateurs',
+    filterDates: 'Dates',
+    resetFilters: 'Réinitialiser les filtres',
     data: 'Groupe de données à examiner',
     data_details:
       'Données listées ici parce qu\'elles ont été ciblées et qu\'elles ne respectent pas les règles de validation.',
