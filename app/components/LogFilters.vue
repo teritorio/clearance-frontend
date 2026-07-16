@@ -103,7 +103,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
           :max="999"
         >
           <el-button
-            type="danger"
+            type="primary"
             :plain="filters?.filterByAction !== key"
             :disabled="!!(filters?.filterByAction && filters?.filterByAction !== key)"
             size="small"
@@ -149,7 +149,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
           :max="999"
         >
           <el-button
-            type="warning"
+            type="primary"
             :plain="filters?.filterBySelectors !== match.selectors.join()"
             :disabled="!!(filters?.filterBySelectors && filters?.filterBySelectors !== match.selectors.join())"
             size="small"
@@ -172,7 +172,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
           :max="999"
         >
           <el-button
-            type="info"
+            type="primary"
             :plain="filters?.filterByUsers !== key"
             :disabled="!!(filters?.filterByUsers && filters?.filterByUsers !== key)"
             size="small"

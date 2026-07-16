@@ -123,7 +123,7 @@ const atomUrl = computed(() => `${config.public.api}/projects/${props.project.id
   right: 0;
   color: var(--el-text-color-placeholder);
   text-decoration: none;
-  font-size: 1rem;
+  font-size: 1.25rem;
   line-height: 1;
   transition: color 0.15s;
 }
