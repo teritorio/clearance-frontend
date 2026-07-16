@@ -10,6 +10,8 @@ export default {
     attribution: {
       data: 'Datos y mapas',
       osm: '© colaboradores OpenStreetMap',
+      madeBy: 'Realizado por',
+      webApp: 'Aplicación web:',
     },
     project: {
       new: 'Para añadir un nuevo proyecto contacte con el administrador:',
