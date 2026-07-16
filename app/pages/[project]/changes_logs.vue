@@ -24,6 +24,7 @@ const config = useRuntimeConfig()
 const user = useUser()
 const { data, status } = useChangesLogs(projectSlug)
 const pendingAcceptIds = ref(new Set<number>())
+const pendingAcceptGroupKeys = ref(new Set<string>())
 
 const baseGeoms = computed(() => {
   if (!data.value?.loChas) {
@@ -240,6 +241,59 @@ async function handleAccept(loChaIds?: number[]) {
   }
 }
 
+async function handleAcceptGroup(loCha: ClearanceLoChaData, groupIndex: number) {
+  const loChaId = loCha.metadata.locha_id
+  const key = `${loChaId}-${groupIndex}`
+  pendingAcceptGroupKeys.value.add(key)
+
+  try {
+    await $fetch(`${config.public.api}/projects/${projectSlug}/changes_logs/${loChaId}/${groupIndex}/accept`, {
+      credentials: 'include',
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+
+    if (data.value) {
+      const locha = data.value.loChas.find((l) => l.metadata.locha_id === loChaId)
+      if (locha) {
+        locha.metadata.links.splice(groupIndex, 1)
+        locha.features = locha.features
+          .filter((f) => f.properties.links !== groupIndex)
+          .map((f) => ({
+            ...f,
+            properties: {
+              ...f.properties,
+              links: f.properties.links > groupIndex ? f.properties.links - 1 : f.properties.links,
+            },
+          }))
+        if (locha.metadata.links.length === 0) {
+          data.value.loChas = data.value.loChas.filter((l) => l.metadata.locha_id !== loChaId)
+        }
+      }
+    }
+
+    ElMessage.success({
+      duration: 3000,
+      message: t('logs.accept_success'),
+    })
+
+    if (!loChasWithFilter.value.length) {
+      resetFilters()
+    }
+  }
+  catch {
+    ElMessage.error({
+      duration: 5000,
+      message: t('logs.accept_error'),
+    })
+  }
+  finally {
+    pendingAcceptGroupKeys.value.delete(key)
+  }
+}
+
 async function resetFilters() {
   await router.replace({ ...route, query: undefined })
 }
@@ -307,9 +361,14 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
               </div>
             </template>
             <LoCha :id="String(loCha.metadata.locha_id)" :data="loCha" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
-              <template v-if="isProjectUser" #header-start-end>
+              <template v-if="isProjectUser" #header-start-end="{ index: groupIndex }">
                 <el-button-group>
-                  <el-button type="primary" @click="handleAccept([loCha.metadata.locha_id])">
+                  <el-button
+                    type="primary"
+                    :loading="pendingAcceptGroupKeys.has(`${loCha.metadata.locha_id}-${groupIndex}`)"
+                    :disabled="pendingAcceptIds.has(loCha.metadata.locha_id)"
+                    @click="handleAcceptGroup(loCha, groupIndex)"
+                  >
                     ✓
                   </el-button>
                 </el-button-group>
