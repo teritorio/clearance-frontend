@@ -17,7 +17,9 @@ const atomUrl = computed(() => `${config.public.api}/projects/${props.project.id
   <el-card shadow="hover" class="project-card">
     <template #header>
       <div class="card-header">
-        <project-light :project="project" title-tag="h3" />
+        <nuxt-link :to="`/${project.id}/changes_logs`" class="title-link">
+          <project-light :project="project" title-tag="h3" />
+        </nuxt-link>
         <nuxt-link :to="`/${project.id}/validators`" class="settings-icon" :title="$t('project.settings')">
           <el-icon><Setting /></el-icon>
         </nuxt-link>
@@ -83,12 +85,6 @@ const atomUrl = computed(() => `${config.public.api}/projects/${props.project.id
         </p>
       </div>
     </div>
-
-    <template #footer>
-      <nuxt-link class="el-button el-button--primary details-btn" :to="`/${project.id}/changes_logs`">
-        {{ $t('project.details') }}
-      </nuxt-link>
-    </template>
   </el-card>
 </template>
 
@@ -106,10 +102,6 @@ const atomUrl = computed(() => `${config.public.api}/projects/${props.project.id
 :deep(.el-card__body) {
   padding: 0;
   flex: 1;
-}
-
-:deep(.el-card__footer) {
-  padding: 8px 12px;
 }
 
 .card-header {
@@ -257,9 +249,14 @@ const atomUrl = computed(() => `${config.public.api}/projects/${props.project.id
   color: var(--el-text-color-secondary);
 }
 
-.details-btn {
-  width: 100%;
-  justify-content: center;
+.title-link {
   text-decoration: none;
+  color: inherit;
+  flex: 1;
+  min-width: 0;
+}
+
+.title-link:hover :deep(.title) {
+  color: var(--el-color-primary);
 }
 </style>
