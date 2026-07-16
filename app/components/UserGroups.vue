@@ -117,28 +117,21 @@ const groups = computed(() =>
 
 <template>
   <div class="user-groups">
-    <el-table :data="groups" stripe style="width: 100%">
-      <el-table-column prop="id" width="30">
-        <template #default="scope">
-          <span :style="`color:${scope.row.color}`">⬤</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="id" :label="$t('project.user_group_label')">
-        <template #default="scope">
-          {{ useI18nHash(scope.row.title) }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="id" :label="$t('project.user_group_users')">
-        <template #default="scope">
-          <span v-for="user in scope.row.users" :key="user" class="user">
-            <a
-              :href="`https://www.openstreetmap.org/user/${user}`"
-              target="_blank"
-            >👤&nbsp;{{ user }}</a>
-          </span>
-        </template>
-      </el-table-column>
-    </el-table>
+    <ul class="group-list">
+      <li v-for="(group, index) in groups" :key="index" class="group-row">
+        <span class="group-dot" :style="{ background: group.color }" />
+        <span class="group-name">{{ useI18nHash(group.title) }}</span>
+        <span class="group-users">
+          <a
+            v-for="user in group.users"
+            :key="user"
+            :href="`https://www.openstreetmap.org/user/${user}`"
+            target="_blank"
+            class="user-chip"
+          >{{ user }}</a>
+        </span>
+      </li>
+    </ul>
     <div ref="mapContainer" class="map" />
   </div>
 </template>
@@ -154,12 +147,70 @@ const groups = computed(() =>
   gap: 0.5rem;
 }
 
+.group-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.group-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+.group-row:nth-child(odd) {
+  background: var(--el-fill-color-lighter);
+}
+
+.group-dot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 2px;
+}
+
+.group-name {
+  flex-shrink: 0;
+  font-weight: 500;
+  color: var(--el-text-color-primary);
+  min-width: 120px;
+  max-width: 180px;
+}
+
+.group-users {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.user-chip {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: var(--el-fill-color);
+  color: var(--el-text-color-secondary);
+  text-decoration: none;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+
+.user-chip:hover {
+  background: var(--el-color-primary-light-9);
+  color: var(--el-color-primary);
+}
+
 .map {
   width: 100%;
   height: 200px;
-}
-
-.user + .user {
-  margin-left: 0.5em;
 }
 </style>
