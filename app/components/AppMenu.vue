@@ -48,6 +48,10 @@ header {
   align-items: center;
   box-shadow: var(--el-box-shadow-light);
   display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--el-bg-color);
 }
 
 header > div {

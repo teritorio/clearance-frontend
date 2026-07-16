@@ -54,6 +54,13 @@ function filterProjects(projects: InitializedProject[]): InitializedProject[] {
 const filteredMyProjects = computed(() => filterProjects(myProjects.value))
 const filteredOtherProjects = computed(() => filterProjects(otherProjects.value))
 
+const hasActiveFilters = computed(() => !!searchQuery.value || selectedTags.value.length > 0)
+
+function resetSearch() {
+  searchQuery.value = ''
+  selectedTags.value = []
+}
+
 function toggleTag(tag: string, checked: boolean) {
   if (checked) {
     selectedTags.value = [...selectedTags.value, tag]
@@ -87,10 +94,13 @@ function toggleTag(tag: string, checked: boolean) {
           v-model="searchQuery"
           :placeholder="$t('page.index.search')"
           clearable
-          prefix-icon="Search"
           size="large"
           class="search-input"
-        />
+        >
+          <template #prefix>
+            <el-icon><Search /></el-icon>
+          </template>
+        </el-input>
         <div v-if="allTags.length" class="tag-filters">
           <el-check-tag
             v-for="tag in allTags"
@@ -123,7 +133,16 @@ function toggleTag(tag: string, checked: boolean) {
           </el-col>
         </el-row>
       </template>
-      <el-empty v-else :description="$t('page.index.empty')" :image-size="50" />
+      <div v-else class="empty-state">
+        <el-empty
+          :description="hasActiveFilters ? $t('page.index.noResults') : $t('page.index.empty')"
+          :image-size="80"
+        >
+          <el-button v-if="hasActiveFilters" type="primary" plain @click="resetSearch">
+            {{ $t('page.index.resetSearch') }}
+          </el-button>
+        </el-empty>
+      </div>
 
       <template v-if="uninitializedProjects?.length">
         <h2>{{ $t('page.index.uninitializedProjects') }}</h2>
@@ -208,6 +227,19 @@ function toggleTag(tag: string, checked: boolean) {
 .search-input :deep(.el-input__inner) {
   height: 36px;
   font-size: 1.1rem;
+}
+
+.search-input :deep(.el-input__prefix) {
+  font-size: 1.2rem;
+  color: var(--el-text-color-placeholder);
+}
+
+.search-input :deep(.el-input__clear) {
+  font-size: 1.2rem;
+}
+
+.empty-state {
+  padding: 2rem 0;
 }
 
 .tag-filters {
