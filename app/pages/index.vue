@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { InitializedProject, UninitializedProject } from '~/libs/types'
-import { RefreshLeft, Search } from '@element-plus/icons-vue'
+import { CircleClose, RefreshLeft, Search } from '@element-plus/icons-vue'
 import _ from 'underscore'
 import { isInitializedProject } from '~/libs/types'
 
