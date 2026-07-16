@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { InitializedProject, UninitializedProject } from '~/libs/types'
-import { RefreshLeft, Search } from '@element-plus/icons-vue'
+import { CircleClose, RefreshLeft, Search } from '@element-plus/icons-vue'
 import _ from 'underscore'
 import { isInitializedProject } from '~/libs/types'
 
@@ -94,11 +94,22 @@ function toggleTag(tag: string, checked: boolean) {
         <el-input
           v-model="searchQuery"
           :placeholder="$t('page.index.search')"
-          clearable
           :prefix-icon="Search"
           size="large"
           class="search-input"
-        />
+        >
+          <template v-if="searchQuery" #suffix>
+            <el-icon
+              tabindex="0"
+              class="search-clear"
+              @click="searchQuery = ''"
+              @keydown.enter="searchQuery = ''"
+              @keydown.space.prevent="searchQuery = ''"
+            >
+              <CircleClose />
+            </el-icon>
+          </template>
+        </el-input>
         <div v-if="allTags.length" class="tag-filters">
           <el-check-tag
             v-for="tag in allTags"
@@ -230,10 +241,16 @@ function toggleTag(tag: string, checked: boolean) {
   color: var(--el-text-color-placeholder);
 }
 
-.search-input :deep(.el-input__clear) {
+.search-input :deep(.search-clear) {
   font-size: 1.4rem;
-  width: 1.4rem;
-  height: 1.4rem;
+  color: var(--el-text-color-placeholder);
+  cursor: pointer;
+  outline: none;
+}
+
+.search-input :deep(.search-clear:hover),
+.search-input :deep(.search-clear:focus) {
+  color: var(--el-text-color-regular);
 }
 
 .empty-state {
