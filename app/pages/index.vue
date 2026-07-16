@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { InitializedProject, UninitializedProject } from '~/libs/types'
-import { RefreshLeft } from '@element-plus/icons-vue'
+import { RefreshLeft, Search } from '@element-plus/icons-vue'
 import _ from 'underscore'
 import { isInitializedProject } from '~/libs/types'
 
@@ -95,13 +95,10 @@ function toggleTag(tag: string, checked: boolean) {
           v-model="searchQuery"
           :placeholder="$t('page.index.search')"
           clearable
+          :prefix-icon="Search"
           size="large"
           class="search-input"
-        >
-          <template #prefix>
-            <el-icon><Search /></el-icon>
-          </template>
-        </el-input>
+        />
         <div v-if="allTags.length" class="tag-filters">
           <el-check-tag
             v-for="tag in allTags"
@@ -111,10 +108,7 @@ function toggleTag(tag: string, checked: boolean) {
           >
             {{ tag }}
           </el-check-tag>
-          <el-button v-if="selectedTags.length" link size="small" class="reset-tags" @click="selectedTags = []">
-            <el-icon><RefreshLeft /></el-icon>
-            {{ $t('page.index.resetFilters') }}
-          </el-button>
+          <el-button v-if="selectedTags.length" :icon="RefreshLeft" circle class="reset-tags" @click="selectedTags = []" />
         </div>
       </div>
 
@@ -231,13 +225,13 @@ function toggleTag(tag: string, checked: boolean) {
   font-size: 1.1rem;
 }
 
-.search-input :deep(.el-input__prefix) {
-  font-size: 1.2rem;
+.search-input :deep(.el-input__prefix .el-icon) {
+  font-size: 1.3rem;
   color: var(--el-text-color-placeholder);
 }
 
-.search-input :deep(.el-input__clear) {
-  font-size: 1.2rem;
+.search-input :deep(.el-input__clear .el-icon) {
+  font-size: 1.3rem;
 }
 
 .empty-state {
