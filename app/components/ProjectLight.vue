@@ -11,22 +11,40 @@ const details = computed(() => ({
   label: t('project.details'),
   url: `/${props.project.id}/changes_logs`,
 }))
+
+const TAG_COLORS = [
+  { bg: '#fef3e5', color: '#b45309', border: '#f59e0b' }, // amber
+  { bg: '#eff6ff', color: '#1d4ed8', border: '#93c5fd' }, // blue
+  { bg: '#f0fdfa', color: '#0f766e', border: '#5eead4' }, // teal
+  { bg: '#eef2ff', color: '#4338ca', border: '#a5b4fc' }, // indigo
+  { bg: '#fff1f2', color: '#be123c', border: '#fda4af' }, // rose
+  { bg: '#f5f3ff', color: '#6d28d9', border: '#c4b5fd' }, // violet
+]
+
+function tagColor(tag: string) {
+  return TAG_COLORS[(tag.charCodeAt(0) + tag.length) % TAG_COLORS.length]!
+}
 </script>
 
 <template>
   <header>
-    <span>
+    <span class="project-info">
       <component :is="titleTag" class="title">
         {{ useI18nHash(project.title) }}
-        <el-tag
+      </component>
+      <div v-if="project.project_tags?.length" class="tags">
+        <span
           v-for="tag in project.project_tags"
           :key="tag"
-          size="small"
-        >
-          {{ tag }}
-        </el-tag>
-      </component>
-      <p>{{ useI18nHash(project.description) }}</p>
+          class="tag"
+          :style="{
+            background: tagColor(tag).bg,
+            color: tagColor(tag).color,
+            borderColor: tagColor(tag).border,
+          }"
+        >{{ tag }}</span>
+      </div>
+      <p class="description">{{ useI18nHash(project.description) }}</p>
     </span>
     <project-stats :last-update="project.date_last_update" :to-be-validated="project.to_be_validated" />
     <el-button-group>
@@ -45,29 +63,45 @@ header {
   align-items: center;
   display: flex;
   justify-content: space-between;
+  gap: 1rem;
 }
 
-header > span {
-  justify-content: start;
+.project-info {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-}
-
-.el-row {
-  flex-grow: 1;
-}
-
-P {
-  color: var(--el-color-info);
-  margin: 0;
+  gap: 4px;
 }
 
 .title {
-  align-items: center;
-  display: flex;
   margin: 0;
-  gap: 8px;
   font-weight: 600;
-  padding-right: 1em;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.description {
+  color: var(--el-color-info);
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 </style>
