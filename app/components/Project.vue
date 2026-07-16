@@ -203,9 +203,10 @@ const lastUpdateTitle = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   width: calc(100% + 2 * 16px);
   margin: 8px -16px 0;
-  padding: 4px 0;
+  padding: 10px 0;
   background: none;
   border: none;
   border-top: 1px solid var(--el-border-color-lighter);
@@ -214,9 +215,26 @@ const lastUpdateTitle = computed(() => {
   transition: color 0.15s, background 0.15s;
 }
 
+.expand-trigger::after {
+  content: '';
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--el-border-color-light);
+  transition: background 0.15s;
+}
+
 .expand-trigger:hover {
   background: var(--el-fill-color-light);
   color: var(--el-text-color-secondary);
+}
+
+.expand-trigger:hover::after {
+  background: var(--el-color-primary-light-5);
 }
 
 .expand-icon {
