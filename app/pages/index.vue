@@ -230,8 +230,10 @@ function toggleTag(tag: string, checked: boolean) {
   color: var(--el-text-color-placeholder);
 }
 
-.search-input :deep(.el-input__clear .el-icon) {
-  font-size: 1.3rem;
+.search-input :deep(.el-input__clear) {
+  font-size: 1.4rem;
+  width: 1.4rem;
+  height: 1.4rem;
 }
 
 .empty-state {
