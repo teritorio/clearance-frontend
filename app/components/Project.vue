@@ -51,20 +51,22 @@ const lastUpdateTitle = computed(() => {
   <el-card shadow="hover" class="project-card">
     <template #header>
       <div class="card-header">
-        <nuxt-link :to="`/${project.id}/changes_logs`" class="title-link">
-          <project-light :project="project" title-tag="h3" />
-        </nuxt-link>
-        <div class="header-stats">
-          <span v-if="lastUpdateCompact" class="stat-badge" :title="lastUpdateTitle">
-            <el-icon><Clock /></el-icon>{{ lastUpdateCompact }}
-          </span>
-          <span v-if="project.to_be_validated" class="stat-badge stat-pending" :title="$t('project.toBeValidated')">
-            <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
-          </span>
+        <div class="card-header-row">
+          <nuxt-link :to="`/${project.id}/changes_logs`" class="title-link">
+            <project-light :project="project" title-tag="h3" />
+          </nuxt-link>
+          <div class="header-stats">
+            <span v-if="lastUpdateCompact" class="stat-badge" :title="lastUpdateTitle">
+              <el-icon><Clock /></el-icon>{{ lastUpdateCompact }}
+            </span>
+            <span v-if="project.to_be_validated" class="stat-badge stat-pending" :title="$t('project.toBeValidated')">
+              <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
+            </span>
+          </div>
+          <nuxt-link :to="`/${project.id}/validators`" class="settings-icon" :title="$t('project.settings')">
+            <el-icon><Setting /></el-icon>
+          </nuxt-link>
         </div>
-        <nuxt-link :to="`/${project.id}/validators`" class="settings-icon" :title="$t('project.settings')">
-          <el-icon><Setting /></el-icon>
-        </nuxt-link>
         <button class="expand-trigger" @click="expanded = !expanded">
           <el-icon class="expand-icon" :class="{ 'is-expanded': expanded }">
             <ArrowDown />
@@ -143,6 +145,11 @@ const lastUpdateTitle = computed(() => {
 }
 
 .card-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-header-row {
   display: flex;
   align-items: flex-start;
   gap: 8px;
