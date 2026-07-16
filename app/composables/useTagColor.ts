@@ -1,10 +1,10 @@
 const TAG_COLORS = [
-  { bg: '#fef3e5', color: '#b45309', border: '#f59e0b' },
-  { bg: '#eff6ff', color: '#1d4ed8', border: '#93c5fd' },
-  { bg: '#f0fdfa', color: '#0f766e', border: '#5eead4' },
-  { bg: '#eef2ff', color: '#4338ca', border: '#a5b4fc' },
-  { bg: '#fff1f2', color: '#be123c', border: '#fda4af' },
-  { bg: '#f5f3ff', color: '#6d28d9', border: '#c4b5fd' },
+  { bg: '#fef3c7', color: '#92400e', border: '#f59e0b' }, // amber
+  { bg: '#fee2e2', color: '#991b1b', border: '#f87171' }, // red
+  { bg: '#d1fae5', color: '#065f46', border: '#34d399' }, // emerald
+  { bg: '#dbeafe', color: '#1e40af', border: '#60a5fa' }, // blue
+  { bg: '#ffedd5', color: '#9a3412', border: '#fb923c' }, // orange
+  { bg: '#f3e8ff', color: '#6b21a8', border: '#c084fc' }, // purple
 ]
 
 export function useTagColor(tag: string) {
