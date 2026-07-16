@@ -135,15 +135,19 @@ function tagFilterStyle(tag: string, checked: boolean) {
       </div>
 
       <template v-if="myProjects.length > 0">
-        <h2>{{ $t('page.index.myProjects') }}</h2>
-        <el-row :gutter="20" class="project-grid">
-          <el-col v-for="project in filteredMyProjects" :key="project.id" :xs="24" :md="12" :lg="8">
-            <Project :project="project" />
-          </el-col>
-        </el-row>
+        <h2 class="section-title">
+          {{ $t('page.index.myProjects') }}
+          <span class="section-count">{{ filteredMyProjects.length }}</span>
+        </h2>
+        <div class="project-list">
+          <ProjectRow v-for="project in filteredMyProjects" :key="project.id" :project="project" />
+        </div>
       </template>
 
-      <h2>{{ $t('page.index.publicProjects') }}</h2>
+      <h2 class="section-title">
+        {{ $t('page.index.publicProjects') }}
+        <span class="section-count">{{ filteredOtherProjects.length }}</span>
+      </h2>
       <template v-if="filteredOtherProjects.length > 0">
         <el-row :gutter="20" class="project-grid">
           <el-col v-for="project in filteredOtherProjects" :key="project.id" :xs="24" :md="12" :lg="8">
@@ -163,19 +167,24 @@ function tagFilterStyle(tag: string, checked: boolean) {
       </div>
 
       <template v-if="uninitializedProjects?.length">
-        <h2>{{ $t('page.index.uninitializedProjects') }}</h2>
-        <el-row :gutter="20" class="project-grid">
-          <el-col v-for="project in uninitializedProjects" :key="project.id" :xs="24" :md="12" :lg="8">
-            <el-card shadow="never" class="ghost-card">
-              <div class="ghost-card-inner">
-                <span class="project-id">{{ project.id }}</span>
-                <el-tag type="info" effect="plain" size="small" disable-transitions>
-                  {{ $t('page.index.pendingInit') }}
-                </el-tag>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
+        <details class="uninitialized-section">
+          <summary class="section-title">
+            {{ $t('page.index.uninitializedProjects') }}
+            <span class="section-count">{{ uninitializedProjects.length }}</span>
+          </summary>
+          <el-row :gutter="20" class="project-grid uninitialized-grid">
+            <el-col v-for="project in uninitializedProjects" :key="project.id" :xs="24" :md="12" :lg="8">
+              <el-card shadow="never" class="ghost-card">
+                <div class="ghost-card-inner">
+                  <span class="project-id">{{ project.id }}</span>
+                  <el-tag type="info" effect="plain" size="small" disable-transitions>
+                    {{ $t('page.index.pendingInit') }}
+                  </el-tag>
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+        </details>
       </template>
     </el-container>
   </el-main>
@@ -299,6 +308,61 @@ function tagFilterStyle(tag: string, checked: boolean) {
 .reset-tags {
   color: var(--el-text-color-placeholder);
   font-size: 0.8rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: default;
+}
+
+.section-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 11px;
+  background: var(--el-fill-color);
+  color: var(--el-text-color-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 2rem;
+}
+
+.uninitialized-section {
+  margin-top: 1rem;
+}
+
+.uninitialized-section > summary {
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.uninitialized-section > summary::before {
+  content: '▶';
+  display: inline-block;
+  font-size: 0.6rem;
+  margin-right: 6px;
+  transition: transform 0.2s;
+  color: var(--el-text-color-placeholder);
+}
+
+.uninitialized-section[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.uninitialized-grid {
+  margin-top: 1rem;
 }
 
 .project-grid :deep(.el-col) {
