@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { InitializedProject, UninitializedProject } from '~/libs/types'
-import { CircleClose, RefreshLeft, Search } from '@element-plus/icons-vue'
+import { RefreshLeft, Search } from '@element-plus/icons-vue'
 import _ from 'underscore'
 import { isInitializedProject } from '~/libs/types'
 
@@ -98,8 +98,9 @@ function toggleTag(tag: string, checked: boolean) {
           size="large"
           class="search-input"
         >
-          <template v-if="searchQuery" #suffix>
+          <template #suffix>
             <el-icon
+              v-if="searchQuery"
               tabindex="0"
               class="search-clear"
               @click="searchQuery = ''"
