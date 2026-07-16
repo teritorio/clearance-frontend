@@ -166,18 +166,18 @@ const lastUpdateTitle = computed(() => {
 .stat-badge {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  font-size: 0.7rem;
+  gap: 4px;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--el-text-color-secondary);
   background: var(--el-fill-color);
   border-radius: 10px;
-  padding: 2px 6px;
+  padding: 3px 8px;
   white-space: nowrap;
 }
 
 .stat-badge .el-icon {
-  font-size: 0.75rem;
+  font-size: 0.9rem;
 }
 
 .stat-pending {
