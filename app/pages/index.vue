@@ -88,18 +88,25 @@ function tagFilterStyle(tag: string, checked: boolean) {
   <el-main>
     <el-container direction="vertical">
       <div class="hero">
-        <div class="hero-body">
-          <h1>{{ $t('app.title') }}</h1>
-          <p>{{ $t('app.summary') }}</p>
-          <p v-if="admin" class="hero-admin">
-            {{ $t('app.project.new') }}
-            <a :href="`https://www.openstreetmap.org/user/${encodeURIComponent(admin)}`" target="_blank">{{ admin }}</a>
-          </p>
-        </div>
+        <h1 class="hero-title">
+          {{ $t('app.title') }}
+        </h1>
         <div class="hero-stats">
-          <el-statistic :value="initializedProjects.length" :title="$t('page.index.totalProjects')" />
-          <el-statistic :value="totalPending" :title="$t('page.index.totalPending')" />
+          <span class="hero-stat">
+            <span class="hero-stat-value">{{ initializedProjects.length }}</span>
+            <span class="hero-stat-label">{{ $t('page.index.totalProjects') }}</span>
+          </span>
+          <span class="hero-stat-sep">·</span>
+          <span class="hero-stat hero-stat-pending">
+            <el-icon><CircleCheck /></el-icon>
+            <span class="hero-stat-value">{{ totalPending.toLocaleString() }}</span>
+            <span class="hero-stat-label">{{ $t('page.index.totalPending') }}</span>
+          </span>
         </div>
+        <p v-if="admin" class="hero-admin">
+          {{ $t('app.project.new') }}
+          <a :href="`https://www.openstreetmap.org/user/${encodeURIComponent(admin)}`" target="_blank">{{ admin }}</a>
+        </p>
       </div>
 
       <div class="search-bar">
@@ -197,49 +204,59 @@ function tagFilterStyle(tag: string, checked: boolean) {
 <style scoped>
 .hero {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 2rem;
-  background-color: var(--el-color-primary-light-9);
-  border-radius: var(--el-border-radius-base);
-  padding: 1.5rem 2rem;
-  margin-bottom: 1.5rem;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+  flex-wrap: wrap;
 }
 
-.hero-body {
-  flex: 0 0 33%;
-  max-width: 33%;
-}
-
-.hero-body h1 {
-  margin: 0 0 0.5rem;
-}
-
-.hero-body p {
-  color: var(--el-text-color-secondary);
-  font-size: 1rem;
-  margin: 0.25rem 0 0;
-  line-height: 1.5;
-}
-
-.hero-admin {
-  margin-top: 0.5rem !important;
+.hero-title {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--el-text-color-primary);
 }
 
 .hero-stats {
-  flex: 1;
   display: flex;
-  gap: 3rem;
   align-items: center;
-  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-left: auto;
 }
 
-.hero-stats :deep(.el-statistic__head) {
-  font-size: 1rem;
+.hero-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--el-text-color-secondary);
 }
 
-.hero-stats :deep(.el-statistic__content) {
-  font-size: 3rem;
+.hero-stat-value {
+  font-weight: 700;
+  color: var(--el-text-color-primary);
+}
+
+.hero-stat-pending {
+  color: var(--el-color-primary);
+}
+
+.hero-stat-pending .hero-stat-value {
+  color: var(--el-color-primary);
+}
+
+.hero-stat-sep {
+  color: var(--el-text-color-placeholder);
+}
+
+.hero-admin {
+  width: 100%;
+  font-size: 0.875rem;
+  color: var(--el-text-color-secondary);
+  margin: 0;
+  padding-top: 0.25rem;
 }
 
 .search-bar {
