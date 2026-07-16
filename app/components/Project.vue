@@ -254,6 +254,14 @@ const lastUpdateTitle = computed(() => {
   align-items: center;
   gap: 6px;
   font-size: 0.875rem;
+  min-width: 0;
+}
+
+.link-list a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .link-list .el-icon {
