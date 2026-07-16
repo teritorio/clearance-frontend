@@ -33,5 +33,17 @@ watch(data, (val) => {
 <style>
 body {
   margin: 0;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Theme: aligned with clearance-website (amber primary) */
+:root {
+  --el-color-primary: #f59e0b;
+  --el-color-primary-dark-2: #d97706;
+  --el-color-primary-light-3: #f8bb54;
+  --el-color-primary-light-5: #fbcc85;
+  --el-color-primary-light-7: #fdddb5;
+  --el-color-primary-light-8: #fee5ca;
+  --el-color-primary-light-9: #fef3e5;
 }
 </style>

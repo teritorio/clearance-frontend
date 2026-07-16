@@ -18,25 +18,26 @@ async function changeLocale(code: string) {
 
 <template>
   <el-header height="68px">
-    <nuxt-link to="/" :title="$t('app.back')">
+    <nuxt-link to="/" :title="$t('app.back')" class="brand">
       <img src="/favicon.svg" />
+      <span class="brand-name">clearance</span>
     </nuxt-link>
     <div>
-      <el-select
-        class="m-2"
-        size="small"
-        :placeholder="`${getFlagEmoji(localeProperties.flag as string)} ${localeProperties.name}`"
-        @change="changeLocale"
-      >
-        <el-option
-          v-for="l in locales"
-          :key="l.code"
-          :label="`${getFlagEmoji(l.flag as string)} ${l.name}`"
-          :value="l.code"
-          :fit-input-width="true"
-          :disabled="l.code === locale"
-        />
-      </el-select>
+      <el-dropdown trigger="click" @command="changeLocale">
+        <span class="lang-trigger">{{ getFlagEmoji(localeProperties.flag as string) }}</span>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item
+              v-for="l in locales"
+              :key="l.code"
+              :command="l.code"
+              :disabled="l.code === locale"
+            >
+              {{ getFlagEmoji(l.flag as string) }} {{ l.name }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
       <user-profile />
     </div>
   </el-header>
@@ -56,15 +57,28 @@ header > div {
   margin-left: auto;
 }
 
-.el-select {
-  width: 100px;
-}
-
 img {
-  width: 68px;
+  width: 36px;
 }
 
-:deep(.el-select__placeholder) {
-  color: var(--el-text-color-regular)
+.lang-trigger {
+  font-size: 1.4rem;
+  cursor: pointer;
+  line-height: 1;
+  user-select: none;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.brand-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--el-text-color-primary);
+  letter-spacing: -0.02em;
 }
 </style>
