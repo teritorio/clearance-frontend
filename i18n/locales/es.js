@@ -23,6 +23,7 @@ export default {
       myProjects: 'Mis proyectos',
       publicProjects: 'Proyectos públicos',
       uninitializedProjects: 'Proyectos no inicializados',
+      pendingInit: 'Pendiente de inicialización',
       empty: 'Sin proyecto',
       noResults: 'Sin resultados para tu búsqueda',
       resetSearch: 'Limpiar búsqueda',
