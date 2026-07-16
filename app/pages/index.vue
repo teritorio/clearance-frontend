@@ -70,6 +70,14 @@ function toggleTag(tag: string, checked: boolean) {
     selectedTags.value = selectedTags.value.filter((t) => t !== tag)
   }
 }
+
+function tagFilterStyle(tag: string, checked: boolean) {
+  const c = useTagColor(tag)
+  if (checked) {
+    return { background: c.color, borderColor: c.color, color: '#fff' }
+  }
+  return { background: c.bg, borderColor: c.border, color: c.color }
+}
 </script>
 
 <template>
@@ -117,6 +125,7 @@ function toggleTag(tag: string, checked: boolean) {
             v-for="tag in allTags"
             :key="tag"
             :checked="selectedTags.includes(tag)"
+            :style="tagFilterStyle(tag, selectedTags.includes(tag))"
             @change="(checked) => toggleTag(tag, checked)"
           >
             {{ tag }}
@@ -275,25 +284,16 @@ function toggleTag(tag: string, checked: boolean) {
 }
 
 .tag-filters :deep(.el-check-tag) {
-  border: 1px solid var(--el-border-color);
-  background: var(--el-fill-color-lighter);
-  color: var(--el-text-color-regular);
+  border: 1px solid;
   border-radius: 20px;
   padding: 7px 20px;
   font-size: 0.95rem;
   font-weight: 500;
-  transition: all 0.15s;
+  transition: filter 0.15s;
 }
 
 .tag-filters :deep(.el-check-tag:hover) {
-  border-color: var(--el-color-primary-light-3);
-  background: var(--el-color-primary-light-9);
-}
-
-.tag-filters :deep(.el-check-tag.is-checked) {
-  background: var(--el-color-primary);
-  border-color: var(--el-color-primary);
-  color: #fff;
+  filter: brightness(0.92);
 }
 
 .reset-tags {
