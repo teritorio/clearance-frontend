@@ -96,6 +96,7 @@ function toggleTag(tag: string, checked: boolean) {
           :placeholder="$t('page.index.search')"
           :prefix-icon="Search"
           size="large"
+          autofocus
           class="search-input"
         >
           <template #suffix>
