@@ -88,6 +88,8 @@ function toggleTag(tag: string, checked: boolean) {
           :placeholder="$t('page.index.search')"
           clearable
           prefix-icon="Search"
+          size="large"
+          class="search-input"
         />
         <div v-if="allTags.length" class="tag-filters">
           <el-check-tag
@@ -148,7 +150,8 @@ function toggleTag(tag: string, checked: boolean) {
 }
 
 .hero-body {
-  flex: 1;
+  flex: 0 0 33%;
+  max-width: 33%;
 }
 
 .hero-body h1 {
@@ -157,8 +160,9 @@ function toggleTag(tag: string, checked: boolean) {
 
 .hero-body p {
   color: var(--el-text-color-secondary);
-  font-size: 0.9rem;
+  font-size: 1rem;
   margin: 0.25rem 0 0;
+  line-height: 1.5;
 }
 
 .hero-admin {
@@ -166,17 +170,44 @@ function toggleTag(tag: string, checked: boolean) {
 }
 
 .hero-stats {
+  flex: 1;
   display: flex;
-  gap: 2rem;
-  flex-shrink: 0;
+  gap: 3rem;
   align-items: center;
+  justify-content: flex-end;
+}
+
+.hero-stats :deep(.el-statistic__head) {
+  font-size: 1rem;
+}
+
+.hero-stats :deep(.el-statistic__content) {
+  font-size: 3rem;
 }
 
 .search-bar {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: center;
+}
+
+.search-input {
+  width: 65%;
+  min-width: 400px;
+}
+
+.search-input :deep(.el-input__wrapper) {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  padding: 8px 20px;
+  font-size: 1.1rem;
+}
+
+.search-input :deep(.el-input__inner) {
+  height: 36px;
+  font-size: 1.1rem;
 }
 
 .tag-filters {
@@ -184,10 +215,34 @@ function toggleTag(tag: string, checked: boolean) {
   flex-wrap: wrap;
   gap: 0.5rem;
   align-items: center;
+  justify-content: center;
+}
+
+.tag-filters :deep(.el-check-tag) {
+  border: 1px solid var(--el-border-color);
+  background: var(--el-fill-color-lighter);
+  color: var(--el-text-color-regular);
+  border-radius: 20px;
+  padding: 7px 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.tag-filters :deep(.el-check-tag:hover) {
+  border-color: var(--el-color-primary-light-3);
+  background: var(--el-color-primary-light-9);
+}
+
+.tag-filters :deep(.el-check-tag.is-checked) {
+  background: var(--el-color-primary);
+  border-color: var(--el-color-primary);
+  color: #fff;
 }
 
 .reset-tags {
-  color: var(--el-color-danger);
+  color: var(--el-text-color-placeholder);
+  font-size: 0.8rem;
 }
 
 .project-grid :deep(.el-col) {
