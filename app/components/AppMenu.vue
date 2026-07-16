@@ -23,12 +23,6 @@ async function changeLocale(code: string) {
       <span class="brand-name">clearance</span>
     </nuxt-link>
     <div>
-      <a
-        href="https://clearance.teritorio.xyz"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="website-link"
-      >clearance.teritorio.xyz <span class="website-link-icon">↗</span></a>
       <el-dropdown trigger="click" @command="changeLocale">
         <span class="lang-trigger">{{ getFlagEmoji(localeProperties.flag as string) }}</span>
         <template #dropdown>
@@ -90,22 +84,5 @@ img {
   font-weight: 700;
   color: var(--el-text-color-primary);
   letter-spacing: -0.02em;
-}
-
-.website-link {
-  color: var(--el-text-color-secondary);
-  font-size: 0.8rem;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color 0.2s;
-}
-
-.website-link:hover {
-  color: var(--el-color-primary);
-}
-
-.website-link-icon {
-  font-size: 0.7rem;
-  vertical-align: super;
 }
 </style>
