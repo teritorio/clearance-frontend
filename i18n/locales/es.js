@@ -7,6 +7,7 @@ export default {
     summary:
       '"Clearance" es una herramienta para producir extractos OSM y mantenerlos actualizados respetando las normas de calidad. Se basa en actualizaciones parciales y locales. Los grupos de datos rechazados deben ser corregidos en OSM o aceptados manualmente. Los cambios OSM a revisar se gestionan de forma colaborativa por grupos de interés.',
     github: 'Ver código fuente en GitHub',
+    doc: 'Documentación',
     attribution: {
       data: 'Datos y mapas',
       osm: '© colaboradores OpenStreetMap',

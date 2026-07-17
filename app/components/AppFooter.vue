@@ -7,6 +7,8 @@ const config = useRuntimeConfig()
     <span class="footer-left">
       {{ $t('app.attribution.website') }}
       <a href="https://clearance.teritorio.xyz" target="_blank" rel="noopener noreferrer">clearance.teritorio.xyz</a>
+      <span class="footer-sep">·</span>
+      <a href="https://clearance.teritorio.xyz/en/how-it-works/replication" target="_blank" rel="noopener noreferrer">{{ $t('app.doc') }}</a>
     </span>
     <span class="footer-center">
       {{ $t('app.attribution.madeBy') }}
@@ -83,6 +85,11 @@ const config = useRuntimeConfig()
 
 .version-sep {
   color: var(--el-text-color-placeholder);
+}
+
+.footer-sep {
+  color: var(--el-text-color-placeholder);
+  margin: 0 0.15rem;
 }
 
 .github-link {
