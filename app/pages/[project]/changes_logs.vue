@@ -2,7 +2,7 @@
 import type { Action, IFeature } from '@teritorio/openstreetmap-logical-history-component'
 import type { Geometry } from 'geojson'
 import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
-import { CircleCheck, Clock } from '@element-plus/icons-vue'
+import { CircleCheck, Clock, Setting } from '@element-plus/icons-vue'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
 import dayjs from 'dayjs'
 import en from 'dayjs/locale/en-gb'
@@ -362,7 +362,12 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
     <el-container v-if="data && status === 'success'" direction="vertical" class="changes-container">
       <div class="page-layout">
         <aside class="sidebar">
-          <project-light :project="data.project" title-tag="h1" />
+          <div class="project-header">
+            <project-light :project="data.project" title-tag="h1" />
+            <nuxt-link :to="`/${projectSlug}/validators`" class="settings-link" :title="$t('project.settings')">
+              <el-icon><Setting /></el-icon>
+            </nuxt-link>
+          </div>
           <div v-if="lastUpdateCompact || data.project.to_be_validated" class="project-stats">
             <div v-if="lastUpdateCompact" class="stat-item stat-time">
               <span class="stat-label">
@@ -543,6 +548,34 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   flex-direction: column;
   gap: 1rem;
   padding-right: 4px;
+}
+
+.project-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.settings-link {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--el-text-color-placeholder);
+  text-decoration: none;
+  transition: color 0.15s, background 0.15s;
+}
+
+.settings-link:hover {
+  color: var(--el-text-color-regular);
+  background: var(--el-fill-color);
+}
+
+.settings-link .el-icon {
+  font-size: 16px;
 }
 
 .project-stats {
