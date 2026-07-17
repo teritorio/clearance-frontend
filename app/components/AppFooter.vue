@@ -18,7 +18,14 @@ const config = useRuntimeConfig()
       </a>
     </span>
     <span class="footer-right">
-      <span v-if="config.public.version" class="version">v{{ config.public.version }} ·</span>
+      <a
+        v-if="config.public.version"
+        :href="`https://github.com/teritorio/clearance-frontend/releases/tag/v${config.public.version}`"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="version"
+      >v{{ config.public.version }}</a>
+      <span v-if="config.public.version" class="version-sep">·</span>
       {{ $t('app.attribution.data') }}
       <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">{{
         $t('app.attribution.osm')
@@ -65,6 +72,16 @@ const config = useRuntimeConfig()
 }
 
 .version {
+  color: var(--el-text-color-placeholder);
+  text-decoration: none;
+}
+
+.version:hover {
+  color: var(--el-text-color-secondary);
+  text-decoration: underline;
+}
+
+.version-sep {
   color: var(--el-text-color-placeholder);
 }
 
