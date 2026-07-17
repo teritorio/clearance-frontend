@@ -56,27 +56,6 @@ function resetSearch() {
   searchQuery.value = ''
   selectedTags.value = []
 }
-
-function toggleTag(tag: string, checked: boolean) {
-  if (checked) {
-    selectedTags.value = [...selectedTags.value, tag]
-  }
-  else {
-    selectedTags.value = selectedTags.value.filter((t) => t !== tag)
-  }
-}
-
-function tagFilterStyle(tag: string, checked: boolean) {
-  if (checked) {
-    return {
-      background: 'var(--el-color-primary)',
-      borderColor: 'var(--el-color-primary)',
-      color: '#fff',
-    }
-  }
-  const c = useTagColor(tag)
-  return { background: c.bg, borderColor: c.border, color: c.color }
-}
 </script>
 
 <template>
@@ -106,18 +85,24 @@ function tagFilterStyle(tag: string, checked: boolean) {
             </el-icon>
           </template>
         </el-input>
-        <div v-if="allTags.length" class="tag-filters">
-          <el-check-tag
+        <el-select
+          v-if="allTags.length"
+          v-model="selectedTags"
+          multiple
+          clearable
+          collapse-tags
+          collapse-tags-tooltip
+          :placeholder="$t('page.index.filterByTag')"
+          size="large"
+          class="tag-select"
+        >
+          <el-option
             v-for="tag in allTags"
             :key="tag"
-            :checked="selectedTags.includes(tag)"
-            :style="tagFilterStyle(tag, selectedTags.includes(tag))"
-            @change="(checked) => toggleTag(tag, checked)"
-          >
-            {{ tag }}
-          </el-check-tag>
-          <el-button v-if="selectedTags.length" :icon="RefreshLeft" circle class="reset-tags" @click="selectedTags = []" />
-        </div>
+            :label="tag"
+            :value="tag"
+          />
+        </el-select>
       </div>
 
       <template v-if="myProjects.length > 0">
@@ -179,15 +164,21 @@ function tagFilterStyle(tag: string, checked: boolean) {
 <style scoped>
 .search-bar {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
   margin-bottom: 2rem;
   align-items: center;
+  justify-content: center;
 }
 
 .search-input {
-  width: 65%;
-  min-width: 400px;
+  flex: 1;
+  max-width: 600px;
+  min-width: 200px;
+}
+
+.tag-select {
+  width: 220px;
+  flex-shrink: 0;
 }
 
 .search-input :deep(.el-input__wrapper) {
@@ -221,32 +212,6 @@ function tagFilterStyle(tag: string, checked: boolean) {
 
 .empty-state {
   padding: 2rem 0;
-}
-
-.tag-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: center;
-  justify-content: center;
-}
-
-.tag-filters :deep(.el-check-tag) {
-  border: 1px solid;
-  border-radius: 20px;
-  padding: 7px 20px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  transition: filter 0.15s;
-}
-
-.tag-filters :deep(.el-check-tag:hover) {
-  filter: brightness(0.92);
-}
-
-.reset-tags {
-  color: var(--el-text-color-placeholder);
-  font-size: 0.8rem;
 }
 
 .section-title {
