@@ -561,9 +561,9 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   color: var(--el-text-color-placeholder);
   text-decoration: none;
   transition: color 0.15s, background 0.15s;
@@ -575,7 +575,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 }
 
 .settings-link .el-icon {
-  font-size: 16px;
+  font-size: 22px;
 }
 
 .project-stats {
