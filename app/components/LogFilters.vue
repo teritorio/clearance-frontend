@@ -64,12 +64,23 @@ function getStats<Type>(data: Type[], key: (o: Type) => string = (i) => `${i}`):
   ).map(([key, count]) => [index[key]!, count])
 }
 
-async function applyFilter(key: string, value: string) {
-  const query = filters.value?.[key] === value
-    ? Object.fromEntries(Object.entries(route.query).filter(([k, _v]) => k !== key))
-    : { ...route.query, [key]: value }
-  await router.replace({ ...route, query })
+function filterModel(queryKey: string) {
+  return computed({
+    get: () => (filters.value?.[queryKey] as string) ?? null,
+    set: async (val: string | null) => {
+      const query = val
+        ? { ...route.query, [queryKey]: val }
+        : Object.fromEntries(Object.entries(route.query).filter(([k]) => k !== queryKey))
+      await router.replace({ ...route, query })
+    },
+  })
 }
+
+const selectedAction = filterModel('filterByAction')
+const selectedUserGroup = filterModel('filterByUserGroups')
+const selectedSelector = filterModel('filterBySelectors')
+const selectedUser = filterModel('filterByUsers')
+const selectedDate = filterModel('filterByDate')
 
 async function resetAllFilters() {
   await router.replace({ ...route, query: undefined })
@@ -86,118 +97,77 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
 
     <div v-if="stats.length" class="filter-group">
       <label>{{ $t('logs.filterAction') }}</label>
-      <div class="filter-chips">
-        <el-badge
+      <el-select v-model="selectedAction" clearable size="small" class="filter-select">
+        <el-option
           v-for="[key, count] in stats"
           :key="key"
-          :value="count"
-          class="item"
-          :max="999"
+          :value="key"
+          :label="key"
         >
-          <el-button
-            type="primary"
-            :plain="filters?.filterByAction !== key"
-            :disabled="!!(filters?.filterByAction && filters?.filterByAction !== key)"
-            size="small"
-            @click="applyFilter('filterByAction', key)"
-          >
-            {{ key }}
-          </el-button>
-        </el-badge>
-      </div>
+          <span class="option-label">{{ key }}</span>
+          <span class="option-count">{{ count }}</span>
+        </el-option>
+      </el-select>
     </div>
 
     <div v-if="statUserGroups.length" class="filter-group">
       <label>{{ $t('logs.filterUserGroups') }}</label>
-      <div class="filter-chips">
-        <el-badge
+      <el-select v-model="selectedUserGroup" clearable size="small" class="filter-select">
+        <el-option
           v-for="[key, count] in statUserGroups"
           :key="key"
-          :value="count"
-          class="item"
-          :max="999"
+          :value="key"
+          :label="key"
         >
-          <el-button
-            type="primary"
-            :plain="filters?.filterByUserGroups !== key"
-            :disabled="!!(filters?.filterByUserGroups && filters?.filterByUserGroups !== key)"
-            size="small"
-            @click="applyFilter('filterByUserGroups', key)"
-          >
-            {{ key }}
-          </el-button>
-        </el-badge>
-      </div>
+          <span class="option-label">{{ key }}</span>
+          <span class="option-count">{{ count }}</span>
+        </el-option>
+      </el-select>
     </div>
 
     <div v-if="statSelectors.length" class="filter-group">
       <label>{{ $t('logs.filterSelectors') }}</label>
-      <div class="filter-chips">
-        <el-badge
+      <el-select v-model="selectedSelector" clearable size="small" class="filter-select">
+        <el-option
           v-for="[match, count] in statSelectors"
           :key="match.selectors.join()"
-          :value="count"
-          class="item"
-          :max="999"
+          :value="match.selectors.join()"
+          :label="match.selectors.join(' ')"
         >
-          <el-button
-            type="primary"
-            :plain="filters?.filterBySelectors !== match.selectors.join()"
-            :disabled="!!(filters?.filterBySelectors && filters?.filterBySelectors !== match.selectors.join())"
-            size="small"
-            @click="applyFilter('filterBySelectors', match.selectors.join())"
-          >
-            {{ match.selectors.join(' ') }}
-          </el-button>
-        </el-badge>
-      </div>
+          <span class="option-label">{{ match.selectors.join(' ') }}</span>
+          <span class="option-count">{{ count }}</span>
+        </el-option>
+      </el-select>
     </div>
 
     <div v-if="statUsers.length" class="filter-group">
       <label>{{ $t('logs.filterUsers') }}</label>
-      <div class="filter-chips">
-        <el-badge
-          v-for="[key, count] in statUsers.slice(0, 20)"
+      <el-select v-model="selectedUser" clearable size="small" class="filter-select" filterable>
+        <el-option
+          v-for="[key, count] in statUsers"
           :key="key"
-          :value="count"
-          class="item"
-          :max="999"
+          :value="key"
+          :label="key"
         >
-          <el-button
-            type="primary"
-            :plain="filters?.filterByUsers !== key"
-            :disabled="!!(filters?.filterByUsers && filters?.filterByUsers !== key)"
-            size="small"
-            @click="applyFilter('filterByUsers', key)"
-          >
-            {{ key }}
-          </el-button>
-        </el-badge>
-        <span v-if="statUsers.length > 20">{{ $t('logs.tags_more') }}</span>
-      </div>
+          <span class="option-label">{{ key }}</span>
+          <span class="option-count">{{ count }}</span>
+        </el-option>
+      </el-select>
     </div>
 
     <div v-if="statDates.length" class="filter-group">
       <label>{{ $t('logs.filterDates') }}</label>
-      <div class="filter-chips">
-        <el-badge
+      <el-select v-model="selectedDate" clearable size="small" class="filter-select">
+        <el-option
           v-for="[key, count] in statDates"
           :key="key"
-          :value="count"
-          class="item"
-          :max="999"
+          :value="key"
+          :label="key"
         >
-          <el-button
-            type="primary"
-            :plain="filters?.filterByDate !== key"
-            :disabled="!!(filters?.filterByDate && filters?.filterByDate !== key)"
-            size="small"
-            @click="applyFilter('filterByDate', key)"
-          >
-            {{ key }}
-          </el-button>
-        </el-badge>
-      </div>
+          <span class="option-label">{{ key }}</span>
+          <span class="option-count">{{ count }}</span>
+        </el-option>
+      </el-select>
     </div>
 
     <el-button v-if="hasActiveFilters" link size="small" class="reset-btn" @click="resetAllFilters">
@@ -225,7 +195,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
 .filter-group {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.3rem;
 }
 
 .filter-group label {
@@ -234,11 +204,32 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
   color: var(--el-text-color-placeholder);
 }
 
-.filter-chips {
+.filter-select {
+  width: 100%;
+}
+
+.option-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.85rem;
+}
+
+.option-count {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: var(--el-text-color-placeholder);
+  margin-left: 6px;
+}
+
+:deep(.el-select__wrapper) {
+  font-size: 0.85rem;
+}
+
+:deep(.el-select-dropdown__item) {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .reset-btn {
