@@ -364,12 +364,18 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
         <aside class="sidebar">
           <project-light :project="data.project" title-tag="h1" />
           <div v-if="lastUpdateCompact || data.project.to_be_validated" class="project-stats">
-            <span v-if="lastUpdateCompact" class="stat-badge stat-time" :title="lastUpdateTitle">
-              <el-icon><Clock /></el-icon>{{ lastUpdateCompact }}
-            </span>
-            <span v-if="data.project.to_be_validated" class="stat-badge stat-pending" :title="$t('project.toBeValidated')">
-              <el-icon><CircleCheck /></el-icon>{{ data.project.to_be_validated }}
-            </span>
+            <div v-if="lastUpdateCompact" class="stat-item stat-time">
+              <span class="stat-label">
+                <el-icon><Clock /></el-icon>{{ $t('project.lastUpdate') }}
+              </span>
+              <span class="stat-value" :title="lastUpdateTitle">{{ lastUpdateTitle }}</span>
+            </div>
+            <div v-if="data.project.to_be_validated" class="stat-item stat-pending">
+              <span class="stat-label">
+                <el-icon><CircleCheck /></el-icon>{{ $t('project.toBeValidated') }}
+              </span>
+              <span class="stat-value">{{ data.project.to_be_validated }}</span>
+            </div>
           </div>
           <diff-map :base-geom="baseGeoms" :change-geom="changeGeoms" />
           <log-filters :lo-chas="data.loChas" />
@@ -520,28 +526,44 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 
 .project-stats {
   display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.stat-badge {
-  display: inline-flex;
+.stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+.stat-label {
+  display: flex;
   align-items: center;
   gap: 4px;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+}
+
+.stat-value {
+  font-size: 0.9rem;
+  font-weight: 600;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-time {
-  color: var(--el-color-info);
+  color: var(--el-color-info-dark-2);
   background: var(--el-color-info-light-9);
 }
 
 .stat-pending {
-  color: var(--el-color-primary);
+  color: var(--el-color-primary-dark-2);
   background: var(--el-color-primary-light-9);
 }
 
