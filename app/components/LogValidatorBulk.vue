@@ -1,4 +1,5 @@
 <script setup lang="ts">
+defineProps<{ count: number }>()
 defineEmits(['bulkValidation'])
 </script>
 
@@ -6,7 +7,7 @@ defineEmits(['bulkValidation'])
   <div class="bulk-validator">
     <el-divider />
     <el-popconfirm
-      :title="$t('logs.validate_selection_confirm')"
+      :title="$t('logs.validate_selection_confirm', { n: count })"
       :confirm-button-text="$t('logs.validate_selection_confirm_ok')"
       :cancel-button-text="$t('logs.validate_selection_confirm_cancel')"
       confirm-button-type="primary"
