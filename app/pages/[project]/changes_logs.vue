@@ -575,11 +575,12 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 }
 
 .stat-value {
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 1.25rem;
+  font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 .stat-time {
