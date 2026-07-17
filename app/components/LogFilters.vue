@@ -97,7 +97,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
 
     <div v-if="stats.length" class="filter-group">
       <label>{{ $t('logs.filterAction') }}</label>
-      <el-select v-model="selectedAction" clearable size="small" class="filter-select">
+      <el-select v-model="selectedAction" clearable size="large" class="filter-select">
         <el-option
           v-for="[key, count] in stats"
           :key="key"
@@ -112,7 +112,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
 
     <div v-if="statUserGroups.length" class="filter-group">
       <label>{{ $t('logs.filterUserGroups') }}</label>
-      <el-select v-model="selectedUserGroup" clearable size="small" class="filter-select">
+      <el-select v-model="selectedUserGroup" clearable size="large" class="filter-select">
         <el-option
           v-for="[key, count] in statUserGroups"
           :key="key"
@@ -127,7 +127,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
 
     <div v-if="statSelectors.length" class="filter-group">
       <label>{{ $t('logs.filterSelectors') }}</label>
-      <el-select v-model="selectedSelector" clearable size="small" class="filter-select">
+      <el-select v-model="selectedSelector" clearable size="large" class="filter-select">
         <el-option
           v-for="[match, count] in statSelectors"
           :key="match.selectors.join()"
@@ -142,7 +142,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
 
     <div v-if="statUsers.length" class="filter-group">
       <label>{{ $t('logs.filterUsers') }}</label>
-      <el-select v-model="selectedUser" clearable size="small" class="filter-select" filterable>
+      <el-select v-model="selectedUser" clearable size="large" class="filter-select" filterable>
         <el-option
           v-for="[key, count] in statUsers"
           :key="key"
@@ -157,7 +157,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
 
     <div v-if="statDates.length" class="filter-group">
       <label>{{ $t('logs.filterDates') }}</label>
-      <el-select v-model="selectedDate" clearable size="small" class="filter-select">
+      <el-select v-model="selectedDate" clearable size="large" class="filter-select">
         <el-option
           v-for="[key, count] in statDates"
           :key="key"
@@ -180,7 +180,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
 .log-filters {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .filters-title {
@@ -195,13 +195,13 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
 .filter-group {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.4rem;
 }
 
 .filter-group label {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--el-text-color-placeholder);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--el-text-color-regular);
 }
 
 .filter-select {
@@ -213,18 +213,14 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.85rem;
 }
 
 .option-count {
   flex-shrink: 0;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
   color: var(--el-text-color-placeholder);
-  margin-left: 6px;
-}
-
-:deep(.el-select__wrapper) {
-  font-size: 0.85rem;
+  margin-left: 8px;
 }
 
 :deep(.el-select-dropdown__item) {
