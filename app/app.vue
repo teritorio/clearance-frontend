@@ -40,6 +40,24 @@ body {
   min-height: 100vh;
 }
 
+/* Changelogs page: fixed-height layout, only locha list scrolls */
+body.layout-fixed,
+body.layout-fixed #__nuxt {
+  height: 100vh;
+  overflow: hidden;
+}
+
+body.layout-fixed .el-container {
+  height: 100vh;
+  min-height: unset;
+  overflow: hidden;
+}
+
+body.layout-fixed .el-main {
+  overflow: hidden;
+  min-height: 0;
+}
+
 /* Theme: aligned with clearance-website (amber primary) */
 :root {
   --el-color-primary: #f59e0b;

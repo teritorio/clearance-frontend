@@ -190,6 +190,7 @@ onUnmounted(() => {
 const atomUrl = computed(() => `${config.public.api}/projects/${projectSlug}/changes_logs.atom`)
 
 useHead({
+  bodyAttrs: { class: 'layout-fixed' },
   link: [
     {
       rel: 'alternate',
@@ -444,30 +445,41 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 
 <style scoped>
 .el-main {
-  overflow: initial;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+:deep(.el-container) {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .page-layout {
   display: flex;
   gap: 1.5rem;
-  align-items: flex-start;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .sidebar {
   width: 280px;
   flex-shrink: 0;
-  position: sticky;
-  top: 68px;
-  max-height: calc(100vh - 88px);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding-right: 4px;
 }
 
 .locha-list {
   flex: 1;
   min-width: 0;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 @media (max-width: 768px) {
@@ -477,8 +489,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 
   .sidebar {
     width: 100%;
-    position: static;
-    max-height: none;
+    overflow-y: initial;
   }
 }
 
