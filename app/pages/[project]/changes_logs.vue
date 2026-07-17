@@ -397,9 +397,20 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                 <template v-if="getRapprochementsCount(loCha) > 1" #header>
                   <div class="card-header">
                     <el-button-group v-if="isProjectUser">
-                      <el-button type="primary" @click="handleAccept([loCha.metadata.locha_id])">
-                        ✓ {{ $t('logs.validate_locha') }}
-                      </el-button>
+                      <el-popconfirm
+                        :title="$t('logs.validate_selection_confirm')"
+                        :confirm-button-text="$t('logs.validate_selection_confirm_ok')"
+                        :cancel-button-text="$t('logs.validate_selection_confirm_cancel')"
+                        confirm-button-type="primary"
+                        width="220"
+                        @confirm="handleAccept([loCha.metadata.locha_id])"
+                      >
+                        <template #reference>
+                          <el-button type="primary">
+                            ✓ {{ $t('logs.validate_locha') }}
+                          </el-button>
+                        </template>
+                      </el-popconfirm>
                     </el-button-group>
                     <strong class="object-count">
                       {{ $t('logs.rapprochements_count', { n: getRapprochementsCount(loCha) }) }}
@@ -408,16 +419,26 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                 </template>
                 <LoCha :id="String(loCha.metadata.locha_id)" :data="loCha" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
                   <template v-if="isProjectUser" #header-start-end="{ index: groupIndex }">
-                    <el-button-group>
-                      <el-button
-                        type="primary"
-                        :loading="pendingAcceptGroupKeys.has(`${loCha.metadata.locha_id}-${groupIndex}`)"
-                        :disabled="pendingAcceptIds.has(loCha.metadata.locha_id)"
-                        @click="handleAcceptGroup(loCha, groupIndex)"
-                      >
-                        ✓
-                      </el-button>
-                    </el-button-group>
+                    <el-popconfirm
+                      :title="$t('logs.validate_selection_confirm')"
+                      :confirm-button-text="$t('logs.validate_selection_confirm_ok')"
+                      :cancel-button-text="$t('logs.validate_selection_confirm_cancel')"
+                      confirm-button-type="primary"
+                      width="220"
+                      @confirm="handleAcceptGroup(loCha, groupIndex)"
+                    >
+                      <template #reference>
+                        <el-button-group>
+                          <el-button
+                            type="primary"
+                            :loading="pendingAcceptGroupKeys.has(`${loCha.metadata.locha_id}-${groupIndex}`)"
+                            :disabled="pendingAcceptIds.has(loCha.metadata.locha_id)"
+                          >
+                            ✓
+                          </el-button>
+                        </el-button-group>
+                      </template>
+                    </el-popconfirm>
                   </template>
                   <template #object-detail="{ feature, index: groupIndex }">
                     <template v-for="(link, i) in getFeatureLinks(loCha, feature, groupIndex)" :key="i">
