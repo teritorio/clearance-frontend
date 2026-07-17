@@ -326,9 +326,9 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   >
     <el-alert v-if="status === 'idle' && !data" :title="$t('logs.no_data')" type="warning" />
     <el-container v-if="data && status === 'success'" direction="vertical">
-      <project-light :project="data.project" title-tag="h1" />
       <div class="page-layout">
         <aside class="sidebar">
+          <project-light :project="data.project" title-tag="h1" />
           <diff-map :base-geom="baseGeoms" :change-geom="changeGeoms" />
           <log-filters :lo-chas="data.loChas" />
           <log-validator-bulk
@@ -476,7 +476,6 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   display: flex;
   gap: 1.5rem;
   align-items: flex-start;
-  margin-top: 1rem;
 }
 
 .sidebar {
