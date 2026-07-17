@@ -386,6 +386,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
           <log-filters :lo-chas="data.loChas" />
           <log-validator-bulk
             v-if="isProjectUser && Object.keys(route.query).length"
+            :count="loChasWithFilter.length"
             @bulk-validation="handleAccept"
           />
         </aside>
@@ -403,11 +404,11 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                   <div class="card-header">
                     <el-button-group v-if="isProjectUser">
                       <el-popconfirm
-                        :title="$t('logs.validate_selection_confirm')"
+                        :title="$t('logs.validate_locha_confirm', { n: getRapprochementsCount(loCha) })"
                         :confirm-button-text="$t('logs.validate_selection_confirm_ok')"
                         :cancel-button-text="$t('logs.validate_selection_confirm_cancel')"
                         confirm-button-type="primary"
-                        width="220"
+                        width="260"
                         @confirm="handleAccept([loCha.metadata.locha_id])"
                       >
                         <template #reference>
@@ -425,11 +426,11 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                 <LoCha :id="String(loCha.metadata.locha_id)" :data="loCha" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
                   <template v-if="isProjectUser" #header-start-end="{ index: groupIndex }">
                     <el-popconfirm
-                      :title="$t('logs.validate_selection_confirm')"
+                      :title="$t('logs.validate_group_confirm')"
                       :confirm-button-text="$t('logs.validate_selection_confirm_ok')"
                       :cancel-button-text="$t('logs.validate_selection_confirm_cancel')"
                       confirm-button-type="primary"
-                      width="220"
+                      width="200"
                       @confirm="handleAcceptGroup(loCha, groupIndex)"
                     >
                       <template #reference>
