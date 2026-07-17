@@ -36,6 +36,10 @@ body {
   font-family: ui-sans-serif, system-ui, sans-serif;
 }
 
+.el-container {
+  min-height: 100vh;
+}
+
 /* Theme: aligned with clearance-website (amber primary) */
 :root {
   --el-color-primary: #f59e0b;

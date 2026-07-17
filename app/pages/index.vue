@@ -82,6 +82,8 @@ function tagFilterStyle(tag: string, checked: boolean) {
 <template>
   <el-main>
     <el-container direction="vertical">
+      <LazyProjectsOverviewMap v-if="initializedProjects.length" :projects="initializedProjects" />
+
       <div class="search-bar">
         <el-input
           v-model="searchQuery"
