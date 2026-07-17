@@ -2,7 +2,13 @@
 import type { Action, IFeature } from '@teritorio/openstreetmap-logical-history-component'
 import type { Geometry } from 'geojson'
 import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
+import { CircleCheck, Clock } from '@element-plus/icons-vue'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
+import dayjs from 'dayjs'
+import en from 'dayjs/locale/en-gb'
+import es from 'dayjs/locale/es'
+import fr from 'dayjs/locale/fr'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import { uniq } from 'underscore'
 import { getAfterDates, getAfterUsers } from '~/composables/useChangesLogs'
 
@@ -16,7 +22,10 @@ definePageMeta({
 const BATCH_SIZE = 3
 const LOCHA_HASH_PATTERN = /^#locha-(-?\d+)-group-/
 
-const { t } = useI18n()
+dayjs.extend(relativeTime)
+const _daysjsLocale = { en, fr, es }
+
+const { t, locale } = useI18n()
 const router = useRouter()
 const route = useRoute()
 const projectSlug = route.params.project as string
@@ -25,6 +34,32 @@ const user = useUser()
 const { data, status } = useChangesLogs(projectSlug)
 const pendingAcceptIds = ref(new Set<number>())
 const pendingAcceptGroupKeys = ref(new Set<string>())
+
+const lastUpdateCompact = computed(() => {
+  const dateStr = data.value?.project.date_last_update
+  if (!dateStr) {
+    return null
+  }
+  const diff = dayjs().diff(dayjs(dateStr), 'minute')
+  if (diff < 60) {
+    return `${diff}m`
+  }
+  if (diff < 60 * 24) {
+    return `${Math.floor(diff / 60)}h`
+  }
+  if (diff < 60 * 24 * 30) {
+    return `${Math.floor(diff / (60 * 24))}d`
+  }
+  return `${Math.floor(diff / (60 * 24 * 30))}mo`
+})
+
+const lastUpdateTitle = computed(() => {
+  const dateStr = data.value?.project.date_last_update
+  if (!dateStr) {
+    return undefined
+  }
+  return dayjs(dateStr).locale(locale.value).fromNow()
+})
 
 const baseGeoms = computed(() => {
   if (!data.value?.loChas) {
@@ -324,10 +359,18 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
     :element-loading-text="$t('common.loading')"
   >
     <el-alert v-if="status === 'idle' && !data" :title="$t('logs.no_data')" type="warning" />
-    <el-container v-if="data && status === 'success'" direction="vertical">
+    <el-container v-if="data && status === 'success'" direction="vertical" class="changes-container">
       <div class="page-layout">
         <aside class="sidebar">
           <project-light :project="data.project" title-tag="h1" />
+          <div v-if="lastUpdateCompact || data.project.to_be_validated" class="project-stats">
+            <span v-if="lastUpdateCompact" class="stat-badge stat-time" :title="lastUpdateTitle">
+              <el-icon><Clock /></el-icon>{{ lastUpdateCompact }}
+            </span>
+            <span v-if="data.project.to_be_validated" class="stat-badge stat-pending" :title="$t('project.toBeValidated')">
+              <el-icon><CircleCheck /></el-icon>{{ data.project.to_be_validated }}
+            </span>
+          </div>
           <diff-map :base-geom="baseGeoms" :change-geom="changeGeoms" />
           <log-filters :lo-chas="data.loChas" />
           <log-validator-bulk
@@ -451,7 +494,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   min-height: 0;
 }
 
-:deep(.el-container) {
+:deep(.changes-container) {
   flex: 1;
   min-height: 0;
   overflow: hidden;
@@ -473,6 +516,33 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   flex-direction: column;
   gap: 1rem;
   padding-right: 4px;
+}
+
+.project-stats {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.stat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.stat-time {
+  color: var(--el-color-info);
+  background: var(--el-color-info-light-9);
+}
+
+.stat-pending {
+  color: var(--el-color-primary);
+  background: var(--el-color-primary-light-9);
 }
 
 .locha-list {
