@@ -5,7 +5,7 @@ defineProps<{
   changesets: Changeset[]
 }>()
 
-const accordion = ref(0)
+const accordion = ref<string | number | undefined>(undefined)
 </script>
 
 <template>
