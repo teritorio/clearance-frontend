@@ -28,6 +28,12 @@ export interface ClearanceLoChaData extends LoChaData {
   }
 }
 
+type RawClearanceLoChaData = Omit<ClearanceLoChaData, 'metadata'> & {
+  metadata: Omit<ClearanceLoChaData['metadata'], 'links'> & {
+    links: Record<string, ClearanceApiLink[]>
+  }
+}
+
 function getAfterChangesets(loCha: ClearanceLoChaData) {
   const featuresById = new Map(loCha.features.map((f) => [f.id as string, f]))
   const afterChangesetIds = new Set<number>()
@@ -75,17 +81,17 @@ export function useChangesLogs(projectSlug: string) {
       try {
         const [project, rawLoChas] = await Promise.all([
           $fetch<InitializedProject>(`${config.public.api}/projects/${projectSlug}`),
-          $fetch<ClearanceLoChaData[]>(`${config.public.api}/projects/${projectSlug}/changes_logs`),
+          $fetch<RawClearanceLoChaData[]>(`${config.public.api}/projects/${projectSlug}/changes_logs`),
         ])
 
         // The API returns links as Record<semantic_group, ClearanceApiLink[]>.
         // Convert to a sparse array keyed by semantic_group so the LoCha lib can
         // access links[index] and Array.prototype.flat() skips removed groups.
-        const loChas = rawLoChas.map((loCha) => ({
+        const loChas: ClearanceLoChaData[] = rawLoChas.map((loCha) => ({
           ...loCha,
           metadata: {
             ...loCha.metadata,
-            links: Object.entries(loCha.metadata.links as unknown as Record<string, ClearanceApiLink[]>)
+            links: Object.entries(loCha.metadata.links)
               .reduce<ClearanceApiLink[][]>((acc, [key, val]) => {
                 acc[Number(key)] = val
                 return acc
