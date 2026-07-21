@@ -286,7 +286,8 @@ async function handleAcceptGroup(loCha: ClearanceLoChaData, groupIndex: number) 
   pendingAcceptGroupKeys.value.add(key)
 
   try {
-    await $fetch(`${config.public.api}/projects/${projectSlug}/changes_logs/${loChaId}/${groupIndex}/accept`, {
+    const semanticGroup = loCha.metadata.linkSemanticGroups[groupIndex]
+    await $fetch(`${config.public.api}/projects/${projectSlug}/changes_logs/${loChaId}/${semanticGroup}/accept`, {
       credentials: 'include',
       method: 'PUT',
       headers: {
@@ -298,6 +299,7 @@ async function handleAcceptGroup(loCha: ClearanceLoChaData, groupIndex: number) 
       const locha = data.value.loChas.find((l) => l.metadata.locha_id === loChaId)
       if (locha) {
         locha.metadata.links.splice(groupIndex, 1)
+        locha.metadata.linkSemanticGroups.splice(groupIndex, 1)
         locha.features = locha.features
           .filter((f) => f.properties.links !== groupIndex)
           .map((f) => ({

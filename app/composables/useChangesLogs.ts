@@ -24,7 +24,16 @@ export interface ClearanceLoChaData extends LoChaData {
   metadata: LoChaData['metadata'] & {
     locha_id: number
     links: ClearanceApiLink[][]
+    // Parallel array: linkSemanticGroups[i] is the semantic_group key for links[i].
+    // Required to call PUT /changes_logs/:locha_id/:semantic_group/accept correctly.
+    linkSemanticGroups: string[]
     changesets: Changeset[] | null
+  }
+}
+
+type RawClearanceLoChaData = Omit<ClearanceLoChaData, 'metadata'> & {
+  metadata: Omit<ClearanceLoChaData['metadata'], 'links' | 'linkSemanticGroups'> & {
+    links: Record<string, ClearanceApiLink[]>
   }
 }
 
@@ -73,10 +82,24 @@ export function useChangesLogs(projectSlug: string) {
     `changes_logs-${projectSlug}`,
     async () => {
       try {
-        const [project, loChas] = await Promise.all([
+        const [project, rawLoChas] = await Promise.all([
           $fetch<InitializedProject>(`${config.public.api}/projects/${projectSlug}`),
-          $fetch<ClearanceLoChaData[]>(`${config.public.api}/projects/${projectSlug}/changes_logs`),
+          $fetch<RawClearanceLoChaData[]>(`${config.public.api}/projects/${projectSlug}/changes_logs`),
         ])
+
+        // links comes as Record<semantic_group, ...>; sort keys numerically to match
+        // features.properties.links (0-based positional) and preserve for the accept endpoint.
+        const loChas: ClearanceLoChaData[] = rawLoChas.map((loCha) => {
+          const linkSemanticGroups = Object.keys(loCha.metadata.links).sort((a, b) => Number(a) - Number(b))
+          return {
+            ...loCha,
+            metadata: {
+              ...loCha.metadata,
+              links: linkSemanticGroups.map((key) => loCha.metadata.links[key]!),
+              linkSemanticGroups,
+            },
+          }
+        })
 
         return {
           project,
