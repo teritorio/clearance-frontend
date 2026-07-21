@@ -73,10 +73,25 @@ export function useChangesLogs(projectSlug: string) {
     `changes_logs-${projectSlug}`,
     async () => {
       try {
-        const [project, loChas] = await Promise.all([
+        const [project, rawLoChas] = await Promise.all([
           $fetch<InitializedProject>(`${config.public.api}/projects/${projectSlug}`),
           $fetch<ClearanceLoChaData[]>(`${config.public.api}/projects/${projectSlug}/changes_logs`),
         ])
+
+        // The API returns links as Record<semantic_group, ClearanceApiLink[]>.
+        // Convert to a sparse array keyed by semantic_group so the LoCha lib can
+        // access links[index] and Array.prototype.flat() skips removed groups.
+        const loChas = rawLoChas.map((loCha) => ({
+          ...loCha,
+          metadata: {
+            ...loCha.metadata,
+            links: Object.entries(loCha.metadata.links as unknown as Record<string, ClearanceApiLink[]>)
+              .reduce<ClearanceApiLink[][]>((acc, [key, val]) => {
+                acc[Number(key)] = val
+                return acc
+              }, []),
+          },
+        }))
 
         return {
           project,
