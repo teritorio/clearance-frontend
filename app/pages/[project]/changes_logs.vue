@@ -367,8 +367,8 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
               </div>
             </template>
             <LoCha :id="String(loCha.metadata.locha_id)" :data="loCha" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
-              <template v-if="isProjectUser" #header-start-end="{ index: groupIndex }">
-                <el-button-group>
+              <template #header-start-end="{ index: groupIndex }">
+                <el-button-group v-if="isProjectUser">
                   <el-button
                     type="primary"
                     :loading="pendingAcceptGroupKeys.has(`${loCha.metadata.locha_id}-${groupIndex}`)"
