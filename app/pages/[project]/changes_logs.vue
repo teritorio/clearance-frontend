@@ -68,7 +68,7 @@ function getBeforeFeature(loCha: ClearanceLoChaData, link: ClearanceApiLink): IF
 }
 
 function getRapprochementsCount(loCha: ClearanceLoChaData): number {
-  return Object.keys(loCha.metadata.links).length
+  return loCha.metadata.links.length
 }
 
 function uniqMatches(links: ClearanceApiLink[]): ClearanceMatch[] {
@@ -250,7 +250,8 @@ async function handleAcceptGroup(loCha: ClearanceLoChaData, groupIndex: number) 
   pendingAcceptGroupKeys.value.add(key)
 
   try {
-    await $fetch(`${config.public.api}/projects/${projectSlug}/changes_logs/${loChaId}/${groupIndex}/accept`, {
+    const semanticGroup = loCha.metadata.linkSemanticGroups[groupIndex]
+    await $fetch(`${config.public.api}/projects/${projectSlug}/changes_logs/${loChaId}/${semanticGroup}/accept`, {
       credentials: 'include',
       method: 'PUT',
       headers: {
@@ -261,9 +262,18 @@ async function handleAcceptGroup(loCha: ClearanceLoChaData, groupIndex: number) 
     if (data.value) {
       const locha = data.value.loChas.find((l) => l.metadata.locha_id === loChaId)
       if (locha) {
-        delete locha.metadata.links[groupIndex]
-        locha.features = locha.features.filter((f) => f.properties.links !== groupIndex)
-        if (Object.keys(locha.metadata.links).length === 0) {
+        locha.metadata.links.splice(groupIndex, 1)
+        locha.metadata.linkSemanticGroups.splice(groupIndex, 1)
+        locha.features = locha.features
+          .filter((f) => f.properties.links !== groupIndex)
+          .map((f) => ({
+            ...f,
+            properties: {
+              ...f.properties,
+              links: f.properties.links > groupIndex ? f.properties.links - 1 : f.properties.links,
+            },
+          }))
+        if (locha.metadata.links.length === 0) {
           data.value.loChas = data.value.loChas.filter((l) => l.metadata.locha_id !== loChaId)
         }
       }

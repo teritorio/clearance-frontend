@@ -24,12 +24,15 @@ export interface ClearanceLoChaData extends LoChaData {
   metadata: LoChaData['metadata'] & {
     locha_id: number
     links: ClearanceApiLink[][]
+    // Parallel array: linkSemanticGroups[i] is the semantic_group key for links[i].
+    // Required to call PUT /changes_logs/:locha_id/:semantic_group/accept correctly.
+    linkSemanticGroups: string[]
     changesets: Changeset[] | null
   }
 }
 
 type RawClearanceLoChaData = Omit<ClearanceLoChaData, 'metadata'> & {
-  metadata: Omit<ClearanceLoChaData['metadata'], 'links'> & {
+  metadata: Omit<ClearanceLoChaData['metadata'], 'links' | 'linkSemanticGroups'> & {
     links: Record<string, ClearanceApiLink[]>
   }
 }
@@ -85,19 +88,22 @@ export function useChangesLogs(projectSlug: string) {
         ])
 
         // The API returns links as Record<semantic_group, ClearanceApiLink[]>.
-        // Convert to a sparse array keyed by semantic_group so the LoCha lib can
-        // access links[index] and Array.prototype.flat() skips removed groups.
-        const loChas: ClearanceLoChaData[] = rawLoChas.map((loCha) => ({
-          ...loCha,
-          metadata: {
-            ...loCha.metadata,
-            links: Object.entries(loCha.metadata.links)
-              .reduce<ClearanceApiLink[][]>((acc, [key, val]) => {
-                acc[Number(key)] = val
-                return acc
-              }, []),
-          },
-        }))
+        // features[].properties.links is a 0-based positional index matching the old
+        // ORDER BY semantic_group asc array. Sort keys numerically to reconstruct that
+        // order as a dense array so the LoCha lib can access links[index] correctly.
+        // Keep the sorted keys in linkSemanticGroups to use the real semantic_group
+        // value when calling the accept API.
+        const loChas: ClearanceLoChaData[] = rawLoChas.map((loCha) => {
+          const linkSemanticGroups = Object.keys(loCha.metadata.links).sort((a, b) => Number(a) - Number(b))
+          return {
+            ...loCha,
+            metadata: {
+              ...loCha.metadata,
+              links: linkSemanticGroups.map((key) => loCha.metadata.links[key]!),
+              linkSemanticGroups,
+            },
+          }
+        })
 
         return {
           project,
