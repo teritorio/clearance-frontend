@@ -55,7 +55,7 @@ const isProjectUser = computed(() => {
 })
 
 function getFeatureLinks(loCha: ClearanceLoChaData, feature: IFeature, groupIndex: number): ClearanceApiLink[] {
-  const links = loCha.metadata.links[groupIndex] as ClearanceApiLink[]
+  const links = (loCha.metadata.links[groupIndex] ?? []) as ClearanceApiLink[]
   if (feature.properties.is_before) {
     const link = links.find((l) => l.before === feature.id || l.after === feature.id)
     return link ? [link] : []
