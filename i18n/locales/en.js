@@ -16,7 +16,7 @@ export default {
     },
     project: {
       new: 'To add a new project contact administrator:',
-      join: 'To join the project contact one of the project member. You can use OSM messages.',
+      join: 'To join the project, contact one of the Main Contacts. You can use OSM messages.',
       mainContacts: 'Main contact:',
     },
     back: 'Back',
