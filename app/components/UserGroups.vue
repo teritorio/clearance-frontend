@@ -125,7 +125,7 @@ const groups = computed(() =>
     </div>
     <ul class="group-list">
       <li v-for="(group, index) in groups" :key="index" class="group-row">
-        <span class="group-dot" :style="{ background: group.color }" />
+        <span class="group-dot-cell"><span class="group-dot" :style="{ background: group.color }" /></span>
         <span class="group-name">{{ useI18nHash(group.title) }}</span>
         <span class="group-users">
           <a
@@ -156,45 +156,53 @@ const groups = computed(() =>
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.group-row {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  padding: 5px 8px;
-  border-radius: 6px;
+  display: grid;
+  grid-template-columns: 20px minmax(120px, 200px) 1fr;
+  gap: 2px 0;
   font-size: 0.8rem;
 }
 
-.group-row:nth-child(odd) {
+.group-row {
+  display: contents;
+}
+
+.group-row:nth-child(odd) .group-dot-cell,
+.group-row:nth-child(odd) .group-name,
+.group-row:nth-child(odd) .group-users {
   background: var(--el-fill-color-lighter);
+}
+
+.group-dot-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 4px 5px 8px;
+  border-radius: 6px 0 0 6px;
 }
 
 .group-dot {
   display: inline-block;
-  flex-shrink: 0;
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  margin-top: 2px;
+  flex-shrink: 0;
 }
 
 .group-name {
-  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 5px 8px;
   font-weight: 500;
   color: var(--el-text-color-primary);
-  min-width: 120px;
-  max-width: 180px;
 }
 
 .group-users {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 4px;
+  padding: 5px 8px 5px 0;
+  border-radius: 0 6px 6px 0;
 }
 
 .user-chip {
