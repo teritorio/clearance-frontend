@@ -78,15 +78,15 @@ const lastUpdateTitle = computed(() => {
       </nuxt-link>
     </div>
     <div class="row-footer">
-      <nuxt-link :to="`/${project.id}/changes_logs`" class="footer-btn footer-details">
-        <el-icon><ArrowRight /></el-icon>
-        {{ $t('project.details') }}
-      </nuxt-link>
       <button class="footer-btn footer-expand" @click="expanded = !expanded">
         <el-icon class="expand-icon" :class="{ 'is-expanded': expanded }">
           <ArrowDown />
         </el-icon>
       </button>
+      <nuxt-link :to="`/${project.id}/changes_logs`" class="footer-btn footer-details">
+        <el-icon><ArrowRight /></el-icon>
+        {{ $t('project.details') }}
+      </nuxt-link>
     </div>
 
     <div v-show="expanded" class="row-detail">
@@ -271,14 +271,13 @@ const lastUpdateTitle = computed(() => {
   color: var(--el-color-primary);
 }
 
-.footer-details {
+.footer-expand {
   border-right: 1px solid var(--el-border-color-lighter);
-  color: var(--el-color-primary);
-  font-weight: 500;
 }
 
-.footer-expand {
-  max-width: 48px;
+.footer-details {
+  color: var(--el-color-primary);
+  font-weight: 500;
 }
 
 .expand-icon {
