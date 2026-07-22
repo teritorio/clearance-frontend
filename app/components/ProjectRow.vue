@@ -50,7 +50,7 @@ const lastUpdateTitle = computed(() => {
 <template>
   <div class="project-row-wrapper" :class="{ 'is-expanded': expanded }">
     <div class="project-row">
-      <nuxt-link :to="`/${project.id}/changes_logs`" class="row-main">
+      <div class="row-main">
         <span class="row-title">
           {{ useI18nHash(project.title) }}
           <span
@@ -72,7 +72,7 @@ const lastUpdateTitle = computed(() => {
             <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
           </span>
         </span>
-      </nuxt-link>
+      </div>
       <nuxt-link :to="`/${project.id}/validators`" class="row-settings" :title="$t('project.settings')">
         <el-icon><Setting /></el-icon>
       </nuxt-link>
@@ -166,8 +166,6 @@ const lastUpdateTitle = computed(() => {
   display: flex;
   align-items: center;
   gap: 12px;
-  text-decoration: none;
-  color: inherit;
   min-width: 0;
 }
 
@@ -180,10 +178,6 @@ const lastUpdateTitle = computed(() => {
   font-size: 0.95rem;
   color: var(--el-text-color-primary);
   min-width: 0;
-}
-
-.row-main:hover .row-title {
-  color: var(--el-color-primary);
 }
 
 .tag {

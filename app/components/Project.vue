@@ -52,9 +52,9 @@ const lastUpdateTitle = computed(() => {
     <template #header>
       <div class="card-header">
         <div class="card-header-row">
-          <nuxt-link :to="`/${project.id}/changes_logs`" class="title-link">
+          <div class="title-link">
             <project-light :project="project" title-tag="h3" />
-          </nuxt-link>
+          </div>
           <div class="header-stats">
             <span v-if="lastUpdateCompact" class="stat-badge stat-time" :title="lastUpdateTitle">
               <el-icon><Clock /></el-icon>{{ lastUpdateCompact }}
@@ -355,14 +355,8 @@ const lastUpdateTitle = computed(() => {
 }
 
 .title-link {
-  text-decoration: none;
-  color: inherit;
   flex: 1;
   min-width: 0;
   overflow: hidden;
-}
-
-.title-link:hover :deep(.title) {
-  color: var(--el-color-primary);
 }
 </style>
