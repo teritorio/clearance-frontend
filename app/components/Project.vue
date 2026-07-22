@@ -72,6 +72,7 @@ const lastUpdateTitle = computed(() => {
             <el-icon class="expand-icon" :class="{ 'is-expanded': expanded }">
               <ArrowDown />
             </el-icon>
+            {{ $t('project.seeMore') }}
           </button>
           <nuxt-link :to="`/${project.id}/changes_logs`" class="footer-btn footer-details">
             {{ $t('project.details') }}
