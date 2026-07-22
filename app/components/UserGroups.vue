@@ -119,6 +119,10 @@ const groups = computed(() =>
 
 <template>
   <div class="user-groups">
+    <div class="map-wrapper">
+      <div v-if="!mapLoaded" class="map-skeleton" />
+      <div ref="mapContainer" class="map" :class="{ 'map-hidden': !mapLoaded }" />
+    </div>
     <ul class="group-list">
       <li v-for="(group, index) in groups" :key="index" class="group-row">
         <span class="group-dot" :style="{ background: group.color }" />
@@ -134,10 +138,6 @@ const groups = computed(() =>
         </span>
       </li>
     </ul>
-    <div class="map-wrapper">
-      <div v-if="!mapLoaded" class="map-skeleton" />
-      <div ref="mapContainer" class="map" :class="{ 'map-hidden': !mapLoaded }" />
-    </div>
   </div>
 </template>
 
