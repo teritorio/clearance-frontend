@@ -276,7 +276,6 @@ const lastUpdateTitle = computed(() => {
 }
 
 .footer-details {
-  color: var(--el-color-primary);
   font-weight: 500;
 }
 
