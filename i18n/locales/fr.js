@@ -16,7 +16,7 @@ export default {
     },
     project: {
       new: 'Pour ajouter un nouveau projet, contactez l\'administrateur :',
-      join: 'Pour rejoindre le projet, contactez l\'un des membres. Vous pouvez utiliser les messages OSM.',
+      join: 'Pour rejoindre le projet, contactez l\'un des Contacts principaux. Vous pouvez utiliser les messages OSM.',
       mainContacts: 'Contact principal :',
     },
     back: 'Retour',
