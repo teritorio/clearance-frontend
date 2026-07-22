@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { InitializedProject } from '~/libs/types'
-import { ArrowDown, ArrowRight, CircleCheck, Clock, Link, Setting } from '@element-plus/icons-vue'
+import { ArrowDown, CircleCheck, Clock, Link, Setting } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import en from 'dayjs/locale/en-gb'
 import es from 'dayjs/locale/es'
@@ -74,7 +74,6 @@ const lastUpdateTitle = computed(() => {
             </el-icon>
           </button>
           <nuxt-link :to="`/${project.id}/changes_logs`" class="footer-btn footer-details">
-            <el-icon><ArrowRight /></el-icon>
             {{ $t('project.details') }}
           </nuxt-link>
         </div>
