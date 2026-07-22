@@ -73,14 +73,16 @@ const lastUpdateTitle = computed(() => {
           </span>
         </span>
       </nuxt-link>
-      <nuxt-link :to="`/${project.id}/changes_logs`" class="row-cta">
-        {{ $t('project.validate') }}
-        <el-icon><ArrowRight /></el-icon>
-      </nuxt-link>
       <nuxt-link :to="`/${project.id}/validators`" class="row-settings" :title="$t('project.settings')">
         <el-icon><Setting /></el-icon>
       </nuxt-link>
-      <button class="row-expand" :title="expanded ? $t('project.details') : $t('project.seeMore')" @click="expanded = !expanded">
+    </div>
+    <div class="row-footer">
+      <nuxt-link :to="`/${project.id}/changes_logs`" class="footer-btn footer-details">
+        <el-icon><ArrowRight /></el-icon>
+        {{ $t('project.details') }}
+      </nuxt-link>
+      <button class="footer-btn footer-expand" @click="expanded = !expanded">
         <el-icon class="expand-icon" :class="{ 'is-expanded': expanded }">
           <ArrowDown />
         </el-icon>
@@ -230,32 +232,6 @@ const lastUpdateTitle = computed(() => {
   background: var(--el-color-primary-light-9);
 }
 
-.row-cta {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 12px;
-  border-radius: 20px;
-  background: var(--el-color-primary);
-  color: #fff;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background 0.15s;
-  line-height: 1;
-}
-
-.row-cta:hover {
-  background: var(--el-color-primary-dark-2);
-  color: #fff;
-}
-
-.row-cta .el-icon {
-  font-size: 0.85rem;
-}
-
 .row-settings {
   flex-shrink: 0;
   color: var(--el-text-color-placeholder);
@@ -269,19 +245,40 @@ const lastUpdateTitle = computed(() => {
   color: var(--el-text-color-regular);
 }
 
-.row-expand {
-  flex-shrink: 0;
-  background: none;
-  border: none;
-  padding: 4px;
-  cursor: pointer;
-  color: var(--el-text-color-placeholder);
-  line-height: 1;
-  transition: color 0.15s;
+.row-footer {
+  display: flex;
+  border-top: 1px solid var(--el-border-color-lighter);
 }
 
-.row-expand:hover {
+.footer-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 7px;
+  font-size: 0.8rem;
   color: var(--el-text-color-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.footer-btn:hover {
+  background: var(--el-fill-color-light);
+  color: var(--el-color-primary);
+}
+
+.footer-details {
+  border-right: 1px solid var(--el-border-color-lighter);
+  color: var(--el-color-primary);
+  font-weight: 500;
+}
+
+.footer-expand {
+  max-width: 48px;
 }
 
 .expand-icon {

@@ -75,7 +75,6 @@ export default {
     user_group_label: 'Groupe',
     user_group_users: 'Utilisateurs',
     settings: '⚙ Paramètres',
-    validate: 'Valider',
     data: '✓ Données',
     start: 'Début',
     lastUpdate: 'Fraîcheur des données',

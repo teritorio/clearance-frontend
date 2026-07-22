@@ -63,19 +63,21 @@ const lastUpdateTitle = computed(() => {
               <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
             </span>
           </div>
-          <nuxt-link :to="`/${project.id}/changes_logs`" class="cta-btn">
-            {{ $t('project.validate') }}
-            <el-icon><ArrowRight /></el-icon>
-          </nuxt-link>
           <nuxt-link :to="`/${project.id}/validators`" class="settings-icon" :title="$t('project.settings')">
             <el-icon><Setting /></el-icon>
           </nuxt-link>
         </div>
-        <button class="expand-trigger" @click="expanded = !expanded">
-          <el-icon class="expand-icon" :class="{ 'is-expanded': expanded }">
-            <ArrowDown />
-          </el-icon>
-        </button>
+        <div class="card-footer">
+          <nuxt-link :to="`/${project.id}/changes_logs`" class="footer-btn footer-details">
+            <el-icon><ArrowRight /></el-icon>
+            {{ $t('project.details') }}
+          </nuxt-link>
+          <button class="footer-btn footer-expand" @click="expanded = !expanded">
+            <el-icon class="expand-icon" :class="{ 'is-expanded': expanded }">
+              <ArrowDown />
+            </el-icon>
+          </button>
+        </div>
       </div>
     </template>
 
@@ -194,32 +196,6 @@ const lastUpdateTitle = computed(() => {
   background: var(--el-color-primary-light-9);
 }
 
-.cta-btn {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 20px;
-  background: var(--el-color-primary);
-  color: #fff;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background 0.15s;
-  line-height: 1;
-}
-
-.cta-btn:hover {
-  background: var(--el-color-primary-dark-2);
-  color: #fff;
-}
-
-.cta-btn .el-icon {
-  font-size: 0.8rem;
-}
-
 .settings-icon {
   flex-shrink: 0;
   color: var(--el-text-color-placeholder);
@@ -234,25 +210,42 @@ const lastUpdateTitle = computed(() => {
   color: var(--el-text-color-regular);
 }
 
-.expand-trigger {
+.card-footer {
+  display: flex;
+  width: calc(100% + 2 * 16px);
+  margin: 8px -16px 0;
+  border-top: 1px solid var(--el-border-color-lighter);
+}
+
+.footer-btn {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  width: calc(100% + 2 * 16px);
-  margin: 8px -16px 0;
-  padding: 10px 0;
+  gap: 5px;
+  padding: 8px;
+  font-size: 0.8rem;
+  color: var(--el-text-color-secondary);
   background: none;
   border: none;
-  border-top: 1px solid var(--el-border-color-lighter);
   cursor: pointer;
-  color: var(--el-text-color-placeholder);
-  transition: color 0.15s, background 0.15s;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
 }
 
-.expand-trigger:hover {
+.footer-btn:hover {
   background: var(--el-fill-color-light);
-  color: var(--el-text-color-secondary);
+  color: var(--el-color-primary);
+}
+
+.footer-details {
+  border-right: 1px solid var(--el-border-color-lighter);
+  color: var(--el-color-primary);
+  font-weight: 500;
+}
+
+.footer-expand {
+  max-width: 48px;
 }
 
 .expand-icon {

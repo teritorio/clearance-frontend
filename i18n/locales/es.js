@@ -75,7 +75,6 @@ export default {
     user_group_label: 'Groupo',
     user_group_users: 'Usuarios',
     settings: '⚙ Configuración',
-    validate: 'Validar',
     data: '✓ Datos',
     start: 'Inicio',
     lastUpdate: 'Frescura de los datos',
