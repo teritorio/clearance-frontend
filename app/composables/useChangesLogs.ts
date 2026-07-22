@@ -87,12 +87,22 @@ export function useChangesLogs(projectSlug: string) {
           $fetch<RawClearanceLoChaData[]>(`${config.public.api}/projects/${projectSlug}/changes_logs`),
         ])
 
-        // links comes as Record<semantic_group, ...>; sort keys numerically to match
-        // features.properties.links (0-based positional) and preserve for the accept endpoint.
+        // links comes as Record<semantic_group, ...>. Sort keys numerically and build a
+        // dense 0-based array so LoCha can index into it. Also remap features.properties.links
+        // from semantic_group key to the matching 0-based position, since that field carries
+        // the actual semantic_group value from the API (not a positional index).
         const loChas: ClearanceLoChaData[] = rawLoChas.map((loCha) => {
           const linkSemanticGroups = Object.keys(loCha.metadata.links).sort((a, b) => Number(a) - Number(b))
+          const keyToIndex = new Map(linkSemanticGroups.map((key, i) => [Number(key), i]))
           return {
             ...loCha,
+            features: loCha.features.map((f) => ({
+              ...f,
+              properties: {
+                ...f.properties,
+                links: keyToIndex.get(f.properties.links) ?? f.properties.links,
+              },
+            })),
             metadata: {
               ...loCha.metadata,
               links: linkSemanticGroups.map((key) => loCha.metadata.links[key]!),

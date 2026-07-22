@@ -38,4 +38,4 @@ USER ${UID}:${GID}
 
 EXPOSE 3000
 
-CMD ["npx", "nuxi", "dev", "--host", "0.0.0.0"]
+CMD ["sh", "-c", "yarn install && npx nuxi dev --host 0.0.0.0"]

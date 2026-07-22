@@ -90,7 +90,7 @@ const isProjectUser = computed(() => {
 })
 
 function getFeatureLinks(loCha: ClearanceLoChaData, feature: IFeature, groupIndex: number): ClearanceApiLink[] {
-  const links = loCha.metadata.links[groupIndex] as ClearanceApiLink[]
+  const links = (loCha.metadata.links[groupIndex] ?? []) as ClearanceApiLink[]
   if (feature.properties.is_before) {
     const link = links.find((l) => l.before === feature.id || l.after === feature.id)
     return link ? [link] : []
@@ -398,8 +398,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
               <el-card
                 v-for="loCha in visibleLoChas"
                 :key="loCha.metadata.locha_id"
-                class="locha-card"
-                :class="{ 'locha-card--pending': pendingAcceptIds.has(loCha.metadata.locha_id) }"
+                :class="{ 'locha-card': getRapprochementsCount(loCha) > 1, 'locha-card--pending': pendingAcceptIds.has(loCha.metadata.locha_id) }"
                 style="--el-card-padding: 0;"
               >
                 <template v-if="getRapprochementsCount(loCha) > 1" #header>
@@ -485,7 +484,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                   </template>
                   <template #header-center="{ index: groupIndex }">
                     <el-tag
-                      v-for="userGroup in uniq((loCha.metadata.links[groupIndex] as ClearanceApiLink[]).flatMap((link) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"
+                      v-for="userGroup in uniq((loCha.metadata.links[groupIndex] ?? [] as ClearanceApiLink[]).flatMap((link) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"
                       :key="userGroup"
                       size="small"
                       class="match-tag"
@@ -493,7 +492,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                       📌 {{ useI18nHash(data?.project.user_groups[userGroup]?.title) ?? userGroup }}
                     </el-tag>
                     <el-tag
-                      v-for="match in uniqMatches(loCha.metadata.links[groupIndex] as ClearanceApiLink[])"
+                      v-for="match in uniqMatches((loCha.metadata.links[groupIndex] ?? []) as ClearanceApiLink[])"
                       :key="match.selectors.join(';')"
                       size="small"
                       type="warning"
