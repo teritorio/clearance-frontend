@@ -350,8 +350,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
           <el-card
             v-for="loCha in visibleLoChas"
             :key="loCha.metadata.locha_id"
-            class="locha-card"
-            :class="{ 'locha-card--pending': pendingAcceptIds.has(loCha.metadata.locha_id) }"
+            :class="{ 'locha-card': getRapprochementsCount(loCha) > 1, 'locha-card--pending': pendingAcceptIds.has(loCha.metadata.locha_id) }"
             style="--el-card-padding: 0;"
           >
             <template v-if="getRapprochementsCount(loCha) > 1" #header>
