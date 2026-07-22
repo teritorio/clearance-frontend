@@ -84,7 +84,6 @@ const lastUpdateTitle = computed(() => {
     </div>
 
     <div v-show="expanded" class="row-detail">
-      <LazyProjectsOverviewMap v-if="expanded" :projects="[project]" />
       <LazyUserGroups v-if="expanded" :user-groups="Object.values(project.user_groups)" />
 
       <div class="detail-section">
