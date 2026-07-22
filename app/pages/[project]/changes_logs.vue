@@ -2,7 +2,13 @@
 import type { Action, IFeature } from '@teritorio/openstreetmap-logical-history-component'
 import type { Geometry } from 'geojson'
 import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
+import { CircleCheck, Clock, Setting } from '@element-plus/icons-vue'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
+import dayjs from 'dayjs'
+import en from 'dayjs/locale/en-gb'
+import es from 'dayjs/locale/es'
+import fr from 'dayjs/locale/fr'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import { uniq } from 'underscore'
 import { getAfterDates, getAfterUsers } from '~/composables/useChangesLogs'
 
@@ -16,7 +22,10 @@ definePageMeta({
 const BATCH_SIZE = 3
 const LOCHA_HASH_PATTERN = /^#locha-(-?\d+)-group-/
 
-const { t } = useI18n()
+dayjs.extend(relativeTime)
+const _daysjsLocale = { en, fr, es }
+
+const { t, locale } = useI18n()
 const router = useRouter()
 const route = useRoute()
 const projectSlug = route.params.project as string
@@ -25,6 +34,32 @@ const user = useUser()
 const { data, status } = useChangesLogs(projectSlug)
 const pendingAcceptIds = ref(new Set<number>())
 const pendingAcceptGroupKeys = ref(new Set<string>())
+
+const lastUpdateCompact = computed(() => {
+  const dateStr = data.value?.project.date_last_update
+  if (!dateStr) {
+    return null
+  }
+  const diff = dayjs().diff(dayjs(dateStr), 'minute')
+  if (diff < 60) {
+    return `${diff}m`
+  }
+  if (diff < 60 * 24) {
+    return `${Math.floor(diff / 60)}h`
+  }
+  if (diff < 60 * 24 * 30) {
+    return `${Math.floor(diff / (60 * 24))}d`
+  }
+  return `${Math.floor(diff / (60 * 24 * 30))}mo`
+})
+
+const lastUpdateTitle = computed(() => {
+  const dateStr = data.value?.project.date_last_update
+  if (!dateStr) {
+    return undefined
+  }
+  return dayjs(dateStr).locale(locale.value).fromNow()
+})
 
 const baseGeoms = computed(() => {
   if (!data.value?.loChas) {
@@ -190,6 +225,7 @@ onUnmounted(() => {
 const atomUrl = computed(() => `${config.public.api}/projects/${projectSlug}/changes_logs.atom`)
 
 useHead({
+  bodyAttrs: { class: 'layout-fixed' },
   link: [
     {
       rel: 'alternate',
@@ -325,133 +361,285 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
     :element-loading-text="$t('common.loading')"
   >
     <el-alert v-if="status === 'idle' && !data" :title="$t('logs.no_data')" type="warning" />
-    <el-container v-if="data && status === 'success'" direction="vertical">
-      <project-light :project="data.project" title-tag="h1" />
-      <el-row>
-        <diff-map
-          :base-geom="baseGeoms"
-          :change-geom="changeGeoms"
-          style="resize: vertical"
-        />
-      </el-row>
-      <log-filters :lo-chas="data.loChas" />
-      <log-validator-bulk
-        v-if="isProjectUser && Object.keys(route.query).length"
-        @bulk-validation="handleAccept"
-      />
-      <h3>{{ $t('logs.data') }}</h3>
-      <p>{{ $t('logs.data_details') }}</p>
-      <ul>
-        <li>{{ $t('logs.data_details_osm') }}</li>
-        <li>{{ $t('logs.data_details_manual') }}</li>
-      </ul>
-      <template v-if="loChasWithFilter.length">
-        <el-space fill :size="20">
-          <el-card
-            v-for="loCha in visibleLoChas"
-            :key="loCha.metadata.locha_id"
-            :class="{ 'locha-card': getRapprochementsCount(loCha) > 1, 'locha-card--pending': pendingAcceptIds.has(loCha.metadata.locha_id) }"
-            style="--el-card-padding: 0;"
-          >
-            <template v-if="getRapprochementsCount(loCha) > 1" #header>
-              <div class="card-header">
-                <el-button-group v-if="isProjectUser">
-                  <el-button type="primary" @click="handleAccept([loCha.metadata.locha_id])">
-                    ✓ {{ $t('logs.validate_locha') }}
-                  </el-button>
-                </el-button-group>
-                <strong class="object-count">
-                  {{ $t('logs.rapprochements_count', { n: getRapprochementsCount(loCha) }) }}
-                </strong>
-              </div>
-            </template>
-            <LoCha :id="String(loCha.metadata.locha_id)" :data="loCha" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
-              <template #header-start-end="{ index: groupIndex }">
-                <el-button-group v-if="isProjectUser">
-                  <el-button
-                    type="primary"
-                    :loading="pendingAcceptGroupKeys.has(`${loCha.metadata.locha_id}-${groupIndex}`)"
-                    :disabled="pendingAcceptIds.has(loCha.metadata.locha_id)"
-                    @click="handleAcceptGroup(loCha, groupIndex)"
-                  >
-                    ✓
-                  </el-button>
-                </el-button-group>
-              </template>
-              <template #object-detail="{ feature, index: groupIndex }">
-                <template v-for="(link, i) in getFeatureLinks(loCha, feature, groupIndex)" :key="i">
-                  <template v-if="feature.properties.is_after">
-                    <template v-for="(before, _) in [getBeforeFeature(loCha, link)]" :key="_">
-                      <div v-if="link.diff_attribs && Object.keys(link.diff_attribs).length" class="diff-section diff-section--centered diff-section--attribs">
-                        <AttribsDiff :diff="link.diff_attribs" />
-                      </div>
-                      <div class="diff-section">
+    <el-container v-if="data && status === 'success'" direction="vertical" class="changes-container">
+      <div class="page-layout">
+        <aside class="sidebar">
+          <div class="project-header">
+            <project-light :project="data.project" title-tag="h1" />
+            <nuxt-link :to="`/${projectSlug}/validators`" class="settings-link" :title="$t('project.settings')">
+              <el-icon><Setting /></el-icon>
+            </nuxt-link>
+          </div>
+          <div v-if="lastUpdateCompact || data.project.to_be_validated" class="project-stats">
+            <div v-if="lastUpdateCompact" class="stat-item stat-time">
+              <span class="stat-label">
+                <el-icon><Clock /></el-icon>{{ $t('project.lastUpdate') }}
+              </span>
+              <span class="stat-value" :title="lastUpdateTitle">{{ lastUpdateTitle }}</span>
+            </div>
+            <div v-if="data.project.to_be_validated" class="stat-item stat-pending">
+              <span class="stat-label">
+                <el-icon><CircleCheck /></el-icon>{{ $t('project.toBeValidated') }}
+              </span>
+              <span class="stat-value">{{ data.project.to_be_validated }}</span>
+            </div>
+          </div>
+          <diff-map :base-geom="baseGeoms" :change-geom="changeGeoms" />
+          <log-filters :lo-chas="data.loChas" />
+          <log-validator-bulk
+            v-if="isProjectUser && Object.keys(route.query).length"
+            :count="loChasWithFilter.length"
+            @bulk-validation="handleAccept"
+          />
+        </aside>
+        <div class="locha-list">
+          <template v-if="loChasWithFilter.length">
+            <el-space fill :size="20">
+              <el-card
+                v-for="loCha in visibleLoChas"
+                :key="loCha.metadata.locha_id"
+                :class="{ 'locha-card': getRapprochementsCount(loCha) > 1, 'locha-card--pending': pendingAcceptIds.has(loCha.metadata.locha_id) }"
+                style="--el-card-padding: 0;"
+              >
+                <template v-if="getRapprochementsCount(loCha) > 1" #header>
+                  <div class="card-header">
+                    <el-button-group v-if="isProjectUser">
+                      <el-popconfirm
+                        :title="$t('logs.validate_locha_confirm', { n: getRapprochementsCount(loCha) })"
+                        :confirm-button-text="$t('logs.validate_selection_confirm_ok')"
+                        :cancel-button-text="$t('logs.validate_selection_confirm_cancel')"
+                        confirm-button-type="primary"
+                        width="260"
+                        @confirm="handleAccept([loCha.metadata.locha_id])"
+                      >
+                        <template #reference>
+                          <el-button type="primary">
+                            ✓ {{ $t('logs.validate_locha') }}
+                          </el-button>
+                        </template>
+                      </el-popconfirm>
+                    </el-button-group>
+                    <strong class="object-count">
+                      {{ $t('logs.rapprochements_count', { n: getRapprochementsCount(loCha) }) }}
+                    </strong>
+                  </div>
+                </template>
+                <LoCha :id="String(loCha.metadata.locha_id)" :data="loCha" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
+                  <template v-if="isProjectUser" #header-start-end="{ index: groupIndex }">
+                    <el-popconfirm
+                      :title="$t('logs.validate_group_confirm')"
+                      :confirm-button-text="$t('logs.validate_selection_confirm_ok')"
+                      :cancel-button-text="$t('logs.validate_selection_confirm_cancel')"
+                      confirm-button-type="primary"
+                      width="200"
+                      @confirm="handleAcceptGroup(loCha, groupIndex)"
+                    >
+                      <template #reference>
+                        <el-button-group>
+                          <el-button
+                            type="primary"
+                            :loading="pendingAcceptGroupKeys.has(`${loCha.metadata.locha_id}-${groupIndex}`)"
+                            :disabled="pendingAcceptIds.has(loCha.metadata.locha_id)"
+                          >
+                            ✓
+                          </el-button>
+                        </el-button-group>
+                      </template>
+                    </el-popconfirm>
+                  </template>
+                  <template #object-detail="{ feature, index: groupIndex }">
+                    <template v-for="(link, i) in getFeatureLinks(loCha, feature, groupIndex)" :key="i">
+                      <template v-if="feature.properties.is_after">
+                        <template v-for="(before, _) in [getBeforeFeature(loCha, link)]" :key="_">
+                          <div v-if="link.diff_attribs && Object.keys(link.diff_attribs).length" class="diff-section diff-section--centered diff-section--attribs">
+                            <AttribsDiff :diff="link.diff_attribs" />
+                          </div>
+                          <div class="diff-section">
+                            <TagsDiff
+                              v-if="!feature.properties.deleted"
+                              :diff="link.diff_tags"
+                              :src="before?.properties"
+                              :dst="feature.properties"
+                            />
+                          </div>
+                        </template>
+                      </template>
+                      <template v-else-if="feature.properties.is_new">
                         <TagsDiff
-                          v-if="!feature.properties.deleted"
                           :diff="link.diff_tags"
-                          :src="before?.properties"
                           :dst="feature.properties"
                         />
-                      </div>
+                      </template>
+                      <template v-else>
+                        <TagsDiff
+                          :src="feature.properties"
+                        />
+                      </template>
                     </template>
                   </template>
-                  <template v-else-if="feature.properties.is_new">
-                    <TagsDiff
-                      :diff="link.diff_tags"
-                      :dst="feature.properties"
-                    />
+                  <template #content-start="{ index: groupIndex }">
+                    <template v-for="(changesets, i) in [getGroupChangesets(loCha, groupIndex)]" :key="i">
+                      <Changesets v-if="changesets.length" :changesets="changesets" />
+                    </template>
                   </template>
-                  <template v-else>
-                    <TagsDiff
-                      :src="feature.properties"
-                    />
+                  <template #header-center="{ index: groupIndex }">
+                    <el-tag
+                      v-for="userGroup in uniq((loCha.metadata.links[groupIndex] ?? [] as ClearanceApiLink[]).flatMap((link) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"
+                      :key="userGroup"
+                      size="small"
+                      class="match-tag"
+                    >
+                      📌 {{ useI18nHash(data?.project.user_groups[userGroup]?.title) ?? userGroup }}
+                    </el-tag>
+                    <el-tag
+                      v-for="match in uniqMatches((loCha.metadata.links[groupIndex] ?? []) as ClearanceApiLink[])"
+                      :key="match.selectors.join(';')"
+                      size="small"
+                      type="warning"
+                      class="match-tag"
+                    >
+                      🏷️ {{ match.selectors.join(' ') }}
+                    </el-tag>
                   </template>
-                </template>
-              </template>
-              <template #content-start="{ index: groupIndex }">
-                <template v-for="(changesets, i) in [getGroupChangesets(loCha, groupIndex)]" :key="i">
-                  <Changesets v-if="changesets.length" :changesets="changesets" />
-                </template>
-              </template>
-              <template #header-center="{ index: groupIndex }">
-                <el-tag
-                  v-for="userGroup in uniq((loCha.metadata.links[groupIndex] ?? [] as ClearanceApiLink[]).flatMap((link) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"
-                  :key="userGroup"
-                  size="small"
-                  class="match-tag"
-                >
-                  📌 {{ useI18nHash(data?.project.user_groups[userGroup]?.title) ?? userGroup }}
-                </el-tag>
-                <el-tag
-                  v-for="match in uniqMatches((loCha.metadata.links[groupIndex] ?? []) as ClearanceApiLink[])"
-                  :key="match.selectors.join(';')"
-                  size="small"
-                  type="warning"
-                  class="match-tag"
-                >
-                  🏷️ {{ match.selectors.join(' ') }}
-                </el-tag>
-              </template>
-            </LoCha>
-          </el-card>
-        </el-space>
-        <div v-if="hasMore" ref="sentinel" class="sentinel" />
-      </template>
-      <el-empty
-        v-else-if="data.loChas.length"
-        :description="$t('logs.no_results')"
-      />
-      <el-empty
-        v-else
-        :description="$t('logs.no_data')"
-      />
+                </LoCha>
+              </el-card>
+            </el-space>
+            <div v-if="hasMore" ref="sentinel" class="sentinel" />
+          </template>
+          <el-empty
+            v-else-if="data.loChas.length"
+            :description="$t('logs.no_results')"
+          />
+          <el-empty
+            v-else
+            :description="$t('logs.no_data')"
+          />
+        </div>
+      </div>
     </el-container>
   </el-main>
 </template>
 
 <style scoped>
 .el-main {
-  overflow: initial;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+:deep(.changes-container) {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.page-layout {
+  display: flex;
+  gap: 1.5rem;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-right: 4px;
+}
+
+.project-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.settings-link {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  color: var(--el-text-color-placeholder);
+  text-decoration: none;
+  transition: color 0.15s, background 0.15s;
+}
+
+.settings-link:hover {
+  color: var(--el-text-color-regular);
+  background: var(--el-fill-color);
+}
+
+.settings-link .el-icon {
+  font-size: 22px;
+}
+
+.project-stats {
+  display: flex;
+  gap: 8px;
+}
+
+.stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+.stat-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.stat-time {
+  color: var(--el-color-info-dark-2);
+  background: var(--el-color-info-light-9);
+}
+
+.stat-pending {
+  color: var(--el-color-primary-dark-2);
+  background: var(--el-color-primary-light-9);
+}
+
+.locha-list {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+@media (max-width: 768px) {
+  .page-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    overflow-y: initial;
+  }
 }
 
 .card-header {

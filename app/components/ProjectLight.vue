@@ -1,73 +1,68 @@
 <script setup lang="ts">
 import type { HTMLTags, InitializedProject } from '~/libs/types'
 
-const props = defineProps<{
+defineProps<{
   project: InitializedProject
   titleTag: HTMLTags
 }>()
-
-const { t } = useI18n()
-const details = computed(() => ({
-  label: t('project.details'),
-  url: `/${props.project.id}/changes_logs`,
-}))
 </script>
 
 <template>
-  <header>
-    <span>
-      <component :is="titleTag" class="title">
-        {{ useI18nHash(project.title) }}
-        <el-tag
-          v-for="tag in project.project_tags"
-          :key="tag"
-          size="small"
-        >
-          {{ tag }}
-        </el-tag>
-      </component>
-      <p>{{ useI18nHash(project.description) }}</p>
-    </span>
-    <project-stats :last-update="project.date_last_update" :to-be-validated="project.to_be_validated" />
-    <el-button-group>
-      <nuxt-link class="el-button" :to="`/${project.id}/validators`">
-        {{ $t('project.settings') }}
-      </nuxt-link>
-      <nuxt-link class="el-button el-button--primary" :to="details.url">
-        {{ details.label }}
-      </nuxt-link>
-    </el-button-group>
-  </header>
+  <div class="project-light">
+    <component :is="titleTag" class="title">
+      {{ useI18nHash(project.title) }}
+      <span
+        v-for="tag in project.project_tags"
+        :key="tag"
+        class="tag"
+        :style="{
+          background: useTagColor(tag).bg,
+          color: useTagColor(tag).color,
+          borderColor: useTagColor(tag).border,
+        }"
+      >{{ tag }}</span>
+    </component>
+    <p class="description">
+      {{ useI18nHash(project.description) }}
+    </p>
+  </div>
 </template>
 
 <style scoped>
-header {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-}
-
-header > span {
-  justify-content: start;
+.project-light {
   display: flex;
   flex-direction: column;
-}
-
-.el-row {
-  flex-grow: 1;
-}
-
-P {
-  color: var(--el-color-info);
-  margin: 0;
+  gap: 4px;
+  min-width: 0;
 }
 
 .title {
-  align-items: center;
-  display: flex;
   margin: 0;
-  gap: 8px;
   font-weight: 600;
-  padding-right: 1em;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+  font-size: 11px;
+  line-height: 18px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.description {
+  color: var(--el-text-color-secondary);
+  margin: 0;
+  font-size: 0.875rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 </style>

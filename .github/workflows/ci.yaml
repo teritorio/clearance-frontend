@@ -2,7 +2,7 @@ name: Continuous Integration
 
 on:
   push:
-    branches: [master, develop]
+    branches: [master, develop, staging]
     tags:
       - 'v*'
   pull_request:
@@ -34,7 +34,7 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     needs: [build]
-    if: github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/v')
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/staging' || startsWith(github.ref, 'refs/tags/v')
 
     permissions:
       contents: read
@@ -52,3 +52,10 @@ jobs:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ startsWith(github.ref, 'refs/tags/v') && secrets.SENTRY_PROJECT_PROD || secrets.SENTRY_PROJECT_DEV }}
           SENTRY_URL: ${{ secrets.SENTRY_URL }}
+
+      - name: Retag :staging as :develop for Watchtower
+        if: github.ref == 'refs/heads/staging'
+        run: |
+          docker buildx imagetools create \
+            ghcr.io/teritorio/clearance-frontend:staging \
+            --tag ghcr.io/teritorio/clearance-frontend:develop

@@ -1,4 +1,5 @@
 import process from 'node:process'
+import pkg from './package.json'
 
 const defaultMapStyleUrl = 'https://vecto.teritorio.xyz/styles/teritorio-basic/style.json?key=teritorio_clearance-1-ahNoohaepohy9iexoo3qua'
 
@@ -42,6 +43,7 @@ export default defineNuxtConfig({
       mapStyleUrl: process.env.NUXT_PUBLIC_MAP_STYLE_URL || defaultMapStyleUrl,
       sentryDsn: process.env.NUXT_PUBLIC_SENTRY_DSN,
       sentryEnvironment: process.env.NUXT_PUBLIC_SENTRY_ENVIRONMENT,
+      version: pkg.version,
     },
   },
 
