@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { InitializedProject } from '~/libs/types'
-import { ArrowDown, CircleCheck, Clock, Link, Setting } from '@element-plus/icons-vue'
+import { ArrowDown, ArrowRight, CircleCheck, Clock, Link, Setting } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import en from 'dayjs/locale/en-gb'
 import es from 'dayjs/locale/es'
@@ -63,6 +63,10 @@ const lastUpdateTitle = computed(() => {
               <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
             </span>
           </div>
+          <nuxt-link :to="`/${project.id}/changes_logs`" class="cta-btn">
+            {{ $t('project.validate') }}
+            <el-icon><ArrowRight /></el-icon>
+          </nuxt-link>
           <nuxt-link :to="`/${project.id}/validators`" class="settings-icon" :title="$t('project.settings')">
             <el-icon><Setting /></el-icon>
           </nuxt-link>
@@ -188,6 +192,32 @@ const lastUpdateTitle = computed(() => {
 .stat-pending {
   color: var(--el-color-primary);
   background: var(--el-color-primary-light-9);
+}
+
+.cta-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--el-color-primary);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s;
+  line-height: 1;
+}
+
+.cta-btn:hover {
+  background: var(--el-color-primary-dark-2);
+  color: #fff;
+}
+
+.cta-btn .el-icon {
+  font-size: 0.8rem;
 }
 
 .settings-icon {
