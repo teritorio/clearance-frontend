@@ -415,7 +415,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
               </template>
               <template #header-center="{ index: groupIndex }">
                 <el-tag
-                  v-for="userGroup in uniq((loCha.metadata.links[groupIndex] as ClearanceApiLink[]).flatMap((link) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"
+                  v-for="userGroup in uniq((loCha.metadata.links[groupIndex] ?? [] as ClearanceApiLink[]).flatMap((link) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"
                   :key="userGroup"
                   size="small"
                   class="match-tag"
@@ -423,7 +423,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                   📌 {{ useI18nHash(data?.project.user_groups[userGroup]?.title) ?? userGroup }}
                 </el-tag>
                 <el-tag
-                  v-for="match in uniqMatches(loCha.metadata.links[groupIndex] as ClearanceApiLink[])"
+                  v-for="match in uniqMatches((loCha.metadata.links[groupIndex] ?? []) as ClearanceApiLink[])"
                   :key="match.selectors.join(';')"
                   size="small"
                   type="warning"
