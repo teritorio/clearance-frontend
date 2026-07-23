@@ -1,14 +1,5 @@
 <script setup lang="ts">
-const { locale, locales, setLocale, localeProperties } = useI18n()
-
-// Function from https://dev.to/jorik/country-code-to-flag-emoji-a21
-function getFlagEmoji(countryCode: string) {
-  const codePoints = countryCode
-    .toUpperCase()
-    .split('')
-    .map((char) => 127397 + char.charCodeAt(0))
-  return String.fromCodePoint(...codePoints)
-}
+const { locale, locales, setLocale } = useI18n()
 
 async function changeLocale(code: string) {
   // Keep locale union in sync with nuxt.config.ts i18n.locales
@@ -24,7 +15,12 @@ async function changeLocale(code: string) {
     </nuxt-link>
     <div>
       <el-dropdown trigger="click" @command="changeLocale">
-        <span class="lang-trigger">{{ getFlagEmoji(localeProperties.flag as string) }}</span>
+        <span class="lang-trigger">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m5 8 6 6" /><path d="m4 14 6-6 2-3" /><path d="M2 5h12" /><path d="M7 2h1" /><path d="m22 22-5-10-5 10" /><path d="M14 18h6" />
+          </svg>
+          {{ locale.toUpperCase() }}
+        </span>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item
@@ -33,7 +29,7 @@ async function changeLocale(code: string) {
               :command="l.code"
               :disabled="l.code === locale"
             >
-              {{ getFlagEmoji(l.flag as string) }} {{ l.name }}
+              {{ l.name }}
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -66,10 +62,21 @@ img {
 }
 
 .lang-trigger {
-  font-size: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   cursor: pointer;
-  line-height: 1;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--el-text-color-regular);
   user-select: none;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.lang-trigger:hover {
+  background: var(--el-fill-color-light);
 }
 
 .brand {
