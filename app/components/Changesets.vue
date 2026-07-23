@@ -39,12 +39,6 @@ const accordion = ref<string | number | undefined>(undefined)
                 :href="`https://www.openstreetmap.org/changeset/${changeset.id}`"
                 target="_blank"
               >{{ changeset.id }}</a>
-              <a
-                v-if="changeset.comments_count > 0"
-                :href="`https://www.openstreetmap.org/changeset/${changeset.id}#comments`"
-                target="_blank"
-                class="comments-link"
-              >💬</a>
             </template>
 
             <table>
@@ -68,6 +62,12 @@ const accordion = ref<string | number | undefined>(undefined)
             </table>
           </el-collapse-item>
         </el-collapse>
+        <a
+          v-if="changeset.comments_count > 0"
+          :href="`https://www.openstreetmap.org/changeset/${changeset.id}#comments`"
+          target="_blank"
+          class="comments-link"
+        >💬 {{ changeset.comments_count }}</a>
       </p>
     </el-timeline-item>
   </el-timeline>
