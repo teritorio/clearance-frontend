@@ -36,7 +36,7 @@ const accordion = ref<string | number | undefined>(undefined)
           :href="`https://www.openstreetmap.org/changeset/${changeset.id}#comments`"
           target="_blank"
           class="comments-link"
-        >💬 {{ changeset.comments_count }}</a>
+        >💬</a>
         <el-collapse v-model="accordion" accordion>
           <el-collapse-item :name="index">
             <template #title>
