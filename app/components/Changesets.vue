@@ -30,7 +30,6 @@ const accordion = ref<string | number | undefined>(undefined)
         </span>
         <template v-if="changeset.tags?.created_by">
           <span class="created_by">🛠 {{ changeset.tags.created_by }}</span>
-          <br />
         </template>
         <a
           v-if="changeset.comments_count > 0"
