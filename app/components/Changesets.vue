@@ -28,16 +28,16 @@ const accordion = ref<string | number | undefined>(undefined)
             target="_blank"
           >{{ changeset.user }}</a>
         </span>
+        <template v-if="changeset.tags?.created_by">
+          <span class="created_by">🛠 {{ changeset.tags.created_by }}</span>
+          <br />
+        </template>
         <a
           v-if="changeset.comments_count > 0"
           :href="`https://www.openstreetmap.org/changeset/${changeset.id}#comments`"
           target="_blank"
           class="comments-link"
         >💬 {{ changeset.comments_count }}</a>
-        <template v-if="changeset.tags?.created_by">
-          <span class="created_by">🛠 {{ changeset.tags.created_by }}</span>
-          <br />
-        </template>
         <el-collapse v-model="accordion" accordion>
           <el-collapse-item :name="index">
             <template #title>
