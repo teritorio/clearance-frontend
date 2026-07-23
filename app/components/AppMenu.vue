@@ -1,10 +1,5 @@
 <script setup lang="ts">
-const { locale, locales, setLocale, localeProperties } = useI18n()
-
-function getFlagEmoji(countryCode: string) {
-  const codePoints = countryCode.toUpperCase().split('').map((char) => 127397 + char.charCodeAt(0))
-  return String.fromCodePoint(...codePoints)
-}
+const { locale, locales, setLocale } = useI18n()
 
 async function changeLocale(code: string) {
   // Keep locale union in sync with nuxt.config.ts i18n.locales
@@ -24,7 +19,7 @@ async function changeLocale(code: string) {
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="m5 8 6 6" /><path d="m4 14 6-6 2-3" /><path d="M2 5h12" /><path d="M7 2h1" /><path d="m22 22-5-10-5 10" /><path d="M14 18h6" />
           </svg>
-          {{ getFlagEmoji(localeProperties.flag as string) }} {{ locale.toUpperCase() }}
+          {{ locale.toUpperCase() }}
         </span>
         <template #dropdown>
           <el-dropdown-menu>
