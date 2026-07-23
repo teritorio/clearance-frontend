@@ -41,7 +41,7 @@ const accordion = ref<string | number | undefined>(undefined)
         <el-collapse v-model="accordion" accordion>
           <el-collapse-item :name="index">
             <template #title>
-              ⯼&nbsp;<a
+              <a
                 :href="`https://www.openstreetmap.org/changeset/${changeset.id}`"
                 target="_blank"
               >{{ changeset.id }}</a>
