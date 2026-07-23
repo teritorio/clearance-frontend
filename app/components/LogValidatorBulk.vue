@@ -10,12 +10,12 @@ defineEmits(['bulkValidation'])
       :title="$t('logs.validate_selection_confirm', { n: count })"
       :confirm-button-text="$t('logs.validate_selection_confirm_ok')"
       :cancel-button-text="$t('logs.validate_selection_confirm_cancel')"
-      confirm-button-type="primary"
+      confirm-button-type="success"
       width="220"
       @confirm="$emit('bulkValidation')"
     >
       <template #reference>
-        <el-button type="primary" style="width: 100%">
+        <el-button type="success" style="width: 100%">
           ✓ {{ $t('logs.validate_selection') }}
         </el-button>
       </template>

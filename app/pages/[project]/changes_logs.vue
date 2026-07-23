@@ -409,12 +409,12 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                         :title="$t('logs.validate_locha_confirm', { n: getRapprochementsCount(loCha) })"
                         :confirm-button-text="$t('logs.validate_selection_confirm_ok')"
                         :cancel-button-text="$t('logs.validate_selection_confirm_cancel')"
-                        confirm-button-type="primary"
+                        confirm-button-type="success"
                         width="260"
                         @confirm="handleAccept([loCha.metadata.locha_id])"
                       >
                         <template #reference>
-                          <el-button type="primary">
+                          <el-button type="success">
                             ✓ {{ $t('logs.validate_locha') }}
                           </el-button>
                         </template>
@@ -431,14 +431,14 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                       :title="$t('logs.validate_group_confirm')"
                       :confirm-button-text="$t('logs.validate_selection_confirm_ok')"
                       :cancel-button-text="$t('logs.validate_selection_confirm_cancel')"
-                      confirm-button-type="primary"
+                      confirm-button-type="success"
                       width="200"
                       @confirm="handleAcceptGroup(loCha, groupIndex)"
                     >
                       <template #reference>
                         <el-button-group>
                           <el-button
-                            type="primary"
+                            type="success"
                             :loading="pendingAcceptGroupKeys.has(`${loCha.metadata.locha_id}-${groupIndex}`)"
                             :disabled="pendingAcceptIds.has(loCha.metadata.locha_id)"
                           >
