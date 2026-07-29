@@ -21,7 +21,7 @@ export interface ClearanceIFeature extends IFeature {
 
 export interface ClearanceLoChaData extends LoChaData {
   features: ClearanceIFeature[]
-  metadata: LoChaData['metadata'] & {
+  metadata: Omit<LoChaData['metadata'], 'links'> & {
     locha_id: number
     links: ClearanceApiLink[][]
     // Parallel array: linkSemanticGroups[i] is the semantic_group key for links[i].

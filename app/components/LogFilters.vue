@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Action } from '@teritorio/openstreetmap-logical-history-component'
 import type { LocationQuery } from 'vue-router'
-import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
+import type { ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
 import { countBy, indexBy, sortBy, uniq } from 'underscore'
 import { getAfterDates, getAfterUsers } from '~/composables/useChangesLogs'
 
@@ -17,10 +17,12 @@ watchEffect(() => {
   filters.value = route.query
 })
 
+const groups = (loCha: ClearanceLoChaData) => loCha.metadata.links
+
 const stats = computed(() => {
   const actions = props.loChas
     .flatMap((loCha) =>
-      (loCha.metadata.links as ClearanceApiLink[][]).flatMap((group) =>
+      groups(loCha).flatMap((group) =>
         uniq(
           group
             .flatMap((link) => [
@@ -37,8 +39,8 @@ const stats = computed(() => {
 
 const statSelectors = computed(() => {
   const matches = props.loChas.flatMap((loCha) =>
-    (loCha.metadata.links as ClearanceApiLink[][]).flatMap((group) =>
-      uniq(group.flatMap((link) => link.matches)),
+    groups(loCha).flatMap((group) =>
+      uniq(group.flatMap((link) => link.matches), (m: ClearanceMatch) => m.selectors.join(';')),
     ),
   )
   return getStats(matches, (m: ClearanceMatch) => m.selectors.join(';'))
@@ -47,7 +49,7 @@ const statSelectors = computed(() => {
 const statUserGroups = computed(() => {
   const userGroups = props.loChas
     .flatMap((loCha) =>
-      (loCha.metadata.links as ClearanceApiLink[][]).flatMap((group) =>
+      groups(loCha).flatMap((group) =>
         uniq(group.flatMap((link) => link.matches.flatMap((m) => m.user_groups))),
       ),
     )
