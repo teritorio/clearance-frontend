@@ -9,6 +9,7 @@ else {
   Sentry.init({
     dsn: runtimeConfig.public.sentryDsn,
     environment: runtimeConfig.public.sentryEnvironment,
+    allowUrls: [/clearance(?:-dev)?\.teritorio\.xyz/],
     tracesSampleRate: 0.05,
     replaysSessionSampleRate: 0.05,
     replaysOnErrorSampleRate: 1.0,
