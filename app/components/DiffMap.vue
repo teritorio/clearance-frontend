@@ -42,7 +42,10 @@ function initMap() {
       attributionControl: false,
     })
   }
-  catch {
+  catch (e) {
+    if (!(e instanceof Error) || !e.message.includes('WebGL')) {
+      throw e
+    }
     // WebGL unavailable (headless browser, bot, sandboxed env, no GPU)
     return
   }
