@@ -6,7 +6,7 @@ import type {
 } from '#app/composables/asyncData'
 import type { NuxtApp } from '#app/nuxt'
 
-import { useAsyncData } from '#imports'
+import { showError, useAsyncData } from '#imports'
 
 export function getAsyncDataOrThrows<
   DataT,
@@ -20,6 +20,7 @@ export function getAsyncDataOrThrows<
 ): AsyncData<DataT, DataE> {
   return useAsyncData(key, handler, options).then((asyncData) => {
     if (asyncData.error.value) {
+      showError(asyncData.error.value as Error)
       throw asyncData.error
     }
     else {
