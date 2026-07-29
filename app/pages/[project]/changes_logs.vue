@@ -63,8 +63,8 @@ function getFeatureLinks(loCha: ClearanceLoChaData, feature: IFeature, groupInde
   return links.filter((l) => l.before === feature.id || l.after === feature.id)
 }
 
-function getBeforeFeature(loCha: ClearanceLoChaData, link: ClearanceApiLink): IFeature | undefined {
-  return loCha.features.find((f) => f.id === link.before) as IFeature | undefined
+function getAfterFeature(loCha: ClearanceLoChaData, link: ClearanceApiLink): IFeature | undefined {
+  return loCha.features.find((f) => f.id === link.after) as IFeature | undefined
 }
 
 function getRapprochementsCount(loCha: ClearanceLoChaData): number {
@@ -382,26 +382,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                 <template v-for="(featureLinks, _fl) in [getFeatureLinks(loCha, feature, groupIndex)]" :key="_fl">
                   <template v-for="(link, i) in featureLinks" :key="i">
                     <template v-if="feature.properties.is_after">
-                      <template v-for="(before, _) in [getBeforeFeature(loCha, link)]" :key="_">
-                        <div
-                          v-if="featureLinks.length > 1"
-                          class="diff-link-header"
-                          :class="{ 'diff-link-header--first': i === 0 }"
-                        >
-                          <code>{{ link.before }}</code> → <code>{{ link.after }}</code>
-                        </div>
-                        <div v-if="link.diff_attribs && Object.keys(link.diff_attribs).length" class="diff-section diff-section--centered diff-section--attribs">
-                          <AttribsDiff :diff="link.diff_attribs" />
-                        </div>
-                        <div class="diff-section">
-                          <TagsDiff
-                            v-if="!feature.properties.deleted"
-                            :diff="link.diff_tags"
-                            :src="before?.properties"
-                            :dst="feature.properties"
-                          />
-                        </div>
-                      </template>
+                      <!-- Diffs are displayed below each is_before panel -->
                     </template>
                     <template v-else-if="feature.properties.is_new">
                       <div v-if="link.diff_attribs && Object.keys(link.diff_attribs).length" class="diff-section diff-section--centered diff-section--attribs">
@@ -413,9 +394,19 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                       />
                     </template>
                     <template v-else>
-                      <TagsDiff
-                        :src="feature.properties"
-                      />
+                      <!-- is_before: show its specific diff below this panel -->
+                      <template v-for="(after, _a) in [getAfterFeature(loCha, link)]" :key="_a">
+                        <div v-if="link.diff_attribs && Object.keys(link.diff_attribs).length" class="diff-section diff-section--centered diff-section--attribs">
+                          <AttribsDiff :diff="link.diff_attribs" />
+                        </div>
+                        <div class="diff-section">
+                          <TagsDiff
+                            :diff="link.diff_tags"
+                            :src="feature.properties"
+                            :dst="after?.properties"
+                          />
+                        </div>
+                      </template>
                     </template>
                   </template>
                 </template>
@@ -519,19 +510,6 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   background-color: #fef3c7;
   border-radius: 4px;
   padding: 0.5rem;
-  border-top: none;
-}
-
-.diff-link-header {
-  margin-top: 0.75rem;
-  padding-top: 0.5rem;
-  border-top: 2px solid #d1d5db;
-  font-size: 0.8em;
-  color: #6b7280;
-}
-
-.diff-link-header--first {
-  margin-top: 0;
   border-top: none;
 }
 </style>
