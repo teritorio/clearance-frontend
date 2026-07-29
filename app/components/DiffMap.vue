@@ -32,14 +32,20 @@ function initMap() {
     return
   }
 
-  map = new Map({
-    container: mapContainerRef.value,
-    style: config.public.mapStyleUrl as string,
-    bounds: bounds.value,
-    fitBoundsOptions: { maxZoom: 17, padding: 50 },
-    cooperativeGestures: true,
-    attributionControl: false,
-  })
+  try {
+    map = new Map({
+      container: mapContainerRef.value,
+      style: config.public.mapStyleUrl as string,
+      bounds: bounds.value,
+      fitBoundsOptions: { maxZoom: 17, padding: 50 },
+      cooperativeGestures: true,
+      attributionControl: false,
+    })
+  }
+  catch {
+    // WebGL unavailable (headless browser, bot, sandboxed env, no GPU)
+    return
+  }
 
   map.addControl(new FullscreenControl())
 
