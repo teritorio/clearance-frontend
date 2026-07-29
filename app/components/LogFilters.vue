@@ -20,14 +20,16 @@ watchEffect(() => {
 const stats = computed(() => {
   const actions = props.loChas
     .flatMap((loCha) =>
-      uniq(
-        loCha.metadata.links.flat()
-          .flatMap((link: ClearanceApiLink) => [
-            ...Object.values(link.diff_attribs || {}),
-            ...Object.values(link.diff_tags || {}),
-          ])
-          .flat()
-          .map((action: Action) => action[0]),
+      (loCha.metadata.links as ClearanceApiLink[][]).flatMap((group) =>
+        uniq(
+          group
+            .flatMap((link) => [
+              ...Object.values(link.diff_attribs || {}),
+              ...Object.values(link.diff_tags || {}),
+            ])
+            .flat()
+            .map((action: Action) => action[0]),
+        ),
       ),
     )
   return getStats(actions)
@@ -35,7 +37,9 @@ const stats = computed(() => {
 
 const statSelectors = computed(() => {
   const matches = props.loChas.flatMap((loCha) =>
-    uniq(loCha.metadata.links.flat().flatMap((link: ClearanceApiLink) => link.matches)).flat(),
+    (loCha.metadata.links as ClearanceApiLink[][]).flatMap((group) =>
+      uniq(group.flatMap((link) => link.matches)),
+    ),
   )
   return getStats(matches, (m: ClearanceMatch) => m.selectors.join(';'))
 })
@@ -43,7 +47,9 @@ const statSelectors = computed(() => {
 const statUserGroups = computed(() => {
   const userGroups = props.loChas
     .flatMap((loCha) =>
-      uniq(loCha.metadata.links.flat().flatMap((link: ClearanceApiLink) => link.matches.flatMap((m) => m.user_groups))),
+      (loCha.metadata.links as ClearanceApiLink[][]).flatMap((group) =>
+        uniq(group.flatMap((link) => link.matches.flatMap((m) => m.user_groups))),
+      ),
     )
   return getStats(userGroups)
 })
