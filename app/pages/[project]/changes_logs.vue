@@ -379,35 +379,44 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                 </el-button-group>
               </template>
               <template #object-detail="{ feature, index: groupIndex }">
-                <template v-for="(link, i) in getFeatureLinks(loCha, feature, groupIndex)" :key="i">
-                  <template v-if="feature.properties.is_after">
-                    <template v-for="(before, _) in [getBeforeFeature(loCha, link)]" :key="_">
+                <template v-for="(featureLinks, _fl) in [getFeatureLinks(loCha, feature, groupIndex)]" :key="_fl">
+                  <template v-for="(link, i) in featureLinks" :key="i">
+                    <template v-if="feature.properties.is_after">
+                      <template v-for="(before, _) in [getBeforeFeature(loCha, link)]" :key="_">
+                        <div
+                          v-if="featureLinks.length > 1"
+                          class="diff-link-header"
+                          :class="{ 'diff-link-header--first': i === 0 }"
+                        >
+                          <code>{{ link.before }}</code> → <code>{{ link.after }}</code>
+                        </div>
+                        <div v-if="link.diff_attribs && Object.keys(link.diff_attribs).length" class="diff-section diff-section--centered diff-section--attribs">
+                          <AttribsDiff :diff="link.diff_attribs" />
+                        </div>
+                        <div class="diff-section">
+                          <TagsDiff
+                            v-if="!feature.properties.deleted"
+                            :diff="link.diff_tags"
+                            :src="before?.properties"
+                            :dst="feature.properties"
+                          />
+                        </div>
+                      </template>
+                    </template>
+                    <template v-else-if="feature.properties.is_new">
                       <div v-if="link.diff_attribs && Object.keys(link.diff_attribs).length" class="diff-section diff-section--centered diff-section--attribs">
                         <AttribsDiff :diff="link.diff_attribs" />
                       </div>
-                      <div class="diff-section">
-                        <TagsDiff
-                          v-if="!feature.properties.deleted"
-                          :diff="link.diff_tags"
-                          :src="before?.properties"
-                          :dst="feature.properties"
-                        />
-                      </div>
+                      <TagsDiff
+                        :diff="link.diff_tags"
+                        :dst="feature.properties"
+                      />
                     </template>
-                  </template>
-                  <template v-else-if="feature.properties.is_new">
-                    <div v-if="link.diff_attribs && Object.keys(link.diff_attribs).length" class="diff-section diff-section--centered diff-section--attribs">
-                      <AttribsDiff :diff="link.diff_attribs" />
-                    </div>
-                    <TagsDiff
-                      :diff="link.diff_tags"
-                      :dst="feature.properties"
-                    />
-                  </template>
-                  <template v-else>
-                    <TagsDiff
-                      :src="feature.properties"
-                    />
+                    <template v-else>
+                      <TagsDiff
+                        :src="feature.properties"
+                      />
+                    </template>
                   </template>
                 </template>
               </template>
@@ -510,6 +519,19 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   background-color: #fef3c7;
   border-radius: 4px;
   padding: 0.5rem;
+  border-top: none;
+}
+
+.diff-link-header {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 2px solid #d1d5db;
+  font-size: 0.8em;
+  color: #6b7280;
+}
+
+.diff-link-header--first {
+  margin-top: 0;
   border-top: none;
 }
 </style>
