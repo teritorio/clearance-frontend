@@ -11,7 +11,7 @@ async function changeLocale(code: string) {
   <el-header height="68px">
     <nuxt-link to="/" :title="$t('app.back')" class="brand">
       <img src="/favicon.svg" />
-      <span class="brand-name">clearance</span>
+      <span class="brand-name">Clearance</span>
     </nuxt-link>
     <div>
       <el-dropdown trigger="click" @command="changeLocale">
