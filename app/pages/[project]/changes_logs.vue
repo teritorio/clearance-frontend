@@ -529,4 +529,8 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 .diff-before-header--first {
   margin-top: 0;
 }
+
+.diff-before-header :deep(article) {
+  border: none;
+}
 </style>
