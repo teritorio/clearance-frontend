@@ -2,7 +2,7 @@
 import type { Action, IFeature } from '@teritorio/openstreetmap-logical-history-component'
 import type { Geometry } from 'geojson'
 import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
-import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
+import { LoCha, LoChaObject } from '@teritorio/openstreetmap-logical-history-component'
 import { uniq } from 'underscore'
 import { getAfterDates, getAfterUsers } from '~/composables/useChangesLogs'
 
@@ -383,23 +383,13 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                   <template v-for="(link, i) in featureLinks" :key="i">
                     <template v-if="feature.properties.is_after">
                       <template v-for="(before, _) in [getBeforeFeature(loCha, link)]" :key="_">
-                        <div
+                        <LoChaObject
                           v-if="featureLinks.length > 1 && before"
-                          class="diff-link-header"
-                          :class="{ 'diff-link-header--first': i === 0 }"
-                        >
-                          <a
-                            :href="`https://www.openstreetmap.org/${before.properties.objtype}/${before.properties.id}/history`"
-                            target="_blank"
-                            rel="noopener"
-                          >{{ before.properties.objtype }}{{ before.properties.id }}-v{{ before.properties.version }}</a>
-                          <span class="diff-link-date">📅 {{ before.properties.created }}</span>
-                          <a
-                            :href="`https://www.openstreetmap.org/user/${encodeURIComponent(before.properties.username)}`"
-                            target="_blank"
-                            rel="noopener"
-                          >👤 {{ before.properties.username }}</a>
-                        </div>
+                          :feature="before"
+                          :compact="true"
+                          class="diff-before-header"
+                          :class="{ 'diff-before-header--first': i === 0 }"
+                        />
                         <div v-if="link.diff_attribs && Object.keys(link.diff_attribs).length" class="diff-section diff-section--centered diff-section--attribs">
                           <AttribsDiff :diff="link.diff_attribs" />
                         </div>
@@ -532,24 +522,11 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   border-top: none;
 }
 
-.diff-link-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
+.diff-before-header {
   margin-top: 0.75rem;
-  padding: 0.4rem 0.5rem;
-  border-top: 2px solid #d1d5db;
-  background-color: #f9fafb;
-  font-size: 0.85em;
 }
 
-.diff-link-header--first {
+.diff-before-header--first {
   margin-top: 0;
-  border-top: none;
-}
-
-.diff-link-date {
-  color: #6b7280;
 }
 </style>
