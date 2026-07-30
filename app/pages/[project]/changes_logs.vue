@@ -384,11 +384,21 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                     <template v-if="feature.properties.is_after">
                       <template v-for="(before, _) in [getBeforeFeature(loCha, link)]" :key="_">
                         <div
-                          v-if="featureLinks.length > 1"
+                          v-if="featureLinks.length > 1 && before"
                           class="diff-link-header"
                           :class="{ 'diff-link-header--first': i === 0 }"
                         >
-                          <code>{{ link.before }}</code> → <code>{{ link.after }}</code>
+                          <a
+                            :href="`https://www.openstreetmap.org/${before.properties.objtype}/${before.properties.id}/history`"
+                            target="_blank"
+                            rel="noopener"
+                          >{{ before.properties.objtype }}{{ before.properties.id }}-v{{ before.properties.version }}</a>
+                          <span class="diff-link-date">📅 {{ before.properties.created }}</span>
+                          <a
+                            :href="`https://www.openstreetmap.org/user/${encodeURIComponent(before.properties.username)}`"
+                            target="_blank"
+                            rel="noopener"
+                          >👤 {{ before.properties.username }}</a>
                         </div>
                         <div v-if="link.diff_attribs && Object.keys(link.diff_attribs).length" class="diff-section diff-section--centered diff-section--attribs">
                           <AttribsDiff :diff="link.diff_attribs" />
@@ -523,15 +533,23 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 }
 
 .diff-link-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
   margin-top: 0.75rem;
-  padding-top: 0.5rem;
+  padding: 0.4rem 0.5rem;
   border-top: 2px solid #d1d5db;
-  font-size: 0.8em;
-  color: #6b7280;
+  background-color: #f9fafb;
+  font-size: 0.85em;
 }
 
 .diff-link-header--first {
   margin-top: 0;
   border-top: none;
+}
+
+.diff-link-date {
+  color: #6b7280;
 }
 </style>
