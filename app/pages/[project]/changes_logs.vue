@@ -15,6 +15,7 @@ definePageMeta({
 
 const BATCH_SIZE = 3
 const LOCHA_HASH_PATTERN = /^#locha-(-?\d+)-group-/
+const FEATURE_ID_SUFFIX = /__\d+$/
 
 const { t } = useI18n()
 const router = useRouter()
@@ -56,11 +57,12 @@ const isProjectUser = computed(() => {
 
 function getFeatureLinks(loCha: ClearanceLoChaData, feature: IFeature, groupIndex: number): ClearanceApiLink[] {
   const links = (loCha.metadata.links[groupIndex] ?? []) as ClearanceApiLink[]
+  const featureId = (feature.id as string).replace(FEATURE_ID_SUFFIX, '')
   if (feature.properties.is_before) {
-    const link = links.find((l) => l.before === feature.id || l.after === feature.id)
+    const link = links.find((l) => l.before === featureId || l.after === featureId)
     return link ? [link] : []
   }
-  return links.filter((l) => l.before === feature.id || l.after === feature.id)
+  return links.filter((l) => l.before === featureId || l.after === featureId)
 }
 
 function getBeforeFeature(loCha: ClearanceLoChaData, link: ClearanceApiLink): IFeature | undefined {
@@ -151,7 +153,7 @@ function splitLoChaGroups(loCha: ClearanceLoChaData): SplitLoChaResult {
     }
     else {
       matchingIdxs.forEach((i) => {
-        newFeatures.push({ ...feature, properties: { ...feature.properties, links: newIndices[i]! } })
+        newFeatures.push({ ...feature, id: `${featureId}__${i}`, properties: { ...feature.properties, links: newIndices[i]! } })
       })
     }
   })
