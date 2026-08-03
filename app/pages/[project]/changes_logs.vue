@@ -76,9 +76,17 @@ interface SplitLoChaResult {
   groupIndexMap: number[]
 }
 
+function isMergeGroup(group: ClearanceApiLink[]): boolean {
+  if (group.length <= 1) {
+    return false
+  }
+  const afterIds = new Set(group.map((l) => l.after))
+  return afterIds.size === 1
+}
+
 function splitLoChaGroups(loCha: ClearanceLoChaData): SplitLoChaResult {
-  const hasMultiLinks = loCha.metadata.links.some((group) => group.length > 1)
-  if (!hasMultiLinks) {
+  const hasGroupToSplit = loCha.metadata.links.some(isMergeGroup)
+  if (!hasGroupToSplit) {
     return { rendered: loCha, groupIndexMap: loCha.metadata.links.map((_, i) => i) }
   }
 
@@ -89,12 +97,20 @@ function splitLoChaGroups(loCha: ClearanceLoChaData): SplitLoChaResult {
 
   loCha.metadata.links.forEach((group, originalIndex) => {
     const newIndices: number[] = []
-    group.forEach((link) => {
+    if (isMergeGroup(group)) {
+      group.forEach((link) => {
+        const newIndex = newLinks.length
+        newLinks.push([link])
+        newLinkSemanticGroups.push(loCha.metadata.linkSemanticGroups[originalIndex]!)
+        newIndices.push(newIndex)
+      })
+    }
+    else {
       const newIndex = newLinks.length
-      newLinks.push([link])
+      newLinks.push(group)
       newLinkSemanticGroups.push(loCha.metadata.linkSemanticGroups[originalIndex]!)
       newIndices.push(newIndex)
-    })
+    }
     oldToNewIndices.set(originalIndex, newIndices)
     newIndices.forEach(() => groupIndexMap.push(originalIndex))
   })
