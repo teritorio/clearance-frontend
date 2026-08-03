@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Action, IFeature } from '@teritorio/openstreetmap-logical-history-component'
 import type { Geometry } from 'geojson'
-import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
+import type { ClearanceApiLink, ClearanceIFeature, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
 import { uniq } from 'underscore'
 import { getAfterDates, getAfterUsers } from '~/composables/useChangesLogs'
@@ -69,6 +69,61 @@ function getBeforeFeature(loCha: ClearanceLoChaData, link: ClearanceApiLink): IF
 
 function getRapprochementsCount(loCha: ClearanceLoChaData): number {
   return loCha.metadata.links.length
+}
+
+interface SplitLoChaResult {
+  rendered: ClearanceLoChaData
+  groupIndexMap: number[]
+}
+
+function splitLoChaGroups(loCha: ClearanceLoChaData): SplitLoChaResult {
+  const hasMultiLinks = loCha.metadata.links.some((group) => group.length > 1)
+  if (!hasMultiLinks) {
+    return { rendered: loCha, groupIndexMap: loCha.metadata.links.map((_, i) => i) }
+  }
+
+  const newLinks: ClearanceApiLink[][] = []
+  const newLinkSemanticGroups: string[] = []
+  const groupIndexMap: number[] = []
+  const oldToNewIndices = new Map<number, number[]>()
+
+  loCha.metadata.links.forEach((group, originalIndex) => {
+    const newIndices: number[] = []
+    group.forEach((link) => {
+      const newIndex = newLinks.length
+      newLinks.push([link])
+      newLinkSemanticGroups.push(loCha.metadata.linkSemanticGroups[originalIndex]!)
+      newIndices.push(newIndex)
+    })
+    oldToNewIndices.set(originalIndex, newIndices)
+    newIndices.forEach(() => groupIndexMap.push(originalIndex))
+  })
+
+  const newFeatures: ClearanceIFeature[] = []
+  loCha.features.forEach((feature) => {
+    const oldGroupIndex = feature.properties.links
+    const newIndices = oldToNewIndices.get(oldGroupIndex)
+    if (!newIndices || newIndices.length <= 1) {
+      newFeatures.push({ ...feature, properties: { ...feature.properties, links: newIndices?.[0] ?? oldGroupIndex } })
+      return
+    }
+    if (feature.properties.is_before) {
+      const originalGroup = loCha.metadata.links[oldGroupIndex] ?? []
+      const linkIndex = originalGroup.findIndex((l) => l.before === (feature.id as string))
+      const newIndex = newIndices[linkIndex >= 0 ? linkIndex : 0]!
+      newFeatures.push({ ...feature, properties: { ...feature.properties, links: newIndex } })
+    }
+    else {
+      newIndices.forEach((newIndex) => {
+        newFeatures.push({ ...feature, properties: { ...feature.properties, links: newIndex } })
+      })
+    }
+  })
+
+  return {
+    rendered: { ...loCha, features: newFeatures, metadata: { ...loCha.metadata, links: newLinks, linkSemanticGroups: newLinkSemanticGroups } },
+    groupIndexMap,
+  }
 }
 
 function uniqMatches(links: ClearanceApiLink[]): ClearanceMatch[] {
@@ -149,6 +204,10 @@ watch(() => loChasWithFilter.value.length, () => {
 
 const visibleLoChas = computed(() => {
   return loChasWithFilter.value.slice(0, visibleCount.value)
+})
+
+const visibleLoChasSplit = computed(() => {
+  return visibleLoChas.value.map((loCha) => ({ original: loCha, ...splitLoChaGroups(loCha) }))
 })
 
 const hasMore = computed(() => {
@@ -348,12 +407,12 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
       <template v-if="loChasWithFilter.length">
         <el-space fill :size="20">
           <el-card
-            v-for="loCha in visibleLoChas"
+            v-for="{ original: loCha, rendered, groupIndexMap } in visibleLoChasSplit"
             :key="loCha.metadata.locha_id"
-            :class="{ 'locha-card': getRapprochementsCount(loCha) > 1, 'locha-card--pending': pendingAcceptIds.has(loCha.metadata.locha_id) }"
+            :class="{ 'locha-card': getRapprochementsCount(rendered) > 1, 'locha-card--pending': pendingAcceptIds.has(loCha.metadata.locha_id) }"
             style="--el-card-padding: 0;"
           >
-            <template v-if="getRapprochementsCount(loCha) > 1" #header>
+            <template v-if="getRapprochementsCount(rendered) > 1" #header>
               <div class="card-header">
                 <el-button-group v-if="isProjectUser">
                   <el-button type="primary" @click="handleAccept([loCha.metadata.locha_id])">
@@ -361,25 +420,25 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                   </el-button>
                 </el-button-group>
                 <strong class="object-count">
-                  {{ $t('logs.rapprochements_count', { n: getRapprochementsCount(loCha) }) }}
+                  {{ $t('logs.rapprochements_count', { n: getRapprochementsCount(rendered) }) }}
                 </strong>
               </div>
             </template>
-            <LoCha :id="String(loCha.metadata.locha_id)" :data="loCha" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
+            <LoCha :id="String(loCha.metadata.locha_id)" :data="rendered" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
               <template #header-start-end="{ index: groupIndex }">
                 <el-button-group v-if="isProjectUser">
                   <el-button
                     type="primary"
-                    :loading="pendingAcceptGroupKeys.has(`${loCha.metadata.locha_id}-${groupIndex}`)"
+                    :loading="pendingAcceptGroupKeys.has(`${loCha.metadata.locha_id}-${groupIndexMap[groupIndex]}`)"
                     :disabled="pendingAcceptIds.has(loCha.metadata.locha_id)"
-                    @click="handleAcceptGroup(loCha, groupIndex)"
+                    @click="handleAcceptGroup(loCha, groupIndexMap[groupIndex]!)"
                   >
                     ✓
                   </el-button>
                 </el-button-group>
               </template>
               <template #object-detail="{ feature, index: groupIndex }">
-                <template v-for="(featureLinks, _fl) in [getFeatureLinks(loCha, feature, groupIndex)]" :key="_fl">
+                <template v-for="(featureLinks, _fl) in [getFeatureLinks(rendered, feature, groupIndex)]" :key="_fl">
                   <template v-for="(link, i) in featureLinks" :key="i">
                     <template v-if="feature.properties.is_after">
                       <template v-for="(before, _) in [getBeforeFeature(loCha, link)]" :key="_">
@@ -421,13 +480,13 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                 </template>
               </template>
               <template #content-start="{ index: groupIndex }">
-                <template v-for="(changesets, i) in [getGroupChangesets(loCha, groupIndex)]" :key="i">
+                <template v-for="(changesets, i) in [getGroupChangesets(rendered, groupIndex)]" :key="i">
                   <Changesets v-if="changesets.length" :changesets="changesets" />
                 </template>
               </template>
               <template #header-center="{ index: groupIndex }">
                 <el-tag
-                  v-for="userGroup in uniq((loCha.metadata.links[groupIndex] ?? [] as ClearanceApiLink[]).flatMap((link) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"
+                  v-for="userGroup in uniq((rendered.metadata.links[groupIndex] ?? [] as ClearanceApiLink[]).flatMap((link) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"
                   :key="userGroup"
                   size="small"
                   class="match-tag"
@@ -435,7 +494,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                   📌 {{ useI18nHash(data?.project.user_groups[userGroup]?.title) ?? userGroup }}
                 </el-tag>
                 <el-tag
-                  v-for="match in uniqMatches((loCha.metadata.links[groupIndex] ?? []) as ClearanceApiLink[])"
+                  v-for="match in uniqMatches((rendered.metadata.links[groupIndex] ?? []) as ClearanceApiLink[])"
                   :key="match.selectors.join(';')"
                   size="small"
                   type="warning"
