@@ -139,23 +139,18 @@ function splitLoChaGroups(loCha: ClearanceLoChaData): SplitLoChaResult {
     }
 
     const featureId = feature.id as string
+    const matchingIdxs = subGroups
+      .map((subGroup, i) => subGroup.some((l) => l.before === featureId || l.after === featureId) ? i : -1)
+      .filter((i) => i >= 0)
 
-    if (feature.properties.is_before) {
-      let targetIdx = subGroups.length - 1
-      for (let i = 0; i < subGroups.length; i++) {
-        if (subGroups[i]!.some((l) => l.before === featureId || l.after === featureId)) {
-          targetIdx = i
-          break
-        }
-      }
-      newFeatures.push({ ...feature, properties: { ...feature.properties, links: newIndices[targetIdx]! } })
+    if (matchingIdxs.length === 0) {
+      newFeatures.push({ ...feature, properties: { ...feature.properties, links: newIndices[0]! } })
+    }
+    else if (matchingIdxs.length === 1) {
+      newFeatures.push({ ...feature, properties: { ...feature.properties, links: newIndices[matchingIdxs[0]!]! } })
     }
     else {
-      const matchingIdxs = subGroups
-        .map((subGroup, i) => subGroup.some((l) => l.after === featureId || l.before === featureId) ? i : -1)
-        .filter((i) => i >= 0)
-      const targets = matchingIdxs.length > 0 ? matchingIdxs : [0]
-      targets.forEach((i) => {
+      matchingIdxs.forEach((i) => {
         newFeatures.push({ ...feature, properties: { ...feature.properties, links: newIndices[i]! } })
       })
     }
