@@ -109,7 +109,7 @@ function splitLoChaGroups(loCha: ClearanceLoChaData): SplitLoChaResult {
     }
     if (feature.properties.is_before) {
       const originalGroup = loCha.metadata.links[oldGroupIndex] ?? []
-      const linkIndex = originalGroup.findIndex((l) => l.before === (feature.id as string))
+      const linkIndex = originalGroup.findIndex((l) => l.before === (feature.id as string) || l.after === (feature.id as string))
       const newIndex = newIndices[linkIndex >= 0 ? linkIndex : 0]!
       newFeatures.push({ ...feature, properties: { ...feature.properties, links: newIndex } })
     }
