@@ -76,62 +76,87 @@ interface SplitLoChaResult {
   groupIndexMap: number[]
 }
 
-function isMergeGroup(group: ClearanceApiLink[]): boolean {
-  if (group.length <= 1) {
-    return false
-  }
-  const afterIds = new Set(group.map((l) => l.after))
-  return afterIds.size === 1
-}
-
 function splitLoChaGroups(loCha: ClearanceLoChaData): SplitLoChaResult {
-  const hasGroupToSplit = loCha.metadata.links.some(isMergeGroup)
-  if (!hasGroupToSplit) {
+  // For each original group, split into sub-groups:
+  // - links where link.after appears N>1 times in the group → each in its own sub-group
+  // - links where link.after is unique in the group → all stay together in one sub-group
+  const subGroupsPerOriginal: ClearanceApiLink[][][] = loCha.metadata.links.map((group) => {
+    const afterCount = new Map<string | undefined, number>()
+    group.forEach((link) => afterCount.set(link.after, (afterCount.get(link.after) ?? 0) + 1))
+
+    const sharedLinks: ClearanceApiLink[] = []
+    const uniqueLinks: ClearanceApiLink[] = []
+    group.forEach((link) => {
+      if ((afterCount.get(link.after) ?? 0) > 1) {
+        sharedLinks.push(link)
+      }
+      else {
+        uniqueLinks.push(link)
+      }
+    })
+
+    if (sharedLinks.length === 0) {
+      return [group]
+    }
+    const subGroups: ClearanceApiLink[][] = sharedLinks.map((l) => [l])
+    if (uniqueLinks.length > 0) {
+      subGroups.push(uniqueLinks)
+    }
+    return subGroups
+  })
+
+  const needsSplit = subGroupsPerOriginal.some((subs) => subs.length > 1)
+  if (!needsSplit) {
     return { rendered: loCha, groupIndexMap: loCha.metadata.links.map((_, i) => i) }
   }
 
   const newLinks: ClearanceApiLink[][] = []
   const newLinkSemanticGroups: string[] = []
   const groupIndexMap: number[] = []
-  const oldToNewIndices = new Map<number, number[]>()
+  const oldToNewIndicesMap = new Map<number, number[]>()
 
-  loCha.metadata.links.forEach((group, originalIndex) => {
+  subGroupsPerOriginal.forEach((subGroups, originalIndex) => {
     const newIndices: number[] = []
-    if (isMergeGroup(group)) {
-      group.forEach((link) => {
-        const newIndex = newLinks.length
-        newLinks.push([link])
-        newLinkSemanticGroups.push(loCha.metadata.linkSemanticGroups[originalIndex]!)
-        newIndices.push(newIndex)
-      })
-    }
-    else {
+    subGroups.forEach((subGroup) => {
       const newIndex = newLinks.length
-      newLinks.push(group)
+      newLinks.push(subGroup)
       newLinkSemanticGroups.push(loCha.metadata.linkSemanticGroups[originalIndex]!)
       newIndices.push(newIndex)
-    }
-    oldToNewIndices.set(originalIndex, newIndices)
+    })
+    oldToNewIndicesMap.set(originalIndex, newIndices)
     newIndices.forEach(() => groupIndexMap.push(originalIndex))
   })
 
   const newFeatures: ClearanceIFeature[] = []
   loCha.features.forEach((feature) => {
     const oldGroupIndex = feature.properties.links
-    const newIndices = oldToNewIndices.get(oldGroupIndex)
-    if (!newIndices || newIndices.length <= 1) {
+    const newIndices = oldToNewIndicesMap.get(oldGroupIndex)
+    const subGroups = subGroupsPerOriginal[oldGroupIndex]
+
+    if (!newIndices || !subGroups || newIndices.length <= 1) {
       newFeatures.push({ ...feature, properties: { ...feature.properties, links: newIndices?.[0] ?? oldGroupIndex } })
       return
     }
+
+    const featureId = feature.id as string
+
     if (feature.properties.is_before) {
-      const originalGroup = loCha.metadata.links[oldGroupIndex] ?? []
-      const linkIndex = originalGroup.findIndex((l) => l.before === (feature.id as string) || l.after === (feature.id as string))
-      const newIndex = newIndices[linkIndex >= 0 ? linkIndex : 0]!
-      newFeatures.push({ ...feature, properties: { ...feature.properties, links: newIndex } })
+      let targetIdx = subGroups.length - 1
+      for (let i = 0; i < subGroups.length; i++) {
+        if (subGroups[i]!.some((l) => l.before === featureId || l.after === featureId)) {
+          targetIdx = i
+          break
+        }
+      }
+      newFeatures.push({ ...feature, properties: { ...feature.properties, links: newIndices[targetIdx]! } })
     }
     else {
-      newIndices.forEach((newIndex) => {
-        newFeatures.push({ ...feature, properties: { ...feature.properties, links: newIndex } })
+      const matchingIdxs = subGroups
+        .map((subGroup, i) => subGroup.some((l) => l.after === featureId || l.before === featureId) ? i : -1)
+        .filter((i) => i >= 0)
+      const targets = matchingIdxs.length > 0 ? matchingIdxs : [0]
+      targets.forEach((i) => {
+        newFeatures.push({ ...feature, properties: { ...feature.properties, links: newIndices[i]! } })
       })
     }
   })
