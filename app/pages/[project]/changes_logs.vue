@@ -57,6 +57,10 @@ const isProjectUser = computed(() => {
 function getFeatureLinks(loCha: ClearanceLoChaData, feature: IFeature, groupIndex: number): ClearanceApiLink[] {
   const links = (loCha.metadata.links[groupIndex] ?? []) as ClearanceApiLink[]
   const featureId = feature.id as string
+  if (feature.properties.is_before) {
+    const link = links.find((l) => l.before === featureId || l.after === featureId)
+    return link ? [link] : []
+  }
   return links.filter((l) => l.before === featureId || l.after === featureId)
 }
 
@@ -119,9 +123,14 @@ function splitLoChaGroups(loCha: ClearanceLoChaData): SplitLoChaResult {
       units.push(makeMiniLoCha(loCha, group, originalIndex, false))
     }
     else {
-      group.forEach((link) => {
+      const sharedLinks = group.filter((link) => link.after !== undefined && (afterCount.get(link.after) ?? 0) > 1)
+      const uniqueLinks = group.filter((link) => link.after === undefined || (afterCount.get(link.after) ?? 0) <= 1)
+      sharedLinks.forEach((link) => {
         units.push(makeMiniLoCha(loCha, [link], originalIndex, true))
       })
+      if (uniqueLinks.length > 0) {
+        units.push(makeMiniLoCha(loCha, uniqueLinks, originalIndex, false))
+      }
     }
   })
 
