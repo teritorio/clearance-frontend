@@ -12,14 +12,13 @@
     "preview": "nuxi preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "vitest",
-    "postinstall": "patch-package"
+    "test": "vitest"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
     "@element-plus/nuxt": "^1.1.5",
     "@sentry/nuxt": "^10.47.0",
-    "@teritorio/openstreetmap-logical-history-component": "0.7.0",
+    "@teritorio/openstreetmap-logical-history-component": "0.7.2",
     "@turf/bbox": "^7.3.4",
     "@turf/boolean-equal": "^7.3.4",
     "@turf/helpers": "^7.3.4",
@@ -46,7 +45,6 @@
     "happy-dom": "^17.4.4",
     "lint-staged": "^16.4.0",
     "nuxt": "^4.4.2",
-    "patch-package": "^8.0.1",
     "postcss-html": "^1.8.1",
     "simple-git-hooks": "^2.13.1",
     "typescript": "^6.0.2",
