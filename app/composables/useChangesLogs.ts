@@ -28,6 +28,9 @@ export interface ClearanceLoChaData extends LoChaData {
     // Required to call PUT /changes_logs/:locha_id/:semantic_group/accept correctly.
     linkSemanticGroups: string[]
     changesets: Changeset[] | null
+    // When true, forces multi-column layout in LoCha even for 1-before/1-after pairs.
+    // Used for merge-pair mini-LoCha instances created by splitLoChaGroups.
+    forceMultiColumn?: boolean
   }
 }
 
