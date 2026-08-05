@@ -66,7 +66,7 @@ function featureRef(f: IFeature): string {
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
-  padding: 0.25rem 0;
+  padding: 0.25rem 5rem 0.25rem 0;
 }
 
 .diff-feature-header__side {
@@ -78,7 +78,7 @@ function featureRef(f: IFeature): string {
 
 .diff-feature-header__ref {
   font-size: 0.85em;
-  color: #c8a84b;
+  color: #0066cc;
   font-weight: 600;
   text-decoration: underline;
   white-space: nowrap;
