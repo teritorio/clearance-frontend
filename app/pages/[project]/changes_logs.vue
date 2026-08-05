@@ -383,13 +383,12 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                   <template v-for="(link, i) in featureLinks" :key="i">
                     <template v-if="feature.properties.is_after">
                       <template v-for="(before, _) in [getBeforeFeature(loCha, link)]" :key="_">
-                        <div
+                        <DiffLinkHeader
                           v-if="featureLinks.length > 1"
-                          class="diff-link-header"
+                          :before="before"
+                          :after="feature"
                           :class="{ 'diff-link-header--first': i === 0 }"
-                        >
-                          <code>{{ link.before }}</code> → <code>{{ link.after }}</code>
-                        </div>
+                        />
                         <div v-if="link.diff_attribs && Object.keys(link.diff_attribs).length" class="diff-section diff-section--centered diff-section--attribs">
                           <AttribsDiff :diff="link.diff_attribs" />
                         </div>
