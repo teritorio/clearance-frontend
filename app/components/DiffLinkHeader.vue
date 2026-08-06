@@ -30,6 +30,7 @@ function featureRef(f: IFeature): string {
       </p>
       <a
         v-if="before.properties.username"
+        class="user-link"
         :href="userUrl(before.properties.username)"
         target="_blank"
         @click.stop
@@ -45,6 +46,7 @@ function featureRef(f: IFeature): string {
       </p>
       <a
         v-if="after.properties.username"
+        class="user-link"
         :href="userUrl(after.properties.username)"
         target="_blank"
         @click.stop
@@ -73,10 +75,9 @@ function featureRef(f: IFeature): string {
   gap: 2px;
 }
 
-.part-before a,
-.part-after a {
+.user-link {
   font-size: 0.75em;
-  white-space: nowrap;
+  color: #333333;
 }
 
 .date {
