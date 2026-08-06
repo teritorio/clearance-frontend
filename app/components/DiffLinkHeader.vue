@@ -87,7 +87,8 @@ function featureRef(f: IFeature): string {
 
 .arrow {
   flex-shrink: 0;
-  align-self: center;
+  align-self: flex-start;
+  padding-top: 0.1em;
   color: #666;
 }
 </style>
