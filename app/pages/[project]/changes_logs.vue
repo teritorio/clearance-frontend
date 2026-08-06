@@ -378,18 +378,29 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                   </el-button>
                 </el-button-group>
               </template>
+              <template #object-header="{ feature, index: groupIndex }">
+                <template v-for="(featureLinks, _fl) in [getFeatureLinks(loCha, feature, groupIndex)]" :key="_fl">
+                  <template v-if="featureLinks.length > 1 && feature.properties.is_after">
+                    <template v-for="(firstLink, _fl2) in [featureLinks[0]]" :key="_fl2">
+                      <DiffLinkHeader
+                        v-if="firstLink"
+                        :before="getBeforeFeature(loCha, firstLink)"
+                        :after="feature"
+                      />
+                    </template>
+                  </template>
+                </template>
+              </template>
               <template #object-detail="{ feature, index: groupIndex }">
                 <template v-for="(featureLinks, _fl) in [getFeatureLinks(loCha, feature, groupIndex)]" :key="_fl">
                   <template v-for="(link, i) in featureLinks" :key="i">
                     <template v-if="feature.properties.is_after">
                       <template v-for="(before, _) in [getBeforeFeature(loCha, link)]" :key="_">
-                        <div
-                          v-if="featureLinks.length > 1"
-                          class="diff-link-header"
-                          :class="{ 'diff-link-header--first': i === 0 }"
-                        >
-                          <code>{{ link.before }}</code> → <code>{{ link.after }}</code>
-                        </div>
+                        <DiffLinkHeader
+                          v-if="featureLinks.length > 1 && i > 0"
+                          :before="before"
+                          :after="feature"
+                        />
                         <div v-if="link.diff_attribs && Object.keys(link.diff_attribs).length" class="diff-section diff-section--centered diff-section--attribs">
                           <AttribsDiff :diff="link.diff_attribs" />
                         </div>
@@ -519,19 +530,6 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   background-color: #fef3c7;
   border-radius: 4px;
   padding: 0.5rem;
-  border-top: none;
-}
-
-.diff-link-header {
-  margin-top: 0.75rem;
-  padding-top: 0.5rem;
-  border-top: 2px solid #d1d5db;
-  font-size: 0.8em;
-  color: #6b7280;
-}
-
-.diff-link-header--first {
-  margin-top: 0;
   border-top: none;
 }
 </style>
