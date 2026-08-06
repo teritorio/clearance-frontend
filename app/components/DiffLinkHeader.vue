@@ -22,37 +22,31 @@ function featureRef(f: IFeature): string {
 </script>
 
 <template>
-  <div class="diff-feature-header">
-    <div v-if="before" class="diff-feature-header__side">
-      <a :href="historyUrl(before)" target="_blank" class="diff-feature-header__ref" @click.stop>
-        {{ featureRef(before) }}
-      </a>
-      <span class="diff-feature-header__meta">
+  <div class="diff-link-header">
+    <div v-if="before" class="part-before">
+      <a :href="historyUrl(before)" target="_blank" @click.stop>{{ featureRef(before) }}</a>
+      <p class="date">
         📅 {{ before.properties.created }}
-      </span>
+      </p>
       <a
         v-if="before.properties.username"
         :href="userUrl(before.properties.username)"
         target="_blank"
-        class="diff-feature-header__user"
         @click.stop
       >
         👤 {{ before.properties.username }}
       </a>
     </div>
-    <span class="diff-feature-header__arrow">→</span>
-    <div class="diff-feature-header__side">
-      <a :href="historyUrl(after)" target="_blank" class="diff-feature-header__ref" @click.stop>
-        {{ featureRef(after) }}
-      </a>
-      <span class="diff-feature-header__meta">
+    <span class="arrow">→</span>
+    <div class="part-after">
+      <a :href="historyUrl(after)" target="_blank" @click.stop>{{ featureRef(after) }}</a>
+      <p class="date">
         📅 {{ after.properties.created }}
-      </span>
+      </p>
       <a
         v-if="after.properties.username"
         :href="userUrl(after.properties.username)"
         target="_blank"
-        class="diff-feature-header__user"
         @click.stop
       >
         👤 {{ after.properties.username }}
@@ -62,46 +56,38 @@ function featureRef(f: IFeature): string {
 </template>
 
 <style scoped>
-.diff-feature-header {
+.diff-link-header {
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: flex-start;
   gap: 0.5rem;
-  padding: 0.25rem 5rem 0.25rem 0;
 }
 
-.diff-feature-header__side {
+.part-before,
+.part-after {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 0;
 }
 
-.diff-feature-header__ref {
-  font-size: 0.85em;
-  color: #0066cc;
-  font-weight: 600;
-  text-decoration: underline;
+.part-before a,
+.part-after a {
+  font-size: 0.75em;
   white-space: nowrap;
 }
 
-.diff-feature-header__meta {
+.date {
   font-size: 0.75em;
   color: grey;
+  margin: 0;
 }
 
-.diff-feature-header__user {
-  font-size: 0.75em;
-  color: #333;
-  text-decoration: none;
-}
-
-.diff-feature-header__user:hover {
-  text-decoration: underline;
-}
-
-.diff-feature-header__arrow {
-  align-self: center;
+.arrow {
   flex-shrink: 0;
+  align-self: center;
   color: #666;
 }
 </style>
