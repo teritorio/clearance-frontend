@@ -378,13 +378,26 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                   </el-button>
                 </el-button-group>
               </template>
+              <template #object-header="{ feature, index: groupIndex }">
+                <template v-for="(featureLinks, _fl) in [getFeatureLinks(loCha, feature, groupIndex)]" :key="_fl">
+                  <template v-if="featureLinks.length > 1 && feature.properties.is_after">
+                    <template v-for="(firstLink, _fl2) in [featureLinks[0]]" :key="_fl2">
+                      <DiffLinkHeader
+                        v-if="firstLink"
+                        :before="getBeforeFeature(loCha, firstLink)"
+                        :after="feature"
+                      />
+                    </template>
+                  </template>
+                </template>
+              </template>
               <template #object-detail="{ feature, index: groupIndex }">
                 <template v-for="(featureLinks, _fl) in [getFeatureLinks(loCha, feature, groupIndex)]" :key="_fl">
                   <template v-for="(link, i) in featureLinks" :key="i">
                     <template v-if="feature.properties.is_after">
                       <template v-for="(before, _) in [getBeforeFeature(loCha, link)]" :key="_">
                         <DiffLinkHeader
-                          v-if="featureLinks.length > 1"
+                          v-if="featureLinks.length > 1 && i > 0"
                           :before="before"
                           :after="feature"
                         />
