@@ -77,7 +77,6 @@ function featureRef(f: IFeature): string {
 
 .ref-link {
   font-size: 1rem;
-  font-weight: 600;
 }
 
 .user-link {
