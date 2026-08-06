@@ -24,7 +24,7 @@ function featureRef(f: IFeature): string {
 <template>
   <div class="diff-link-header">
     <div v-if="before" class="part-before">
-      <a :href="historyUrl(before)" target="_blank" @click.stop>{{ featureRef(before) }}</a>
+      <a class="ref-link" :href="historyUrl(before)" target="_blank" @click.stop>{{ featureRef(before) }}</a>
       <p class="date">
         📅 {{ before.properties.created }}
       </p>
@@ -40,7 +40,7 @@ function featureRef(f: IFeature): string {
     </div>
     <span class="arrow">→</span>
     <div class="part-after">
-      <a :href="historyUrl(after)" target="_blank" @click.stop>{{ featureRef(after) }}</a>
+      <a class="ref-link" :href="historyUrl(after)" target="_blank" @click.stop>{{ featureRef(after) }}</a>
       <p class="date">
         📅 {{ after.properties.created }}
       </p>
@@ -73,6 +73,11 @@ function featureRef(f: IFeature): string {
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+
+.ref-link {
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .user-link {
