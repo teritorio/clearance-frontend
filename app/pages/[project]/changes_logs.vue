@@ -519,17 +519,4 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   padding: 0.5rem;
   border-top: none;
 }
-
-.diff-link-header {
-  margin-top: 0.75rem;
-  padding-top: 0.5rem;
-  border-top: 2px solid #d1d5db;
-  font-size: 0.8em;
-  color: #6b7280;
-}
-
-.diff-link-header--first {
-  margin-top: 0;
-  border-top: none;
-}
 </style>
