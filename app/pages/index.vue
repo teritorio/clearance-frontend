@@ -82,41 +82,42 @@ function tagFilterStyle(tag: string, checked: boolean) {
 <template>
   <el-main>
     <el-container direction="vertical">
-      <LazyProjectsOverviewMap v-if="initializedProjects.length" :projects="initializedProjects" />
-
-      <div class="search-bar">
-        <el-input
-          v-model="searchQuery"
-          :placeholder="$t('page.index.search')"
-          :prefix-icon="Search"
-          size="large"
-          autofocus
-          class="search-input"
-        >
-          <template #suffix>
-            <el-icon
-              v-if="searchQuery"
-              tabindex="0"
-              class="search-clear"
-              @click="searchQuery = ''"
-              @keydown.enter="searchQuery = ''"
-              @keydown.space.prevent="searchQuery = ''"
-            >
-              <CircleClose />
-            </el-icon>
-          </template>
-        </el-input>
-        <div v-if="allTags.length" class="tag-filters">
-          <el-check-tag
-            v-for="tag in allTags"
-            :key="tag"
-            :checked="selectedTags.includes(tag)"
-            :style="tagFilterStyle(tag, selectedTags.includes(tag))"
-            @change="(checked) => toggleTag(tag, checked)"
+      <div :class="initializedProjects.length ? 'hero' : 'search-bar'">
+        <LazyProjectsOverviewMap v-if="initializedProjects.length" :projects="initializedProjects" />
+        <div :class="initializedProjects.length ? 'search-overlay' : null">
+          <el-input
+            v-model="searchQuery"
+            :placeholder="$t('page.index.search')"
+            :prefix-icon="Search"
+            size="large"
+            autofocus
+            class="search-input"
           >
-            {{ tag }}
-          </el-check-tag>
-          <el-button v-if="selectedTags.length" :icon="RefreshLeft" circle class="reset-tags" @click="selectedTags = []" />
+            <template #suffix>
+              <el-icon
+                v-if="searchQuery"
+                tabindex="0"
+                class="search-clear"
+                @click="searchQuery = ''"
+                @keydown.enter="searchQuery = ''"
+                @keydown.space.prevent="searchQuery = ''"
+              >
+                <CircleClose />
+              </el-icon>
+            </template>
+          </el-input>
+          <div v-if="allTags.length" class="tag-filters">
+            <el-check-tag
+              v-for="tag in allTags"
+              :key="tag"
+              :checked="selectedTags.includes(tag)"
+              :style="tagFilterStyle(tag, selectedTags.includes(tag))"
+              @change="(checked) => toggleTag(tag, checked)"
+            >
+              {{ tag }}
+            </el-check-tag>
+            <el-button v-if="selectedTags.length" :icon="RefreshLeft" circle class="reset-tags" @click="selectedTags = []" />
+          </div>
         </div>
       </div>
 
@@ -177,6 +178,45 @@ function tagFilterStyle(tag: string, checked: boolean) {
 </template>
 
 <style scoped>
+.hero {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: linear-gradient(to bottom, transparent, rgba(10, 10, 20, 0.6));
+  border-radius: 0 0 10px 10px;
+  pointer-events: none;
+}
+
+.hero :deep(.map-wrapper) {
+  margin-bottom: 0;
+}
+
+.search-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.75rem 1.25rem 1.25rem;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.search-overlay .search-input {
+  width: 55%;
+  min-width: 360px;
+}
+
 .search-bar {
   display: flex;
   flex-direction: column;
@@ -185,21 +225,30 @@ function tagFilterStyle(tag: string, checked: boolean) {
   align-items: center;
 }
 
-.search-input {
+.search-bar .search-input {
   width: 65%;
   min-width: 400px;
 }
 
-.search-input :deep(.el-input__wrapper) {
+.search-bar .search-input :deep(.el-input__wrapper) {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
   border-radius: 12px;
   padding: 8px 20px;
   font-size: 1.1rem;
 }
 
-.search-input :deep(.el-input__inner) {
+.search-bar .search-input :deep(.el-input__inner) {
   height: 36px;
   font-size: 1.1rem;
+}
+
+.search-overlay .search-input :deep(.el-input__wrapper) {
+  box-shadow: none;
+  border-radius: 8px;
+  padding: 6px 16px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
 .search-input :deep(.el-input__prefix .el-icon) {
@@ -234,10 +283,15 @@ function tagFilterStyle(tag: string, checked: boolean) {
 .tag-filters :deep(.el-check-tag) {
   border: 1px solid;
   border-radius: 20px;
-  padding: 7px 20px;
-  font-size: 0.95rem;
+  padding: 5px 14px;
+  font-size: 0.85rem;
   font-weight: 500;
   transition: filter 0.15s;
+}
+
+.search-overlay .tag-filters :deep(.el-check-tag) {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
 }
 
 .tag-filters :deep(.el-check-tag:hover) {
@@ -247,6 +301,12 @@ function tagFilterStyle(tag: string, checked: boolean) {
 .reset-tags {
   color: var(--el-text-color-placeholder);
   font-size: 0.8rem;
+}
+
+.search-overlay .reset-tags {
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .section-title {
