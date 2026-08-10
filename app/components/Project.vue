@@ -117,11 +117,8 @@ const lastUpdateTitle = computed(() => {
             :key="user"
             :href="`https://www.openstreetmap.org/user/${user}`"
             target="_blank"
-            class="contact"
-          >
-            <span class="contact-avatar">{{ user.charAt(0).toUpperCase() }}</span>
-            {{ user }}
-          </a>
+            class="user-chip"
+          >{{ user }}</a>
         </div>
       </div>
 
@@ -320,32 +317,21 @@ const lastUpdateTitle = computed(() => {
   gap: 0.5rem;
 }
 
-.contact {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  font-size: 0.875rem;
-  text-decoration: none;
-  color: var(--el-text-color-regular);
-}
-
-.contact:hover {
-  color: var(--el-text-color-primary);
-  text-decoration: underline;
-}
-
-.contact-avatar {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background-color: var(--el-fill-color);
+.user-chip {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: var(--el-fill-color);
   color: var(--el-text-color-secondary);
-  font-size: 11px;
-  font-weight: 600;
-  flex-shrink: 0;
+  text-decoration: none;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+
+.user-chip:hover {
+  background: var(--el-color-primary-light-9);
+  color: var(--el-color-primary);
 }
 
 .join-text {
