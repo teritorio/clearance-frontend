@@ -347,6 +347,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
         <log-filters :lo-chas="data.loChas" />
         <log-validator-bulk
           v-if="isProjectUser && Object.keys(route.query).length"
+          class="bulk-validator-right"
           :count="loChasWithFilter.length"
           @bulk-validation="handleAccept"
         />
@@ -525,6 +526,10 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   border-bottom: 1px solid var(--el-border-color-lighter);
   flex-shrink: 0;
   flex-wrap: wrap;
+}
+
+.bulk-validator-right {
+  margin-left: auto;
 }
 
 .locha-list {

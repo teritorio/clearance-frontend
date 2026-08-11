@@ -234,8 +234,8 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
 
 .filter-select {
   width: auto;
-  min-width: 110px;
-  max-width: 240px;
+  min-width: 150px;
+  max-width: 280px;
 }
 
 :deep(.filter-select.is-active .el-select__wrapper) {
@@ -252,10 +252,12 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
 
 .option-count {
   flex-shrink: 0;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   color: var(--el-text-color-placeholder);
-  margin-left: 8px;
+  padding-left: 10px;
+  margin-left: 10px;
+  border-left: 1px solid var(--el-border-color);
 }
 
 :deep(.el-select-dropdown__item) {
