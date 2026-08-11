@@ -2,7 +2,6 @@
 import type { Action } from '@teritorio/openstreetmap-logical-history-component'
 import type { LocationQuery } from 'vue-router'
 import type { ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
-import { Avatar, Calendar, Operation, PriceTag, UserFilled } from '@element-plus/icons-vue'
 import { countBy, indexBy, sortBy, uniq } from 'underscore'
 import { getAfterDates, getAfterUsers } from '~/composables/useChangesLogs'
 
@@ -109,7 +108,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       :placeholder="$t('logs.filterAction')"
     >
       <template #prefix>
-        <el-icon><Operation /></el-icon>
+        ⚡
       </template>
       <el-option
         v-for="[key, count] in stats"
@@ -131,7 +130,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       :placeholder="$t('logs.filterUserGroups')"
     >
       <template #prefix>
-        <el-icon><UserFilled /></el-icon>
+        📌
       </template>
       <el-option
         v-for="[key, count] in statUserGroups"
@@ -153,7 +152,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       :placeholder="$t('logs.filterSelectors')"
     >
       <template #prefix>
-        <el-icon><PriceTag /></el-icon>
+        🏷️
       </template>
       <el-option
         v-for="[match, count] in statSelectors"
@@ -176,7 +175,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       :placeholder="$t('logs.filterUsers')"
     >
       <template #prefix>
-        <el-icon><Avatar /></el-icon>
+        👤
       </template>
       <el-option
         v-for="[key, count] in statUsers"
@@ -198,7 +197,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       :placeholder="$t('logs.filterDates')"
     >
       <template #prefix>
-        <el-icon><Calendar /></el-icon>
+        📅
       </template>
       <el-option
         v-for="[key, count] in statDates"

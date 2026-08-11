@@ -64,6 +64,10 @@ function isActive(queryKey: string, value: string) {
   return route.query[queryKey] === value
 }
 
+function isSectionFiltered(queryKey: string) {
+  return route.query[queryKey] !== undefined
+}
+
 async function toggleFilter(queryKey: string, value: string) {
   const active = isActive(queryKey, value)
   const query = active
@@ -75,11 +79,11 @@ async function toggleFilter(queryKey: string, value: string) {
 type TagType = 'primary' | 'success' | 'warning' | 'danger' | 'info'
 
 const sections = computed(() => [
-  { key: 'filterByAction', label: 'Action', type: 'danger' as TagType, extraClass: '', items: statActions.value.map(([v, c]) => ({ value: v as string, count: c })) },
-  { key: 'filterByUserGroups', label: 'Groups', type: 'primary' as TagType, extraClass: '', items: statUserGroups.value.map(([v, c]) => ({ value: v as string, count: c })) },
-  { key: 'filterBySelectors', label: 'Selectors', type: 'warning' as TagType, extraClass: '', items: statSelectors.value.map(([m, c]) => ({ value: (m as ClearanceMatch).selectors.join(';'), label: (m as ClearanceMatch).selectors.join(' '), count: c })) },
-  { key: 'filterByUsers', label: 'Users', type: 'info' as TagType, extraClass: '', items: statUsers.value.map(([v, c]) => ({ value: v as string, count: c })) },
-  { key: 'filterByDate', label: 'Dates', type: 'info' as TagType, extraClass: '', items: statDates.value.map(([v, c]) => ({ value: v as string, count: c })) },
+  { key: 'filterByAction', label: 'Action', icon: '⚡', type: 'danger' as TagType, extraClass: '', items: statActions.value.map(([v, c]) => ({ value: v as string, count: c })) },
+  { key: 'filterByUserGroups', label: 'Groups', icon: '📌', type: 'primary' as TagType, extraClass: '', items: statUserGroups.value.map(([v, c]) => ({ value: v as string, count: c })) },
+  { key: 'filterBySelectors', label: 'Selectors', icon: '🏷️', type: 'warning' as TagType, extraClass: '', items: statSelectors.value.map(([m, c]) => ({ value: (m as ClearanceMatch).selectors.join(';'), label: (m as ClearanceMatch).selectors.join(' '), count: c })) },
+  { key: 'filterByUsers', label: 'Users', icon: '👤', type: 'info' as TagType, extraClass: '', items: statUsers.value.map(([v, c]) => ({ value: v as string, count: c })) },
+  { key: 'filterByDate', label: 'Dates', icon: '📅', type: 'info' as TagType, extraClass: 'chip--date', items: statDates.value.map(([v, c]) => ({ value: v as string, count: c })) },
 ].filter((s) => s.items.length > 0))
 </script>
 
@@ -90,7 +94,10 @@ const sections = computed(() => [
       :key="section.key"
       class="overview-section"
     >
-      <span class="section-label">{{ section.label }}</span>
+      <span class="section-label">
+        <span class="section-icon">{{ section.icon }}</span>
+        {{ section.label }}
+      </span>
       <div class="chips">
         <el-badge
           v-for="item in section.items"
@@ -100,10 +107,10 @@ const sections = computed(() => [
           class="chip-badge"
         >
           <el-tag
-            :effect="isActive(section.key, item.value) ? 'light' : 'plain'"
+            :effect="isActive(section.key, item.value) ? 'dark' : 'plain'"
             :type="section.type"
             class="chip"
-            :class="[{ 'chip--active': isActive(section.key, item.value) }, section.extraClass]"
+            :class="[{ 'chip--active': isActive(section.key, item.value), 'chip--dimmed': isSectionFiltered(section.key) && !isActive(section.key, item.value) }, section.extraClass]"
             @click="toggleFilter(section.key, item.value)"
           >
             {{ 'label' in item ? item.label : item.value }}
@@ -134,14 +141,23 @@ const sections = computed(() => [
 }
 
 .section-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--el-text-color-placeholder);
   white-space: nowrap;
-  min-width: 60px;
+  min-width: 80px;
   padding-top: 4px;
+}
+
+.section-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+  line-height: 1;
 }
 
 .chips {
@@ -168,11 +184,25 @@ const sections = computed(() => [
   font-weight: 600;
 }
 
+.chip--dimmed {
+  opacity: 0.35;
+}
+
 :deep(.el-badge__content) {
   font-size: 10px;
   padding: 0 4px;
   min-width: 16px;
   height: 16px;
   line-height: 16px;
+}
+
+:deep(.chip--date.el-tag) {
+  --el-color-info: #409eff;
+  --el-color-info-dark-2: #337ecc;
+  --el-color-info-light-3: #79bbff;
+  --el-color-info-light-5: #a0cfff;
+  --el-color-info-light-7: #c6e2ff;
+  --el-color-info-light-8: #d9ecff;
+  --el-color-info-light-9: #ecf5ff;
 }
 </style>
