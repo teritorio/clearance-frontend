@@ -2,7 +2,6 @@
 import type { Action, IFeature } from '@teritorio/openstreetmap-logical-history-component'
 import type { Geometry } from 'geojson'
 import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
-import { CircleCheck, Clock, Setting } from '@element-plus/icons-vue'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
 import dayjs from 'dayjs'
 import en from 'dayjs/locale/en-gb'
@@ -361,29 +360,16 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
     :element-loading-text="$t('common.loading')"
   >
     <el-alert v-if="status === 'idle' && !data" :title="$t('logs.no_data')" type="warning" />
+    <project-context-bar
+      v-if="data"
+      :project="data.project"
+      :project-slug="projectSlug"
+      :last-update-compact="lastUpdateCompact"
+      :last-update-title="lastUpdateTitle"
+    />
     <el-container v-if="data && status === 'success'" direction="vertical" class="changes-container">
       <div class="page-layout">
         <aside class="sidebar">
-          <div class="project-header">
-            <project-light :project="data.project" title-tag="h1" />
-            <nuxt-link :to="`/${projectSlug}/validators`" class="settings-link" :title="$t('project.settings')">
-              <el-icon><Setting /></el-icon>
-            </nuxt-link>
-          </div>
-          <div v-if="lastUpdateCompact || data.project.to_be_validated" class="project-stats">
-            <div v-if="lastUpdateCompact" class="stat-item stat-time">
-              <span class="stat-label">
-                <el-icon><Clock /></el-icon>{{ $t('project.lastUpdate') }}
-              </span>
-              <span class="stat-value" :title="lastUpdateTitle">{{ lastUpdateTitle }}</span>
-            </div>
-            <div v-if="data.project.to_be_validated" class="stat-item stat-pending">
-              <span class="stat-label">
-                <el-icon><CircleCheck /></el-icon>{{ $t('project.toBeValidated') }}
-              </span>
-              <span class="stat-value">{{ data.project.to_be_validated }}</span>
-            </div>
-          </div>
           <diff-map :base-geom="baseGeoms" :change-geom="changeGeoms" />
           <log-filters :lo-chas="data.loChas" />
           <log-validator-bulk
@@ -575,78 +561,6 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   flex-direction: column;
   gap: 1rem;
   padding-right: 4px;
-}
-
-.project-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.settings-link {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  color: var(--el-text-color-placeholder);
-  text-decoration: none;
-  transition: color 0.15s, background 0.15s;
-}
-
-.settings-link:hover {
-  color: var(--el-text-color-regular);
-  background: var(--el-fill-color);
-}
-
-.settings-link .el-icon {
-  font-size: 22px;
-}
-
-.project-stats {
-  display: flex;
-  gap: 8px;
-}
-
-.stat-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 8px 10px;
-  border-radius: 8px;
-}
-
-.stat-label {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  opacity: 0.75;
-}
-
-.stat-value {
-  font-size: 1.25rem;
-  font-weight: 700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.2;
-}
-
-.stat-time {
-  color: var(--el-color-info-dark-2);
-  background: var(--el-color-info-light-9);
-}
-
-.stat-pending {
-  color: var(--el-color-primary-dark-2);
-  background: var(--el-color-primary-light-9);
 }
 
 .locha-list {
