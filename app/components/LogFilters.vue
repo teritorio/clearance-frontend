@@ -106,9 +106,11 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       clearable
       size="small"
       class="filter-select" :class="[{ 'is-active': selectedAction !== null }]"
-      :prefix-icon="Operation"
       :placeholder="$t('logs.filterAction')"
     >
+      <template #prefix>
+        <el-icon><Operation /></el-icon>
+      </template>
       <el-option
         v-for="[key, count] in stats"
         :key="key"
@@ -126,9 +128,11 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       clearable
       size="small"
       class="filter-select" :class="[{ 'is-active': selectedUserGroup !== null }]"
-      :prefix-icon="UserFilled"
       :placeholder="$t('logs.filterUserGroups')"
     >
+      <template #prefix>
+        <el-icon><UserFilled /></el-icon>
+      </template>
       <el-option
         v-for="[key, count] in statUserGroups"
         :key="key"
@@ -146,9 +150,11 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       clearable
       size="small"
       class="filter-select" :class="[{ 'is-active': selectedSelector !== null }]"
-      :prefix-icon="PriceTag"
       :placeholder="$t('logs.filterSelectors')"
     >
+      <template #prefix>
+        <el-icon><PriceTag /></el-icon>
+      </template>
       <el-option
         v-for="[match, count] in statSelectors"
         :key="match.selectors.join()"
@@ -167,9 +173,11 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       size="small"
       class="filter-select" :class="[{ 'is-active': selectedUser !== null }]"
       filterable
-      :prefix-icon="Avatar"
       :placeholder="$t('logs.filterUsers')"
     >
+      <template #prefix>
+        <el-icon><Avatar /></el-icon>
+      </template>
       <el-option
         v-for="[key, count] in statUsers"
         :key="key"
@@ -187,9 +195,11 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       clearable
       size="small"
       class="filter-select" :class="[{ 'is-active': selectedDate !== null }]"
-      :prefix-icon="Calendar"
       :placeholder="$t('logs.filterDates')"
     >
+      <template #prefix>
+        <el-icon><Calendar /></el-icon>
+      </template>
       <el-option
         v-for="[key, count] in statDates"
         :key="key"
