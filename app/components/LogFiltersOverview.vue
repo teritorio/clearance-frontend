@@ -72,12 +72,14 @@ async function toggleFilter(queryKey: string, value: string) {
   await router.replace({ ...route, query })
 }
 
+type TagType = 'primary' | 'success' | 'warning' | 'danger' | 'info'
+
 const sections = computed(() => [
-  { key: 'filterByAction', label: 'Action', items: statActions.value.map(([v, c]) => ({ value: v as string, count: c })) },
-  { key: 'filterByUserGroups', label: 'Groups', items: statUserGroups.value.map(([v, c]) => ({ value: v as string, count: c })) },
-  { key: 'filterBySelectors', label: 'Selectors', items: statSelectors.value.map(([m, c]) => ({ value: (m as ClearanceMatch).selectors.join(';'), label: (m as ClearanceMatch).selectors.join(' '), count: c })) },
-  { key: 'filterByUsers', label: 'Users', items: statUsers.value.map(([v, c]) => ({ value: v as string, count: c })) },
-  { key: 'filterByDate', label: 'Dates', items: statDates.value.map(([v, c]) => ({ value: v as string, count: c })) },
+  { key: 'filterByAction', label: 'Action', type: 'danger' as TagType, items: statActions.value.map(([v, c]) => ({ value: v as string, count: c })) },
+  { key: 'filterByUserGroups', label: 'Groups', type: 'primary' as TagType, items: statUserGroups.value.map(([v, c]) => ({ value: v as string, count: c })) },
+  { key: 'filterBySelectors', label: 'Selectors', type: 'warning' as TagType, items: statSelectors.value.map(([m, c]) => ({ value: (m as ClearanceMatch).selectors.join(';'), label: (m as ClearanceMatch).selectors.join(' '), count: c })) },
+  { key: 'filterByUsers', label: 'Users', type: 'info' as TagType, items: statUsers.value.map(([v, c]) => ({ value: v as string, count: c })) },
+  { key: 'filterByDate', label: 'Dates', type: 'primary' as TagType, items: statDates.value.map(([v, c]) => ({ value: v as string, count: c })) },
 ].filter((s) => s.items.length > 0))
 </script>
 
@@ -98,8 +100,8 @@ const sections = computed(() => [
           class="chip-badge"
         >
           <el-tag
-            effect="plain"
-            :type="isActive(section.key, item.value) ? 'primary' : undefined"
+            :effect="isActive(section.key, item.value) ? 'light' : 'plain'"
+            :type="section.type"
             class="chip"
             :class="{ 'chip--active': isActive(section.key, item.value) }"
             @click="toggleFilter(section.key, item.value)"
