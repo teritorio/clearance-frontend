@@ -5,7 +5,6 @@ defineEmits(['bulkValidation'])
 
 <template>
   <div class="bulk-validator">
-    <el-divider />
     <el-popconfirm
       :title="$t('logs.validate_selection_confirm', { n: count })"
       :confirm-button-text="$t('logs.validate_selection_confirm_ok')"
@@ -28,9 +27,5 @@ defineEmits(['bulkValidation'])
   display: flex;
   flex-direction: column;
   gap: 0;
-}
-
-:deep(.el-divider) {
-  margin: 4px 0 12px;
 }
 </style>
