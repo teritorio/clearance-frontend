@@ -92,6 +92,13 @@ export default {
     action: 'Acción',
     description: 'Descripción',
     other: 'Otro',
+    search: 'Buscar por nombre o fuente…',
+    filterGroup: 'Filtrar por grupo',
+    category: 'Categoría',
+    sources: 'Fuentes',
+    groups: 'Grupos',
+    osmTags: 'Etiquetas OSM',
+    duplicateDistance: 'Radio de detección',
   },
   atomFeed: 'Fuente Atom',
 }

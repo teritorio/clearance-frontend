@@ -92,6 +92,13 @@ export default {
     action: 'Action',
     description: 'Description',
     other: 'Other',
+    search: 'Search by name or source…',
+    filterGroup: 'Filter by group',
+    category: 'Category',
+    sources: 'Sources',
+    groups: 'Groups',
+    osmTags: 'OSM tags',
+    duplicateDistance: 'Detection radius',
   },
   atomFeed: 'Atom Feed',
 }
