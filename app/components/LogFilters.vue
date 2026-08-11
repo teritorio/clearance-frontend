@@ -248,16 +248,19 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-weight: 500;
+  color: var(--el-text-color-primary);
 }
 
 .option-count {
   flex-shrink: 0;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--el-text-color-placeholder);
-  padding-left: 10px;
-  margin-left: 10px;
-  border-left: 1px solid var(--el-border-color);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--el-color-info-dark-2);
+  background: var(--el-color-info-light-9);
+  border-radius: 10px;
+  padding: 1px 7px;
+  margin-left: 8px;
 }
 
 :deep(.el-select-dropdown__item) {
