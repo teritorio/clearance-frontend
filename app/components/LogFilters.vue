@@ -104,7 +104,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       v-model="selectedAction"
       clearable
       size="small"
-      class="filter-select"
+      class="filter-select" :class="[{ 'is-active': selectedAction !== null }]"
       :placeholder="$t('logs.filterAction')"
     >
       <el-option
@@ -123,7 +123,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       v-model="selectedUserGroup"
       clearable
       size="small"
-      class="filter-select"
+      class="filter-select" :class="[{ 'is-active': selectedUserGroup !== null }]"
       :placeholder="$t('logs.filterUserGroups')"
     >
       <el-option
@@ -142,7 +142,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       v-model="selectedSelector"
       clearable
       size="small"
-      class="filter-select"
+      class="filter-select" :class="[{ 'is-active': selectedSelector !== null }]"
       :placeholder="$t('logs.filterSelectors')"
     >
       <el-option
@@ -161,7 +161,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       v-model="selectedUser"
       clearable
       size="small"
-      class="filter-select"
+      class="filter-select" :class="[{ 'is-active': selectedUser !== null }]"
       filterable
       :placeholder="$t('logs.filterUsers')"
     >
@@ -181,7 +181,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       v-model="selectedDate"
       clearable
       size="small"
-      class="filter-select"
+      class="filter-select" :class="[{ 'is-active': selectedDate !== null }]"
       :placeholder="$t('logs.filterDates')"
     >
       <el-option
@@ -217,7 +217,14 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
 }
 
 .filter-select {
-  width: 160px;
+  width: auto;
+  min-width: 110px;
+  max-width: 240px;
+}
+
+:deep(.filter-select.is-active .el-select__wrapper) {
+  border-color: #409eff;
+  background-color: #ecf5ff;
 }
 
 .option-label {
