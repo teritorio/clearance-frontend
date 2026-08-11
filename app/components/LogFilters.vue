@@ -98,122 +98,126 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
 </script>
 
 <template>
-  <aside class="log-filters">
-    <p class="filters-title">
-      {{ $t('logs.filters') }}
-    </p>
+  <div class="log-filters">
+    <el-select
+      v-if="stats.length"
+      v-model="selectedAction"
+      clearable
+      size="small"
+      class="filter-select"
+      :placeholder="$t('logs.filterAction')"
+    >
+      <el-option
+        v-for="[key, count] in stats"
+        :key="key"
+        :value="key"
+        :label="key"
+      >
+        <span class="option-label">{{ key }}</span>
+        <span class="option-count">{{ count }}</span>
+      </el-option>
+    </el-select>
 
-    <div v-if="stats.length" class="filter-group">
-      <label>{{ $t('logs.filterAction') }}</label>
-      <el-select v-model="selectedAction" clearable size="large" class="filter-select">
-        <el-option
-          v-for="[key, count] in stats"
-          :key="key"
-          :value="key"
-          :label="key"
-        >
-          <span class="option-label">{{ key }}</span>
-          <span class="option-count">{{ count }}</span>
-        </el-option>
-      </el-select>
-    </div>
+    <el-select
+      v-if="statUserGroups.length"
+      v-model="selectedUserGroup"
+      clearable
+      size="small"
+      class="filter-select"
+      :placeholder="$t('logs.filterUserGroups')"
+    >
+      <el-option
+        v-for="[key, count] in statUserGroups"
+        :key="key"
+        :value="key"
+        :label="key"
+      >
+        <span class="option-label">{{ key }}</span>
+        <span class="option-count">{{ count }}</span>
+      </el-option>
+    </el-select>
 
-    <div v-if="statUserGroups.length" class="filter-group">
-      <label>{{ $t('logs.filterUserGroups') }}</label>
-      <el-select v-model="selectedUserGroup" clearable size="large" class="filter-select">
-        <el-option
-          v-for="[key, count] in statUserGroups"
-          :key="key"
-          :value="key"
-          :label="key"
-        >
-          <span class="option-label">{{ key }}</span>
-          <span class="option-count">{{ count }}</span>
-        </el-option>
-      </el-select>
-    </div>
+    <el-select
+      v-if="statSelectors.length"
+      v-model="selectedSelector"
+      clearable
+      size="small"
+      class="filter-select"
+      :placeholder="$t('logs.filterSelectors')"
+    >
+      <el-option
+        v-for="[match, count] in statSelectors"
+        :key="match.selectors.join()"
+        :value="match.selectors.join()"
+        :label="match.selectors.join(' ')"
+      >
+        <span class="option-label">{{ match.selectors.join(' ') }}</span>
+        <span class="option-count">{{ count }}</span>
+      </el-option>
+    </el-select>
 
-    <div v-if="statSelectors.length" class="filter-group">
-      <label>{{ $t('logs.filterSelectors') }}</label>
-      <el-select v-model="selectedSelector" clearable size="large" class="filter-select">
-        <el-option
-          v-for="[match, count] in statSelectors"
-          :key="match.selectors.join()"
-          :value="match.selectors.join()"
-          :label="match.selectors.join(' ')"
-        >
-          <span class="option-label">{{ match.selectors.join(' ') }}</span>
-          <span class="option-count">{{ count }}</span>
-        </el-option>
-      </el-select>
-    </div>
+    <el-select
+      v-if="statUsers.length"
+      v-model="selectedUser"
+      clearable
+      size="small"
+      class="filter-select"
+      filterable
+      :placeholder="$t('logs.filterUsers')"
+    >
+      <el-option
+        v-for="[key, count] in statUsers"
+        :key="key"
+        :value="key"
+        :label="key"
+      >
+        <span class="option-label">{{ key }}</span>
+        <span class="option-count">{{ count }}</span>
+      </el-option>
+    </el-select>
 
-    <div v-if="statUsers.length" class="filter-group">
-      <label>{{ $t('logs.filterUsers') }}</label>
-      <el-select v-model="selectedUser" clearable size="large" class="filter-select" filterable>
-        <el-option
-          v-for="[key, count] in statUsers"
-          :key="key"
-          :value="key"
-          :label="key"
-        >
-          <span class="option-label">{{ key }}</span>
-          <span class="option-count">{{ count }}</span>
-        </el-option>
-      </el-select>
-    </div>
+    <el-select
+      v-if="statDates.length"
+      v-model="selectedDate"
+      clearable
+      size="small"
+      class="filter-select"
+      :placeholder="$t('logs.filterDates')"
+    >
+      <el-option
+        v-for="[key, count] in statDates"
+        :key="key"
+        :value="key"
+        :label="key"
+      >
+        <span class="option-label">{{ key }}</span>
+        <span class="option-count">{{ count }}</span>
+      </el-option>
+    </el-select>
 
-    <div v-if="statDates.length" class="filter-group">
-      <label>{{ $t('logs.filterDates') }}</label>
-      <el-select v-model="selectedDate" clearable size="large" class="filter-select">
-        <el-option
-          v-for="[key, count] in statDates"
-          :key="key"
-          :value="key"
-          :label="key"
-        >
-          <span class="option-label">{{ key }}</span>
-          <span class="option-count">{{ count }}</span>
-        </el-option>
-      </el-select>
-    </div>
-
-    <el-button v-if="hasActiveFilters" link size="small" class="reset-btn" @click="resetAllFilters">
+    <el-button
+      v-if="hasActiveFilters"
+      link
+      size="small"
+      class="reset-btn"
+      @click="resetAllFilters"
+    >
       × {{ $t('logs.resetFilters') }}
     </el-button>
-  </aside>
+  </div>
 </template>
 
 <style scoped>
 .log-filters {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.filters-title {
-  margin: 0;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: var(--el-text-color-secondary);
-  letter-spacing: 0.05em;
-}
-
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.filter-group label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--el-text-color-regular);
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .filter-select {
-  width: 100%;
+  width: 160px;
 }
 
 .option-label {
@@ -237,8 +241,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
 }
 
 .reset-btn {
-  align-self: flex-start;
   color: var(--el-color-danger);
-  margin-top: 0.25rem;
+  white-space: nowrap;
 }
 </style>
