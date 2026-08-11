@@ -51,6 +51,7 @@ export default {
     filterUsers: 'Users',
     filterDates: 'Dates',
     resetFilters: 'Reset filters',
+    overview: 'Overview',
     data: 'Group of data to review',
     data_details:
       'Data listed here because targeted and fail to comply with the validation rules.',

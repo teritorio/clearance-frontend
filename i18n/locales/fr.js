@@ -51,6 +51,7 @@ export default {
     filterUsers: 'Utilisateurs',
     filterDates: 'Dates',
     resetFilters: 'Réinitialiser les filtres',
+    overview: 'Vue globale',
     data: 'Groupe de données à examiner',
     data_details:
       'Données listées ici parce qu\'elles ont été ciblées et qu\'elles ne respectent pas les règles de validation.',

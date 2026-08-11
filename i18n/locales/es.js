@@ -51,6 +51,7 @@ export default {
     filterUsers: 'Usuarios',
     filterDates: 'Fechas',
     resetFilters: 'Restablecer filtros',
+    overview: 'Vista general',
     data: 'Grupo de datos a examinar',
     data_details:
       'Datos incluidos aquí porque se han selectivo y no cumplan las reglas de validación.',
