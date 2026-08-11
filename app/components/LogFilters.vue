@@ -104,7 +104,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       v-if="stats.length"
       v-model="selectedAction"
       clearable
-      size="small"
+      size="default"
       class="filter-select" :class="[{ 'is-active': selectedAction !== null }]"
       :placeholder="$t('logs.filterAction')"
     >
@@ -126,7 +126,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       v-if="statUserGroups.length"
       v-model="selectedUserGroup"
       clearable
-      size="small"
+      size="default"
       class="filter-select" :class="[{ 'is-active': selectedUserGroup !== null }]"
       :placeholder="$t('logs.filterUserGroups')"
     >
@@ -148,7 +148,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       v-if="statSelectors.length"
       v-model="selectedSelector"
       clearable
-      size="small"
+      size="default"
       class="filter-select" :class="[{ 'is-active': selectedSelector !== null }]"
       :placeholder="$t('logs.filterSelectors')"
     >
@@ -170,7 +170,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       v-if="statUsers.length"
       v-model="selectedUser"
       clearable
-      size="small"
+      size="default"
       class="filter-select" :class="[{ 'is-active': selectedUser !== null }]"
       filterable
       :placeholder="$t('logs.filterUsers')"
@@ -193,7 +193,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       v-if="statDates.length"
       v-model="selectedDate"
       clearable
-      size="small"
+      size="default"
       class="filter-select" :class="[{ 'is-active': selectedDate !== null }]"
       :placeholder="$t('logs.filterDates')"
     >
@@ -214,7 +214,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
     <el-button
       v-if="hasActiveFilters"
       link
-      size="small"
+      size="default"
       class="reset-btn"
       @click="resetAllFilters"
     >
