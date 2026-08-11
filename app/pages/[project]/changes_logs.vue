@@ -511,7 +511,8 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                       v-for="userGroup in uniq((loCha.metadata.links[groupIndex] ?? [] as ClearanceApiLink[]).flatMap((link) => link.matches.flatMap((m: ClearanceMatch) => m.user_groups)))"
                       :key="userGroup"
                       size="small"
-                      class="match-tag"
+                      type="primary"
+                      class="match-tag match-tag--group"
                     >
                       📌 {{ useI18nHash(data?.project.user_groups[userGroup]?.title) ?? userGroup }}
                     </el-tag>
@@ -520,7 +521,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                       :key="match.selectors.join(';')"
                       size="small"
                       type="warning"
-                      class="match-tag"
+                      class="match-tag match-tag--selector"
                     >
                       🏷️ {{ match.selectors.join(' ') }}
                     </el-tag>
@@ -681,6 +682,18 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   transition: none !important;
   animation: none !important;
   font-size: 16px;
+}
+
+:deep(.group-header .header-center .match-tag--group) {
+  background-color: #ecf5ff !important;
+  border-color: #a0cfff !important;
+  color: #409eff !important;
+}
+
+:deep(.group-header .header-center .match-tag--selector) {
+  background-color: #fdf6ec !important;
+  border-color: #f3d19e !important;
+  color: #e6a23c !important;
 }
 
 :deep(.locha-object h3),
