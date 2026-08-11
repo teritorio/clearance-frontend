@@ -256,7 +256,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
   flex-shrink: 0;
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--el-color-danger-dark-2);
+  color: var(--el-color-danger);
   background: var(--el-color-danger-light-9);
   border-radius: 10px;
   padding: 1px 7px;
