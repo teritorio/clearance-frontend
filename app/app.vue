@@ -34,4 +34,9 @@ watch(data, (val) => {
 body {
   margin: 0;
 }
+
+/* Remove EP tag appear/leave transitions globally */
+.el-tag {
+  transition: none;
+}
 </style>
