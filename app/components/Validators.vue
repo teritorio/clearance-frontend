@@ -36,7 +36,7 @@ const { locale } = useI18n()
 // Build structured entries from the raw Record
 const validatorEntries = computed<ValidatorEntry[]>(() => {
   return Object.entries(props.validators).map(([key, value]) => {
-    const settings = value as unknown as ValidatorSettings
+    const settings = (value as unknown as { settings: ValidatorSettings }).settings
     const globalMatches: Match[] = settings.global_osm_tags_matches?.matches ?? []
     const specificMatches: Match[] = settings.specific_osm_tags_matches?.matches ?? []
     const allMatches = [...globalMatches, ...specificMatches]
