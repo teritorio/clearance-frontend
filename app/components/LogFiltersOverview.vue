@@ -79,7 +79,7 @@ const sections = computed(() => [
   { key: 'filterByUserGroups', label: 'Groups', type: 'primary' as TagType, extraClass: '', items: statUserGroups.value.map(([v, c]) => ({ value: v as string, count: c })) },
   { key: 'filterBySelectors', label: 'Selectors', type: 'warning' as TagType, extraClass: '', items: statSelectors.value.map(([m, c]) => ({ value: (m as ClearanceMatch).selectors.join(';'), label: (m as ClearanceMatch).selectors.join(' '), count: c })) },
   { key: 'filterByUsers', label: 'Users', type: 'info' as TagType, extraClass: '', items: statUsers.value.map(([v, c]) => ({ value: v as string, count: c })) },
-  { key: 'filterByDate', label: 'Dates', type: 'info' as TagType, extraClass: 'chip--date', items: statDates.value.map(([v, c]) => ({ value: v as string, count: c })) },
+  { key: 'filterByDate', label: 'Dates', type: 'info' as TagType, extraClass: '', items: statDates.value.map(([v, c]) => ({ value: v as string, count: c })) },
 ].filter((s) => s.items.length > 0))
 </script>
 
@@ -166,13 +166,6 @@ const sections = computed(() => [
 
 .chip--active {
   font-weight: 600;
-}
-
-/* Dates: force EP blue (primary is overridden to amber in this theme) */
-:deep(.chip--date.el-tag--info.is-plain) {
-  color: #409eff;
-  border-color: #a0cfff;
-  background-color: #ecf5ff;
 }
 
 :deep(.el-badge__content) {
