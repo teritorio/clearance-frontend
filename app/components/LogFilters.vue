@@ -2,6 +2,7 @@
 import type { Action } from '@teritorio/openstreetmap-logical-history-component'
 import type { LocationQuery } from 'vue-router'
 import type { ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
+import { Avatar, Calendar, Operation, PriceTag, UserFilled } from '@element-plus/icons-vue'
 import { countBy, indexBy, sortBy, uniq } from 'underscore'
 import { getAfterDates, getAfterUsers } from '~/composables/useChangesLogs'
 
@@ -105,6 +106,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       clearable
       size="small"
       class="filter-select" :class="[{ 'is-active': selectedAction !== null }]"
+      :prefix-icon="Operation"
       :placeholder="$t('logs.filterAction')"
     >
       <el-option
@@ -124,6 +126,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       clearable
       size="small"
       class="filter-select" :class="[{ 'is-active': selectedUserGroup !== null }]"
+      :prefix-icon="UserFilled"
       :placeholder="$t('logs.filterUserGroups')"
     >
       <el-option
@@ -143,6 +146,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       clearable
       size="small"
       class="filter-select" :class="[{ 'is-active': selectedSelector !== null }]"
+      :prefix-icon="PriceTag"
       :placeholder="$t('logs.filterSelectors')"
     >
       <el-option
@@ -163,6 +167,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       size="small"
       class="filter-select" :class="[{ 'is-active': selectedUser !== null }]"
       filterable
+      :prefix-icon="Avatar"
       :placeholder="$t('logs.filterUsers')"
     >
       <el-option
@@ -182,6 +187,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       clearable
       size="small"
       class="filter-select" :class="[{ 'is-active': selectedDate !== null }]"
+      :prefix-icon="Calendar"
       :placeholder="$t('logs.filterDates')"
     >
       <el-option
