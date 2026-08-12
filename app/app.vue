@@ -58,6 +58,11 @@ body.layout-fixed .el-main {
   min-height: 0;
 }
 
+/* Remove EP tag appear/leave transitions globally */
+.el-tag {
+  transition: none;
+}
+
 /* Theme: aligned with clearance-website (amber primary) */
 :root {
   --el-color-primary: #f59e0b;

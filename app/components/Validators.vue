@@ -281,6 +281,7 @@ function filteredMatches(entry: ValidatorEntry): Match[] {
   display: flex;
   flex-direction: column;
   gap: 32px;
+  padding: 1.25rem;
 }
 
 .validator-section {
