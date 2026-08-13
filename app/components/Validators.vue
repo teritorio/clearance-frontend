@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Validators } from '~/libs/types'
+import { Search } from '@element-plus/icons-vue'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -95,25 +96,27 @@ function getCategoryLabel(match: Match): string {
   return match.sources?.[0] ?? '—'
 }
 
-function filteredMatches(entry: ValidatorEntry): Match[] {
-  const search = getSearch(entry.key).toLowerCase().trim()
-  const group = getGroup(entry.key)
-
-  return entry.allMatches.filter((m) => {
-    if (group && !m.user_groups?.includes(group)) {
-      return false
-    }
-    if (search) {
-      const label = getCategoryLabel(m).toLowerCase()
-      const inLabel = label.includes(search)
-      const inSources = m.sources?.some((s) => s.toLowerCase().includes(search))
-      if (!inLabel && !inSources) {
+const filteredMatchesMap = computed<Map<string, Match[]>>(() => {
+  const map = new Map<string, Match[]>()
+  for (const entry of validatorEntries.value) {
+    const search = getSearch(entry.key).toLowerCase().trim()
+    const group = getGroup(entry.key)
+    map.set(entry.key, entry.allMatches.filter((m) => {
+      if (group && !m.user_groups?.includes(group)) {
         return false
       }
-    }
-    return true
-  })
-}
+      if (search) {
+        const label = getCategoryLabel(m).toLowerCase()
+        const inSources = m.sources?.some((s) => s.toLowerCase().includes(search))
+        if (!label.includes(search) && !inSources) {
+          return false
+        }
+      }
+      return true
+    }))
+  }
+  return map
+})
 </script>
 
 <template>
@@ -148,7 +151,7 @@ function filteredMatches(entry: ValidatorEntry): Match[] {
           @update:model-value="(v: string) => setSearch(entry.key, v)"
         >
           <template #prefix>
-            <el-icon><i class="el-icon-search" /></el-icon>
+            <el-icon><Search /></el-icon>
           </template>
         </el-input>
 
@@ -168,13 +171,13 @@ function filteredMatches(entry: ValidatorEntry): Match[] {
         </el-select>
 
         <span class="result-count">
-          {{ filteredMatches(entry).length }} / {{ entry.allMatches.length }}
+          {{ filteredMatchesMap.get(entry.key)?.length }} / {{ entry.allMatches.length }}
         </span>
       </div>
 
       <!-- Table -->
       <el-table
-        :data="filteredMatches(entry)"
+        :data="filteredMatchesMap.get(entry.key)"
         stripe
         size="small"
         height="600"
@@ -305,10 +308,6 @@ function filteredMatches(entry: ValidatorEntry): Match[] {
 .validator-id {
   font-size: 1.15rem;
   font-weight: 600;
-}
-
-.category-badge {
-  /* keep badge inline with the title */
 }
 
 .validator-description {

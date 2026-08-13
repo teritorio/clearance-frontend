@@ -18,9 +18,7 @@ import {
 } from '~/libs/types'
 
 dayjs.extend(relativeTime)
-dayjs.locale({ ...en })
-dayjs.locale({ ...fr })
-dayjs.locale({ ...es })
+const _dayjsLocales = { en, fr, es }
 
 definePageMeta({
   validate({ params }) {
