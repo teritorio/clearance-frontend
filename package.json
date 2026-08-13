@@ -5,9 +5,9 @@
   "packageManager": "yarn@4.5.0",
   "scripts": {
     "build": "nuxi build",
-    "dev": "UID=$(id -u) GID=$(id -g) docker compose -f docker-compose.dev.yaml up --build --force-recreate",
+    "dev": "CERTS_DIR=$(git worktree list --porcelain | grep '^worktree ' | head -1 | sed 's/^worktree //')/.certs UID=$(id -u) GID=$(id -g) docker compose -f docker-compose.dev.yaml up --build --force-recreate",
     "dev:reset": "docker compose -f docker-compose.dev.yaml down -v && yarn dev",
-    "dev:portal": "UID=$(id -u) GID=$(id -g) docker compose -f docker-compose.dev.yaml -f docker-compose.portal.yaml up",
+    "dev:portal": "CERTS_DIR=$(git worktree list --porcelain | grep '^worktree ' | head -1 | sed 's/^worktree //')/.certs UID=$(id -u) GID=$(id -g) docker compose -f docker-compose.dev.yaml -f docker-compose.portal.yaml up",
     "generate": "nuxi generate",
     "prepare": "simple-git-hooks && nuxi prepare",
     "preview": "nuxi preview",

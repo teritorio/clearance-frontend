@@ -92,6 +92,13 @@ export default {
     action: 'Action',
     description: 'Description',
     other: 'Autre',
+    search: 'Rechercher par nom ou source…',
+    filterGroup: 'Filtrer par groupe',
+    category: 'Catégorie',
+    sources: 'Sources',
+    groups: 'Groupes',
+    osmTags: 'Tags OSM',
+    duplicateDistance: 'Rayon de détection',
   },
   atomFeed: 'Flux Atom',
 }
