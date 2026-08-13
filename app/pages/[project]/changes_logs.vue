@@ -528,6 +528,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  padding: 0 1.25rem;
 }
 
 :deep(.changes-container) {
@@ -540,7 +541,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 1.25rem;
+  padding: 8px 0;
   border-bottom: 1px solid var(--el-border-color-lighter);
   flex-shrink: 0;
   flex-wrap: wrap;
@@ -554,7 +555,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 1.25rem;
+  padding: 0.75rem 0;
 }
 
 .card-header {

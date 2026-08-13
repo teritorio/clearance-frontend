@@ -126,7 +126,7 @@ const sections = computed(() => [
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 10px 1.25rem;
+  padding: 10px 0;
   border-bottom: 1px solid var(--el-border-color-lighter);
   background: var(--el-fill-color-extra-light);
   flex-shrink: 0;
