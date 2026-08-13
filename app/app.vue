@@ -63,6 +63,17 @@ body.layout-fixed .el-main {
   transition: none;
 }
 
+.el-zoom-in-center-enter-active,
+.el-zoom-in-center-leave-active {
+  transition: none !important;
+}
+
+.el-zoom-in-center-enter-from,
+.el-zoom-in-center-leave-active {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 /* Theme: aligned with clearance-website (amber primary) */
 :root {
   --el-color-primary: #f59e0b;
