@@ -48,43 +48,51 @@ const lastUpdateTitle = computed(() => {
 </script>
 
 <template>
-  <el-card shadow="hover" class="project-card">
-    <template #header>
-      <div class="card-header">
-        <div class="card-header-row">
-          <div class="title-link">
-            <project-light :project="project" title-tag="h3" />
-          </div>
-          <div class="header-stats">
-            <span v-if="lastUpdateCompact" class="stat-badge stat-time" :title="lastUpdateTitle">
-              <el-icon><Clock /></el-icon>{{ lastUpdateCompact }}
-            </span>
-            <span v-if="project.to_be_validated" class="stat-badge stat-pending" :title="$t('project.toBeValidated')">
-              <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
-            </span>
-          </div>
-          <nuxt-link :to="`/${project.id}/validators`" class="settings-icon" :title="$t('project.settings')">
-            <el-icon><Setting /></el-icon>
-          </nuxt-link>
-        </div>
-        <div class="card-footer">
-          <button class="footer-btn footer-expand" @click="expanded = !expanded">
-            <el-icon class="expand-icon" :class="{ 'is-expanded': expanded }">
-              <ArrowDown />
-            </el-icon>
-            {{ $t('project.seeMore') }}
-          </button>
-          <nuxt-link :to="`/${project.id}/changes_logs`" class="footer-btn footer-details">
-            {{ $t('project.details') }}
-          </nuxt-link>
-        </div>
+  <div class="project-row-wrapper" :class="{ 'is-expanded': expanded }">
+    <div class="project-row">
+      <div class="row-main">
+        <span class="row-title">
+          {{ useI18nHash(project.title) }}
+          <span
+            v-for="tag in project.project_tags"
+            :key="tag"
+            class="tag"
+            :style="{
+              background: useTagColor(tag).bg,
+              color: useTagColor(tag).color,
+              borderColor: useTagColor(tag).border,
+            }"
+          >{{ tag }}</span>
+        </span>
+        <span class="row-stats">
+          <span v-if="lastUpdateCompact" class="stat-badge stat-time" :title="lastUpdateTitle">
+            <el-icon><Clock /></el-icon>{{ lastUpdateCompact }}
+          </span>
+          <span v-if="project.to_be_validated" class="stat-badge stat-pending" :title="$t('project.toBeValidated')">
+            <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
+          </span>
+        </span>
       </div>
-    </template>
+      <nuxt-link :to="`/${project.id}/validators`" class="row-settings" :title="$t('project.settings')">
+        <el-icon><Setting /></el-icon>
+      </nuxt-link>
+    </div>
+    <div class="row-footer">
+      <button class="footer-btn footer-expand" @click="expanded = !expanded">
+        <el-icon class="expand-icon" :class="{ 'is-expanded': expanded }">
+          <ArrowDown />
+        </el-icon>
+        {{ $t('project.seeMore') }}
+      </button>
+      <nuxt-link :to="`/${project.id}/changes_logs`" class="footer-btn footer-details">
+        {{ $t('project.details') }}
+      </nuxt-link>
+    </div>
 
-    <div v-show="expanded" class="card-body">
+    <div v-show="expanded" class="row-detail">
       <LazyUserGroups v-if="expanded" :user-groups="Object.values(project.user_groups)" />
 
-      <div class="collapse-section">
+      <div class="detail-section">
         <ul class="link-list">
           <li>
             <el-icon><Link /></el-icon>
@@ -109,7 +117,7 @@ const lastUpdateTitle = computed(() => {
         </ul>
       </div>
 
-      <div v-if="project.main_contacts?.length" class="collapse-section contacts-section">
+      <div v-if="project.main_contacts?.length" class="detail-section contacts-section">
         <span class="contacts-label">{{ $t('app.project.mainContacts') }}</span>
         <div class="contacts-list">
           <a
@@ -122,48 +130,73 @@ const lastUpdateTitle = computed(() => {
         </div>
       </div>
 
-      <div class="collapse-section">
+      <div class="detail-section">
         <p class="join-text">
           {{ $t('app.project.join') }}
         </p>
       </div>
     </div>
-  </el-card>
+  </div>
 </template>
 
 <style scoped>
-.project-card {
-  display: flex;
-  flex-direction: column;
+.project-row-wrapper {
+  border-radius: 8px;
+  border: 1px solid var(--el-border-color-lighter);
+  background: var(--el-bg-color);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  overflow: hidden;
 }
 
-:deep(.el-card__header) {
-  background-color: var(--el-fill-color-lighter);
-  padding-bottom: 0;
+.project-row-wrapper:hover,
+.project-row-wrapper.is-expanded {
+  border-color: var(--el-color-primary-light-5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-:deep(.el-card__body) {
-  padding: 0;
-  flex: 1;
-}
-
-.card-header {
-  display: flex;
-  flex-direction: column;
-}
-
-.card-header-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.header-stats {
+.project-row {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
+  padding: 10px 14px;
+}
+
+.row-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.row-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--el-text-color-primary);
+  min-width: 0;
+}
+
+.tag {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 4px;
+  border: 1px solid;
+  font-size: 11px;
+  line-height: 18px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.row-stats {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   flex-shrink: 0;
-  padding-top: 2px;
+  margin-left: auto;
 }
 
 .stat-badge {
@@ -193,24 +226,21 @@ const lastUpdateTitle = computed(() => {
   background: var(--el-color-primary-light-9);
 }
 
-.settings-icon {
+.row-settings {
   flex-shrink: 0;
   color: var(--el-text-color-placeholder);
+  font-size: 1.1rem;
   text-decoration: none;
-  font-size: 1.25rem;
-  line-height: 1;
   transition: color 0.15s;
-  padding-top: 2px;
+  line-height: 1;
 }
 
-.settings-icon:hover {
+.row-settings:hover {
   color: var(--el-text-color-regular);
 }
 
-.card-footer {
+.row-footer {
   display: flex;
-  width: calc(100% + 2 * 16px);
-  margin: 8px -16px 0;
   border-top: 1px solid var(--el-border-color-lighter);
 }
 
@@ -220,7 +250,7 @@ const lastUpdateTitle = computed(() => {
   align-items: center;
   justify-content: center;
   gap: 5px;
-  padding: 8px;
+  padding: 7px;
   font-size: 0.8rem;
   color: var(--el-text-color-secondary);
   background: none;
@@ -245,20 +275,22 @@ const lastUpdateTitle = computed(() => {
 
 .expand-icon {
   transition: transform 0.2s;
+  font-size: 0.9rem;
 }
 
 .expand-icon.is-expanded {
   transform: rotate(180deg);
 }
 
-.card-body {
+.row-detail {
+  border-top: 1px solid var(--el-border-color-lighter);
   padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.collapse-section {
+.detail-section {
   background-color: var(--el-fill-color-light);
   border-radius: 6px;
   padding: 0.625rem 0.875rem;
@@ -314,7 +346,7 @@ const lastUpdateTitle = computed(() => {
 .contacts-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 4px;
 }
 
 .user-chip {
@@ -338,11 +370,5 @@ const lastUpdateTitle = computed(() => {
   margin: 0;
   font-size: 0.875rem;
   color: var(--el-text-color-secondary);
-}
-
-.title-link {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
 }
 </style>

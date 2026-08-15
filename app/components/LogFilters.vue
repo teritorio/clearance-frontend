@@ -10,6 +10,7 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
+const router = useRouter()
 
 const filters = ref<LocationQuery>()
 
@@ -71,120 +72,203 @@ function getStats<Type>(data: Type[], key: (o: Type) => string = (i) => `${i}`):
   ).map(([key, count]) => [index[key]!, count])
 }
 
-const router = useRouter()
-async function applyFilter(key: string, value: string) {
-  const query = filters.value?.[key] === value
-    ? Object.fromEntries(Object.entries(route.query).filter(([k, _v]) => k !== key))
-    : { ...route.query, [key]: value }
-  await router.replace({ ...route, query })
+function filterModel(queryKey: string) {
+  return computed({
+    get: () => (filters.value?.[queryKey] as string) ?? null,
+    set: async (val: string | null) => {
+      const query = val
+        ? { ...route.query, [queryKey]: val }
+        : Object.fromEntries(Object.entries(route.query).filter(([k]) => k !== queryKey))
+      await router.replace({ ...route, query })
+    },
+  })
 }
+
+const selectedAction = filterModel('filterByAction')
+const selectedUserGroup = filterModel('filterByUserGroups')
+const selectedSelector = filterModel('filterBySelectors')
+const selectedUser = filterModel('filterByUsers')
+const selectedDate = filterModel('filterByDate')
+
+async function resetAllFilters() {
+  await router.replace({ ...route, query: undefined })
+}
+
+const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length > 0)
 </script>
 
 <template>
-  <aside>
-    <h3>{{ $t('logs.filters') }}</h3>
-    <el-row style="margin-top: 20px">
-      <el-badge
+  <div class="log-filters">
+    <el-select
+      v-if="stats.length"
+      v-model="selectedAction"
+      clearable
+      size="default"
+      class="filter-select" :class="[{ 'is-active': selectedAction !== null }]"
+      :placeholder="$t('logs.filterAction')"
+    >
+      <template #prefix>
+        ⚡
+      </template>
+      <el-option
         v-for="[key, count] in stats"
         :key="key"
-        :value="count"
-        class="item"
-        :max="999"
+        :value="key"
+        :label="key"
       >
-        <el-button
-          type="danger"
-          :plain="filters?.filterByAction !== key"
-          :disabled="!!(filters?.filterByAction && filters?.filterByAction !== key)"
-          size="small"
-          @click="applyFilter('filterByAction', key)"
-        >
-          {{ key }}
-        </el-button>
-      </el-badge>
-    </el-row>
-    <el-row>
-      <el-badge
+        <span class="option-label">{{ key }}</span>
+        <span class="option-count">{{ count }}</span>
+      </el-option>
+    </el-select>
+
+    <el-select
+      v-if="statUserGroups.length"
+      v-model="selectedUserGroup"
+      clearable
+      size="default"
+      class="filter-select" :class="[{ 'is-active': selectedUserGroup !== null }]"
+      :placeholder="$t('logs.filterUserGroups')"
+    >
+      <template #prefix>
+        📌
+      </template>
+      <el-option
         v-for="[key, count] in statUserGroups"
         :key="key"
-        :value="count"
-        class="item"
-        :max="999"
+        :value="key"
+        :label="key"
       >
-        <el-button
-          type="primary"
-          :plain="filters?.filterByUserGroups !== key"
-          :disabled="!!(filters?.filterByUserGroups && filters?.filterByUserGroups !== key)"
-          size="small"
-          @click="applyFilter('filterByUserGroups', key)"
-        >
-          {{ key }}
-        </el-button>
-      </el-badge>
-    </el-row>
-    <el-row>
-      <el-badge
+        <span class="option-label">{{ key }}</span>
+        <span class="option-count">{{ count }}</span>
+      </el-option>
+    </el-select>
+
+    <el-select
+      v-if="statSelectors.length"
+      v-model="selectedSelector"
+      clearable
+      size="default"
+      class="filter-select" :class="[{ 'is-active': selectedSelector !== null }]"
+      :placeholder="$t('logs.filterSelectors')"
+    >
+      <template #prefix>
+        🏷️
+      </template>
+      <el-option
         v-for="[match, count] in statSelectors"
         :key="match.selectors.join()"
-        :value="count"
-        class="item"
-        :max="999"
+        :value="match.selectors.join()"
+        :label="match.selectors.join(' ')"
       >
-        <el-button
-          type="warning"
-          :plain="filters?.filterBySelectors !== match.selectors.join()"
-          :disabled="!!(filters?.filterBySelectors && filters?.filterBySelectors !== match.selectors.join())"
-          size="small"
-          @click="applyFilter('filterBySelectors', match.selectors.join())"
-        >
-          {{ match.selectors.join(' ') }}
-        </el-button>
-      </el-badge>
-    </el-row>
-    <el-row>
-      <el-badge
-        v-for="[key, count] in statUsers.slice(0, 20)"
+        <span class="option-label">{{ match.selectors.join(' ') }}</span>
+        <span class="option-count">{{ count }}</span>
+      </el-option>
+    </el-select>
+
+    <el-select
+      v-if="statUsers.length"
+      v-model="selectedUser"
+      clearable
+      size="default"
+      class="filter-select" :class="[{ 'is-active': selectedUser !== null }]"
+      filterable
+      :placeholder="$t('logs.filterUsers')"
+    >
+      <template #prefix>
+        👤
+      </template>
+      <el-option
+        v-for="[key, count] in statUsers"
         :key="key"
-        :value="count"
-        class="item"
-        :max="999"
+        :value="key"
+        :label="key"
       >
-        <el-button
-          type="info"
-          :plain="filters?.filterByUsers !== key"
-          :disabled="!!(filters?.filterByUsers && filters?.filterByUsers !== key)"
-          size="small"
-          @click="applyFilter('filterByUsers', key)"
-        >
-          {{ key }}
-        </el-button>
-      </el-badge>
-      <span v-if="statUsers.length > 20">{{ $t('logs.tags_more') }}</span>
-    </el-row>
-    <el-row>
-      <el-badge
+        <span class="option-label">{{ key }}</span>
+        <span class="option-count">{{ count }}</span>
+      </el-option>
+    </el-select>
+
+    <el-select
+      v-if="statDates.length"
+      v-model="selectedDate"
+      clearable
+      size="default"
+      class="filter-select" :class="[{ 'is-active': selectedDate !== null }]"
+      :placeholder="$t('logs.filterDates')"
+    >
+      <template #prefix>
+        📅
+      </template>
+      <el-option
         v-for="[key, count] in statDates"
         :key="key"
-        :value="count"
-        class="item"
-        :max="999"
+        :value="key"
+        :label="key"
       >
-        <el-button
-          type="primary"
-          :plain="filters?.filterByDate !== key"
-          :disabled="!!(filters?.filterByDate && filters?.filterByDate !== key)"
-          size="small"
-          @click="applyFilter('filterByDate', key)"
-        >
-          {{ key }}
-        </el-button>
-      </el-badge>
-    </el-row>
-  </aside>
+        <span class="option-label">{{ key }}</span>
+        <span class="option-count">{{ count }}</span>
+      </el-option>
+    </el-select>
+
+    <el-button
+      v-if="hasActiveFilters"
+      link
+      size="default"
+      class="reset-btn"
+      @click="resetAllFilters"
+    >
+      × {{ $t('logs.resetFilters') }}
+    </el-button>
+  </div>
 </template>
 
 <style scoped>
-.item {
-  margin-top: 0.7em;
-  margin-right: 1.3em;
+.log-filters {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  width: auto;
+  min-width: 150px;
+  max-width: 280px;
+}
+
+:deep(.filter-select.is-active .el-select__wrapper) {
+  border-color: #409eff;
+  background-color: #ecf5ff;
+}
+
+.option-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+  color: var(--el-text-color-primary);
+}
+
+.option-count {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--el-color-danger);
+  background: var(--el-color-danger-light-9);
+  border-radius: 10px;
+  padding: 1px 7px;
+  margin-left: 8px;
+}
+
+:deep(.el-select-dropdown__item) {
+  display: flex;
+  align-items: center;
+}
+
+.reset-btn {
+  color: var(--el-color-danger);
+  white-space: nowrap;
 }
 </style>
