@@ -12,9 +12,6 @@ defineProps<{
 
 <template>
   <div class="context-bar">
-    <nuxt-link :to="`/${projectSlug}/changes_logs`" class="back-link" :title="$t('project.details')">
-      <el-icon><ArrowLeft /></el-icon>
-    </nuxt-link>
     <div class="context-left">
       <span class="project-title">{{ useI18nHash(project.title) }}</span>
       <span
@@ -35,6 +32,9 @@ defineProps<{
       <span v-if="project.to_be_validated" class="stat stat-pending" :title="$t('project.toBeValidated')">
         <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
       </span>
+      <nuxt-link :to="`/${projectSlug}/changes_logs`" class="back-link" :title="$t('project.details')">
+        <el-icon><ArrowLeft /></el-icon>
+      </nuxt-link>
     </div>
   </div>
 </template>
