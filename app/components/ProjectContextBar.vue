@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { InitializedProject } from '~/libs/types'
-import { CircleCheck, Clock } from '@element-plus/icons-vue'
+import { ArrowLeft, CircleCheck, Clock } from '@element-plus/icons-vue'
 
 defineProps<{
   project: InitializedProject
@@ -12,6 +12,9 @@ defineProps<{
 
 <template>
   <div class="context-bar">
+    <nuxt-link :to="`/${projectSlug}/changes_logs`" class="back-link" :title="$t('project.details')">
+      <el-icon><ArrowLeft /></el-icon>
+    </nuxt-link>
     <div class="context-left">
       <span class="project-title">{{ useI18nHash(project.title) }}</span>
       <span
@@ -46,6 +49,25 @@ defineProps<{
   flex-shrink: 0;
   border-bottom: 1px solid var(--el-border-color-lighter);
   background: var(--el-bg-color);
+}
+
+.back-link {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--el-text-color-secondary);
+  text-decoration: none;
+  font-size: 1rem;
+  transition: background 0.15s, color 0.15s;
+}
+
+.back-link:hover {
+  background: var(--el-fill-color-light);
+  color: var(--el-color-primary);
 }
 
 .context-left {
