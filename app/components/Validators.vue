@@ -126,21 +126,6 @@ const filteredMatchesMap = computed<Map<string, Match[]>>(() => {
       :key="entry.key"
       class="validator-section"
     >
-      <!-- Header -->
-      <div class="validator-header">
-        <div class="validator-title">
-          <span class="validator-id">{{ entry.settings.id || entry.key }}</span>
-          <el-badge
-            :value="entry.allMatches.length"
-            type="info"
-            class="category-badge"
-          />
-        </div>
-        <p v-if="entry.settings.description" class="validator-description">
-          {{ entry.settings.description }}
-        </p>
-      </div>
-
       <!-- Control bar -->
       <div class="control-bar">
         <el-input
@@ -271,29 +256,6 @@ const filteredMatchesMap = computed<Map<string, Match[]>>(() => {
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-
-.validator-header {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.validator-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.validator-id {
-  font-size: 1.15rem;
-  font-weight: 600;
-}
-
-.validator-description {
-  margin: 0;
-  color: var(--el-text-color-secondary);
-  font-size: 0.9rem;
 }
 
 .control-bar {
