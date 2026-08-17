@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import type { InitializedProject, UninitializedProject } from '~/libs/types'
 import { CircleClose, RefreshLeft, Search } from '@element-plus/icons-vue'
-import _ from 'underscore'
 import { isInitializedProject } from '~/libs/types'
 
 const user = useUser()
 
 const { data } = await useProjectsData()
 
-const partitionedProjects = computed(() =>
-  _.partition(data.value?.projects ?? [], isInitializedProject),
+const initializedProjects = computed<InitializedProject[]>(() =>
+  (data.value?.projects ?? []).filter(isInitializedProject) as InitializedProject[],
 )
 
-const initializedProjects = computed<InitializedProject[]>(() => partitionedProjects.value[0] as InitializedProject[])
-const uninitializedProjects = computed<UninitializedProject[]>(() => partitionedProjects.value[1] as UninitializedProject[])
+const uninitializedProjects = computed<UninitializedProject[]>(() =>
+  (data.value?.projects ?? []).filter((p) => !isInitializedProject(p)) as UninitializedProject[],
+)
 
 const myProjects = computed<InitializedProject[]>(() =>
   initializedProjects.value.filter((p) => user.value?.projects.includes(p.id) ?? false),
@@ -126,9 +126,11 @@ function tagFilterStyle(tag: string, checked: boolean) {
           {{ $t('page.index.myProjects') }}
           <span class="section-count">{{ filteredMyProjects.length }}</span>
         </h2>
-        <div class="project-list">
-          <ProjectRow v-for="project in filteredMyProjects" :key="project.id" :project="project" />
-        </div>
+        <el-row :gutter="20" class="project-grid">
+          <el-col v-for="project in filteredMyProjects" :key="project.id" :xs="24" :md="12" :lg="8">
+            <Project :project="project" />
+          </el-col>
+        </el-row>
       </template>
 
       <h2 class="section-title">
@@ -328,14 +330,6 @@ function tagFilterStyle(tag: string, checked: boolean) {
   color: var(--el-text-color-secondary);
   font-size: 0.75rem;
   font-weight: 600;
-}
-
-.project-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 2rem;
-  max-width: 720px;
 }
 
 .uninitialized-section {
