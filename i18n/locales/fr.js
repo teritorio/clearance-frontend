@@ -26,7 +26,6 @@ export default {
       myProjects: 'Mes projets',
       publicProjects: 'Projets publics',
       uninitializedProjects: 'Projets non initialisés',
-      pendingInit: 'En attente d\'initialisation',
       empty: 'Aucun projet',
       noResults: 'Aucun résultat pour votre recherche',
       resetSearch: 'Effacer la recherche',
@@ -72,7 +71,7 @@ export default {
   project: {
     control: 'Contrôle',
     details: 'Détails',
-    seeMore: 'Groupes',
+    seeMore: 'Infos',
     user_group_label: 'Groupe',
     user_group_users: 'Utilisateurs',
     settings: '⚙ Paramètres',
