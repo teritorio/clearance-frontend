@@ -32,8 +32,12 @@ defineProps<{
       <span v-if="project.to_be_validated" class="stat stat-pending" :title="$t('project.toBeValidated')">
         <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
       </span>
-      <nuxt-link :to="`/${projectSlug}/changes_logs`" class="back-link">
-        {{ $t('project.details') }}<el-icon><ArrowRight /></el-icon>
+      <nuxt-link :to="`/${projectSlug}/changes_logs`">
+        <el-button text type="primary" size="small">
+          {{ $t('project.details') }}<el-icon class="el-icon--right">
+            <ArrowRight />
+          </el-icon>
+        </el-button>
       </nuxt-link>
     </div>
   </div>
@@ -49,25 +53,6 @@ defineProps<{
   flex-shrink: 0;
   border-bottom: 1px solid var(--el-border-color-lighter);
   background: var(--el-bg-color);
-}
-
-.back-link {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  color: var(--el-text-color-secondary);
-  text-decoration: none;
-  font-size: 1rem;
-  transition: background 0.15s, color 0.15s;
-}
-
-.back-link:hover {
-  background: var(--el-fill-color-light);
-  color: var(--el-color-primary);
 }
 
 .context-left {
