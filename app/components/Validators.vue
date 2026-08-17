@@ -107,7 +107,7 @@ const filteredMatchesMap = computed<Map<string, Match[]>>(() => {
       }
       if (search) {
         const label = getCategoryLabel(m).toLowerCase()
-        const inSources = m.sources?.some((s) => s.toLowerCase().includes(search))
+        const inSources = m.sources?.some((s) => s?.toLowerCase().includes(search))
         if (!label.includes(search) && !inSources) {
           return false
         }
