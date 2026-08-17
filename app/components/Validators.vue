@@ -233,7 +233,7 @@ const filteredMatchesMap = computed<Map<string, Match[]>>(() => {
         >
           <template #default="{ row }">
             <span
-              v-for="g in (row.user_groups ?? [])"
+              v-for="g in [...new Set<string>(row.user_groups ?? [])]"
               :key="g"
               class="group-chip"
             >{{ g }}</span>
