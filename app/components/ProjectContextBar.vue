@@ -32,8 +32,8 @@ defineProps<{
       <span v-if="project.to_be_validated" class="stat stat-pending" :title="$t('project.toBeValidated')">
         <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
       </span>
-      <nuxt-link :to="`/${projectSlug}/changes_logs`" class="back-link" :title="$t('project.details')">
-        <el-icon><ArrowLeft /></el-icon>
+      <nuxt-link :to="`/${projectSlug}/changes_logs`" class="back-link">
+        <el-icon><ArrowLeft /></el-icon>{{ $t('project.details') }}
       </nuxt-link>
     </div>
   </div>
