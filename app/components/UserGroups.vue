@@ -14,6 +14,7 @@ import _ from 'underscore'
 
 const props = defineProps<{
   userGroups: UserGroup[]
+  showSelectors?: boolean
 }>()
 
 const runtimeConfig = useRuntimeConfig()
@@ -123,7 +124,7 @@ const groups = computed(() =>
       <div v-if="!mapLoaded" class="map-skeleton" />
       <div ref="mapContainer" class="map" :class="{ 'map-hidden': !mapLoaded }" />
     </div>
-    <ul class="group-list">
+    <ul class="group-list" :class="[{ 'with-selectors': showSelectors }]">
       <li v-for="(group, index) in groups" :key="index" class="group-row">
         <span class="group-dot-cell"><span class="group-dot" :style="{ background: group.color }" /></span>
         <span class="group-name">{{ useI18nHash(group.title) }}</span>
@@ -136,7 +137,7 @@ const groups = computed(() =>
             class="user-chip"
           >{{ user }}</a>
         </span>
-        <span class="group-selects">
+        <span v-if="showSelectors" class="group-selects">
           <code
             v-for="sel in (group.select ?? [])"
             :key="sel"
@@ -164,9 +165,13 @@ const groups = computed(() =>
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: 20px minmax(120px, 200px) 1fr 1fr;
+  grid-template-columns: 20px minmax(120px, 200px) 1fr;
   gap: 2px 0;
   font-size: 0.8rem;
+}
+
+.group-list.with-selectors {
+  grid-template-columns: 20px minmax(120px, 200px) 1fr 1fr;
 }
 
 .group-row {
@@ -175,8 +180,11 @@ const groups = computed(() =>
 
 .group-row:nth-child(odd) .group-dot-cell,
 .group-row:nth-child(odd) .group-name,
-.group-row:nth-child(odd) .group-users,
-.group-row:nth-child(odd) .group-selects {
+.group-row:nth-child(odd) .group-users {
+  background: var(--el-fill-color-lighter);
+}
+
+.with-selectors .group-row:nth-child(odd) .group-selects {
   background: var(--el-fill-color-lighter);
 }
 
@@ -210,6 +218,11 @@ const groups = computed(() =>
   flex-wrap: wrap;
   gap: 4px;
   padding: 5px 8px 5px 0;
+  border-radius: 0 6px 6px 0;
+}
+
+.with-selectors .group-users {
+  border-radius: 0;
 }
 
 .group-selects {
