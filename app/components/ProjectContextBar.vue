@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { InitializedProject } from '~/libs/types'
-import { ArrowLeft, CircleCheck, Clock } from '@element-plus/icons-vue'
+import { ArrowRight, CircleCheck, Clock } from '@element-plus/icons-vue'
 
 defineProps<{
   project: InitializedProject
@@ -33,7 +33,7 @@ defineProps<{
         <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
       </span>
       <nuxt-link :to="`/${projectSlug}/changes_logs`" class="back-link">
-        <el-icon><ArrowLeft /></el-icon>{{ $t('project.details') }}
+        {{ $t('project.details') }}<el-icon><ArrowRight /></el-icon>
       </nuxt-link>
     </div>
   </div>
