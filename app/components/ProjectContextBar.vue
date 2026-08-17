@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { InitializedProject } from '~/libs/types'
-import { CircleCheck, Clock, Setting } from '@element-plus/icons-vue'
+import { CircleCheck, Clock } from '@element-plus/icons-vue'
 
 defineProps<{
   project: InitializedProject
@@ -33,9 +33,6 @@ defineProps<{
         <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
       </span>
     </div>
-    <nuxt-link :to="`/${projectSlug}/validators`" class="settings-link" :title="$t('project.settings')">
-      <el-icon><Setting /></el-icon>
-    </nuxt-link>
   </div>
 </template>
 
@@ -111,27 +108,5 @@ defineProps<{
 .stat-pending {
   color: var(--el-color-primary-dark-2);
   background: var(--el-color-primary-light-9);
-}
-
-.settings-link {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  color: var(--el-text-color-placeholder);
-  text-decoration: none;
-  transition: color 0.15s, background 0.15s;
-}
-
-.settings-link:hover {
-  color: var(--el-text-color-regular);
-  background: var(--el-fill-color);
-}
-
-.settings-link .el-icon {
-  font-size: 18px;
 }
 </style>
