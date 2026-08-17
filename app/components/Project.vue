@@ -51,7 +51,7 @@ const lastUpdateTitle = computed(() => {
   <el-card shadow="hover" class="project-card">
     <template #header>
       <div class="card-header">
-        <div class="card-top">
+        <div class="card-left">
           <div class="card-info">
             <div class="card-header-row">
               <div class="title-link">
@@ -70,16 +70,16 @@ const lastUpdateTitle = computed(() => {
               </nuxt-link>
             </div>
           </div>
-          <nuxt-link :to="`/${project.id}/changes_logs`" class="card-next" :title="$t('project.details')">
-            <el-icon><ArrowRight /></el-icon>
-          </nuxt-link>
+          <button class="card-footer" @click="expanded = !expanded">
+            <el-icon class="expand-icon" :class="{ 'is-expanded': expanded }">
+              <ArrowDown />
+            </el-icon>
+            {{ $t('project.seeMore') }}
+          </button>
         </div>
-        <button class="card-footer" @click="expanded = !expanded">
-          <el-icon class="expand-icon" :class="{ 'is-expanded': expanded }">
-            <ArrowDown />
-          </el-icon>
-          {{ $t('project.seeMore') }}
-        </button>
+        <nuxt-link :to="`/${project.id}/changes_logs`" class="card-next" :title="$t('project.details')">
+          <el-icon><ArrowRight /></el-icon>
+        </nuxt-link>
       </div>
     </template>
 
@@ -151,12 +151,14 @@ const lastUpdateTitle = computed(() => {
 
 .card-header {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 }
 
-.card-top {
+.card-left {
+  flex: 1;
+  min-width: 0;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .card-info {
@@ -240,7 +242,6 @@ const lastUpdateTitle = computed(() => {
 
 .card-footer {
   display: flex;
-  width: 100%;
   align-items: center;
   justify-content: center;
   gap: 5px;
