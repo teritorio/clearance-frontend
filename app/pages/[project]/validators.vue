@@ -81,11 +81,11 @@ const userGroups = computed(() =>
       :last-update-title="lastUpdateTitle"
     />
     <el-tabs class="settings-tabs">
-      <el-tab-pane :label="$t('validators.groups')">
-        <LazyUserGroups v-if="userGroups.length" :user-groups="userGroups" :show-selectors="true" />
-      </el-tab-pane>
       <el-tab-pane :label="$t('validators.tabValidators')">
         <Validators v-if="validators" :validators="validators" />
+      </el-tab-pane>
+      <el-tab-pane :label="$t('validators.groups')">
+        <LazyUserGroups v-if="userGroups.length" :user-groups="userGroups" :show-selectors="true" :show-map="false" />
       </el-tab-pane>
     </el-tabs>
   </el-main>

@@ -14,6 +14,7 @@ import _ from 'underscore'
 
 const props = defineProps<{
   userGroups: UserGroup[]
+  showMap?: boolean
   showSelectors?: boolean
 }>()
 
@@ -24,6 +25,10 @@ const mapContainer = useTemplateRef<HTMLDivElement>('mapContainer')
 const mapLoaded = ref(false)
 
 onMounted(() => {
+  if (props.showMap === false) {
+    return
+  }
+
   type ColoredGroup = UserGroup & { color: string }
   const coloredGroups: ColoredGroup[] = props.userGroups.map((userGroup: UserGroup, index: number) => ({
     ...userGroup,
@@ -120,7 +125,7 @@ const groups = computed(() =>
 
 <template>
   <div class="user-groups">
-    <div class="map-wrapper">
+    <div v-if="showMap !== false" class="map-wrapper">
       <div v-if="!mapLoaded" class="map-skeleton" />
       <div ref="mapContainer" class="map" :class="{ 'map-hidden': !mapLoaded }" />
     </div>

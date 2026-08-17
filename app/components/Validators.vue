@@ -247,31 +247,11 @@ const filteredMatchesMap = computed<Map<string, Match[]>>(() => {
           min-width="200"
         >
           <template #default="{ row }">
-            <template v-if="(row.user_groups ?? []).length <= 3">
-              <el-tag
-                v-for="g in (row.user_groups ?? [])"
-                :key="g"
-                type="primary"
-                size="small"
-                class="chip"
-              >
-                {{ g }}
-              </el-tag>
-            </template>
-            <template v-else>
-              <el-tag
-                v-for="g in (row.user_groups ?? []).slice(0, 3)"
-                :key="g"
-                type="primary"
-                size="small"
-                class="chip"
-              >
-                {{ g }}
-              </el-tag>
-              <el-tag type="primary" size="small" class="chip">
-                +{{ (row.user_groups ?? []).length - 3 }}
-              </el-tag>
-            </template>
+            <span
+              v-for="g in (row.user_groups ?? [])"
+              :key="g"
+              class="group-chip"
+            >{{ g }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -331,6 +311,18 @@ const filteredMatchesMap = computed<Map<string, Match[]>>(() => {
 }
 
 .chip {
+  margin-right: 4px;
+  margin-bottom: 2px;
+}
+
+.group-chip {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: var(--el-fill-color);
+  color: var(--el-text-color-secondary);
+  font-size: 0.75rem;
+  white-space: nowrap;
   margin-right: 4px;
   margin-bottom: 2px;
 }
