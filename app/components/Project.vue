@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { InitializedProject } from '~/libs/types'
-import { ArrowDown, CircleCheck, Clock, Link, Setting } from '@element-plus/icons-vue'
+import { ArrowDown, ArrowRight, CircleCheck, Clock, Link, Setting } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import en from 'dayjs/locale/en-gb'
 import es from 'dayjs/locale/es'
@@ -51,33 +51,35 @@ const lastUpdateTitle = computed(() => {
   <el-card shadow="hover" class="project-card">
     <template #header>
       <div class="card-header">
-        <div class="card-header-row">
-          <div class="title-link">
-            <project-light :project="project" title-tag="h3" />
+        <div class="card-top">
+          <div class="card-info">
+            <div class="card-header-row">
+              <div class="title-link">
+                <project-light :project="project" title-tag="h3" />
+              </div>
+              <div class="header-stats">
+                <span v-if="lastUpdateCompact" class="stat-badge stat-time" :title="lastUpdateTitle">
+                  <el-icon><Clock /></el-icon>{{ lastUpdateCompact }}
+                </span>
+                <span v-if="project.to_be_validated" class="stat-badge stat-pending" :title="$t('project.toBeValidated')">
+                  <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
+                </span>
+              </div>
+              <nuxt-link :to="`/${project.id}/validators`" class="settings-icon" :title="$t('project.settings')">
+                <el-icon><Setting /></el-icon>
+              </nuxt-link>
+            </div>
           </div>
-          <div class="header-stats">
-            <span v-if="lastUpdateCompact" class="stat-badge stat-time" :title="lastUpdateTitle">
-              <el-icon><Clock /></el-icon>{{ lastUpdateCompact }}
-            </span>
-            <span v-if="project.to_be_validated" class="stat-badge stat-pending" :title="$t('project.toBeValidated')">
-              <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
-            </span>
-          </div>
-          <nuxt-link :to="`/${project.id}/validators`" class="settings-icon" :title="$t('project.settings')">
-            <el-icon><Setting /></el-icon>
+          <nuxt-link :to="`/${project.id}/changes_logs`" class="card-next" :title="$t('project.details')">
+            <el-icon><ArrowRight /></el-icon>
           </nuxt-link>
         </div>
-        <div class="card-footer">
-          <button class="footer-btn footer-expand" @click="expanded = !expanded">
-            <el-icon class="expand-icon" :class="{ 'is-expanded': expanded }">
-              <ArrowDown />
-            </el-icon>
-            {{ $t('project.seeMore') }}
-          </button>
-          <nuxt-link :to="`/${project.id}/changes_logs`" class="footer-btn footer-details">
-            {{ $t('project.details') }}
-          </nuxt-link>
-        </div>
+        <button class="card-footer" @click="expanded = !expanded">
+          <el-icon class="expand-icon" :class="{ 'is-expanded': expanded }">
+            <ArrowDown />
+          </el-icon>
+          {{ $t('project.seeMore') }}
+        </button>
       </div>
     </template>
 
@@ -139,7 +141,7 @@ const lastUpdateTitle = computed(() => {
 
 :deep(.el-card__header) {
   background-color: var(--el-fill-color-lighter);
-  padding-bottom: 0;
+  padding: 0;
 }
 
 :deep(.el-card__body) {
@@ -150,6 +152,17 @@ const lastUpdateTitle = computed(() => {
 .card-header {
   display: flex;
   flex-direction: column;
+}
+
+.card-top {
+  display: flex;
+  flex-direction: row;
+}
+
+.card-info {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 8px 8px 16px;
 }
 
 .card-header-row {
@@ -207,16 +220,27 @@ const lastUpdateTitle = computed(() => {
   color: var(--el-text-color-regular);
 }
 
-.card-footer {
+.card-next {
+  flex-shrink: 0;
+  width: 48px;
   display: flex;
-  width: calc(100% + 2 * 16px);
-  margin: 8px -16px 0;
-  border-top: 1px solid var(--el-border-color-lighter);
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid var(--el-border-color-lighter);
+  color: var(--el-text-color-secondary);
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: background 0.15s, color 0.15s;
 }
 
-.footer-btn {
-  flex: 1;
+.card-next:hover {
+  background: var(--el-color-primary-light-9);
+  color: var(--el-color-primary);
+}
+
+.card-footer {
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: center;
   gap: 5px;
@@ -225,22 +249,14 @@ const lastUpdateTitle = computed(() => {
   color: var(--el-text-color-secondary);
   background: none;
   border: none;
+  border-top: 1px solid var(--el-border-color-lighter);
   cursor: pointer;
-  text-decoration: none;
   transition: background 0.15s, color 0.15s;
 }
 
-.footer-btn:hover {
+.card-footer:hover {
   background: var(--el-fill-color-light);
   color: var(--el-color-primary);
-}
-
-.footer-expand {
-  border-right: 1px solid var(--el-border-color-lighter);
-}
-
-.footer-details {
-  font-weight: 500;
 }
 
 .expand-icon {

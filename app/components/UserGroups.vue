@@ -125,8 +125,8 @@ const groups = computed(() =>
 
 <template>
   <div class="user-groups">
-    <div v-if="showMap !== false" class="map-wrapper">
-      <div v-if="!mapLoaded" class="map-skeleton" />
+    <div v-show="showMap !== false" class="map-wrapper">
+      <div v-if="!mapLoaded && showMap !== false" class="map-skeleton" />
       <div ref="mapContainer" class="map" :class="{ 'map-hidden': !mapLoaded }" />
     </div>
     <ul class="group-list" :class="[{ 'with-selectors': showSelectors }]">

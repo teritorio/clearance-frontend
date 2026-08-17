@@ -71,7 +71,7 @@ export default {
   project: {
     control: 'Control',
     details: 'Detalle',
-    seeMore: 'Grupos',
+    seeMore: 'Infos',
     user_group_label: 'Groupo',
     user_group_users: 'Usuarios',
     settings: '⚙ Configuración',
