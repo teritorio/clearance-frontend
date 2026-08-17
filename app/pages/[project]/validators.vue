@@ -150,6 +150,7 @@ watch(
 :deep(.el-tabs__content) {
   flex: 1;
   overflow: hidden;
+  padding: 0 1.25rem;
 }
 
 :deep(.el-tab-pane) {
