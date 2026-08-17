@@ -92,7 +92,7 @@ export default {
     action: 'Action',
     description: 'Description',
     other: 'Autre',
-    search: 'Rechercher par nom ou source…',
+    search: 'Rechercher par catégorie ou source…',
     filterGroup: 'Filtrer par groupe',
     category: 'Catégorie',
     sources: 'Sources',
