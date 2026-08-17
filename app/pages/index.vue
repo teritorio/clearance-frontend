@@ -166,9 +166,6 @@ function tagFilterStyle(tag: string, checked: boolean) {
               <el-card shadow="never" class="ghost-card">
                 <div class="ghost-card-inner">
                   <span class="project-id">{{ project.id }}</span>
-                  <el-tag type="info" effect="plain" size="small" disable-transitions>
-                    {{ $t('page.index.pendingInit') }}
-                  </el-tag>
                 </div>
               </el-card>
             </el-col>

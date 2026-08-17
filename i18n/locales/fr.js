@@ -26,7 +26,6 @@ export default {
       myProjects: 'Mes projets',
       publicProjects: 'Projets publics',
       uninitializedProjects: 'Projets non initialisés',
-      pendingInit: 'En attente d\'initialisation',
       empty: 'Aucun projet',
       noResults: 'Aucun résultat pour votre recherche',
       resetSearch: 'Effacer la recherche',
