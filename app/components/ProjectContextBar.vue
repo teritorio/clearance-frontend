@@ -95,6 +95,7 @@ defineProps<{
 .details-link {
   display: flex;
   align-items: center;
+  text-decoration: none;
 }
 
 .details-link :deep(.el-button) {
