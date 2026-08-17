@@ -165,7 +165,6 @@ const filteredMatchesMap = computed<Map<string, Match[]>>(() => {
         :data="filteredMatchesMap.get(entry.key)"
         stripe
         size="small"
-        height="600"
         style="width: 100%"
       >
         <el-table-column type="expand">
