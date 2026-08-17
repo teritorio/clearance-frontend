@@ -137,12 +137,23 @@ watch(
 }
 
 .settings-tabs {
-  padding: 0 1.25rem;
   flex: 1;
-  overflow: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+:deep(.el-tabs__header) {
+  padding: 0 1.25rem;
 }
 
 :deep(.el-tabs__content) {
-  overflow: visible;
+  flex: 1;
+  overflow: hidden;
+}
+
+:deep(.el-tab-pane) {
+  height: 100%;
+  overflow: auto;
 }
 </style>
