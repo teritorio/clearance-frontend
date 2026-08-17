@@ -136,6 +136,13 @@ const groups = computed(() =>
             class="user-chip"
           >{{ user }}</a>
         </span>
+        <span class="group-selects">
+          <code
+            v-for="sel in (group.select ?? [])"
+            :key="sel"
+            class="selector-chip"
+          >{{ sel }}</code>
+        </span>
       </li>
     </ul>
   </div>
@@ -157,7 +164,7 @@ const groups = computed(() =>
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: 20px minmax(120px, 200px) 1fr;
+  grid-template-columns: 20px minmax(120px, 200px) 1fr 1fr;
   gap: 2px 0;
   font-size: 0.8rem;
 }
@@ -168,7 +175,8 @@ const groups = computed(() =>
 
 .group-row:nth-child(odd) .group-dot-cell,
 .group-row:nth-child(odd) .group-name,
-.group-row:nth-child(odd) .group-users {
+.group-row:nth-child(odd) .group-users,
+.group-row:nth-child(odd) .group-selects {
   background: var(--el-fill-color-lighter);
 }
 
@@ -202,7 +210,26 @@ const groups = computed(() =>
   flex-wrap: wrap;
   gap: 4px;
   padding: 5px 8px 5px 0;
+}
+
+.group-selects {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 5px 8px 5px 0;
   border-radius: 0 6px 6px 0;
+}
+
+.selector-chip {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--el-fill-color-dark);
+  color: var(--el-text-color-regular);
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+  white-space: nowrap;
 }
 
 .user-chip {

@@ -84,6 +84,7 @@ export interface UserGroup {
   title: MultilingualString
   polygon?: string
   users: string[]
+  select?: string[]
 }
 
 export interface UninitializedProject {

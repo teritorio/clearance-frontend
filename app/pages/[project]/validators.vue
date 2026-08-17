@@ -65,10 +65,14 @@ const lastUpdateTitle = computed(() => {
   }
   return dayjs(dateStr).locale(locale.value).fromNow()
 })
+
+const userGroups = computed(() =>
+  projectDetails.value ? Object.values(projectDetails.value.user_groups) : [],
+)
 </script>
 
 <template>
-  <el-main class="validators-page">
+  <el-main class="settings-page">
     <project-context-bar
       v-if="projectDetails"
       :project="projectDetails"
@@ -76,15 +80,32 @@ const lastUpdateTitle = computed(() => {
       :last-update-compact="lastUpdateCompact"
       :last-update-title="lastUpdateTitle"
     />
-    <Validators v-if="validators" :validators="validators" />
+    <el-tabs class="settings-tabs">
+      <el-tab-pane :label="$t('validators.tabGroups')">
+        <UserGroups v-if="userGroups.length" :user-groups="userGroups" />
+      </el-tab-pane>
+      <el-tab-pane :label="$t('validators.tabValidators')">
+        <Validators v-if="validators" :validators="validators" />
+      </el-tab-pane>
+    </el-tabs>
   </el-main>
 </template>
 
 <style scoped>
-.validators-page {
+.settings-page {
   display: flex;
   flex-direction: column;
   overflow: hidden;
   padding: 0;
+}
+
+.settings-tabs {
+  padding: 0 1.25rem;
+  flex: 1;
+  overflow: auto;
+}
+
+:deep(.el-tabs__content) {
+  overflow: visible;
 }
 </style>

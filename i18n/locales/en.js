@@ -100,6 +100,9 @@ export default {
     groups: 'Groups',
     osmTags: 'OSM tags',
     duplicateDistance: 'Detection radius',
+    tabGroups: 'Groups',
+    tabValidators: 'Validators',
+    selectors: 'Selectors',
   },
   atomFeed: 'Atom Feed',
 }
