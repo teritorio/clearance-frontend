@@ -83,7 +83,9 @@ export function getValidators(
 export interface UserGroup {
   title: MultilingualString
   polygon?: string
+  osm_tags?: string
   users: string[]
+  select?: string[]
 }
 
 export interface UninitializedProject {

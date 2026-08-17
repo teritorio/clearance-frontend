@@ -100,6 +100,7 @@ export default {
     groups: 'Grupos',
     osmTags: 'Etiquetas OSM',
     duplicateDistance: 'Radio de detección',
+    tabValidators: 'Validadores',
   },
   atomFeed: 'Fuente Atom',
 }

@@ -100,6 +100,7 @@ export default {
     groups: 'Groupes',
     osmTags: 'Tags OSM',
     duplicateDistance: 'Rayon de détection',
+    tabValidators: 'Validateurs',
   },
   atomFeed: 'Flux Atom',
 }
