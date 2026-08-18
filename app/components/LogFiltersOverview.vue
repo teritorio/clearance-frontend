@@ -130,6 +130,8 @@ const sections = computed(() => [
   border-bottom: 1px solid var(--el-border-color-lighter);
   background: var(--el-fill-color-extra-light);
   flex-shrink: 0;
+  max-height: 220px;
+  overflow-y: auto;
 }
 
 .overview-section {
