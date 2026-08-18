@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { Action, IFeature } from '@teritorio/openstreetmap-logical-history-component'
 import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
-import { DataAnalysis } from '@element-plus/icons-vue'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
 import dayjs from 'dayjs'
 import en from 'dayjs/locale/en-gb'
@@ -63,12 +62,6 @@ const lastUpdateTitle = computed(() => {
 const isProjectUser = computed(() => {
   return !!user.value?.projects?.includes(projectSlug)
 })
-
-const showOverview = ref(false)
-onMounted(() => {
-  showOverview.value = localStorage.getItem('cl-overview') === 'true'
-})
-watch(showOverview, (val) => localStorage.setItem('cl-overview', String(val)))
 
 function getFeatureLinks(loCha: ClearanceLoChaData, feature: IFeature, groupIndex: number): ClearanceApiLink[] {
   const links = (loCha.metadata.links[groupIndex] ?? []) as ClearanceApiLink[]
@@ -352,25 +345,14 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
     <el-container v-if="data && status === 'success'" direction="vertical" class="changes-container">
       <div class="locha-list">
         <div class="filter-bar">
-          <el-button
-            :type="showOverview ? 'primary' : ''"
-            :plain="!showOverview"
-            size="default"
-            class="overview-toggle"
-            :title="$t('logs.overview')"
-            @click="showOverview = !showOverview"
-          >
-            <el-icon><DataAnalysis /></el-icon>
-          </el-button>
-          <log-filters :lo-chas="data.loChas" />
           <log-validator-bulk
             v-if="isProjectUser && Object.keys(route.query).length"
-            class="bulk-validator-right"
             :count="loChasWithFilter.length"
             @bulk-validation="handleAccept"
           />
+          <log-filters :lo-chas="data.loChas" />
         </div>
-        <log-filters-overview v-if="showOverview" :lo-chas="data.loChas" />
+        <log-filters-overview :lo-chas="data.loChas" />
         <template v-if="loChasWithFilter.length">
           <el-space fill :size="20">
             <el-card
