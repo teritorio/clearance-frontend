@@ -350,27 +350,27 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
       :last-update-title="lastUpdateTitle"
     />
     <el-container v-if="data && status === 'success'" direction="vertical" class="changes-container">
-      <div class="filter-bar">
-        <el-button
-          :type="showOverview ? 'primary' : ''"
-          :plain="!showOverview"
-          size="default"
-          class="overview-toggle"
-          :title="$t('logs.overview')"
-          @click="showOverview = !showOverview"
-        >
-          <el-icon><DataAnalysis /></el-icon>
-        </el-button>
-        <log-filters :lo-chas="data.loChas" />
-        <log-validator-bulk
-          v-if="isProjectUser && Object.keys(route.query).length"
-          class="bulk-validator-right"
-          :count="loChasWithFilter.length"
-          @bulk-validation="handleAccept"
-        />
-      </div>
-      <log-filters-overview v-if="showOverview" :lo-chas="data.loChas" />
       <div class="locha-list">
+        <div class="filter-bar">
+          <el-button
+            :type="showOverview ? 'primary' : ''"
+            :plain="!showOverview"
+            size="default"
+            class="overview-toggle"
+            :title="$t('logs.overview')"
+            @click="showOverview = !showOverview"
+          >
+            <el-icon><DataAnalysis /></el-icon>
+          </el-button>
+          <log-filters :lo-chas="data.loChas" />
+          <log-validator-bulk
+            v-if="isProjectUser && Object.keys(route.query).length"
+            class="bulk-validator-right"
+            :count="loChasWithFilter.length"
+            @bulk-validation="handleAccept"
+          />
+        </div>
+        <log-filters-overview v-if="showOverview" :lo-chas="data.loChas" />
         <template v-if="loChasWithFilter.length">
           <el-space fill :size="20">
             <el-card
@@ -541,9 +541,9 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 1.25rem;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
   border-bottom: 1px solid var(--el-border-color-lighter);
-  flex-shrink: 0;
   flex-wrap: wrap;
 }
 
