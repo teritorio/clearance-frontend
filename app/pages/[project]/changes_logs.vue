@@ -529,10 +529,6 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   flex-wrap: wrap;
 }
 
-.bulk-validator-right {
-  margin-left: auto;
-}
-
 .locha-list {
   flex: 1;
   min-height: 0;
