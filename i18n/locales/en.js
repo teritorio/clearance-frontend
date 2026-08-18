@@ -74,7 +74,7 @@ export default {
     seeMore: 'Infos',
     user_group_label: 'Group',
     user_group_users: 'Users',
-    settings: '⚙ Settings',
+    settings: 'Settings',
     data: '✓ Data',
     start: 'Start',
     lastUpdate: 'Data freshness',
