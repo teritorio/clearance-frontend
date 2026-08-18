@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { InitializedProject } from '~/libs/types'
-import { ArrowRight, CircleCheck, Clock } from '@element-plus/icons-vue'
+import { ArrowRight, CircleCheck, Clock, Setting } from '@element-plus/icons-vue'
 
 defineProps<{
   project: InitializedProject
@@ -8,6 +8,9 @@ defineProps<{
   lastUpdateCompact: string | null
   lastUpdateTitle: string | undefined
 }>()
+
+const route = useRoute()
+const isValidatorsPage = computed(() => route.path.endsWith('/validators'))
 </script>
 
 <template>
@@ -32,10 +35,17 @@ defineProps<{
       <span v-if="project.to_be_validated" class="stat stat-pending" :title="$t('project.toBeValidated')">
         <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
       </span>
-      <nuxt-link :to="`/${projectSlug}/changes_logs`" class="details-link">
+      <nuxt-link v-if="isValidatorsPage" :to="`/${projectSlug}/changes_logs`" class="details-link">
         <el-button text type="primary">
           {{ $t('project.details') }}<el-icon class="el-icon--right">
             <ArrowRight />
+          </el-icon>
+        </el-button>
+      </nuxt-link>
+      <nuxt-link v-else :to="`/${projectSlug}/validators`" class="details-link">
+        <el-button text type="primary">
+          {{ $t('project.settings') }}<el-icon class="el-icon--right">
+            <Setting />
           </el-icon>
         </el-button>
       </nuxt-link>
