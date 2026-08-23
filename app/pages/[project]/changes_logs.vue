@@ -532,6 +532,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 .locha-list {
   flex: 1;
   min-height: 0;
+  overflow-x: hidden;
   overflow-y: auto;
   padding: 0.75rem 1.25rem;
 }

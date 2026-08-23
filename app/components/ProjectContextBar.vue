@@ -16,17 +16,22 @@ const isValidatorsPage = computed(() => route.path.endsWith('/validators'))
 <template>
   <div class="context-bar">
     <div class="context-left">
-      <span class="project-title">{{ useI18nHash(project.title) }}</span>
-      <span
-        v-for="tag in project.project_tags"
-        :key="tag"
-        class="tag"
-        :style="{
-          background: useTagColor(tag).bg,
-          color: useTagColor(tag).color,
-          borderColor: useTagColor(tag).border,
-        }"
-      >{{ tag }}</span>
+      <div class="project-title-row">
+        <span class="project-title">{{ useI18nHash(project.title) }}</span>
+        <span
+          v-for="tag in project.project_tags"
+          :key="tag"
+          class="tag"
+          :style="{
+            background: useTagColor(tag).bg,
+            color: useTagColor(tag).color,
+            borderColor: useTagColor(tag).border,
+          }"
+        >{{ tag }}</span>
+      </div>
+      <p v-if="useI18nHash(project.description)" class="project-description">
+        {{ useI18nHash(project.description) }}
+      </p>
     </div>
     <div class="context-stats">
       <span v-if="lastUpdateCompact" class="stat stat-time" :title="lastUpdateTitle">
@@ -59,7 +64,7 @@ const isValidatorsPage = computed(() => route.path.endsWith('/validators'))
   align-items: center;
   gap: 12px;
   padding: 0 1.25rem;
-  height: 48px;
+  min-height: 48px;
   flex-shrink: 0;
   border-bottom: 1px solid var(--el-border-color-lighter);
   background: var(--el-bg-color);
@@ -67,10 +72,19 @@ const isValidatorsPage = computed(() => route.path.endsWith('/validators'))
 
 .context-left {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
   flex: 1;
   min-width: 0;
+  overflow: hidden;
+  padding: 6px 0;
+}
+
+.project-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   overflow: hidden;
 }
 
@@ -78,6 +92,15 @@ const isValidatorsPage = computed(() => route.path.endsWith('/validators'))
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--el-text-color-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-description {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--el-text-color-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

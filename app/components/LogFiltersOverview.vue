@@ -126,18 +126,19 @@ const sections = computed(() => [
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 10px 1.25rem;
+  padding: 10px 1.25rem 10px 0;
   border-bottom: 1px solid var(--el-border-color-lighter);
   background: var(--el-fill-color-extra-light);
   flex-shrink: 0;
   max-height: 220px;
+  overflow-x: hidden;
   overflow-y: auto;
 }
 
 .overview-section {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: 16px;
 }
 
 .section-label {
@@ -163,7 +164,7 @@ const sections = computed(() => [
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 16px;
 }
 
 .chip-badge {
