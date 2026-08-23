@@ -8,8 +8,7 @@ ENV NODE_ENV=development
 
 WORKDIR /src
 
-COPY package.json .
-RUN corepack enable && corepack install
+RUN corepack enable
 
 # Build
 FROM base AS build
