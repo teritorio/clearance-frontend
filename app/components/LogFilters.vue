@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Action } from '@teritorio/openstreetmap-logical-history-component'
 import type { LocationQuery } from 'vue-router'
-import type { ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
+import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
 import { countBy, indexBy, sortBy, uniq } from 'underscore'
 import { getAfterDates, getAfterUsers } from '~/composables/useChangesLogs'
 
@@ -18,7 +18,11 @@ watchEffect(() => {
   filters.value = route.query
 })
 
-const groups = (loCha: ClearanceLoChaData) => loCha.metadata.links
+function groups(loCha: ClearanceLoChaData) {
+  return Array.isArray(loCha.metadata.links)
+    ? loCha.metadata.links
+    : Object.values(loCha.metadata.links as unknown as Record<string, ClearanceApiLink[]>)
+}
 
 const stats = computed(() => {
   const actions = props.loChas

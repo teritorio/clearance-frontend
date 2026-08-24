@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Action } from '@teritorio/openstreetmap-logical-history-component'
-import type { ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
+import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
 import { countBy, indexBy, sortBy, uniq } from 'underscore'
 import { getAfterDates, getAfterUsers } from '~/composables/useChangesLogs'
 
@@ -11,7 +11,11 @@ const props = defineProps<{
 const route = useRoute()
 const router = useRouter()
 
-const groups = (loCha: ClearanceLoChaData) => loCha.metadata.links
+function groups(loCha: ClearanceLoChaData) {
+  return Array.isArray(loCha.metadata.links)
+    ? loCha.metadata.links
+    : Object.values(loCha.metadata.links as unknown as Record<string, ClearanceApiLink[]>)
+}
 
 function getStats<Type>(data: Type[], key: (o: Type) => string = (i) => `${i}`): [Type, number][] {
   const index = indexBy(data, key)
