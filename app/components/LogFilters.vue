@@ -172,6 +172,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       size="default"
       class="filter-select" :class="[{ 'is-active': selectedUser !== null }]"
       filterable
+      style="width: 150px"
       :placeholder="$t('logs.filterUsers')"
     >
       <template #prefix>
@@ -265,6 +266,17 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
 :deep(.el-select-dropdown__item) {
   display: flex;
   align-items: center;
+}
+
+:deep(.el-select-dropdown__item.is-selected),
+:deep(.el-select-dropdown__item.is-selected:hover) {
+  background-color: var(--el-color-primary-light-9);
+  color: var(--el-color-primary);
+}
+
+:deep(.el-select-dropdown__item.is-selected .option-label),
+:deep(.el-select-dropdown__item.is-selected:hover .option-label) {
+  color: var(--el-color-primary);
 }
 
 .reset-btn {

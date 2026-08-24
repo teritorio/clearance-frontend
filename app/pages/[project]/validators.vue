@@ -70,7 +70,12 @@ const lastUpdateTitle = computed(() => {
 // Cache URL → Promise<string[]> pour dédupliquer les fetches (plusieurs groupes partagent souvent la même URL osm_tags)
 const osmTagsCache = new Map<string, Promise<string[]>>()
 
+const MOCK_OSM_TAGS = false // set to true to bypass CORS for UI testing
+
 function fetchOsmTagsSelects(url: string): Promise<string[]> {
+  if (MOCK_OSM_TAGS) {
+    return Promise.resolve(['amenity=restaurant', 'amenity=cafe', 'shop=supermarket', 'tourism=hotel'])
+  }
   if (!osmTagsCache.has(url)) {
     osmTagsCache.set(url, fetch(url)
       .then((r) => r.ok ? r.json() : [])

@@ -129,28 +129,45 @@ const groups = computed(() =>
       <div v-if="!mapLoaded && showMap !== false" class="map-skeleton" />
       <div ref="mapContainer" class="map" :class="{ 'map-hidden': !mapLoaded }" />
     </div>
-    <ul class="group-list" :class="[{ 'with-selectors': showSelectors }]">
-      <li v-for="(group, index) in groups" :key="index" class="group-row">
-        <span class="group-dot-cell"><span class="group-dot" :style="{ background: group.color }" /></span>
-        <span class="group-name">{{ useI18nHash(group.title) }}</span>
-        <span class="group-users">
-          <a
-            v-for="user in group.users"
-            :key="user"
-            :href="`https://www.openstreetmap.org/user/${user}`"
-            target="_blank"
-            class="user-chip"
-          >{{ user }}</a>
-        </span>
-        <span v-if="showSelectors" class="group-selects">
-          <code
-            v-for="sel in (group.select ?? [])"
-            :key="sel"
-            class="selector-chip"
-          >{{ sel }}</code>
-        </span>
-      </li>
-    </ul>
+    <el-table :data="groups" stripe size="small" style="width: 100%">
+      <!-- Group name -->
+      <el-table-column :label="$t('project.user_group_label')" min-width="180">
+        <template #default="{ row }">
+          <span class="group-name-cell">
+            <span class="group-dot" :style="{ background: row.color }" />
+            {{ useI18nHash(row.title) }}
+          </span>
+        </template>
+      </el-table-column>
+
+      <!-- Users -->
+      <el-table-column :label="$t('project.user_group_users')" min-width="220">
+        <template #default="{ row }">
+          <div class="chips-cell">
+            <a
+              v-for="user in row.users"
+              :key="user"
+              :href="`https://www.openstreetmap.org/user/${user}`"
+              target="_blank"
+              class="user-chip"
+            >{{ user }}</a>
+          </div>
+        </template>
+      </el-table-column>
+
+      <!-- Selectors -->
+      <el-table-column v-if="showSelectors" :label="$t('validators.osmTags')" min-width="220">
+        <template #default="{ row }">
+          <div class="chips-cell">
+            <code
+              v-for="sel in (row.select ?? [])"
+              :key="sel"
+              class="selector-chip"
+            >{{ sel }}</code>
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -165,40 +182,11 @@ const groups = computed(() =>
   gap: 0.5rem;
 }
 
-.group-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: 20px minmax(120px, 200px) 1fr;
-  gap: 2px 0;
-  font-size: 0.8rem;
-}
-
-.group-list.with-selectors {
-  grid-template-columns: 20px minmax(120px, 200px) 1fr 1fr;
-}
-
-.group-row {
-  display: contents;
-}
-
-.group-row:nth-child(odd) .group-dot-cell,
-.group-row:nth-child(odd) .group-name,
-.group-row:nth-child(odd) .group-users {
-  background: var(--el-fill-color-lighter);
-}
-
-.with-selectors .group-row:nth-child(odd) .group-selects {
-  background: var(--el-fill-color-lighter);
-}
-
-.group-dot-cell {
+.group-name-cell {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 5px 4px 5px 8px;
-  border-radius: 6px 0 0 6px;
+  gap: 8px;
+  font-weight: 500;
 }
 
 .group-dot {
@@ -209,34 +197,10 @@ const groups = computed(() =>
   flex-shrink: 0;
 }
 
-.group-name {
+.chips-cell {
   display: flex;
-  align-items: center;
-  padding: 5px 8px;
-  font-weight: 500;
-  color: var(--el-text-color-primary);
-}
-
-.group-users {
-  display: flex;
-  align-items: center;
   flex-wrap: wrap;
   gap: 4px;
-  padding: 5px 8px 5px 0;
-  border-radius: 0 6px 6px 0;
-}
-
-.with-selectors .group-users {
-  border-radius: 0;
-}
-
-.group-selects {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 4px;
-  padding: 5px 8px 5px 0;
-  border-radius: 0 6px 6px 0;
 }
 
 .selector-chip {
