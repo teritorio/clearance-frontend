@@ -64,10 +64,10 @@ const lastUpdateTitle = computed(() => {
                 <span v-if="project.to_be_validated" class="stat-badge stat-pending" :title="$t('project.toBeValidated')">
                   <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
                 </span>
+                <nuxt-link :to="`/${project.id}/validators`" class="settings-icon" :title="$t('project.settings')">
+                  <el-icon><Setting /></el-icon>
+                </nuxt-link>
               </div>
-              <nuxt-link :to="`/${project.id}/validators`" class="settings-icon" :title="$t('project.settings')">
-                <el-icon><Setting /></el-icon>
-              </nuxt-link>
             </div>
           </div>
           <button class="card-footer" @click="expanded = !expanded">
