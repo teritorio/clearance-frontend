@@ -178,7 +178,6 @@ const lastUpdateTitle = computed(() => {
   align-items: center;
   gap: 4px;
   flex-shrink: 0;
-  padding-top: 2px;
 }
 
 .stat-badge {
@@ -215,7 +214,6 @@ const lastUpdateTitle = computed(() => {
   font-size: 1.25rem;
   line-height: 1;
   transition: color 0.15s;
-  padding-top: 2px;
 }
 
 .settings-icon:hover {
