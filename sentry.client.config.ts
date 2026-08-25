@@ -18,5 +18,11 @@ else {
       blockAllMedia: false,
     })],
     enableLogs: true,
+    beforeSend(event) {
+      if (event.exception?.values?.some((e) => e.value?.includes(' 404'))) {
+        return null
+      }
+      return event
+    },
   })
 }
