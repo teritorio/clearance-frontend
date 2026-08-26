@@ -78,7 +78,9 @@ const lastUpdateTitle = computed(() => {
           <span v-if="project.to_be_validated" class="card-next-count">
             <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
           </span>
-          <el-icon><ArrowRight /></el-icon>
+          <el-icon class="card-next-arrow">
+            <ArrowRight />
+          </el-icon>
         </nuxt-link>
       </div>
     </template>
@@ -217,18 +219,16 @@ const lastUpdateTitle = computed(() => {
 
 .card-next {
   flex-shrink: 0;
-  min-width: 48px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 2px;
   border-left: 1px solid var(--el-border-color-lighter);
   color: var(--el-text-color-secondary);
   text-decoration: none;
-  font-size: 1.1rem;
   transition: background 0.15s, color 0.15s;
-  padding: 0 8px;
+  padding: 0 10px;
 }
 
 .card-next--pending {
@@ -246,8 +246,12 @@ const lastUpdateTitle = computed(() => {
   display: flex;
   align-items: center;
   gap: 3px;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 700;
+}
+
+.card-next-arrow {
+  font-size: 1.1rem;
 }
 
 .card-footer {
