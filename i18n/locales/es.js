@@ -88,10 +88,10 @@ export default {
     logout: 'Cerrar sesión',
   },
   validators: {
-    validatorId: 'Validator ID',
+    name: 'Nombre',
     action: 'Acción',
     description: 'Descripción',
-    other: 'Otro',
+    others: 'Otros',
     search: 'Buscar por categoría o fuente…',
     filterGroup: 'Filtrar por grupo',
     category: 'Categoría',

@@ -88,10 +88,10 @@ export default {
     logout: 'Logout',
   },
   validators: {
-    validatorId: 'Validator ID',
+    name: 'Name',
     action: 'Action',
     description: 'Description',
-    other: 'Other',
+    others: 'Others',
     search: 'Search by category or source…',
     filterGroup: 'Filter by group',
     category: 'Category',

@@ -1,5 +1,3 @@
-import type { ActionType } from '@teritorio/openstreetmap-logical-history-component'
-
 export type ObjType = 'n' | 'w' | 'r'
 export type ObjTypeFull = 'node' | 'way' | 'relation'
 
@@ -52,24 +50,26 @@ export interface User {
   projects: string[]
 }
 
-export interface Validator {
-  [key: string]: any
-
-  action: ActionType
-  action_force: ActionType
-  description: string
+export interface ValidatorConfig {
+  instance?: string
+  action?: 'accept' | 'reject'
+  action_force?: 'accept' | 'reject'
+  reject?: string
+  accept?: string
+  description?: string
+  [key: string]: unknown
 }
 
-export type Validators = Record<string, Validator>
+export type Validators = Record<string, ValidatorConfig>
 
 export function getValidators(
   apiEndpoint: string,
   project: string,
-): Promise<Validator> {
+): Promise<Validators> {
   return fetch(`${apiEndpoint}/projects/${project}/validators/`).then(
     (data) => {
       if (data.ok) {
-        return data.json() as unknown as Validator
+        return data.json() as unknown as Validators
       }
       else {
         return Promise.reject(
