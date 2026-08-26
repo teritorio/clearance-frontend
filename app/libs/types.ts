@@ -50,17 +50,20 @@ export interface User {
   projects: string[]
 }
 
-export interface ValidatorConfig {
-  instance?: string
-  action?: 'accept' | 'reject'
-  action_force?: 'accept' | 'reject'
-  reject?: string
-  accept?: string
-  description?: string
-  [key: string]: unknown
+export interface ValidatorSettings {
+  id: string
+  description: string | null
+  global_osm_tags_matches: Record<string, unknown> | null
+  specific_osm_tags_matches: Record<string, unknown> | null
 }
 
-export type Validators = Record<string, ValidatorConfig>
+export interface ValidatorItem {
+  settings: ValidatorSettings
+  action_force: boolean | null
+  action: [string, 'accept' | 'reject', null] | null
+}
+
+export type Validators = ValidatorItem[]
 
 export function getValidators(
   apiEndpoint: string,
