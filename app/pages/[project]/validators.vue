@@ -124,10 +124,10 @@ watch(
     />
     <el-tabs class="settings-tabs">
       <el-tab-pane :label="$t('validators.tabValidators')">
-        <LazyUserGroups v-if="enrichedUserGroups.length" :user-groups="enrichedUserGroups" :show-selectors="true" :show-map="false" />
+        <Validators v-if="validators" :validators="validators" />
       </el-tab-pane>
       <el-tab-pane :label="$t('validators.groups')">
-        <Validators v-if="validators" :validators="validators" />
+        <LazyUserGroups v-if="enrichedUserGroups.length" :user-groups="enrichedUserGroups" :show-selectors="true" :show-map="false" />
       </el-tab-pane>
     </el-tabs>
   </el-main>
