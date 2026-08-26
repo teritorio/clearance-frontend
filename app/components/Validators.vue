@@ -78,7 +78,7 @@ function actionTagType(key: string, value: string) {
 
     <el-table-column :label="$t('validators.others')" min-width="220">
       <template #default="{ row }">
-        <pre v-if="row.others" class="others-json">{{ JSON.stringify(row.others, null, 2) }}</pre>
+        <textarea v-if="row.others" :value="JSON.stringify(row.others, null, 2)" class="others-textarea" readonly />
       </template>
     </el-table-column>
   </el-table>
@@ -123,13 +123,18 @@ function actionTagType(key: string, value: string) {
   color: var(--el-text-color-regular);
 }
 
-.others-json {
-  margin: 0;
+.others-textarea {
+  width: 100%;
+  max-height: 120px;
   font-family: ui-monospace, monospace;
   font-size: 0.7rem;
   color: var(--el-text-color-secondary);
-  white-space: pre-wrap;
-  word-break: break-all;
+  background: var(--el-fill-color-light);
+  border: 1px solid var(--el-border-color-lighter);
+  border-radius: 4px;
+  padding: 4px 6px;
+  resize: vertical;
+  box-sizing: border-box;
 }
 
 :deep(.el-table__cell) {
