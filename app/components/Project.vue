@@ -61,9 +61,6 @@ const lastUpdateTitle = computed(() => {
                 <span v-if="lastUpdateCompact" class="stat-badge stat-time" :title="lastUpdateTitle">
                   <el-icon><Clock /></el-icon>{{ lastUpdateCompact }}
                 </span>
-                <span v-if="project.to_be_validated" class="stat-badge stat-pending" :title="$t('project.toBeValidated')">
-                  <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
-                </span>
                 <nuxt-link :to="`/${project.id}/validators`" class="settings-icon" :title="$t('project.settings')">
                   <el-icon><Setting /></el-icon>
                 </nuxt-link>
@@ -77,7 +74,10 @@ const lastUpdateTitle = computed(() => {
             {{ $t('project.seeMore') }}
           </button>
         </div>
-        <nuxt-link :to="`/${project.id}/changes_logs`" class="card-next" :title="$t('project.details')">
+        <nuxt-link :to="`/${project.id}/changes_logs`" class="card-next" :class="{ 'card-next--pending': project.to_be_validated }" :title="$t('project.details')">
+          <span v-if="project.to_be_validated" class="card-next-count">
+            <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
+          </span>
           <el-icon><ArrowRight /></el-icon>
         </nuxt-link>
       </div>
@@ -202,11 +202,6 @@ const lastUpdateTitle = computed(() => {
   background: var(--el-color-info-light-9);
 }
 
-.stat-pending {
-  color: var(--el-color-primary);
-  background: var(--el-color-primary-light-9);
-}
-
 .settings-icon {
   flex-shrink: 0;
   color: var(--el-text-color-placeholder);
@@ -222,20 +217,37 @@ const lastUpdateTitle = computed(() => {
 
 .card-next {
   flex-shrink: 0;
-  width: 48px;
+  min-width: 48px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   border-left: 1px solid var(--el-border-color-lighter);
   color: var(--el-text-color-secondary);
   text-decoration: none;
   font-size: 1.1rem;
   transition: background 0.15s, color 0.15s;
+  padding: 0 8px;
+}
+
+.card-next--pending {
+  background: var(--el-color-primary-light-9);
+  color: var(--el-color-primary);
+  border-left-color: var(--el-color-primary-light-7);
 }
 
 .card-next:hover {
-  background: var(--el-color-primary-light-9);
+  background: var(--el-color-primary-light-8);
   color: var(--el-color-primary);
+}
+
+.card-next-count {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.85rem;
+  font-weight: 700;
 }
 
 .card-footer {
