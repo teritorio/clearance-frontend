@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Action, IFeature } from '@teritorio/openstreetmap-logical-history-component'
 import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
+import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
 import dayjs from 'dayjs'
 import en from 'dayjs/locale/en-gb'
@@ -32,6 +33,7 @@ const user = useUser()
 const { data, status } = useChangesLogs(projectSlug)
 const pendingAcceptIds = ref(new Set<number>())
 const pendingAcceptGroupKeys = ref(new Set<string>())
+const showOverview = ref(true)
 
 const lastUpdateCompact = computed(() => {
   const dateStr = data.value?.project.date_last_update
@@ -351,8 +353,13 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
             @bulk-validation="handleAccept"
           />
           <log-filters :lo-chas="data.loChas" />
+          <el-button text size="small" @click="showOverview = !showOverview">
+            {{ $t('logs.overview') }}<el-icon class="el-icon--right">
+              <ArrowUp v-if="showOverview" /><ArrowDown v-else />
+            </el-icon>
+          </el-button>
         </div>
-        <log-filters-overview :lo-chas="data.loChas" />
+        <log-filters-overview v-if="showOverview" :lo-chas="data.loChas" />
         <template v-if="loChasWithFilter.length">
           <el-space fill :size="20">
             <el-card
