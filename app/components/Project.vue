@@ -220,15 +220,15 @@ const lastUpdateTitle = computed(() => {
 .card-next {
   flex-shrink: 0;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 4px;
   border-left: 1px solid var(--el-border-color-lighter);
   color: var(--el-text-color-secondary);
   text-decoration: none;
   transition: background 0.15s, color 0.15s;
-  padding: 0 10px;
+  width: 72px;
 }
 
 .card-next--pending {

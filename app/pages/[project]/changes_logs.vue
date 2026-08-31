@@ -33,7 +33,7 @@ const user = useUser()
 const { data, status } = useChangesLogs(projectSlug)
 const pendingAcceptIds = ref(new Set<number>())
 const pendingAcceptGroupKeys = ref(new Set<string>())
-const showOverview = ref(true)
+const showOverview = ref(false)
 
 const lastUpdateCompact = computed(() => {
   const dateStr = data.value?.project.date_last_update
@@ -360,6 +360,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
           </el-button>
         </div>
         <log-filters-overview v-if="showOverview" :lo-chas="data.loChas" />
+        <el-divider />
         <template v-if="loChasWithFilter.length">
           <el-space fill :size="20">
             <el-card
