@@ -15,7 +15,6 @@ import _ from 'underscore'
 const props = defineProps<{
   userGroups: UserGroup[]
   showMap?: boolean
-  showSelectors?: boolean
 }>()
 
 const runtimeConfig = useRuntimeConfig()
@@ -154,19 +153,6 @@ const groups = computed(() =>
           </div>
         </template>
       </el-table-column>
-
-      <!-- Selectors -->
-      <el-table-column v-if="showSelectors" :label="$t('validators.osmTags')" min-width="220">
-        <template #default="{ row }">
-          <div class="chips-cell">
-            <code
-              v-for="sel in (row.select ?? [])"
-              :key="sel"
-              class="selector-chip"
-            >{{ sel }}</code>
-          </div>
-        </template>
-      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -201,17 +187,6 @@ const groups = computed(() =>
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-}
-
-.selector-chip {
-  display: inline-block;
-  padding: 1px 6px;
-  border-radius: 4px;
-  background: var(--el-fill-color-dark);
-  color: var(--el-text-color-regular);
-  font-family: ui-monospace, monospace;
-  font-size: 0.72rem;
-  white-space: nowrap;
 }
 
 .user-chip {

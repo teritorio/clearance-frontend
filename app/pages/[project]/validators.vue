@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type {
   InitializedProject,
-  UserGroup,
   Validators as ValidatorsType,
 } from '~/libs/types'
 import dayjs from 'dayjs'
@@ -67,50 +66,7 @@ const lastUpdateTitle = computed(() => {
   return dayjs(dateStr).locale(locale.value).fromNow()
 })
 
-// Cache URL → Promise<string[]> pour dédupliquer les fetches (plusieurs groupes partagent souvent la même URL osm_tags)
-const osmTagsCache = new Map<string, Promise<string[]>>()
-
-const MOCK_OSM_TAGS = false // set to true to bypass CORS for UI testing
-
-function fetchOsmTagsSelects(url: string): Promise<string[]> {
-  if (MOCK_OSM_TAGS) {
-    return Promise.resolve(['amenity=restaurant', 'amenity=cafe', 'shop=supermarket', 'tourism=hotel'])
-  }
-  if (!osmTagsCache.has(url)) {
-    osmTagsCache.set(url, fetch(url)
-      .then((r) => r.ok ? r.json() : [])
-      .then((entries: Array<{ select?: string[] }>) => entries.flatMap((e) => e.select ?? []))
-      .catch(() => []))
-  }
-  return osmTagsCache.get(url)!
-}
-
-const enrichedUserGroups = ref<UserGroup[]>([])
-
-watch(
-  () => projectDetails.value?.user_groups,
-  async (userGroupsMap) => {
-    if (!userGroupsMap) {
-      enrichedUserGroups.value = []
-      return
-    }
-    const groups = Object.values(userGroupsMap)
-    enrichedUserGroups.value = await Promise.all(
-      groups.map(async (group) => {
-        // L'API injecte déjà les selects → pas besoin de fetcher
-        if (group.select?.length) {
-          return group
-        }
-        if (!group.osm_tags) {
-          return group
-        }
-        const select = await fetchOsmTagsSelects(group.osm_tags)
-        return { ...group, select }
-      }),
-    )
-  },
-  { immediate: true },
-)
+const userGroups = computed(() => Object.values(projectDetails.value?.user_groups ?? {}))
 </script>
 
 <template>
@@ -127,7 +83,7 @@ watch(
         <Validators v-if="validators" :validators="validators" />
       </el-tab-pane>
       <el-tab-pane :label="$t('validators.groups')">
-        <LazyUserGroups v-if="enrichedUserGroups.length" :user-groups="enrichedUserGroups" :show-selectors="true" :show-map="false" />
+        <LazyUserGroups v-if="userGroups.length" :user-groups="userGroups" :show-map="false" />
       </el-tab-pane>
     </el-tabs>
   </el-main>
