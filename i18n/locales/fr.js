@@ -47,7 +47,7 @@ export default {
     filterAction: 'Action',
     filterUserGroups: 'Groupes',
     filterSelectors: 'Sélecteurs',
-    filterUsers: 'Utilisateurs',
+    filterUsers: 'Contributeurs',
     filterDates: 'Dates',
     resetFilters: 'Réinitialiser les filtres',
     overview: 'Vue globale',

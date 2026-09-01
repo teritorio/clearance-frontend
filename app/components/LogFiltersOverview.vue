@@ -86,7 +86,7 @@ const sections = computed(() => [
   { key: 'filterByAction', label: 'Action', icon: '⚡', type: 'danger' as TagType, extraClass: '', items: statActions.value.map(([v, c]) => ({ value: v as string, count: c })) },
   { key: 'filterByUserGroups', label: 'Groups', icon: '📌', type: 'primary' as TagType, extraClass: '', items: statUserGroups.value.map(([v, c]) => ({ value: v as string, count: c })) },
   { key: 'filterBySelectors', label: 'Selectors', icon: '🏷️', type: 'warning' as TagType, extraClass: '', items: statSelectors.value.map(([m, c]) => ({ value: (m as ClearanceMatch).selectors.join(';'), label: (m as ClearanceMatch).selectors.join(' '), count: c })) },
-  { key: 'filterByUsers', label: 'Users', icon: '👤', type: 'info' as TagType, extraClass: '', items: statUsers.value.map(([v, c]) => ({ value: v as string, count: c })) },
+  { key: 'filterByUsers', label: 'Contributors', icon: '👤', type: 'info' as TagType, extraClass: '', items: statUsers.value.map(([v, c]) => ({ value: v as string, count: c })) },
   { key: 'filterByDate', label: 'Dates', icon: '📅', type: 'info' as TagType, extraClass: 'chip--date', items: statDates.value.map(([v, c]) => ({ value: v as string, count: c })) },
 ].filter((s) => s.items.length > 0))
 </script>
@@ -155,7 +155,7 @@ const sections = computed(() => [
   letter-spacing: 0.05em;
   color: var(--el-text-color-placeholder);
   white-space: nowrap;
-  min-width: 80px;
+  min-width: 130px;
   padding-top: 4px;
 }
 

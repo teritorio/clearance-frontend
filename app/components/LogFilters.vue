@@ -176,7 +176,6 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       size="default"
       class="filter-select" :class="[{ 'is-active': selectedUser !== null }]"
       filterable
-      style="width: 150px"
       :placeholder="$t('logs.filterUsers')"
     >
       <template #prefix>
@@ -238,7 +237,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
 
 .filter-select {
   width: auto;
-  min-width: 150px;
+  min-width: 165px;
   max-width: 280px;
 }
 
