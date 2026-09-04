@@ -57,10 +57,16 @@ export interface ValidatorSettings {
   specific_osm_tags_matches: Record<string, unknown> | null
 }
 
+export interface ValidatorAction {
+  validator_id: string
+  action: 'accept' | 'reject'
+  force: boolean
+  options: unknown | null
+}
+
 export interface ValidatorItem {
   settings: ValidatorSettings
-  action_force: boolean | null
-  action: [string, 'accept' | 'reject', null] | null
+  actions: ValidatorAction[] | null
 }
 
 export type Validators = ValidatorItem[]

@@ -8,8 +8,7 @@ const props = defineProps<{
 const rows = computed(() =>
   props.validators.map((item) => ({
     id: item.settings.id,
-    actionType: item.action ? item.action[1] : null,
-    actionForce: item.action_force,
+    actions: item.actions ?? [],
     description: item.settings.description,
   })),
 )
@@ -23,25 +22,27 @@ const rows = computed(() =>
       </template>
     </el-table-column>
 
-    <el-table-column :label="$t('validators.action')" min-width="160">
+    <el-table-column :label="$t('validators.action')" min-width="200">
       <template #default="{ row }">
-        <div class="action-cell">
-          <el-tag
-            v-if="row.actionType"
-            :type="row.actionType === 'accept' ? 'success' : 'danger'"
-            size="small"
-            class="action-tag"
-          >
-            {{ row.actionType }}
-          </el-tag>
-          <el-tag
-            v-if="row.actionForce"
-            type="warning"
-            size="small"
-            class="action-tag"
-          >
-            forced
-          </el-tag>
+        <div class="actions-cell">
+          <div v-for="action in row.actions" :key="action.validator_id" class="action-row">
+            <el-tag
+              :type="action.action === 'accept' ? 'success' : 'danger'"
+              size="small"
+              class="action-tag"
+            >
+              {{ action.action }}
+            </el-tag>
+            <el-tag
+              v-if="action.force"
+              type="warning"
+              size="small"
+              class="action-tag"
+            >
+              forced
+            </el-tag>
+            <span class="action-validator-id">{{ action.validator_id }}</span>
+          </div>
         </div>
       </template>
     </el-table-column>
@@ -62,15 +63,28 @@ const rows = computed(() =>
   color: var(--el-text-color-primary);
 }
 
-.action-cell {
+.actions-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.action-row {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 4px;
 }
 
 .action-tag {
   font-family: ui-monospace, monospace;
   font-size: 0.72rem;
+}
+
+.action-validator-id {
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: var(--el-text-color-secondary);
 }
 
 .description-text {
