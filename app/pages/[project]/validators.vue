@@ -78,6 +78,7 @@ const userGroups = computed(() => Object.values(projectDetails.value?.user_group
       :last-update-compact="lastUpdateCompact"
       :last-update-title="lastUpdateTitle"
     />
+    <div v-else class="context-bar-placeholder" />
     <el-tabs class="settings-tabs">
       <el-tab-pane :label="$t('validators.tabValidators')">
         <Validators v-if="validators" :validators="validators" />
@@ -95,6 +96,12 @@ const userGroups = computed(() => Object.values(projectDetails.value?.user_group
   flex-direction: column;
   overflow: hidden;
   padding: 0;
+}
+
+.context-bar-placeholder {
+  min-height: 48px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--el-border-color-lighter);
 }
 
 .settings-tabs {

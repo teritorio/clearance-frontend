@@ -344,6 +344,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
       :last-update-compact="lastUpdateCompact"
       :last-update-title="lastUpdateTitle"
     />
+    <div v-else class="context-bar-placeholder" />
     <el-container v-if="data && status === 'success'" direction="vertical" class="changes-container">
       <div class="locha-list">
         <div class="filter-bar">
@@ -519,6 +520,12 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   flex-direction: column;
   min-height: 0;
   padding: 0;
+}
+
+.context-bar-placeholder {
+  min-height: 48px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--el-border-color-lighter);
 }
 
 :deep(.changes-container) {
