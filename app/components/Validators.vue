@@ -41,7 +41,7 @@ const rows = computed(() =>
             >
               forced
             </el-tag>
-            <span class="action-validator-id">{{ action.validator_id }}</span>
+            <span v-if="action.validator_id !== row.id" class="action-validator-id">{{ action.validator_id }}</span>
           </div>
         </div>
       </template>
