@@ -17,23 +17,35 @@ watch(data, (val) => {
   admin.value = val?.admin ?? null
   projects.value = val?.projects ?? []
 }, { immediate: true })
+
+const { isLoading } = useLoadingIndicator()
 </script>
 
 <template>
   <nuxt-loading-indicator :height="5" />
-  <nuxt-layout>
-    <el-container direction="vertical">
-      <app-menu />
-      <nuxt-page />
-      <app-footer />
-    </el-container>
-  </nuxt-layout>
+  <div
+    v-loading.lock="isLoading"
+    :element-loading-text="$t('common.loading')"
+    class="app-wrapper"
+  >
+    <nuxt-layout>
+      <el-container direction="vertical">
+        <app-menu />
+        <nuxt-page />
+        <app-footer />
+      </el-container>
+    </nuxt-layout>
+  </div>
 </template>
 
 <style>
 body {
   margin: 0;
   font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.app-wrapper {
+  min-height: 100vh;
 }
 
 .el-container {
