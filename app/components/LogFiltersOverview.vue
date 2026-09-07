@@ -84,7 +84,7 @@ type TagType = 'primary' | 'success' | 'warning' | 'danger' | 'info'
 
 const sections = computed(() => [
   { key: 'filterByAction', label: 'Action', icon: '⚡', type: 'danger' as TagType, extraClass: '', items: statActions.value.map(([v, c]) => ({ value: v as string, count: c })) },
-  { key: 'filterByUserGroups', label: 'Groups', icon: '📌', type: 'primary' as TagType, extraClass: '', items: statUserGroups.value.map(([v, c]) => ({ value: v as string, count: c })) },
+  { key: 'filterByUserGroups', label: 'Groups', icon: '🗺️', type: 'primary' as TagType, extraClass: '', items: statUserGroups.value.map(([v, c]) => ({ value: v as string, count: c })) },
   { key: 'filterBySelectors', label: 'Selectors', icon: '🏷️', type: 'warning' as TagType, extraClass: '', items: statSelectors.value.map(([m, c]) => ({ value: (m as ClearanceMatch).selectors.join(';'), label: (m as ClearanceMatch).selectors.join(' '), count: c })) },
   { key: 'filterByUsers', label: 'Contributors', icon: '👤', type: 'info' as TagType, extraClass: '', items: statUsers.value.map(([v, c]) => ({ value: v as string, count: c })) },
   { key: 'filterByDate', label: 'Dates', icon: '📅', type: 'info' as TagType, extraClass: 'chip--date', items: statDates.value.map(([v, c]) => ({ value: v as string, count: c })) },

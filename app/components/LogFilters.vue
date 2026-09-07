@@ -134,7 +134,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       :placeholder="$t('logs.filterUserGroups')"
     >
       <template #prefix>
-        📌
+        🗺️
       </template>
       <el-option
         v-for="[key, count] in statUserGroups"
