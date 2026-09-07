@@ -25,7 +25,7 @@ function actionPriority(actionType: ActionType | null): number {
 }
 
 function maxActionPriority(actions: Action[]): number {
-  return Math.max(...actions.map((action) => actionPriority(action[1])))
+  return Math.max(...actions.map((action) => actionPriority(action.action)))
 }
 
 const groupedTagKeys = computed((): string[][] => {
@@ -40,7 +40,7 @@ const groupedTagKeys = computed((): string[][] => {
   return Object.values(
     groupBy(
       keys,
-      (key) => props.diff?.[key]?.map((diff) => `${diff}`).join('||') || '',
+      (key) => props.diff?.[key]?.map((a) => `${a.validator_id}:${a.action}`).join('||') || '',
     ),
   )
 })
@@ -82,7 +82,7 @@ function isRejected(key: string): boolean {
   if (!actions || !actions[0]) {
     return false
   }
-  return actions[0][1] === 'reject'
+  return actions[0].action === 'reject'
 }
 
 function getRowClass(key: string): string | undefined {
@@ -133,27 +133,27 @@ function diffText(before: string, after: string): Change[] {
                 <template v-else>
                   <template v-for="(action, actionIndex) in actions" :key="actionIndex">
                     <el-dropdown
-                      v-if="action[2]"
+                      v-if="action.options"
                       :show-timeout="0"
                       class="action-tag"
                     >
                       <span class="el-dropdown-link">
                         <el-badge
-                          :value="Object.keys(action[2]).length || undefined"
-                          :type="action[1] === 'reject' ? 'danger' : 'info'"
+                          :value="Object.keys(action.options).length || undefined"
+                          :type="action.action === 'reject' ? 'danger' : 'info'"
                         >
                           <el-tag
-                            :type="action[1] === 'reject' ? 'danger' : 'info'"
+                            :type="action.action === 'reject' ? 'danger' : 'info'"
                             size="small"
                             :disable-transitions="true"
                           >
-                            {{ action[0] }} ⮟
+                            {{ action.validator_id }} ⮟
                           </el-tag>
                         </el-badge>
                       </span>
                       <template #dropdown>
                         <el-dropdown-menu>
-                          <el-dropdown-item v-for="(option, i) in action[2]" :key="i">
+                          <el-dropdown-item v-for="(option, i) in action.options" :key="i">
                             {{ i }}
                             <template v-if="Array.isArray(option)">
                               <ul>
@@ -171,12 +171,12 @@ function diffText(before: string, after: string): Change[] {
                     </el-dropdown>
                     <el-tag
                       v-else
-                      :type="action[1] === 'reject' ? 'danger' : 'info'"
+                      :type="action.action === 'reject' ? 'danger' : 'info'"
                       size="small"
                       :disable-transitions="true"
                       class="action-tag"
                     >
-                      {{ action[0] }}
+                      {{ action.validator_id }}
                     </el-tag>
                   </template>
                 </template>

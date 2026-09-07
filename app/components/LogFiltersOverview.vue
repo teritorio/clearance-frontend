@@ -32,7 +32,7 @@ const statActions = computed(() => {
         group.flatMap((link) => [
           ...Object.values(link.diff_attribs || {}),
           ...Object.values(link.diff_tags || {}),
-        ]).flat().map((action: Action) => action[0]),
+        ]).flat().map((action: Action) => action.validator_id),
       ),
     ),
   )

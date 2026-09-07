@@ -35,7 +35,7 @@ const stats = computed(() => {
               ...Object.values(link.diff_tags || {}),
             ])
             .flat()
-            .map((action: Action) => action[0]),
+            .map((action: Action) => action.validator_id),
         ),
       ),
     )
