@@ -483,7 +483,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                     type="primary"
                     class="match-tag match-tag--group"
                   >
-                    📌 {{ useI18nHash(data?.project.user_groups[userGroup]?.title) ?? userGroup }}
+                    🗺️ {{ useI18nHash(data?.project.user_groups[userGroup]?.title) ?? userGroup }}
                   </el-tag>
                   <el-tag
                     v-for="match in uniqMatches((loCha.metadata.links[groupIndex] ?? []) as ClearanceApiLink[])"
