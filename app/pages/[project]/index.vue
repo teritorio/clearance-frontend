@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import type { InitializedProject } from '~/libs/types'
 import ProjectCompo from '~/components/Project.vue'
-import {
-  getAsyncDataOrThrows,
-  setAsyncRef,
-} from '~/libs/getAsyncData'
 import { getProject } from '~/libs/types'
 
 definePageMeta({
@@ -16,15 +12,22 @@ definePageMeta({
 
 const params = useRoute().params
 const project: string = params.project as string
-const projectDetails = ref<InitializedProject>()
 const config = useRuntimeConfig()
 
-getAsyncDataOrThrows('fetchProject', () =>
-  getProject(config.public.api, project)).then(setAsyncRef(projectDetails))
+const { data: projectDetails, status } = useAsyncData<InitializedProject>(
+  'fetchProject',
+  () => getProject(config.public.api, project),
+)
 </script>
 
 <template>
   <el-main>
     <ProjectCompo v-if="projectDetails" :project="projectDetails" />
+    <el-skeleton v-else-if="status === 'pending'" animated class="project-skeleton">
+      <template #template>
+        <el-skeleton-item variant="text" style="width: 40%; height: 22px; margin-bottom: 10px;" />
+        <el-skeleton-item variant="text" style="width: 60%; height: 14px;" />
+      </template>
+    </el-skeleton>
   </el-main>
 </template>

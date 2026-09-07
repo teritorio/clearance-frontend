@@ -9,10 +9,6 @@ import es from 'dayjs/locale/es'
 import fr from 'dayjs/locale/fr'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import {
-  getAsyncDataOrThrows,
-  setAsyncRef,
-} from '~/libs/getAsyncData'
-import {
   getProject,
   getValidators,
 } from '~/libs/types'
@@ -30,15 +26,17 @@ definePageMeta({
 const { locale } = useI18n()
 const route = useRoute()
 const projectSlug = route.params.project as string
-const projectDetails = ref<InitializedProject>()
-const validators = ref<ValidatorsType>()
 const config = useRuntimeConfig()
 
-getAsyncDataOrThrows('fetchProject', () =>
-  getProject(config.public.api, projectSlug)).then(setAsyncRef(projectDetails))
+const { data: projectDetails } = useAsyncData<InitializedProject>(
+  'fetchProject',
+  () => getProject(config.public.api, projectSlug),
+)
 
-getAsyncDataOrThrows('fetchValidators', () =>
-  getValidators(config.public.api, projectSlug)).then(setAsyncRef(validators))
+const { data: validators } = useAsyncData<ValidatorsType>(
+  'fetchValidators',
+  () => getValidators(config.public.api, projectSlug),
+)
 
 const lastUpdateCompact = computed(() => {
   const dateStr = projectDetails.value?.date_last_update
