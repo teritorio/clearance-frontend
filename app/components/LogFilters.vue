@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { Action } from '@teritorio/openstreetmap-logical-history-component'
 import type { LocationQuery } from 'vue-router'
-import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
+import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch, ValidatorAction } from '~/composables/useChangesLogs'
 import { countBy, indexBy, sortBy, uniq } from 'underscore'
 import { getAfterDates, getAfterUsers } from '~/composables/useChangesLogs'
 
@@ -35,7 +34,7 @@ const stats = computed(() => {
               ...Object.values(link.diff_tags || {}),
             ])
             .flat()
-            .map((action: Action) => action.validator_id),
+            .map((action: ValidatorAction) => action.validator_id),
         ),
       ),
     )

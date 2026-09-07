@@ -1,6 +1,8 @@
-import type { ApiLink, IFeature, LoChaData } from '@teritorio/openstreetmap-logical-history-component'
-import type { Changeset, InitializedProject } from '~/libs/types'
+import type { Action, ActionType, ApiLink, IFeature, LoChaData } from '@teritorio/openstreetmap-logical-history-component'
+import type { Changeset, InitializedProject, ValidatorAction } from '~/libs/types'
 import { uniq } from 'underscore'
+
+export type { ValidatorAction } from '~/libs/types'
 
 export interface ClearanceMatch {
   sources: string[]
@@ -8,8 +10,12 @@ export interface ClearanceMatch {
   user_groups: string[]
 }
 
-export interface ClearanceApiLink extends ApiLink {
+export type ValidatorActions = Record<string, ValidatorAction[]>
+
+export interface ClearanceApiLink extends Omit<ApiLink, 'diff_tags' | 'diff_attribs'> {
   matches: ClearanceMatch[]
+  diff_tags?: ValidatorActions
+  diff_attribs?: ValidatorActions
 }
 
 export interface ClearanceIFeature extends IFeature {
@@ -19,7 +25,7 @@ export interface ClearanceIFeature extends IFeature {
   }
 }
 
-export interface ClearanceLoChaData extends LoChaData {
+export interface ClearanceLoChaData extends Omit<LoChaData, 'metadata'> {
   features: ClearanceIFeature[]
   metadata: Omit<LoChaData['metadata'], 'links'> & {
     locha_id: number
@@ -34,6 +40,34 @@ export interface ClearanceLoChaData extends LoChaData {
 type RawClearanceLoChaData = Omit<ClearanceLoChaData, 'metadata'> & {
   metadata: Omit<ClearanceLoChaData['metadata'], 'links' | 'linkSemanticGroups'> & {
     links: Record<string, ClearanceApiLink[]>
+  }
+}
+
+function adaptValidatorActions(raw: ValidatorActions | undefined): Record<string, Action[]> | undefined {
+  if (!raw) {
+    return undefined
+  }
+  return Object.fromEntries(
+    Object.entries(raw).map(([key, actions]) => [
+      key,
+      actions.map((a) => [a.action as ActionType, a.force, a.options ?? null] as unknown as Action),
+    ]),
+  )
+}
+
+export function toLoChaData(loCha: ClearanceLoChaData): LoChaData {
+  return {
+    ...loCha,
+    metadata: {
+      forceMultiColumn: loCha.metadata.forceMultiColumn,
+      links: loCha.metadata.links.map((group) =>
+        group.map((link) => ({
+          ...link,
+          diff_tags: adaptValidatorActions(link.diff_tags),
+          diff_attribs: adaptValidatorActions(link.diff_attribs),
+        })),
+      ),
+    },
   }
 }
 

@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import type { Action, Actions, ActionType, IFeature } from '@teritorio/openstreetmap-logical-history-component'
+import type { ActionType, IFeature } from '@teritorio/openstreetmap-logical-history-component'
 import type { Change } from 'diff'
+import type { ValidatorAction, ValidatorActions } from '~/composables/useChangesLogs'
 import { diffChars } from 'diff'
 import { groupBy, sortBy, uniq } from 'underscore'
 
 const props = defineProps<{
-  diff?: Actions
+  diff?: ValidatorActions
   dst?: IFeature['properties']
   src?: IFeature['properties']
 }>()
@@ -24,7 +25,7 @@ function actionPriority(actionType: ActionType | null): number {
   return { reject: 2, accept: 0 }[actionType] ?? 1
 }
 
-function maxActionPriority(actions: Action[]): number {
+function maxActionPriority(actions: ValidatorAction[]): number {
   return Math.max(...actions.map((action) => actionPriority(action.action)))
 }
 
@@ -89,12 +90,12 @@ function getRowClass(key: string): string | undefined {
   return isRejected(key) ? undefined : 'no_changes'
 }
 
-function getGroupActions(groupedKey: string[]): Action[] | undefined {
+function getGroupActions(groupedKey: string[]): ValidatorAction[] | undefined {
   const key = groupedKey[0]
   if (!key) {
     return undefined
   }
-  return props.diff?.[key] as Action[] | undefined
+  return props.diff?.[key]
 }
 
 function showTextDiff(before: string, after: string): boolean {

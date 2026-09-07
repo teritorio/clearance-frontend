@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Action, IFeature } from '@teritorio/openstreetmap-logical-history-component'
-import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch } from '~/composables/useChangesLogs'
+import type { IFeature } from '@teritorio/openstreetmap-logical-history-component'
+import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch, ValidatorAction } from '~/composables/useChangesLogs'
 import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
 import dayjs from 'dayjs'
@@ -9,7 +9,7 @@ import es from 'dayjs/locale/es'
 import fr from 'dayjs/locale/fr'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { uniq } from 'underscore'
-import { getAfterDates, getAfterUsers } from '~/composables/useChangesLogs'
+import { getAfterDates, getAfterUsers, toLoChaData } from '~/composables/useChangesLogs'
 
 definePageMeta({
   validate({ params }) {
@@ -114,9 +114,9 @@ const loChasWithFilter = computed(() => {
           ...Object.values(link.diff_attribs || {}),
           ...Object.values(link.diff_tags || {}),
         ].some(
-          (actions: Action[]) =>
+          (actions: ValidatorAction[]) =>
             actions?.some(
-              (action: Action) => action.validator_id === route.query.filterByAction,
+              (action: ValidatorAction) => action.validator_id === route.query.filterByAction,
             ) || false,
         ))
         && (route.query.filterByUserGroups === undefined
@@ -390,7 +390,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                   </strong>
                 </div>
               </template>
-              <LoCha :id="String(loCha.metadata.locha_id)" :data="loCha" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
+              <LoCha :id="String(loCha.metadata.locha_id)" :data="toLoChaData(loCha)" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
                 <template v-if="isProjectUser" #header-start-end="{ index: groupIndex }">
                   <el-popconfirm
                     :title="$t('logs.validate_group_confirm')"
