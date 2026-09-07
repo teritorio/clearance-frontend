@@ -241,6 +241,12 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
   max-width: 280px;
 }
 
+/* Prevent the filterable input from expanding the select wrapper */
+:deep(.filter-select .el-select__input) {
+  width: 0;
+  min-width: 0;
+}
+
 :deep(.filter-select.is-active .el-select__wrapper) {
   border-color: #409eff;
   background-color: #ecf5ff;
