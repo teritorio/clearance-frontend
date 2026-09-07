@@ -361,7 +361,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
           </el-button>
         </div>
         <log-filters-overview v-if="showOverview" :lo-chas="data.loChas" />
-        <el-divider />
+        <el-divider v-if="showOverview" />
         <template v-if="loChasWithFilter.length">
           <el-space fill :size="20">
             <el-card
