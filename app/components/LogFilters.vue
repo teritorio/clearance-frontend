@@ -174,7 +174,7 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
       v-model="selectedUser"
       clearable
       size="default"
-      class="filter-select filter-select--fixed" :class="[{ 'is-active': selectedUser !== null }]"
+      class="filter-select" :class="[{ 'is-active': selectedUser !== null }]"
       filterable
       :placeholder="$t('logs.filterUsers')"
     >
@@ -241,8 +241,10 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
   max-width: 280px;
 }
 
-.filter-select--fixed {
-  width: 200px;
+/* Prevent the filterable input from expanding the select wrapper */
+:deep(.filter-select .el-select__input) {
+  width: 0;
+  min-width: 0;
 }
 
 :deep(.filter-select.is-active .el-select__wrapper) {
