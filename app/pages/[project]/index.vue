@@ -13,10 +13,14 @@ definePageMeta({
 const params = useRoute().params
 const project: string = params.project as string
 const config = useRuntimeConfig()
+const nuxtApp = useNuxtApp()
 
 const { data: projectDetails, error } = await useAsyncData<InitializedProject>(
-  'fetchProject',
+  `project:${project}`,
   () => getProject(config.public.api, project),
+  {
+    getCachedData: (key) => (nuxtApp.payload.data[key] ?? nuxtApp.static.data[key]) as InitializedProject | undefined,
+  },
 )
 
 if (error.value) {

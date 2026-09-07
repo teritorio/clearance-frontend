@@ -22,7 +22,7 @@ const { isLoading } = useLoadingIndicator()
 </script>
 
 <template>
-  <nuxt-loading-indicator :height="5" />
+  <nuxt-loading-indicator :height="5" color="var(--el-color-primary)" />
   <div
     v-loading.lock="isLoading"
     :element-loading-text="$t('common.loading')"

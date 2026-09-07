@@ -27,13 +27,18 @@ const { locale } = useI18n()
 const route = useRoute()
 const projectSlug = route.params.project as string
 const config = useRuntimeConfig()
+const nuxtApp = useNuxtApp()
 
 const [
   { data: projectDetails, error: projectError },
   { data: validators, error: validatorsError },
 ] = await Promise.all([
-  useAsyncData<InitializedProject>('fetchProject', () => getProject(config.public.api, projectSlug)),
-  useAsyncData<ValidatorsType>('fetchValidators', () => getValidators(config.public.api, projectSlug)),
+  useAsyncData<InitializedProject>(`project:${projectSlug}`, () => getProject(config.public.api, projectSlug), {
+    getCachedData: (key) => (nuxtApp.payload.data[key] ?? nuxtApp.static.data[key]) as InitializedProject | undefined,
+  }),
+  useAsyncData<ValidatorsType>(`validators:${projectSlug}`, () => getValidators(config.public.api, projectSlug), {
+    getCachedData: (key) => (nuxtApp.payload.data[key] ?? nuxtApp.static.data[key]) as ValidatorsType | undefined,
+  }),
 ])
 
 if (projectError.value || validatorsError.value) {
