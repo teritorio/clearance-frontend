@@ -82,6 +82,20 @@ const userGroups = computed(() => Object.values(projectDetails.value?.user_group
     <el-tabs class="settings-tabs">
       <el-tab-pane :label="$t('validators.tabValidators')">
         <Validators v-if="validators" :validators="validators" />
+        <div v-else class="validators-skeleton">
+          <div class="skeleton-table">
+            <el-skeleton v-for="i in 6" :key="i" animated :rows="0" class="skeleton-row">
+              <template #template>
+                <div class="skeleton-row-inner">
+                  <el-skeleton-item variant="button" style="width: 56px; height: 20px; flex-shrink: 0;" />
+                  <el-skeleton-item variant="text" style="width: 160px; height: 14px; flex-shrink: 0;" />
+                  <el-skeleton-item variant="text" style="flex: 1; height: 14px;" />
+                </div>
+              </template>
+            </el-skeleton>
+          </div>
+          <div class="skeleton-legend" />
+        </div>
       </el-tab-pane>
       <el-tab-pane :label="$t('validators.groups')">
         <LazyUserGroups v-if="userGroups.length" :user-groups="userGroups" :show-map="false" />
@@ -124,5 +138,40 @@ const userGroups = computed(() => Object.values(projectDetails.value?.user_group
 :deep(.el-tab-pane) {
   height: 100%;
   overflow: auto;
+}
+
+.validators-skeleton {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  padding-top: 12px;
+}
+
+.skeleton-table {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-row {
+  border-bottom: 1px solid var(--el-border-color-lighter);
+  padding: 12px 0;
+}
+
+.skeleton-row-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.skeleton-legend {
+  flex-shrink: 0;
+  width: 260px;
+  height: 140px;
+  background: var(--el-fill-color-light);
+  border-radius: var(--el-border-radius-base);
+  border-left: 3px solid var(--el-border-color);
 }
 </style>
