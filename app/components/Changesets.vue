@@ -17,17 +17,21 @@ const accordion = ref<string | number | undefined>(undefined)
       placement="top"
     >
       <p>
-        <span class="comment">✎ {{ changeset.tags?.comment }}</span>
-        <br />
+        <template v-if="changeset.tags?.comment">
+          <span class="comment">✎ {{ changeset.tags.comment }}</span>
+          <br />
+        </template>
         <template v-if="changeset.tags?.source">
           <span class="source">📷 {{ changeset.tags.source }}</span>
         </template>
-        <span class="user">
-          👤&nbsp;<a
-            :href="`https://www.openstreetmap.org/user/${changeset.user}`"
-            target="_blank"
-          >{{ changeset.user }}</a>
-        </span>
+        <template v-if="changeset.user">
+          <span class="user">
+            👤&nbsp;<a
+              :href="`https://www.openstreetmap.org/user/${changeset.user}`"
+              target="_blank"
+            >{{ changeset.user }}</a>
+          </span>
+        </template>
         <template v-if="changeset.tags?.created_by">
           <span class="created_by">🛠 {{ changeset.tags.created_by }}</span>
         </template>
