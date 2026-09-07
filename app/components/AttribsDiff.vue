@@ -21,27 +21,27 @@ defineProps<{
       <template v-else>
         <template v-for="(action, i) in (actions as Action[])" :key="i">
           <el-dropdown
-            v-if="action[2]"
+            v-if="action.options"
             :show-timeout="0"
             class="action-tag"
           >
             <span class="el-dropdown-link">
               <el-badge
-                :value="Object.keys(action[2]).length || undefined"
-                :type="action[1] === 'reject' ? 'danger' : 'info'"
+                :value="Object.keys(action.options).length || undefined"
+                :type="action.action === 'reject' ? 'danger' : 'info'"
               >
                 <el-tag
-                  :type="action[1] === 'reject' ? 'danger' : 'info'"
+                  :type="action.action === 'reject' ? 'danger' : 'info'"
                   size="small"
                   :disable-transitions="true"
                 >
-                  {{ action[0] }} ⮟
+                  {{ action.validator_id }} ⮟
                 </el-tag>
               </el-badge>
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item v-for="(option, k) in action[2]" :key="k">
+                <el-dropdown-item v-for="(option, k) in action.options" :key="k">
                   {{ k }}
                   <template v-if="Array.isArray(option)">
                     <ul>
@@ -59,12 +59,21 @@ defineProps<{
           </el-dropdown>
           <el-tag
             v-else
-            :type="action[1] === 'reject' ? 'danger' : 'info'"
+            :type="action.action === 'reject' ? 'danger' : 'info'"
             size="small"
             :disable-transitions="true"
             class="action-tag"
           >
-            {{ action[0] }}
+            {{ action.validator_id }}
+          </el-tag>
+          <el-tag
+            v-if="action.force"
+            type="warning"
+            size="small"
+            :disable-transitions="true"
+            class="action-tag"
+          >
+            forced
           </el-tag>
         </template>
       </template>

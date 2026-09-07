@@ -116,7 +116,7 @@ const loChasWithFilter = computed(() => {
         ].some(
           (actions: Action[]) =>
             actions?.some(
-              (action: Action) => action[0] === route.query.filterByAction,
+              (action: Action) => action.validator_id === route.query.filterByAction,
             ) || false,
         ))
         && (route.query.filterByUserGroups === undefined
