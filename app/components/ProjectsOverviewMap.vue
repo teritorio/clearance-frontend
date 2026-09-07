@@ -163,6 +163,8 @@ const _unused = _.identity
   height: 280px;
   border-radius: 10px;
   overflow: hidden;
+  /* Firefox does not clip canvas/WebGL content with overflow+border-radius alone */
+  transform: translateZ(0);
   margin-bottom: 1.5rem;
 }
 
