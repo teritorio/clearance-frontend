@@ -5,7 +5,7 @@ const props = defineProps<{
   validators: Validators
 }>()
 
-const legendOpen = ref<string[]>([])
+const legendOpen = ref<string[]>(['legend'])
 
 const rows = computed(() =>
   props.validators.map((item) => {
