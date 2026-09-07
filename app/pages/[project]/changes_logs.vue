@@ -30,7 +30,7 @@ const route = useRoute()
 const projectSlug = route.params.project as string
 const config = useRuntimeConfig()
 const user = useUser()
-const { data, status } = useChangesLogs(projectSlug)
+const { data, status } = await useChangesLogs(projectSlug)
 const pendingAcceptIds = ref(new Set<number>())
 const pendingAcceptGroupKeys = ref(new Set<string>())
 const showOverview = ref(false)
@@ -331,11 +331,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 </script>
 
 <template>
-  <el-main
-    v-loading.lock="status === 'pending'"
-    element-loading-background="#FAFAFA"
-    :element-loading-text="$t('common.loading')"
-  >
+  <el-main>
     <el-alert v-if="status === 'idle' && !data" :title="$t('logs.no_data')" type="warning" />
     <project-context-bar
       v-if="data"

@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import type { InitializedProject } from '~/libs/types'
 import ProjectCompo from '~/components/Project.vue'
-import {
-  getAsyncDataOrThrows,
-  setAsyncRef,
-} from '~/libs/getAsyncData'
 import { getProject } from '~/libs/types'
 
 definePageMeta({
@@ -16,11 +12,20 @@ definePageMeta({
 
 const params = useRoute().params
 const project: string = params.project as string
-const projectDetails = ref<InitializedProject>()
 const config = useRuntimeConfig()
+const nuxtApp = useNuxtApp()
 
-getAsyncDataOrThrows('fetchProject', () =>
-  getProject(config.public.api, project)).then(setAsyncRef(projectDetails))
+const { data: projectDetails, error } = await useAsyncData<InitializedProject>(
+  `project:${project}`,
+  () => getProject(config.public.api, project),
+  {
+    getCachedData: (key) => (nuxtApp.payload.data[key] ?? nuxtApp.static.data[key]) as InitializedProject | undefined,
+  },
+)
+
+if (error.value) {
+  throw createError({ fatal: true })
+}
 </script>
 
 <template>
