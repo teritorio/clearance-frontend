@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Action, Actions } from '@teritorio/openstreetmap-logical-history-component'
+import type { ValidatorAction, ValidatorActions } from '~/composables/useChangesLogs'
 
 defineProps<{
-  diff: Actions
+  diff: ValidatorActions
 }>()
 </script>
 
@@ -10,7 +10,7 @@ defineProps<{
   <div class="attribs-diff">
     <template v-for="(actions, key) in diff" :key="key">
       <el-tag
-        v-if="(actions as Action[]).length === 0"
+        v-if="(actions as ValidatorAction[]).length === 0"
         type="warning"
         size="small"
         :disable-transitions="true"
@@ -19,7 +19,7 @@ defineProps<{
         ?
       </el-tag>
       <template v-else>
-        <template v-for="(action, i) in (actions as Action[])" :key="i">
+        <template v-for="(action, i) in (actions as ValidatorAction[])" :key="i">
           <el-dropdown
             v-if="action.options"
             :show-timeout="0"
