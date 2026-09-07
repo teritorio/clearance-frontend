@@ -1,4 +1,4 @@
-import type { Action, ApiLink, IFeature, LoChaData } from '@teritorio/openstreetmap-logical-history-component'
+import type { Action, ActionTypeOptions, ApiLink, IFeature, LoChaData } from '@teritorio/openstreetmap-logical-history-component'
 import type { Changeset, InitializedProject, ValidatorAction } from '~/libs/types'
 import { uniq } from 'underscore'
 
@@ -50,7 +50,7 @@ function adaptValidatorActions(raw: ValidatorActions | undefined): Record<string
   return Object.fromEntries(
     Object.entries(raw).map(([key, actions]) => [
       key,
-      actions.map((a) => [a.validator_id, a.action, a.options ?? null] as unknown as Action),
+      actions.map((a): Action => [a.validator_id, a.action, a.options as ActionTypeOptions | null]),
     ]),
   )
 }
