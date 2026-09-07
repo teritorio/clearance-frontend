@@ -28,15 +28,27 @@ const route = useRoute()
 const projectSlug = route.params.project as string
 const config = useRuntimeConfig()
 
-const { data: projectDetails } = useAsyncData<InitializedProject>(
+const { data: projectDetails, error: projectError } = useAsyncData<InitializedProject>(
   'fetchProject',
   () => getProject(config.public.api, projectSlug),
 )
 
-const { data: validators } = useAsyncData<ValidatorsType>(
+const { data: validators, status: validatorsStatus, error: validatorsError } = useAsyncData<ValidatorsType>(
   'fetchValidators',
   () => getValidators(config.public.api, projectSlug),
 )
+
+watch(projectError, (err) => {
+  if (err) {
+    throw createError({ fatal: true })
+  }
+}, { immediate: true })
+
+watch(validatorsError, (err) => {
+  if (err) {
+    throw createError({ fatal: true })
+  }
+}, { immediate: true })
 
 const lastUpdateCompact = computed(() => {
   const dateStr = projectDetails.value?.date_last_update
@@ -80,7 +92,7 @@ const userGroups = computed(() => Object.values(projectDetails.value?.user_group
     <el-tabs class="settings-tabs">
       <el-tab-pane :label="$t('validators.tabValidators')">
         <Validators v-if="validators" :validators="validators" />
-        <div v-else class="validators-skeleton">
+        <div v-else-if="validatorsStatus === 'pending'" class="validators-skeleton">
           <div class="skeleton-table">
             <el-skeleton v-for="i in 6" :key="i" animated :rows="0" class="skeleton-row">
               <template #template>
