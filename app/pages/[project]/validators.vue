@@ -28,27 +28,17 @@ const route = useRoute()
 const projectSlug = route.params.project as string
 const config = useRuntimeConfig()
 
-const { data: projectDetails, error: projectError } = useAsyncData<InitializedProject>(
-  'fetchProject',
-  () => getProject(config.public.api, projectSlug),
-)
+const [
+  { data: projectDetails, error: projectError },
+  { data: validators, error: validatorsError },
+] = await Promise.all([
+  useAsyncData<InitializedProject>('fetchProject', () => getProject(config.public.api, projectSlug)),
+  useAsyncData<ValidatorsType>('fetchValidators', () => getValidators(config.public.api, projectSlug)),
+])
 
-const { data: validators, status: validatorsStatus, error: validatorsError } = useAsyncData<ValidatorsType>(
-  'fetchValidators',
-  () => getValidators(config.public.api, projectSlug),
-)
-
-watch(projectError, (err) => {
-  if (err) {
-    throw createError({ fatal: true })
-  }
-}, { immediate: true })
-
-watch(validatorsError, (err) => {
-  if (err) {
-    throw createError({ fatal: true })
-  }
-}, { immediate: true })
+if (projectError.value || validatorsError.value) {
+  throw createError({ fatal: true })
+}
 
 const lastUpdateCompact = computed(() => {
   const dateStr = projectDetails.value?.date_last_update
@@ -92,20 +82,6 @@ const userGroups = computed(() => Object.values(projectDetails.value?.user_group
     <el-tabs class="settings-tabs">
       <el-tab-pane :label="$t('validators.tabValidators')">
         <Validators v-if="validators" :validators="validators" />
-        <div v-else-if="validatorsStatus === 'pending'" class="validators-skeleton">
-          <div class="skeleton-table">
-            <el-skeleton v-for="i in 6" :key="i" animated :rows="0" class="skeleton-row">
-              <template #template>
-                <div class="skeleton-row-inner">
-                  <el-skeleton-item variant="button" style="width: 56px; height: 20px; flex-shrink: 0;" />
-                  <el-skeleton-item variant="text" style="width: 160px; height: 14px; flex-shrink: 0;" />
-                  <el-skeleton-item variant="text" style="flex: 1; height: 14px;" />
-                </div>
-              </template>
-            </el-skeleton>
-          </div>
-          <div class="skeleton-legend" />
-        </div>
       </el-tab-pane>
       <el-tab-pane :label="$t('validators.groups')">
         <LazyUserGroups v-if="userGroups.length" :user-groups="userGroups" :show-map="false" />
@@ -148,40 +124,5 @@ const userGroups = computed(() => Object.values(projectDetails.value?.user_group
 :deep(.el-tab-pane) {
   height: 100%;
   overflow: auto;
-}
-
-.validators-skeleton {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 16px;
-  padding-top: 12px;
-}
-
-.skeleton-table {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.skeleton-row {
-  border-bottom: 1px solid var(--el-border-color-lighter);
-  padding: 12px 0;
-}
-
-.skeleton-row-inner {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.skeleton-legend {
-  flex-shrink: 0;
-  width: 260px;
-  height: 140px;
-  background: var(--el-fill-color-light);
-  border-radius: var(--el-border-radius-base);
-  border-left: 3px solid var(--el-border-color);
 }
 </style>
