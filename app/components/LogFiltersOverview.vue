@@ -85,7 +85,7 @@ type TagType = 'primary' | 'success' | 'warning' | 'danger' | 'info'
 const sections = computed(() => [
   { key: 'filterByAction', label: 'Action', icon: '⚡', type: 'danger' as TagType, extraClass: '', items: statActions.value.map(([v, c]) => ({ value: v as string, count: c })) },
   { key: 'filterByUserGroups', label: 'Groups', icon: '🗺️', type: 'primary' as TagType, extraClass: '', items: statUserGroups.value.map(([v, c]) => ({ value: v as string, count: c })) },
-  { key: 'filterBySelectors', label: 'Selectors', icon: '🏷️', type: 'warning' as TagType, extraClass: '', items: statSelectors.value.map(([m, c]) => ({ value: (m as ClearanceMatch).selectors.join(';'), label: (m as ClearanceMatch).selectors.join(' '), count: c })) },
+  { key: 'filterBySelectors', label: 'Selectors', icon: '🏷️', type: 'info' as TagType, extraClass: 'chip--selector', items: statSelectors.value.map(([m, c]) => ({ value: (m as ClearanceMatch).selectors.join(';'), label: (m as ClearanceMatch).selectors.join(' '), count: c })) },
   { key: 'filterByUsers', label: 'Contributors', icon: '👤', type: 'info' as TagType, extraClass: '', items: statUsers.value.map(([v, c]) => ({ value: v as string, count: c })) },
   { key: 'filterByDate', label: 'Dates', icon: '📅', type: 'info' as TagType, extraClass: 'chip--date', items: statDates.value.map(([v, c]) => ({ value: v as string, count: c })) },
 ].filter((s) => s.items.length > 0))
@@ -129,7 +129,7 @@ const sections = computed(() => [
 .overview-panel {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
   padding: 10px 1.25rem 10px 0;
   border-bottom: 1px solid var(--el-border-color-lighter);
   background: var(--el-fill-color-extra-light);
@@ -168,7 +168,7 @@ const sections = computed(() => [
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 8px;
 }
 
 .chip-badge {
@@ -201,7 +201,8 @@ const sections = computed(() => [
   line-height: 16px;
 }
 
-:deep(.chip--date.el-tag) {
+:deep(.chip--date.el-tag),
+:deep(.chip--selector.el-tag) {
   --el-color-info: #409eff;
   --el-color-info-dark-2: #337ecc;
   --el-color-info-light-3: #79bbff;
