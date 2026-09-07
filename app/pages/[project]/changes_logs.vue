@@ -331,11 +331,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 </script>
 
 <template>
-  <el-main
-    v-loading.lock="status === 'pending'"
-    element-loading-background="#FAFAFA"
-    :element-loading-text="$t('common.loading')"
-  >
+  <el-main>
     <el-alert v-if="status === 'idle' && !data" :title="$t('logs.no_data')" type="warning" />
     <project-context-bar
       v-if="data"
@@ -510,6 +506,38 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
         />
       </div>
     </el-container>
+    <el-container v-else-if="status === 'pending'" direction="vertical" class="changes-container">
+      <div class="locha-list">
+        <div class="filter-bar skeleton-filter-bar">
+          <el-skeleton animated>
+            <template #template>
+              <div class="skeleton-filter-inner">
+                <el-skeleton-item variant="button" style="width: 100px; height: 28px;" />
+                <el-skeleton-item variant="button" style="width: 130px; height: 28px;" />
+                <el-skeleton-item variant="button" style="width: 110px; height: 28px;" />
+                <el-skeleton-item variant="button" style="width: 80px; height: 28px;" />
+              </div>
+            </template>
+          </el-skeleton>
+        </div>
+        <el-space fill :size="20">
+          <el-card v-for="i in 3" :key="i" class="locha-card" style="--el-card-padding: 0;">
+            <el-skeleton animated>
+              <template #template>
+                <div class="skeleton-locha-body">
+                  <div class="skeleton-locha-map" />
+                  <div class="skeleton-locha-content">
+                    <el-skeleton-item variant="text" style="width: 40%; height: 14px;" />
+                    <el-skeleton-item variant="text" style="width: 70%; height: 14px;" />
+                    <el-skeleton-item variant="text" style="width: 55%; height: 14px;" />
+                  </div>
+                </div>
+              </template>
+            </el-skeleton>
+          </el-card>
+        </el-space>
+      </div>
+    </el-container>
   </el-main>
 </template>
 
@@ -618,5 +646,32 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   border-radius: 4px;
   padding: 0.5rem;
   border-top: none;
+}
+
+.skeleton-filter-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.skeleton-locha-body {
+  display: flex;
+  flex-direction: row;
+  min-height: 180px;
+}
+
+.skeleton-locha-map {
+  flex-shrink: 0;
+  width: 240px;
+  background: var(--el-fill-color);
+}
+
+.skeleton-locha-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
 }
 </style>
