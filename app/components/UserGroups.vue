@@ -12,10 +12,12 @@ import {
 } from 'maplibre-gl'
 import _ from 'underscore'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   userGroups: UserGroup[]
   showMap?: boolean
-}>()
+}>(), {
+  showMap: true,
+})
 
 const runtimeConfig = useRuntimeConfig()
 const colors = ['#2364AA', '#EA7317', '#73BFB8', '#FEC601', '#3DA5D9']
