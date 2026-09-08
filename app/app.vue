@@ -101,4 +101,10 @@ body.layout-fixed .el-main {
 .el-tag {
   transition: none;
 }
+
+/* a11y: EP light tag text is too low-contrast on pastel backgrounds */
+.el-tag--success { --el-tag-text-color: #2f6b16; }
+.el-tag--danger  { --el-tag-text-color: #b42318; }
+.el-tag--warning { --el-tag-text-color: #8a5a00; }
+.el-tag--info    { --el-tag-text-color: #606266; }
 </style>

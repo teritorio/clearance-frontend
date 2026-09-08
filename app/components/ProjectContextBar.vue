@@ -63,11 +63,12 @@ const isValidatorsPage = computed(() => route.path.endsWith('/validators'))
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 0 1.25rem;
-  min-height: 48px;
+  padding: 0 1.5rem;
+  min-height: 56px;
   flex-shrink: 0;
-  border-bottom: 1px solid var(--el-border-color-lighter);
-  background: var(--el-bg-color);
+  background: var(--el-fill-color-light);
+  border-bottom: 1px solid var(--el-border-color-light);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .context-left {
@@ -89,7 +90,7 @@ const isValidatorsPage = computed(() => route.path.endsWith('/validators'))
 }
 
 .project-title {
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--el-text-color-primary);
   white-space: nowrap;
@@ -116,6 +117,7 @@ const isValidatorsPage = computed(() => route.path.endsWith('/validators'))
   font-weight: 500;
   white-space: nowrap;
   flex-shrink: 0;
+  background: var(--el-bg-color) !important;
 }
 
 .context-stats {
@@ -155,11 +157,13 @@ const isValidatorsPage = computed(() => route.path.endsWith('/validators'))
 
 .stat-time {
   color: var(--el-color-info-dark-2);
-  background: var(--el-color-info-light-9);
+  background: var(--el-bg-color);
+  border: 1px solid var(--el-color-info-light-5);
 }
 
 .stat-pending {
   color: var(--el-color-primary-dark-2);
-  background: var(--el-color-primary-light-9);
+  background: var(--el-bg-color);
+  border: 1px solid var(--el-color-primary-light-5);
 }
 </style>

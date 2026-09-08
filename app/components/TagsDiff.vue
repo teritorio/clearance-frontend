@@ -12,8 +12,8 @@ const props = defineProps<{
 }>()
 
 const loChaColors = {
-  new: '#52c41a',
-  delete: '#FF0000',
+  new: '#2f7d12',
+  delete: '#d90000',
   updateBefore: '#FFA479',
   updateAfter: '#F2BE00',
 }

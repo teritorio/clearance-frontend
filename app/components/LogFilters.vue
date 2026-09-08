@@ -246,6 +246,10 @@ const hasActiveFilters = computed(() => Object.keys(filters.value ?? {}).length 
   min-width: 0;
 }
 
+:deep(.filter-select .el-select__placeholder) {
+  color: var(--el-text-color-regular);
+}
+
 :deep(.filter-select.is-active .el-select__wrapper) {
   border-color: #409eff;
   background-color: #ecf5ff;

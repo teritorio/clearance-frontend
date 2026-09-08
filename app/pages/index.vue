@@ -70,12 +70,12 @@ function tagFilterStyle(tag: string, checked: boolean) {
   if (checked) {
     return {
       background: 'var(--el-color-primary)',
-      borderColor: 'var(--el-color-primary)',
+      border: '1px solid var(--el-color-primary)',
       color: '#fff',
     }
   }
   const c = useTagColor(tag)
-  return { background: c.bg, borderColor: c.border, color: c.color }
+  return { background: c.bg, border: `1px solid ${c.border}`, color: c.color }
 }
 </script>
 
@@ -116,7 +116,6 @@ function tagFilterStyle(tag: string, checked: boolean) {
             >
               {{ tag }}
             </el-check-tag>
-            <el-button v-if="selectedTags.length" :icon="RefreshLeft" circle class="reset-tags" @click="selectedTags = []" />
           </div>
         </div>
       </div>
@@ -280,7 +279,6 @@ function tagFilterStyle(tag: string, checked: boolean) {
 }
 
 .tag-filters :deep(.el-check-tag) {
-  border: 1px solid;
   border-radius: 20px;
   padding: 5px 14px;
   font-size: 0.85rem;
@@ -295,17 +293,6 @@ function tagFilterStyle(tag: string, checked: boolean) {
 
 .tag-filters :deep(.el-check-tag:hover) {
   filter: brightness(0.92);
-}
-
-.reset-tags {
-  color: var(--el-text-color-placeholder);
-  font-size: 0.8rem;
-}
-
-.search-overlay .reset-tags {
-  color: rgba(255, 255, 255, 0.8);
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .section-title {

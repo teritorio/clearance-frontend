@@ -86,7 +86,7 @@ function featureRef(f: IFeature): string {
 
 .date {
   font-size: 0.75em;
-  color: grey;
+  color: #6b6e76;
   margin: 0;
 }
 
