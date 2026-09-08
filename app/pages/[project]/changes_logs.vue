@@ -162,6 +162,10 @@ const visibleLoChas = computed(() => {
   return loChasWithFilter.value.slice(0, visibleCount.value)
 })
 
+const adaptedLoChaData = computed(() =>
+  new Map(visibleLoChas.value.map((l) => [l.metadata.locha_id, toLoChaData(l)])),
+)
+
 const hasMore = computed(() => {
   return visibleCount.value < loChasWithFilter.value.length
 })
@@ -394,7 +398,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                   </strong>
                 </div>
               </template>
-              <LoCha :id="String(loCha.metadata.locha_id)" :data="toLoChaData(loCha)" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
+              <LoCha :id="String(loCha.metadata.locha_id)" :data="adaptedLoChaData.get(loCha.metadata.locha_id)!" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
                 <template v-if="isProjectUser" #header-start-end="{ index: groupIndex }">
                   <el-popconfirm
                     :title="$t('logs.validate_group_confirm')"
