@@ -128,12 +128,14 @@ const groups = computed(() =>
       <div v-if="!mapLoaded && showMap !== false" class="map-skeleton" />
       <div ref="mapContainer" class="map" :class="{ 'map-hidden': !mapLoaded }" />
     </div>
-    <el-table :data="groups" stripe size="small" style="width: 100%">
+    <el-table :data="groups" border size="small" style="width: 100%">
       <!-- Group name -->
       <el-table-column :label="$t('project.user_group_label')" min-width="180">
         <template #default="{ row }">
           <span class="group-name-cell">
-            <span class="group-dot" :style="{ background: row.color }" />
+            <el-tooltip :content="useI18nHash(row.title)" placement="top" :show-after="300">
+              <span class="group-dot" :style="{ background: row.color }" />
+            </el-tooltip>
             {{ useI18nHash(row.title) }}
           </span>
         </template>
@@ -194,7 +196,8 @@ const groups = computed(() =>
   padding: 1px 7px;
   border-radius: 10px;
   background: var(--el-fill-color);
-  color: var(--el-text-color-secondary);
+  border: 1px solid var(--el-border-color-lighter);
+  color: var(--el-text-color-regular);
   text-decoration: none;
   font-size: 0.75rem;
   white-space: nowrap;

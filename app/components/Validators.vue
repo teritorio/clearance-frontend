@@ -7,11 +7,12 @@ const props = defineProps<{
 
 const rows = computed(() =>
   props.validators.map((item) => {
-    const { id: _id, description, global_osm_tags_matches: _g, specific_osm_tags_matches: _s, ...rawConfig } = item.settings
+    const { id, description, global_osm_tags_matches: _g, specific_osm_tags_matches: _s, ...rawConfig } = item.settings
     const config = Object.fromEntries(
       Object.entries(rawConfig).filter(([, v]) => v !== null),
     )
     return {
+      id,
       actions: item.actions ?? [],
       description,
       config: Object.keys(config).length ? config : null,
@@ -26,6 +27,9 @@ const rows = computed(() =>
       <el-table-column :label="$t('validators.action')" min-width="200">
         <template #default="{ row }">
           <div class="actions-cell">
+            <div v-if="!row.actions.length" class="action-row">
+              <span class="action-validator-id">{{ row.id }}</span>
+            </div>
             <div v-for="action in row.actions" :key="action.validator_id" class="action-row">
               <el-tag
                 :type="action.action === 'accept' ? 'success' : 'danger'"
@@ -57,7 +61,6 @@ const rows = computed(() =>
       <el-table-column :label="$t('validators.config')" min-width="240">
         <template #default="{ row }">
           <pre v-if="row.config" class="config-json">{{ JSON.stringify(row.config, null, 2) }}</pre>
-          <span v-else class="config-empty">—</span>
         </template>
       </el-table-column>
     </el-table>
@@ -194,10 +197,6 @@ const rows = computed(() =>
   max-height: 200px;
   overflow-y: auto;
   color: var(--el-text-color-regular);
-}
-
-.config-empty {
-  color: var(--el-text-color-placeholder);
 }
 
 :deep(.el-table__cell) {

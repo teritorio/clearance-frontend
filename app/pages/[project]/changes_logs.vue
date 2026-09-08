@@ -578,7 +578,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 :deep(.group-header .header-center .match-tag--selector) {
   background-color: #fdf6ec !important;
   border-color: #f3d19e !important;
-  color: #935a10 !important;
+  color: #8a5a00 !important;
 }
 
 :deep(.locha-object h3),
