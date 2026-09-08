@@ -23,6 +23,18 @@ const rows = computed(() =>
 
 <template>
   <div class="validators-wrapper">
+    <p class="intro-text">
+      Liste et ordre des règles de validation appliquées aux changements entrant.
+      <el-tag type="success" size="small" class="legend-tag">
+        accept
+      </el-tag> {{ $t('validators.legendAccept') }} ·
+      <el-tag type="danger" size="small" class="legend-tag">
+        reject
+      </el-tag> {{ $t('validators.legendReject') }} ·
+      <el-tag type="warning" size="small" class="legend-tag">
+        forced
+      </el-tag> {{ $t('validators.legendForced') }}
+    </p>
     <el-table :data="rows" stripe size="small" class="validators-table">
       <el-table-column :label="$t('validators.action')" min-width="200">
         <template #default="{ row }">
@@ -64,99 +76,29 @@ const rows = computed(() =>
         </template>
       </el-table-column>
     </el-table>
-
-    <aside class="legend-callout">
-      <p class="legend-title">
-        ℹ️ {{ $t('validators.legend') }}
-      </p>
-      <div class="legend-body">
-        <div class="legend-row">
-          <el-tag type="success" size="small" class="legend-tag">
-            accept
-          </el-tag>
-          <span>{{ $t('validators.legendAccept') }}</span>
-        </div>
-        <div class="legend-row">
-          <el-tag type="danger" size="small" class="legend-tag">
-            reject
-          </el-tag>
-          <span>{{ $t('validators.legendReject') }}</span>
-        </div>
-        <div class="legend-row">
-          <el-tag type="warning" size="small" class="legend-tag">
-            forced
-          </el-tag>
-          <span>{{ $t('validators.legendForced') }}</span>
-        </div>
-        <p class="legend-order">
-          {{ $t('validators.legendOrder') }}
-        </p>
-      </div>
-    </aside>
   </div>
 </template>
 
 <style scoped>
 .validators-wrapper {
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 16px;
+  flex-direction: column;
+  gap: 12px;
   padding-top: 12px;
 }
 
-.validators-table {
-  flex: 1;
-  min-width: 0;
-}
-
-.legend-callout {
-  flex-shrink: 0;
-  width: 260px;
-  background: var(--el-color-info-light-9);
-  border: 1px solid var(--el-color-info-light-5);
-  border-left: 3px solid var(--el-color-info);
-  border-radius: var(--el-border-radius-base);
-  padding: 12px 14px;
-}
-
-.legend-title {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--el-text-color-primary);
-  margin: 0 0 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.legend-body {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.legend-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  font-size: 0.8rem;
+.intro-text {
+  font-size: 0.85rem;
   color: var(--el-text-color-regular);
-  line-height: 1.4;
+  line-height: 1.6;
+  margin: 0;
 }
 
 .legend-tag {
   font-family: ui-monospace, monospace;
   font-size: 0.72rem;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-.legend-order {
-  margin: 6px 0 0;
-  font-size: 0.75rem;
-  color: #6b6e76;
-  font-style: italic;
-  line-height: 1.4;
+  vertical-align: middle;
+  margin: 0 2px;
 }
 
 .actions-cell {
