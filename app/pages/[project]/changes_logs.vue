@@ -572,13 +572,13 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 :deep(.group-header .header-center .match-tag--group) {
   background-color: #ecf5ff !important;
   border-color: #a0cfff !important;
-  color: #409eff !important;
+  color: #0d5aa7 !important;
 }
 
 :deep(.group-header .header-center .match-tag--selector) {
   background-color: #fdf6ec !important;
   border-color: #f3d19e !important;
-  color: #e6a23c !important;
+  color: #935a10 !important;
 }
 
 :deep(.locha-object h3),
@@ -587,7 +587,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 }
 
 .locha-card {
-  --el-card-bg-color: #e0e0e4;
+  --el-card-bg-color: #ffffff;
 }
 
 .locha-card--pending {

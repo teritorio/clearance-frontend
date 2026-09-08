@@ -151,7 +151,7 @@ const rows = computed(() =>
 .legend-order {
   margin: 6px 0 0;
   font-size: 0.75rem;
-  color: var(--el-text-color-secondary);
+  color: #6b6e76;
   font-style: italic;
   line-height: 1.4;
 }

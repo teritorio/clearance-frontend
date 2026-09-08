@@ -86,22 +86,22 @@ ul.el-timeline {
 }
 
 .comment {
-  background-color: #f7f7ff;
+  background-color: #eff0ff;
   overflow-wrap: break-word;
 }
 
 .source {
   display: block;
-  background-color: #f7fff7;
+  background-color: #ecfdf5;
   overflow-wrap: break-word;
 }
 
 .user {
-  background-color: #fff7f7;
+  background-color: #fef2f2;
 }
 
 .created_by {
-  background-color: #fffff7;
+  background-color: #fefce8;
 }
 
 .comments-link {
