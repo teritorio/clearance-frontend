@@ -217,10 +217,17 @@ const groups = computed(() =>
   height: 200px;
   border-radius: 6px;
   overflow: hidden;
-  /* Firefox does not clip canvas/WebGL content with overflow+border-radius alone;
-     transform forces a compositing layer, clip-path handles newer Firefox versions */
+  /* Firefox does not clip canvas/WebGL content with overflow+border-radius alone.
+     mask-image via radial-gradients is applied on the composited output and
+     reliably clips WebGL layers. clip-path kept as fallback for other browsers. */
   transform: translateZ(0);
   clip-path: inset(0 round 6px);
+  mask-image:
+    radial-gradient(circle at 0 0, #0000 6px, #000 0),
+    radial-gradient(circle at 100% 0, #0000 6px, #000 0),
+    radial-gradient(circle at 0 100%, #0000 6px, #000 0),
+    radial-gradient(circle at 100% 100%, #0000 6px, #000 0);
+  mask-composite: intersect;
 }
 
 .map {
