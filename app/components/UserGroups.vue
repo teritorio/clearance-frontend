@@ -217,8 +217,10 @@ const groups = computed(() =>
   height: 200px;
   border-radius: 6px;
   overflow: hidden;
-  /* Firefox does not clip canvas/WebGL content with overflow+border-radius alone */
+  /* Firefox does not clip canvas/WebGL content with overflow+border-radius alone;
+     transform forces a compositing layer, clip-path handles newer Firefox versions */
   transform: translateZ(0);
+  clip-path: inset(0 round 6px);
 }
 
 .map {

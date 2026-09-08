@@ -163,8 +163,10 @@ const _unused = _.identity
   height: 280px;
   border-radius: 10px;
   overflow: hidden;
-  /* Firefox does not clip canvas/WebGL content with overflow+border-radius alone */
+  /* Firefox does not clip canvas/WebGL content with overflow+border-radius alone;
+     transform forces a compositing layer, clip-path handles newer Firefox versions */
   transform: translateZ(0);
+  clip-path: inset(0 round 10px);
   margin-bottom: 1.5rem;
 }
 
