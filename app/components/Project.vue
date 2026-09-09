@@ -142,7 +142,7 @@ const lastUpdateTitle = computed(() => {
 }
 
 :deep(.el-card__header) {
-  background-color: var(--el-fill-color-lighter);
+  background-color: var(--el-bg-color);
   padding: 0;
 }
 
