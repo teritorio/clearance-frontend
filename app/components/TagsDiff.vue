@@ -179,15 +179,6 @@ function diffText(before: string, after: string): Change[] {
                     >
                       {{ action.validator_id }}
                     </el-tag>
-                    <el-tag
-                      v-if="action.force"
-                      type="warning"
-                      size="small"
-                      :disable-transitions="true"
-                      class="action-tag"
-                    >
-                      forced
-                    </el-tag>
                   </template>
                 </template>
               </th>
