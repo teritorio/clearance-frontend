@@ -197,7 +197,7 @@ const groups = computed(() =>
   display: inline-block;
   padding: 1px 7px;
   border-radius: 10px;
-  background: var(--el-fill-color);
+  background: var(--el-bg-color);
   border: 1px solid var(--el-border-color-lighter);
   color: var(--el-text-color-regular);
   text-decoration: none;
