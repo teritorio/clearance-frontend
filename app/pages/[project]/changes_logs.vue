@@ -205,7 +205,6 @@ onUnmounted(() => {
 const atomUrl = computed(() => `${config.public.api}/projects/${projectSlug}/changes_logs.atom`)
 
 useHead({
-  bodyAttrs: { class: 'layout-fixed' },
   link: [
     {
       rel: 'alternate',
@@ -368,7 +367,10 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
               v-for="loCha in visibleLoChas"
               :key="loCha.metadata.locha_id"
               class="locha-card"
-              :class="{ 'locha-card--pending': pendingAcceptIds.has(loCha.metadata.locha_id) }"
+              :class="{
+                'locha-card--pending': pendingAcceptIds.has(loCha.metadata.locha_id),
+                'locha-card--multi': getRapprochementsCount(loCha) > 1,
+              }"
               style="--el-card-padding: 0;"
             >
               <template v-if="getRapprochementsCount(loCha) > 1" #header>
@@ -515,10 +517,6 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 
 <style scoped>
 .el-main {
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
   padding: 0;
 }
 
@@ -526,12 +524,6 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
   min-height: 48px;
   flex-shrink: 0;
   border-bottom: 1px solid var(--el-border-color-lighter);
-}
-
-:deep(.changes-container) {
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
 }
 
 .filter-bar {
@@ -545,10 +537,6 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 }
 
 .locha-list {
-  flex: 1;
-  min-height: 0;
-  overflow-x: hidden;
-  overflow-y: auto;
   padding: 0.75rem 1.25rem;
 }
 
@@ -588,6 +576,10 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 
 .locha-card {
   --el-card-bg-color: #ffffff;
+}
+
+.locha-card--multi {
+  border-left: 4px solid var(--el-color-primary);
 }
 
 .locha-card--pending {
