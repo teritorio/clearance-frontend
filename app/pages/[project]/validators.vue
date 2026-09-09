@@ -97,9 +97,6 @@ const userGroups = computed(() => Object.values(projectDetails.value?.user_group
 
 <style scoped>
 .settings-page {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
   padding: 0;
 }
 
@@ -109,25 +106,11 @@ const userGroups = computed(() => Object.values(projectDetails.value?.user_group
   border-bottom: 1px solid var(--el-border-color-lighter);
 }
 
-.settings-tabs {
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
 :deep(.el-tabs__header) {
   padding: 0 1.25rem;
 }
 
 :deep(.el-tabs__content) {
-  flex: 1;
-  overflow: hidden;
   padding: 0 1.25rem;
-}
-
-:deep(.el-tab-pane) {
-  height: 100%;
-  overflow: auto;
 }
 </style>
