@@ -47,6 +47,9 @@ const config = useRuntimeConfig()
   color: var(--el-text-color-secondary);
   background: var(--el-fill-color-light);
   border-top: 1px solid var(--el-border-color-lighter);
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
 }
 
 .app-footer a {
