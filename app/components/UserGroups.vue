@@ -127,7 +127,7 @@ const groups = computed(() =>
 <template>
   <div class="user-groups">
     <div v-show="showMap !== false" class="map-wrapper">
-      <div v-if="!mapLoaded && showMap !== false" class="map-skeleton" />
+      <div v-if="!mapLoaded" class="map-skeleton" />
       <div ref="mapContainer" class="map" :class="{ 'map-hidden': !mapLoaded }" />
     </div>
     <el-table :data="groups" border size="small" style="width: 100%">
@@ -217,17 +217,6 @@ const groups = computed(() =>
   height: 200px;
   border-radius: 6px;
   overflow: hidden;
-  /* Firefox does not clip canvas/WebGL content with overflow+border-radius alone.
-     mask-image via radial-gradients is applied on the composited output and
-     reliably clips WebGL layers. clip-path kept as fallback for other browsers. */
-  transform: translateZ(0);
-  clip-path: inset(0 round 6px);
-  mask-image:
-    radial-gradient(circle at 0 0, #0000 6px, #000 0),
-    radial-gradient(circle at 100% 0, #0000 6px, #000 0),
-    radial-gradient(circle at 0 100%, #0000 6px, #000 0),
-    radial-gradient(circle at 100% 100%, #0000 6px, #000 0);
-  mask-composite: intersect;
 }
 
 .map {
@@ -242,14 +231,7 @@ const groups = computed(() =>
 .map-skeleton {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, var(--el-fill-color) 25%, var(--el-fill-color-light) 50%, var(--el-fill-color) 75%);
-  background-size: 400% 100%;
-  animation: shimmer 1.4s ease infinite;
+  background: var(--el-fill-color);
   border-radius: 6px;
-}
-
-@keyframes shimmer {
-  0% { background-position: 100% 0; }
-  100% { background-position: -100% 0; }
 }
 </style>

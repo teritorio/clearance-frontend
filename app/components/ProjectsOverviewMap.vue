@@ -82,7 +82,6 @@ onMounted(() => {
 
     map.on('load', () => {
       mapLoaded.value = true
-
       map.addSource('projects', { type: 'geojson', data: geojson })
 
       map.addLayer({
@@ -163,17 +162,6 @@ const _unused = _.identity
   height: 280px;
   border-radius: 10px;
   overflow: hidden;
-  /* Firefox does not clip canvas/WebGL content with overflow+border-radius alone.
-     mask-image via radial-gradients is applied on the composited output and
-     reliably clips WebGL layers. clip-path kept as fallback for other browsers. */
-  transform: translateZ(0);
-  clip-path: inset(0 round 10px);
-  mask-image:
-    radial-gradient(circle at 0 0, #0000 10px, #000 0),
-    radial-gradient(circle at 100% 0, #0000 10px, #000 0),
-    radial-gradient(circle at 0 100%, #0000 10px, #000 0),
-    radial-gradient(circle at 100% 100%, #0000 10px, #000 0);
-  mask-composite: intersect;
   margin-bottom: 1.5rem;
 }
 
@@ -189,22 +177,7 @@ const _unused = _.identity
 .map-skeleton {
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, #b8d4e8 0%, #a0c4dc 40%, #8eb8d4 100%);
+  background: var(--el-fill-color);
   border-radius: 10px;
-  overflow: hidden;
-}
-
-.map-skeleton::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.18) 50%, transparent 100%);
-  background-size: 200% 100%;
-  animation: shimmer 2s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
 }
 </style>
