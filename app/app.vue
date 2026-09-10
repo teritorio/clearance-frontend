@@ -70,6 +70,7 @@ body {
 
 /* Theme: aligned with clearance-website (amber primary) */
 :root {
+  --locha-scroll-offset: 68px;
   --el-color-primary: #f59e0b;
   --el-color-primary-dark-2: #d97706;
   --el-color-primary-light-3: #f8bb54;
