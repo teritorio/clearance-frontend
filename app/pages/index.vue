@@ -347,7 +347,7 @@ function tagFilterStyle(tag: string, checked: boolean) {
 }
 
 .ghost-card {
-  background-color: var(--el-fill-color-lighter);
+  background-color: var(--el-bg-color);
   border-style: dashed;
   opacity: 0.65;
   cursor: default;
