@@ -160,7 +160,6 @@ const _unused = _.identity
   position: relative;
   width: 100%;
   height: 280px;
-  border-radius: 10px;
   overflow: hidden;
   margin-bottom: 1.5rem;
 }
@@ -178,6 +177,5 @@ const _unused = _.identity
   position: absolute;
   inset: 0;
   background: var(--el-fill-color);
-  border-radius: 10px;
 }
 </style>

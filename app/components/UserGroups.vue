@@ -215,7 +215,6 @@ const groups = computed(() =>
   position: relative;
   width: 100%;
   height: 200px;
-  border-radius: 6px;
   overflow: hidden;
 }
 
@@ -232,6 +231,5 @@ const groups = computed(() =>
   position: absolute;
   inset: 0;
   background: var(--el-fill-color);
-  border-radius: 6px;
 }
 </style>

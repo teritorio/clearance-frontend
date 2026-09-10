@@ -189,7 +189,6 @@ function tagFilterStyle(tag: string, checked: boolean) {
   right: 0;
   height: 60%;
   background: linear-gradient(to bottom, transparent, rgba(10, 10, 20, 0.6));
-  border-radius: 0 0 10px 10px;
   pointer-events: none;
 }
 
