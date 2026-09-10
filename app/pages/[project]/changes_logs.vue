@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IFeature } from '@teritorio/openstreetmap-logical-history-component'
+import type { IFeature, LoChaData } from '@teritorio/openstreetmap-logical-history-component'
 import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch, ValidatorAction } from '~/composables/useChangesLogs'
 import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
@@ -162,8 +162,16 @@ const visibleLoChas = computed(() => {
   return loChasWithFilter.value.slice(0, visibleCount.value)
 })
 
+const loChaDataCache = new WeakMap<ClearanceLoChaData, LoChaData>()
 const adaptedLoChaData = computed(() =>
-  new Map(visibleLoChas.value.map((l) => [l.metadata.locha_id, toLoChaData(l)])),
+  new Map(visibleLoChas.value.map((l) => {
+    let cached = loChaDataCache.get(l)
+    if (!cached) {
+      cached = toLoChaData(l)
+      loChaDataCache.set(l, cached)
+    }
+    return [l.metadata.locha_id, cached]
+  })),
 )
 
 const hasMore = computed(() => {
@@ -277,9 +285,9 @@ async function handleAcceptGroup(loCha: ClearanceLoChaData, groupIndex: number) 
     if (data.value) {
       const locha = data.value.loChas.find((l) => l.metadata.locha_id === loChaId)
       if (locha) {
-        locha.metadata.links.splice(groupIndex, 1)
-        locha.metadata.linkSemanticGroups.splice(groupIndex, 1)
-        locha.features = locha.features
+        const newLinks = locha.metadata.links.filter((_, i) => i !== groupIndex)
+        const newLinkSemanticGroups = locha.metadata.linkSemanticGroups.filter((_, i) => i !== groupIndex)
+        const newFeatures = locha.features
           .filter((f) => f.properties.links !== groupIndex)
           .map((f) => ({
             ...f,
@@ -288,8 +296,15 @@ async function handleAcceptGroup(loCha: ClearanceLoChaData, groupIndex: number) 
               links: f.properties.links > groupIndex ? f.properties.links - 1 : f.properties.links,
             },
           }))
-        if (locha.metadata.links.length === 0) {
+        if (newLinks.length === 0) {
           data.value.loChas = data.value.loChas.filter((l) => l.metadata.locha_id !== loChaId)
+        }
+        else {
+          data.value.loChas = data.value.loChas.map((l) =>
+            l.metadata.locha_id !== loChaId
+              ? l
+              : { ...l, features: newFeatures, metadata: { ...l.metadata, links: newLinks, linkSemanticGroups: newLinkSemanticGroups } },
+          )
         }
       }
     }
