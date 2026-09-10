@@ -349,7 +349,6 @@ function tagFilterStyle(tag: string, checked: boolean) {
 .ghost-card {
   background-color: var(--el-bg-color);
   border-style: dashed;
-  opacity: 0.65;
   cursor: default;
 }
 
@@ -362,7 +361,7 @@ function tagFilterStyle(tag: string, checked: boolean) {
 
 .project-id {
   font-weight: 600;
-  color: var(--el-text-color-secondary);
+  color: var(--el-text-color-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
