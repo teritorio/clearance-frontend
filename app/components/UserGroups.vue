@@ -30,87 +30,84 @@ onMounted(() => {
     return
   }
 
+  if (!mapContainer.value) {
+    return
+  }
+
   type ColoredGroup = UserGroup & { color: string }
   const coloredGroups: ColoredGroup[] = props.userGroups.map((userGroup: UserGroup, index: number) => ({
     ...userGroup,
     color: colors[index % colors.length]!,
   }))
-  const fetchAllPolygons: Promise<
-    Feature<Polygon | MultiPolygon> | undefined
-  >[] = coloredGroups
-    .filter((userGroup) => !!userGroup.polygon)
-    .map((userGroup) => {
-      return fetch(userGroup.polygon!).then(async (data) => {
-        if (data.ok) {
-          const geojson: Feature<Polygon | MultiPolygon> = {
-            type: 'Feature',
-            geometry: await data.json(),
-            properties: { color: userGroup.color },
+
+  // Start polygon fetches and map init in parallel
+  const polygonsPromise: Promise<(Feature<Polygon | MultiPolygon> | undefined)[]> = Promise.all(
+    coloredGroups
+      .filter((userGroup) => !!userGroup.polygon)
+      .map((userGroup) => {
+        return fetch(userGroup.polygon!).then(async (data) => {
+          if (data.ok) {
+            const geojson: Feature<Polygon | MultiPolygon> = {
+              type: 'Feature',
+              geometry: await data.json(),
+              properties: { color: userGroup.color },
+            }
+            return geojson
           }
-          return geojson
-        }
-        else {
-          console.error(`Failed to fetch polygon "${userGroup.polygon}": HTTP ${data.status}`)
-        }
-      }).catch((err) => {
-        console.error(`Failed to fetch polygon "${userGroup.polygon}":`, err)
-        return undefined
-      })
-    })
+          else {
+            console.error(`Failed to fetch polygon "${userGroup.polygon}": HTTP ${data.status}`)
+          }
+        }).catch((err) => {
+          console.error(`Failed to fetch polygon "${userGroup.polygon}":`, err)
+          return undefined
+        })
+      }),
+  )
 
-  Promise.all(fetchAllPolygons).then((allPolygons) => {
-    if (!mapContainer.value) {
-      return
-    }
+  const map = new Map({
+    container: mapContainer.value,
+    style: runtimeConfig.public.mapStyleUrl as string,
+    cooperativeGestures: true,
+    attributionControl: false,
+    center: [0, 20],
+    zoom: 1,
+  })
 
+  const mapLoadPromise = new Promise<void>((resolve) => map.once('load', resolve))
+
+  Promise.all([mapLoadPromise, polygonsPromise]).then(([, allPolygons]) => {
     const geojson = {
       type: 'FeatureCollection',
       features: _.compact(allPolygons),
     } as FeatureCollection
 
-    const mapOptions: ConstructorParameters<typeof Map>[0] = {
-      container: mapContainer.value,
-      style: runtimeConfig.public.mapStyleUrl as string,
-      cooperativeGestures: true,
-      attributionControl: false,
-    }
-
     if (geojson.features.length > 0) {
-      mapOptions.bounds = new LngLatBounds(bbox(geojson) as [number, number, number, number])
-      mapOptions.fitBoundsOptions = { maxZoom: 20, padding: 50 }
-    }
-    else {
-      mapOptions.center = [0, 20]
-      mapOptions.zoom = 1
+      map.fitBounds(new LngLatBounds(bbox(geojson) as [number, number, number, number]), { maxZoom: 20, padding: 50, animate: false })
     }
 
-    const map = new Map(mapOptions)
+    mapLoaded.value = true
 
-    map.on('load', () => {
-      mapLoaded.value = true
-      map.addSource('geojson', { type: 'geojson', data: geojson })
-
-      map.addLayer({
-        id: 'geojsonFill',
-        type: 'fill',
-        source: 'geojson',
-        filter: ['==', '$type', 'Polygon'],
-        paint: {
-          'fill-color': ['get', 'color'],
-          'fill-opacity': 0.3,
-        },
-      } as FillLayerSpecification)
-      map.addLayer({
-        id: 'geojsonBorder',
-        type: 'line',
-        source: 'geojson',
-        filter: ['==', '$type', 'Polygon'],
-        paint: {
-          'line-color': ['get', 'color'],
-          'line-width': 2,
-        },
-      } as LineLayerSpecification)
-    })
+    map.addSource('geojson', { type: 'geojson', data: geojson })
+    map.addLayer({
+      id: 'geojsonFill',
+      type: 'fill',
+      source: 'geojson',
+      filter: ['==', '$type', 'Polygon'],
+      paint: {
+        'fill-color': ['get', 'color'],
+        'fill-opacity': 0.3,
+      },
+    } as FillLayerSpecification)
+    map.addLayer({
+      id: 'geojsonBorder',
+      type: 'line',
+      source: 'geojson',
+      filter: ['==', '$type', 'Polygon'],
+      paint: {
+        'line-color': ['get', 'color'],
+        'line-width': 2,
+      },
+    } as LineLayerSpecification)
   })
 })
 

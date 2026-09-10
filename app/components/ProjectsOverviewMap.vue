@@ -25,102 +25,99 @@ function getTitle(project: InitializedProject): string {
 }
 
 onMounted(() => {
-  const projectFetches = props.projects.map((project, projectIndex) => {
-    const color = PROJECT_COLORS[projectIndex % PROJECT_COLORS.length]!
-    const polygonUrls = Object.values(project.user_groups)
-      .filter((ug) => !!ug.polygon)
-      .map((ug) => ug.polygon!)
+  if (!mapContainer.value) {
+    return
+  }
 
-    return Promise.all(
-      polygonUrls.map((url) =>
-        fetch(url)
-          .then(async (r) => {
-            if (r.ok) {
-              return { geometry: await r.json() as Polygon | MultiPolygon, ok: true as const }
-            }
-            return { ok: false as const }
-          })
-          .catch(() => ({ ok: false as const })),
-      ),
-    ).then((results) => {
-      const features: Feature<Polygon | MultiPolygon>[] = results
-        .filter((r): r is { geometry: Polygon | MultiPolygon, ok: true } => r.ok)
-        .map((r) => ({
-          type: 'Feature' as const,
-          geometry: r.geometry,
-          properties: { color, projectId: project.id, title: getTitle(project) },
-        }))
-      return { project, color, features }
-    })
+  // Start polygon fetches and map init in parallel
+  const polygonsPromise = Promise.all(
+    props.projects.map((project, projectIndex) => {
+      const color = PROJECT_COLORS[projectIndex % PROJECT_COLORS.length]!
+      const polygonUrls = Object.values(project.user_groups)
+        .filter((ug) => !!ug.polygon)
+        .map((ug) => ug.polygon!)
+
+      return Promise.all(
+        polygonUrls.map((url) =>
+          fetch(url)
+            .then(async (r) => {
+              if (r.ok) {
+                return { geometry: await r.json() as Polygon | MultiPolygon, ok: true as const }
+              }
+              return { ok: false as const }
+            })
+            .catch(() => ({ ok: false as const })),
+        ),
+      ).then((results) => {
+        const features: Feature<Polygon | MultiPolygon>[] = results
+          .filter((r): r is { geometry: Polygon | MultiPolygon, ok: true } => r.ok)
+          .map((r) => ({
+            type: 'Feature' as const,
+            geometry: r.geometry,
+            properties: { color, projectId: project.id, title: getTitle(project) },
+          }))
+        return { project, color, features }
+      })
+    }),
+  )
+
+  const map = new Map({
+    container: mapContainer.value,
+    style: runtimeConfig.public.mapStyleUrl as string,
+    cooperativeGestures: true,
+    attributionControl: false,
+    center: [0, 20],
+    zoom: 1,
   })
 
-  Promise.all(projectFetches).then((projectData) => {
-    if (!mapContainer.value) {
-      return
-    }
+  const mapLoadPromise = new Promise<void>((resolve) => map.once('load', resolve))
 
+  Promise.all([mapLoadPromise, polygonsPromise]).then(([, projectData]) => {
     const allFeatures = projectData.flatMap((d) => d.features)
     const geojson: FeatureCollection = { type: 'FeatureCollection', features: allFeatures }
 
-    const mapOptions: ConstructorParameters<typeof Map>[0] = {
-      container: mapContainer.value,
-      style: runtimeConfig.public.mapStyleUrl as string,
-      cooperativeGestures: true,
-      attributionControl: false,
-    }
-
     if (geojson.features.length > 0) {
-      mapOptions.bounds = new LngLatBounds(bbox(geojson) as [number, number, number, number])
-      mapOptions.fitBoundsOptions = { maxZoom: 8, padding: 50 }
-    }
-    else {
-      mapOptions.center = [0, 20]
-      mapOptions.zoom = 1
+      map.fitBounds(new LngLatBounds(bbox(geojson) as [number, number, number, number]), { maxZoom: 8, padding: 50, animate: false })
     }
 
-    const map = new Map(mapOptions)
+    mapLoaded.value = true
 
-    map.on('load', () => {
-      mapLoaded.value = true
-      map.addSource('projects', { type: 'geojson', data: geojson })
+    map.addSource('projects', { type: 'geojson', data: geojson })
+    map.addLayer({
+      id: 'projectsFill',
+      type: 'fill',
+      source: 'projects',
+      paint: {
+        'fill-color': ['get', 'color'],
+        'fill-opacity': 0.15,
+      },
+    } as FillLayerSpecification)
+    map.addLayer({
+      id: 'projectsBorder',
+      type: 'line',
+      source: 'projects',
+      paint: {
+        'line-color': ['get', 'color'],
+        'line-width': 2,
+      },
+    } as LineLayerSpecification)
 
-      map.addLayer({
-        id: 'projectsFill',
-        type: 'fill',
-        source: 'projects',
-        paint: {
-          'fill-color': ['get', 'color'],
-          'fill-opacity': 0.15,
-        },
-      } as FillLayerSpecification)
+    projectData.forEach(({ project, color, features }) => {
+      if (!features.length) {
+        return
+      }
+      const fc: FeatureCollection = { type: 'FeatureCollection', features }
+      const [minLon, minLat, maxLon, maxLat] = bbox(fc) as [number, number, number, number]
+      const center: [number, number] = [(minLon + maxLon) / 2, (minLat + maxLat) / 2]
 
-      map.addLayer({
-        id: 'projectsBorder',
-        type: 'line',
-        source: 'projects',
-        paint: {
-          'line-color': ['get', 'color'],
-          'line-width': 2,
-        },
-      } as LineLayerSpecification)
+      const el = document.createElement('button')
+      el.className = 'project-pin'
+      el.style.setProperty('--pin-color', color)
+      el.title = getTitle(project)
+      el.setAttribute('aria-label', getTitle(project))
+      el.addEventListener('click', () => router.push(`/${project.id}/changes_logs`))
 
-      projectData.forEach(({ project, color, features }) => {
-        if (!features.length) {
-          return
-        }
-        const fc: FeatureCollection = { type: 'FeatureCollection', features }
-        const [minLon, minLat, maxLon, maxLat] = bbox(fc) as [number, number, number, number]
-        const center: [number, number] = [(minLon + maxLon) / 2, (minLat + maxLat) / 2]
-
-        const el = document.createElement('button')
-        el.className = 'project-pin'
-        el.style.setProperty('--pin-color', color)
-        el.title = getTitle(project)
-        el.setAttribute('aria-label', getTitle(project))
-        el.addEventListener('click', () => router.push(`/${project.id}/changes_logs`))
-
-        new Marker({ element: el }).setLngLat(center).addTo(map)
-      })
+      new Marker({ element: el }).setLngLat(center).addTo(map)
     })
   })
 })
