@@ -580,7 +580,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 
 .locha-card :deep(.el-card__header) {
   background: var(--el-color-primary-light-9);
-  border-bottom: 1px solid var(--el-color-primary-light-7);
+  border-bottom: none;
 }
 
 .locha-card--multi {
