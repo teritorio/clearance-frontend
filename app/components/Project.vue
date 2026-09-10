@@ -353,7 +353,8 @@ const lastUpdateTitle = computed(() => {
   padding: 1px 7px;
   border-radius: 10px;
   background: var(--el-bg-color);
-  color: var(--el-text-color-secondary);
+  border: 1px solid var(--el-border-color-lighter);
+  color: var(--el-text-color-regular);
   text-decoration: none;
   font-size: 0.75rem;
   white-space: nowrap;
