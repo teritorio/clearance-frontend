@@ -290,7 +290,7 @@ const lastUpdateTitle = computed(() => {
 }
 
 .collapse-section {
-  background-color: var(--el-fill-color-light);
+  background-color: var(--el-bg-color);
   border-radius: 6px;
   padding: 0.625rem 0.875rem;
 }
