@@ -584,8 +584,8 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
 }
 
 .locha-card--multi {
-  border-color: var(--el-color-primary-light-5);
   border-left: 4px solid var(--el-color-primary);
+  --el-card-bg-color: var(--el-color-primary-light-9);
 }
 
 .locha-card--pending {
