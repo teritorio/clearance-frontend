@@ -156,7 +156,7 @@ const visibleCount = ref(BATCH_SIZE)
 
 watch(() => loChasWithFilter.value.length, () => {
   visibleCount.value = visibleCountForHash(loChasWithFilter.value)
-})
+}, { immediate: true })
 
 const visibleLoChas = computed(() => {
   return loChasWithFilter.value.slice(0, visibleCount.value)
