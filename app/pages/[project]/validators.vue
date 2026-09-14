@@ -70,8 +70,6 @@ const lastUpdateTitle = computed(() => {
   }
   return dayjs(dateStr).locale(locale.value).fromNow()
 })
-
-const userGroups = computed(() => Object.values(projectDetails.value?.user_groups ?? {}))
 </script>
 
 <template>
@@ -85,11 +83,11 @@ const userGroups = computed(() => Object.values(projectDetails.value?.user_group
     />
     <div v-else class="context-bar-placeholder" />
     <el-tabs class="settings-tabs">
+      <el-tab-pane :label="$t('validators.tabProject')">
+        <ProjectInfo v-if="projectDetails" :project="projectDetails" />
+      </el-tab-pane>
       <el-tab-pane :label="$t('validators.tabValidators')">
         <Validators v-if="validators" :validators="validators" />
-      </el-tab-pane>
-      <el-tab-pane :label="$t('validators.groups')">
-        <LazyUserGroups v-if="userGroups.length" :user-groups="userGroups" :show-map="false" />
       </el-tab-pane>
     </el-tabs>
   </el-main>

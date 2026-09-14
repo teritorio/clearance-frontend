@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { InitializedProject } from '~/libs/types'
-import { ArrowDown, ArrowRight, CircleCheck, Clock, Link, Setting } from '@element-plus/icons-vue'
+import { ArrowRight, CircleCheck, Clock, Setting } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import en from 'dayjs/locale/en-gb'
 import es from 'dayjs/locale/es'
@@ -15,12 +15,7 @@ dayjs.extend(relativeTime)
 
 const _daysjsLocale = { en, fr, es }
 
-const expanded = ref(false)
-const config = useRuntimeConfig()
 const { locale } = useI18n()
-
-const overpassUrl = computed(() => `${config.public.api}/projects/${props.project.id}/overpasslike/`)
-const atomUrl = computed(() => `${config.public.api}/projects/${props.project.id}/changes_logs.atom`)
 
 const lastUpdateCompact = computed(() => {
   if (!props.project.date_last_update) {
@@ -67,12 +62,6 @@ const lastUpdateTitle = computed(() => {
               </div>
             </div>
           </div>
-          <button class="card-footer" @click="expanded = !expanded">
-            <el-icon class="expand-icon" :class="{ 'is-expanded': expanded }">
-              <ArrowDown />
-            </el-icon>
-            {{ $t('project.seeMore') }}
-          </button>
         </div>
         <nuxt-link :to="`/${project.id}/changes_logs`" class="card-next" :class="{ 'card-next--pending': project.to_be_validated }" :title="project.to_be_validated ? `${$t('project.details')} — ${project.to_be_validated} ${$t('project.toBeValidated')}` : $t('project.details')">
           <span v-if="project.to_be_validated" class="card-next-count">
@@ -84,54 +73,6 @@ const lastUpdateTitle = computed(() => {
         </nuxt-link>
       </div>
     </template>
-
-    <div v-show="expanded" class="card-body">
-      <LazyUserGroups v-if="expanded" :user-groups="Object.values(project.user_groups)" />
-
-      <div class="collapse-section">
-        <ul class="link-list">
-          <li>
-            <el-icon><Link /></el-icon>
-            <span class="link-label">{{ $t('project.overpassUrl') }}</span>
-            <a :href="overpassUrl">{{ overpassUrl }}</a>
-          </li>
-          <li>
-            <el-icon><Link /></el-icon>
-            <span class="link-label">{{ $t('project.extract') }}</span>
-            <a :href="`${config.public.api}/${project.id}/export/${project.id}.osm.pbf`">
-              {{ `${project.id}.osm.pbf` }}
-            </a>
-          </li>
-          <li>
-            <el-icon><Link /></el-icon>
-            <a :href="`${config.public.api}/${project.id}/export/update/`">{{ $t('project.diff') }}</a>
-          </li>
-          <li>
-            <el-icon><Link /></el-icon>
-            <a :href="atomUrl" target="_blank">{{ $t('atomFeed') }}</a>
-          </li>
-        </ul>
-      </div>
-
-      <div v-if="project.main_contacts?.length" class="collapse-section contacts-section">
-        <span class="contacts-label">{{ $t('app.project.mainContacts') }}</span>
-        <div class="contacts-list">
-          <a
-            v-for="user in project.main_contacts"
-            :key="user"
-            :href="`https://www.openstreetmap.org/user/${user}`"
-            target="_blank"
-            class="user-chip"
-          >{{ user }}</a>
-        </div>
-      </div>
-
-      <div class="collapse-section">
-        <p class="join-text">
-          {{ $t('app.project.join') }}
-        </p>
-      </div>
-    </div>
   </el-card>
 </template>
 
@@ -252,125 +193,6 @@ const lastUpdateTitle = computed(() => {
 
 .card-next-arrow {
   font-size: 1.1rem;
-}
-
-.card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 8px;
-  font-size: 0.8rem;
-  color: var(--el-text-color-secondary);
-  background: none;
-  border: none;
-  border-top: 1px solid var(--el-border-color-lighter);
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-}
-
-.card-footer:hover {
-  background: var(--el-fill-color-light);
-  color: var(--el-color-primary);
-}
-
-.expand-icon {
-  transition: transform 0.2s;
-}
-
-.expand-icon.is-expanded {
-  transform: rotate(180deg);
-}
-
-.card-body {
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.collapse-section {
-  background-color: var(--el-bg-color);
-  border: 1px solid var(--el-border-color-lighter);
-  border-radius: 6px;
-  padding: 0.625rem 0.875rem;
-}
-
-.link-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.link-list li {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.875rem;
-  min-width: 0;
-}
-
-.link-list a {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  min-width: 0;
-}
-
-.link-list .el-icon {
-  flex-shrink: 0;
-  color: var(--el-text-color-placeholder);
-}
-
-.link-label {
-  color: var(--el-text-color-secondary);
-  white-space: nowrap;
-}
-
-.contacts-section {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.contacts-label {
-  color: var(--el-text-color-secondary);
-  font-size: 0.875rem;
-  white-space: nowrap;
-}
-
-.contacts-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.user-chip {
-  display: inline-block;
-  padding: 1px 7px;
-  border-radius: 10px;
-  background: var(--el-bg-color);
-  border: 1px solid var(--el-border-color-lighter);
-  color: var(--el-text-color-regular);
-  text-decoration: none;
-  font-size: 0.75rem;
-  white-space: nowrap;
-  transition: background 0.15s, color 0.15s;
-}
-
-.user-chip:hover {
-  background: var(--el-color-primary-light-9);
-  color: var(--el-color-primary);
-}
-
-.join-text {
-  margin: 0;
-  font-size: 0.875rem;
-  color: var(--el-text-color-secondary);
 }
 
 .title-link {
