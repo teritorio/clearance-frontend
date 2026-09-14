@@ -15,7 +15,7 @@ const userGroups = computed(() => Object.values(props.project.user_groups))
 
 <template>
   <div class="project-info">
-    <LazyUserGroups v-if="userGroups.length" :user-groups="userGroups" :show-map="false" />
+    <LazyUserGroups v-if="userGroups.length" :user-groups="userGroups" />
 
     <div class="info-section">
       <ul class="link-list">
