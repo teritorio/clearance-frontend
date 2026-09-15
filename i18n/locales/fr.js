@@ -70,7 +70,7 @@ export default {
   },
   project: {
     control: 'Contrôle',
-    details: 'Détails',
+    details: 'Révision',
     seeMore: 'Infos',
     user_group_label: 'Groupe',
     user_group_users: 'Utilisateurs',
