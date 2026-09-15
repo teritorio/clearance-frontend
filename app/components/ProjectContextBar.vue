@@ -10,7 +10,7 @@ defineProps<{
 }>()
 
 const route = useRoute()
-const isValidatorsPage = computed(() => route.path.endsWith('/validators'))
+const isValidatorsPage = computed(() => route.path.endsWith('/settings'))
 </script>
 
 <template>
@@ -47,7 +47,7 @@ const isValidatorsPage = computed(() => route.path.endsWith('/validators'))
           </el-icon>
         </el-button>
       </nuxt-link>
-      <nuxt-link v-else :to="`/${projectSlug}/validators`" class="details-link">
+      <nuxt-link v-else :to="`/${projectSlug}/settings`" class="details-link">
         <el-button text type="primary">
           {{ $t('project.settings') }}<el-icon class="el-icon--right">
             <Setting />

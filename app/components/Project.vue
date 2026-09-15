@@ -56,7 +56,7 @@ const lastUpdateTitle = computed(() => {
                 <span v-if="lastUpdateCompact" class="stat-badge stat-time" :title="lastUpdateTitle">
                   <el-icon><Clock /></el-icon>{{ lastUpdateCompact }}
                 </span>
-                <nuxt-link :to="`/${project.id}/validators`" class="settings-icon" :title="$t('project.settings')">
+                <nuxt-link :to="`/${project.id}/settings`" class="settings-icon" :title="$t('project.settings')">
                   <el-icon><Setting /></el-icon>
                 </nuxt-link>
               </div>
