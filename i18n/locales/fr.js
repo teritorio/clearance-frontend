@@ -76,7 +76,7 @@ export default {
     data: '✓ Données',
     start: 'Début',
     lastUpdate: 'Fraîcheur des données',
-    toBeValidated: 'À valider',
+    toBeValidated: 'à valider',
     overpassUrl: 'Overpass-like API URL :',
     extract: 'Extrait :',
     diff: 'Diff',
