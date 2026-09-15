@@ -25,10 +25,12 @@ const colors = ['#2364AA', '#EA7317', '#73BFB8', '#FEC601', '#3DA5D9']
 const mapContainer = useTemplateRef<HTMLDivElement>('mapContainer')
 const mapLoaded = ref(false)
 
-onMounted(() => {
+onMounted(async () => {
   if (props.showMap === false) {
     return
   }
+
+  await nextTick()
 
   if (!mapContainer.value) {
     return
