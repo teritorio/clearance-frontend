@@ -101,7 +101,6 @@ export default {
     filterGroup: 'Filtrar por grupo',
     category: 'Categoría',
     sources: 'Fuentes',
-    groups: 'Grupos',
     osmTags: 'Etiquetas OSM',
     duplicateDistance: 'Radio de detección',
     tabProject: 'Proyecto',

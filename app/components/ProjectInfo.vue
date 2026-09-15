@@ -33,11 +33,12 @@ const userGroups = computed(() => Object.values(props.project.user_groups))
         </li>
         <li>
           <el-icon><Link /></el-icon>
-          <a :href="`${config.public.api}/${project.id}/export/update/`">{{ $t('project.diff') }}</a>
+          <span class="link-label">{{ $t('project.diff') }}</span>
+          <a :href="`${config.public.api}/${project.id}/export/update/`">{{ `${config.public.api}/${project.id}/export/update/` }}</a>
         </li>
         <li>
           <el-icon><Link /></el-icon>
-          <a :href="atomUrl" target="_blank">{{ $t('atomFeed') }}</a>
+          <a :href="atomUrl" target="_blank" rel="noopener noreferrer">{{ $t('atomFeed') }}</a>
         </li>
       </ul>
     </div>
@@ -50,6 +51,7 @@ const userGroups = computed(() => Object.values(props.project.user_groups))
           :key="user"
           :href="`https://www.openstreetmap.org/user/${user}`"
           target="_blank"
+          rel="noopener noreferrer"
           class="user-chip"
         >{{ user }}</a>
       </div>

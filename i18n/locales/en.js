@@ -101,7 +101,6 @@ export default {
     filterGroup: 'Filter by group',
     category: 'Category',
     sources: 'Sources',
-    groups: 'Groups',
     osmTags: 'OSM tags',
     duplicateDistance: 'Detection radius',
     tabProject: 'Project',
