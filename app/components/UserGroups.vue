@@ -229,6 +229,6 @@ const groups = computed(() =>
 .map-skeleton {
   position: absolute;
   inset: 0;
-  background: #dbd7cc;
+  background: #f2efe9;
 }
 </style>
