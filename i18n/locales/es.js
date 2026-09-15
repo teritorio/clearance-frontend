@@ -30,8 +30,6 @@ export default {
       noResults: 'Sin resultados para tu búsqueda',
       resetSearch: 'Limpiar búsqueda',
       search: 'Buscar un proyecto…',
-      totalProjects: 'Proyectos activos',
-      totalPending: 'Por validar',
       resetFilters: 'Restablecer',
     },
   },
