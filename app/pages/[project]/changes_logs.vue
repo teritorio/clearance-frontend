@@ -10,6 +10,7 @@ import fr from 'dayjs/locale/fr'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { uniq } from 'underscore'
 import { getAfterDates, getAfterUsers, toLoChaData } from '~/composables/useChangesLogs'
+import { getValidators } from '~/libs/types'
 
 definePageMeta({
   validate({ params }) {
@@ -31,6 +32,10 @@ const projectSlug = route.params.project as string
 const config = useRuntimeConfig()
 const user = useUser()
 const { data, status } = await useChangesLogs(projectSlug)
+const { data: validators } = await useAsyncData(`validators:${projectSlug}`, () => getValidators(config.public.api, projectSlug), { lazy: true })
+const validatorDescriptions = computed<Record<string, string | null>>(() =>
+  Object.fromEntries((validators.value ?? []).map((v) => [v.settings.id, v.settings.description])),
+)
 const pendingAcceptIds = ref(new Set<number>())
 const pendingAcceptGroupKeys = ref(new Set<string>())
 const showOverview = ref(false)
@@ -458,7 +463,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                             :after="feature"
                           />
                           <div v-if="link.diff_attribs && Object.keys(link.diff_attribs).length" class="diff-section diff-section--centered diff-section--attribs">
-                            <AttribsDiff :diff="link.diff_attribs" />
+                            <AttribsDiff :diff="link.diff_attribs" :validator-descriptions="validatorDescriptions" />
                           </div>
                           <div class="diff-section">
                             <TagsDiff
@@ -466,17 +471,19 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                               :diff="link.diff_tags"
                               :src="before?.properties"
                               :dst="feature.properties"
+                              :validator-descriptions="validatorDescriptions"
                             />
                           </div>
                         </template>
                       </template>
                       <template v-else-if="feature.properties.is_new">
                         <div v-if="link.diff_attribs && Object.keys(link.diff_attribs).length" class="diff-section diff-section--centered diff-section--attribs">
-                          <AttribsDiff :diff="link.diff_attribs" />
+                          <AttribsDiff :diff="link.diff_attribs" :validator-descriptions="validatorDescriptions" />
                         </div>
                         <TagsDiff
                           :diff="link.diff_tags"
                           :dst="feature.properties"
+                          :validator-descriptions="validatorDescriptions"
                         />
                       </template>
                       <template v-else>

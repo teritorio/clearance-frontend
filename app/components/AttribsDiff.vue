@@ -3,6 +3,7 @@ import type { ValidatorAction, ValidatorActions } from '~/composables/useChanges
 
 defineProps<{
   diff: ValidatorActions
+  validatorDescriptions?: Record<string, string | null>
 }>()
 </script>
 
@@ -30,13 +31,15 @@ defineProps<{
                 :value="Object.keys(action.options).length || undefined"
                 :type="action.action === 'reject' ? 'danger' : 'info'"
               >
-                <el-tag
-                  :type="action.action === 'reject' ? 'danger' : 'info'"
-                  size="small"
-                  :disable-transitions="true"
-                >
-                  {{ action.validator_id }} ⮟
-                </el-tag>
+                <el-tooltip :content="validatorDescriptions?.[action.validator_id] ?? undefined" :disabled="!validatorDescriptions?.[action.validator_id]" placement="top">
+                  <el-tag
+                    :type="action.action === 'reject' ? 'danger' : 'info'"
+                    size="small"
+                    :disable-transitions="true"
+                  >
+                    {{ action.validator_id }} ⮟
+                  </el-tag>
+                </el-tooltip>
               </el-badge>
             </span>
             <template #dropdown>
@@ -57,15 +60,16 @@ defineProps<{
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <el-tag
-            v-else
-            :type="action.action === 'reject' ? 'danger' : 'info'"
-            size="small"
-            :disable-transitions="true"
-            class="action-tag"
-          >
-            {{ action.validator_id }}
-          </el-tag>
+          <el-tooltip v-else :content="validatorDescriptions?.[action.validator_id] ?? undefined" :disabled="!validatorDescriptions?.[action.validator_id]" placement="top">
+            <el-tag
+              :type="action.action === 'reject' ? 'danger' : 'info'"
+              size="small"
+              :disable-transitions="true"
+              class="action-tag"
+            >
+              {{ action.validator_id }}
+            </el-tag>
+          </el-tooltip>
         </template>
       </template>
     </template>

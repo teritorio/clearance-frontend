@@ -9,6 +9,7 @@ const props = defineProps<{
   diff?: ValidatorActions
   dst?: IFeature['properties']
   src?: IFeature['properties']
+  validatorDescriptions?: Record<string, string | null>
 }>()
 
 const loChaColors = {
@@ -143,13 +144,15 @@ function diffText(before: string, after: string): Change[] {
                           :value="Object.keys(action.options).length || undefined"
                           :type="action.action === 'reject' ? 'danger' : 'info'"
                         >
-                          <el-tag
-                            :type="action.action === 'reject' ? 'danger' : 'info'"
-                            size="small"
-                            :disable-transitions="true"
-                          >
-                            {{ action.validator_id }} ⮟
-                          </el-tag>
+                          <el-tooltip :content="props.validatorDescriptions?.[action.validator_id] ?? undefined" :disabled="!props.validatorDescriptions?.[action.validator_id]" placement="top">
+                            <el-tag
+                              :type="action.action === 'reject' ? 'danger' : 'info'"
+                              size="small"
+                              :disable-transitions="true"
+                            >
+                              {{ action.validator_id }} ⮟
+                            </el-tag>
+                          </el-tooltip>
                         </el-badge>
                       </span>
                       <template #dropdown>
@@ -170,15 +173,16 @@ function diffText(before: string, after: string): Change[] {
                         </el-dropdown-menu>
                       </template>
                     </el-dropdown>
-                    <el-tag
-                      v-else
-                      :type="action.action === 'reject' ? 'danger' : 'info'"
-                      size="small"
-                      :disable-transitions="true"
-                      class="action-tag"
-                    >
-                      {{ action.validator_id }}
-                    </el-tag>
+                    <el-tooltip v-else :content="props.validatorDescriptions?.[action.validator_id] ?? undefined" :disabled="!props.validatorDescriptions?.[action.validator_id]" placement="top">
+                      <el-tag
+                        :type="action.action === 'reject' ? 'danger' : 'info'"
+                        size="small"
+                        :disable-transitions="true"
+                        class="action-tag"
+                      >
+                        {{ action.validator_id }}
+                      </el-tag>
+                    </el-tooltip>
                   </template>
                 </template>
               </th>
