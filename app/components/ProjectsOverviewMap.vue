@@ -3,7 +3,7 @@ import type { Feature, FeatureCollection, MultiPolygon, Polygon } from 'geojson'
 import type { FillLayerSpecification, LineLayerSpecification } from 'maplibre-gl'
 import type { InitializedProject } from '~/libs/types'
 import bbox from '@turf/bbox'
-import { LngLatBounds, Map, Marker } from 'maplibre-gl'
+import { FullscreenControl, LngLatBounds, Map, Marker } from 'maplibre-gl'
 import _ from 'underscore'
 
 const props = defineProps<{
@@ -12,7 +12,7 @@ const props = defineProps<{
 
 const router = useRouter()
 const runtimeConfig = useRuntimeConfig()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 
 const PROJECT_COLORS = ['#2364AA', '#EA7317', '#73BFB8', '#FEC601', '#3DA5D9', '#E63946', '#2A9D8F', '#E9C46A']
 
@@ -65,59 +65,65 @@ onMounted(() => {
     container: mapContainer.value,
     style: runtimeConfig.public.mapStyleUrl as string,
     cooperativeGestures: true,
+    locale: {
+      'CooperativeGesturesHandler.WindowsHelpText': t('map.gestureWindows'),
+      'CooperativeGesturesHandler.MacHelpText': t('map.gestureMac'),
+      'CooperativeGesturesHandler.MobileHelpText': t('map.gestureMobile'),
+    },
     attributionControl: false,
     center: [0, 20],
     zoom: 1,
   })
 
-  const mapLoadPromise = new Promise<void>((resolve) => map.once('load', resolve))
-
-  Promise.all([mapLoadPromise, polygonsPromise]).then(([, projectData]) => {
-    const allFeatures = projectData.flatMap((d) => d.features)
-    const geojson: FeatureCollection = { type: 'FeatureCollection', features: allFeatures }
-
-    if (geojson.features.length > 0) {
-      map.fitBounds(new LngLatBounds(bbox(geojson) as [number, number, number, number]), { maxZoom: 8, padding: 50, animate: false })
-    }
-
+  map.once('load', () => {
     mapLoaded.value = true
+    map.addControl(new FullscreenControl())
 
-    map.addSource('projects', { type: 'geojson', data: geojson })
-    map.addLayer({
-      id: 'projectsFill',
-      type: 'fill',
-      source: 'projects',
-      paint: {
-        'fill-color': ['get', 'color'],
-        'fill-opacity': 0.15,
-      },
-    } as FillLayerSpecification)
-    map.addLayer({
-      id: 'projectsBorder',
-      type: 'line',
-      source: 'projects',
-      paint: {
-        'line-color': ['get', 'color'],
-        'line-width': 2,
-      },
-    } as LineLayerSpecification)
+    polygonsPromise.then((projectData) => {
+      const allFeatures = projectData.flatMap((d) => d.features)
+      const geojson: FeatureCollection = { type: 'FeatureCollection', features: allFeatures }
 
-    projectData.forEach(({ project, color, features }) => {
-      if (!features.length) {
-        return
+      if (geojson.features.length > 0) {
+        map.fitBounds(new LngLatBounds(bbox(geojson) as [number, number, number, number]), { maxZoom: 8, padding: 50, animate: false })
       }
-      const fc: FeatureCollection = { type: 'FeatureCollection', features }
-      const [minLon, minLat, maxLon, maxLat] = bbox(fc) as [number, number, number, number]
-      const center: [number, number] = [(minLon + maxLon) / 2, (minLat + maxLat) / 2]
 
-      const el = document.createElement('button')
-      el.className = 'project-pin'
-      el.style.setProperty('--pin-color', color)
-      el.title = getTitle(project)
-      el.setAttribute('aria-label', getTitle(project))
-      el.addEventListener('click', () => router.push(`/${project.id}/changes_logs`))
+      map.addSource('projects', { type: 'geojson', data: geojson })
+      map.addLayer({
+        id: 'projectsFill',
+        type: 'fill',
+        source: 'projects',
+        paint: {
+          'fill-color': ['get', 'color'],
+          'fill-opacity': 0.15,
+        },
+      } as FillLayerSpecification)
+      map.addLayer({
+        id: 'projectsBorder',
+        type: 'line',
+        source: 'projects',
+        paint: {
+          'line-color': ['get', 'color'],
+          'line-width': 2,
+        },
+      } as LineLayerSpecification)
 
-      new Marker({ element: el }).setLngLat(center).addTo(map)
+      projectData.forEach(({ project, color, features }) => {
+        if (!features.length) {
+          return
+        }
+        const fc: FeatureCollection = { type: 'FeatureCollection', features }
+        const [minLon, minLat, maxLon, maxLat] = bbox(fc) as [number, number, number, number]
+        const center: [number, number] = [(minLon + maxLon) / 2, (minLat + maxLat) / 2]
+
+        const el = document.createElement('button')
+        el.className = 'project-pin'
+        el.style.setProperty('--pin-color', color)
+        el.title = getTitle(project)
+        el.setAttribute('aria-label', getTitle(project))
+        el.addEventListener('click', () => router.push(`/${project.id}/changes_logs`))
+
+        new Marker({ element: el }).setLngLat(center).addTo(map)
+      })
     })
   })
 })
@@ -158,6 +164,7 @@ const _unused = _.identity
   width: 100%;
   height: 280px;
   overflow: hidden;
+  isolation: isolate;
   margin-bottom: 1.5rem;
 }
 
