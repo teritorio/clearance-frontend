@@ -24,6 +24,7 @@ const bounds = ref<LngLatBounds>()
 const geometries = ref<Geometry[]>()
 
 const config = useRuntimeConfig()
+const { t } = useI18n()
 
 let map: Map | undefined
 
@@ -39,6 +40,11 @@ function initMap() {
       bounds: bounds.value,
       fitBoundsOptions: { maxZoom: 17, padding: 50 },
       cooperativeGestures: true,
+      locale: {
+        'CooperativeGesturesHandler.WindowsHelpText': t('map.gestureWindows'),
+        'CooperativeGesturesHandler.MacHelpText': t('map.gestureMac'),
+        'CooperativeGesturesHandler.MobileHelpText': t('map.gestureMobile'),
+      },
       attributionControl: false,
     })
   }
