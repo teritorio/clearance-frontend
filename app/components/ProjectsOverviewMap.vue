@@ -12,7 +12,7 @@ const props = defineProps<{
 
 const router = useRouter()
 const runtimeConfig = useRuntimeConfig()
-const { locale, t } = useI18n()
+const { locale } = useI18n()
 
 const PROJECT_COLORS = ['#2364AA', '#EA7317', '#73BFB8', '#FEC601', '#3DA5D9', '#E63946', '#2A9D8F', '#E9C46A']
 
@@ -21,24 +21,12 @@ const mapLoaded = ref(false)
 
 let map: Map | undefined
 
+const { updateCoopGestureLocale } = useCoopGestureLocale(() => map)
+
 function getTitle(project: InitializedProject): string {
   const m = project.title
   return m[locale.value] || m.en || Object.values(m).find((v) => !!v) || project.id
 }
-
-function updateCoopGestureLocale() {
-  if (!map) {
-    return
-  }
-  const l = (map as any)._locale as Record<string, string>
-  l['CooperativeGesturesHandler.WindowsHelpText'] = t('map.gestureWindows')
-  l['CooperativeGesturesHandler.MacHelpText'] = t('map.gestureMac')
-  l['CooperativeGesturesHandler.MobileHelpText'] = t('map.gestureMobile')
-  map.cooperativeGestures.disable()
-  map.cooperativeGestures.enable()
-}
-
-watch(locale, updateCoopGestureLocale)
 
 onMounted(() => {
   if (!mapContainer.value) {
@@ -98,6 +86,7 @@ onMounted(() => {
       if (!map) {
         return
       }
+      const m = map
       const allFeatures = projectData.flatMap((d) => d.features)
       const geojson: FeatureCollection = { type: 'FeatureCollection', features: allFeatures }
 
@@ -126,7 +115,7 @@ onMounted(() => {
       } as LineLayerSpecification)
 
       projectData.forEach(({ project, color, features }) => {
-        if (!features.length || !map) {
+        if (!features.length) {
           return
         }
         const fc: FeatureCollection = { type: 'FeatureCollection', features }
@@ -140,7 +129,7 @@ onMounted(() => {
         el.setAttribute('aria-label', getTitle(project))
         el.addEventListener('click', () => router.push(`/${project.id}/changes_logs`))
 
-        new Marker({ element: el }).setLngLat(center).addTo(map)
+        new Marker({ element: el }).setLngLat(center).addTo(m)
       })
     })
   })

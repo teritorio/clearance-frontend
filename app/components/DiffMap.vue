@@ -24,23 +24,10 @@ const bounds = ref<LngLatBounds>()
 const geometries = ref<Geometry[]>()
 
 const config = useRuntimeConfig()
-const { locale, t } = useI18n()
 
 let map: Map | undefined
 
-function updateCoopGestureLocale() {
-  if (!map) {
-    return
-  }
-  const l = (map as any)._locale as Record<string, string>
-  l['CooperativeGesturesHandler.WindowsHelpText'] = t('map.gestureWindows')
-  l['CooperativeGesturesHandler.MacHelpText'] = t('map.gestureMac')
-  l['CooperativeGesturesHandler.MobileHelpText'] = t('map.gestureMobile')
-  map.cooperativeGestures.disable()
-  map.cooperativeGestures.enable()
-}
-
-watch(locale, updateCoopGestureLocale)
+const { updateCoopGestureLocale } = useCoopGestureLocale(() => map)
 
 function initMap() {
   if (map || !mapContainerRef.value) {
