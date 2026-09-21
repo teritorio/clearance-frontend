@@ -106,4 +106,22 @@ const config = useRuntimeConfig()
 .github-link:hover {
   color: var(--el-text-color-primary);
 }
+
+@media (max-width: 640px) {
+  .app-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .footer-left,
+  .footer-right {
+    flex: unset;
+    text-align: left;
+  }
+
+  .footer-center {
+    white-space: normal;
+  }
+}
 </style>
