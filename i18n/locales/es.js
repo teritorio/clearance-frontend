@@ -111,7 +111,7 @@ export default {
     gestureMobile: 'Use dos dedos para mover el mapa',
   },
   time: {
-    minutes: 'm',
+    minutes: 'min',
     hours: 'h',
     days: 'd',
     months: 'mes',

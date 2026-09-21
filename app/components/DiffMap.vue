@@ -227,3 +227,9 @@ if (geometries.value.length) {
 <style>
 @import url('maplibre-gl/dist/maplibre-gl.css');
 </style>
+
+<style scoped>
+.map {
+  isolation: isolate;
+}
+</style>
