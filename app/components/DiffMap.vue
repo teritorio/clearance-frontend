@@ -24,9 +24,23 @@ const bounds = ref<LngLatBounds>()
 const geometries = ref<Geometry[]>()
 
 const config = useRuntimeConfig()
-const { t } = useI18n()
+const { locale, t } = useI18n()
 
 let map: Map | undefined
+
+function updateCoopGestureLocale() {
+  if (!map) {
+    return
+  }
+  const l = (map as any)._locale as Record<string, string>
+  l['CooperativeGesturesHandler.WindowsHelpText'] = t('map.gestureWindows')
+  l['CooperativeGesturesHandler.MacHelpText'] = t('map.gestureMac')
+  l['CooperativeGesturesHandler.MobileHelpText'] = t('map.gestureMobile')
+  map.cooperativeGestures.disable()
+  map.cooperativeGestures.enable()
+}
+
+watch(locale, updateCoopGestureLocale)
 
 function initMap() {
   if (map || !mapContainerRef.value) {
@@ -40,11 +54,6 @@ function initMap() {
       bounds: bounds.value,
       fitBoundsOptions: { maxZoom: 17, padding: 50 },
       cooperativeGestures: true,
-      locale: {
-        'CooperativeGesturesHandler.WindowsHelpText': t('map.gestureWindows'),
-        'CooperativeGesturesHandler.MacHelpText': t('map.gestureMac'),
-        'CooperativeGesturesHandler.MobileHelpText': t('map.gestureMobile'),
-      },
       attributionControl: false,
     })
   }
@@ -56,6 +65,7 @@ function initMap() {
     return
   }
 
+  updateCoopGestureLocale()
   map.addControl(new FullscreenControl())
 
   map.on('load', () => {

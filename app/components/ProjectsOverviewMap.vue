@@ -19,10 +19,26 @@ const PROJECT_COLORS = ['#2364AA', '#EA7317', '#73BFB8', '#FEC601', '#3DA5D9', '
 const mapContainer = useTemplateRef<HTMLDivElement>('mapContainer')
 const mapLoaded = ref(false)
 
+let map: Map | undefined
+
 function getTitle(project: InitializedProject): string {
   const m = project.title
   return m[locale.value] || m.en || Object.values(m).find((v) => !!v) || project.id
 }
+
+function updateCoopGestureLocale() {
+  if (!map) {
+    return
+  }
+  const l = (map as any)._locale as Record<string, string>
+  l['CooperativeGesturesHandler.WindowsHelpText'] = t('map.gestureWindows')
+  l['CooperativeGesturesHandler.MacHelpText'] = t('map.gestureMac')
+  l['CooperativeGesturesHandler.MobileHelpText'] = t('map.gestureMobile')
+  map.cooperativeGestures.disable()
+  map.cooperativeGestures.enable()
+}
+
+watch(locale, updateCoopGestureLocale)
 
 onMounted(() => {
   if (!mapContainer.value) {
@@ -61,25 +77,27 @@ onMounted(() => {
     }),
   )
 
-  const map = new Map({
+  map = new Map({
     container: mapContainer.value,
     style: runtimeConfig.public.mapStyleUrl as string,
     cooperativeGestures: true,
-    locale: {
-      'CooperativeGesturesHandler.WindowsHelpText': t('map.gestureWindows'),
-      'CooperativeGesturesHandler.MacHelpText': t('map.gestureMac'),
-      'CooperativeGesturesHandler.MobileHelpText': t('map.gestureMobile'),
-    },
     attributionControl: false,
     center: [0, 20],
     zoom: 1,
   })
 
   map.once('load', () => {
+    if (!map) {
+      return
+    }
+    updateCoopGestureLocale()
     mapLoaded.value = true
     map.addControl(new FullscreenControl())
 
     polygonsPromise.then((projectData) => {
+      if (!map) {
+        return
+      }
       const allFeatures = projectData.flatMap((d) => d.features)
       const geojson: FeatureCollection = { type: 'FeatureCollection', features: allFeatures }
 
@@ -108,7 +126,7 @@ onMounted(() => {
       } as LineLayerSpecification)
 
       projectData.forEach(({ project, color, features }) => {
-        if (!features.length) {
+        if (!features.length || !map) {
           return
         }
         const fc: FeatureCollection = { type: 'FeatureCollection', features }
