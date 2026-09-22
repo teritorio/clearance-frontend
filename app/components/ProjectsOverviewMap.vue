@@ -158,6 +158,7 @@ const _unused = _.identity
   width: 100%;
   height: 280px;
   overflow: hidden;
+  isolation: isolate;
   margin-bottom: 1.5rem;
 }
 
