@@ -3,7 +3,7 @@ import type { Feature, FeatureCollection, MultiPolygon, Polygon } from 'geojson'
 import type { FillLayerSpecification, LineLayerSpecification } from 'maplibre-gl'
 import type { InitializedProject } from '~/libs/types'
 import bbox from '@turf/bbox'
-import { LngLatBounds, Map, Marker } from 'maplibre-gl'
+import { FullscreenControl, LngLatBounds, Map, Marker } from 'maplibre-gl'
 import _ from 'underscore'
 
 const props = defineProps<{
@@ -74,62 +74,62 @@ onMounted(() => {
     zoom: 1,
   })
 
-  const mapLoadPromise = new Promise<void>((resolve) => {
-    map!.once('load', () => {
-      updateCoopGestureLocale()
-      resolve()
-    })
-  })
-
-  Promise.all([mapLoadPromise, polygonsPromise]).then(([, projectData]) => {
+  map.once('load', () => {
     if (!map) {
       return
     }
-    const allFeatures = projectData.flatMap((d) => d.features)
-    const geojson: FeatureCollection = { type: 'FeatureCollection', features: allFeatures }
-
-    if (geojson.features.length > 0) {
-      map.fitBounds(new LngLatBounds(bbox(geojson) as [number, number, number, number]), { maxZoom: 8, padding: 50, animate: false })
-    }
-
+    updateCoopGestureLocale()
     mapLoaded.value = true
+    map.addControl(new FullscreenControl())
 
-    map.addSource('projects', { type: 'geojson', data: geojson })
-    map.addLayer({
-      id: 'projectsFill',
-      type: 'fill',
-      source: 'projects',
-      paint: {
-        'fill-color': ['get', 'color'],
-        'fill-opacity': 0.15,
-      },
-    } as FillLayerSpecification)
-    map.addLayer({
-      id: 'projectsBorder',
-      type: 'line',
-      source: 'projects',
-      paint: {
-        'line-color': ['get', 'color'],
-        'line-width': 2,
-      },
-    } as LineLayerSpecification)
-
-    projectData.forEach(({ project, color, features }) => {
-      if (!features.length) {
+    polygonsPromise.then((projectData) => {
+      if (!map) {
         return
       }
-      const fc: FeatureCollection = { type: 'FeatureCollection', features }
-      const [minLon, minLat, maxLon, maxLat] = bbox(fc) as [number, number, number, number]
-      const center: [number, number] = [(minLon + maxLon) / 2, (minLat + maxLat) / 2]
+      const allFeatures = projectData.flatMap((d) => d.features)
+      const geojson: FeatureCollection = { type: 'FeatureCollection', features: allFeatures }
 
-      const el = document.createElement('button')
-      el.className = 'project-pin'
-      el.style.setProperty('--pin-color', color)
-      el.title = getTitle(project)
-      el.setAttribute('aria-label', getTitle(project))
-      el.addEventListener('click', () => router.push(`/${project.id}/changes_logs`))
+      if (geojson.features.length > 0) {
+        map.fitBounds(new LngLatBounds(bbox(geojson) as [number, number, number, number]), { maxZoom: 8, padding: 50, animate: false })
+      }
 
-      new Marker({ element: el }).setLngLat(center).addTo(map!)
+      map.addSource('projects', { type: 'geojson', data: geojson })
+      map.addLayer({
+        id: 'projectsFill',
+        type: 'fill',
+        source: 'projects',
+        paint: {
+          'fill-color': ['get', 'color'],
+          'fill-opacity': 0.15,
+        },
+      } as FillLayerSpecification)
+      map.addLayer({
+        id: 'projectsBorder',
+        type: 'line',
+        source: 'projects',
+        paint: {
+          'line-color': ['get', 'color'],
+          'line-width': 2,
+        },
+      } as LineLayerSpecification)
+
+      projectData.forEach(({ project, color, features }) => {
+        if (!features.length) {
+          return
+        }
+        const fc: FeatureCollection = { type: 'FeatureCollection', features }
+        const [minLon, minLat, maxLon, maxLat] = bbox(fc) as [number, number, number, number]
+        const center: [number, number] = [(minLon + maxLon) / 2, (minLat + maxLat) / 2]
+
+        const el = document.createElement('button')
+        el.className = 'project-pin'
+        el.style.setProperty('--pin-color', color)
+        el.title = getTitle(project)
+        el.setAttribute('aria-label', getTitle(project))
+        el.addEventListener('click', () => router.push(`/${project.id}/changes_logs`))
+
+        new Marker({ element: el }).setLngLat(center).addTo(map!)
+      })
     })
   })
 })
