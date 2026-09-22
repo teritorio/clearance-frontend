@@ -214,6 +214,13 @@ function tagFilterStyle(tag: string, checked: boolean) {
   min-width: 360px;
 }
 
+@media (max-width: 640px) {
+  .search-overlay .search-input {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
 .search-bar {
   display: flex;
   flex-direction: column;
