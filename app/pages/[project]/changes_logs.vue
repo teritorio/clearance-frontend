@@ -59,15 +59,15 @@ const lastUpdateCompact = computed(() => {
   }
   const diff = dayjs().diff(dayjs(dateStr), 'minute')
   if (diff < 60) {
-    return `${diff}m`
+    return `${diff}${t('time.minutes')}`
   }
   if (diff < 60 * 24) {
-    return `${Math.floor(diff / 60)}h`
+    return `${Math.floor(diff / 60)}${t('time.hours')}`
   }
   if (diff < 60 * 24 * 30) {
-    return `${Math.floor(diff / (60 * 24))}d`
+    return `${Math.floor(diff / (60 * 24))}${t('time.days')}`
   }
-  return `${Math.floor(diff / (60 * 24 * 30))}mo`
+  return `${Math.floor(diff / (60 * 24 * 30))}${t('time.months')}`
 })
 
 const lastUpdateTitle = computed(() => {

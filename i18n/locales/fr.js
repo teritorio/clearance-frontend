@@ -110,4 +110,10 @@ export default {
     gestureMac: 'Utilisez ⌘ + défilement pour zoomer sur la carte',
     gestureMobile: 'Utilisez deux doigts pour déplacer la carte',
   },
+  time: {
+    minutes: 'min',
+    hours: 'h',
+    days: 'j',
+    months: 'mois',
+  },
 }

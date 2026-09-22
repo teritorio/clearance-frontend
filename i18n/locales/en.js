@@ -110,4 +110,10 @@ export default {
     gestureMac: 'Use ⌘ + scroll to zoom the map',
     gestureMobile: 'Use two fingers to move the map',
   },
+  time: {
+    minutes: 'm',
+    hours: 'h',
+    days: 'd',
+    months: 'mo',
+  },
 }
