@@ -8,9 +8,10 @@ export function useCoopGestureLocale(getMap: () => Map | undefined) {
     if (!map) {
       return
     }
-    // MapLibre v5 has no public locale setter (Map.setLocale / _locale are private,
-    // and there is no overload on cooperativeGestures.enable()). Mutating _locale
-    // directly then cycling disable/enable is the only way to rebuild the overlay DOM.
+    // MapLibre v4+ has no public locale setter — setCooperativeGestures() was removed
+    // in v4.0.0 with no replacement (see maplibre/maplibre-gl-js#5307). Mutating the
+    // private _locale field then cycling disable/enable is the only workaround until
+    // a public API is restored upstream.
     const l = (map as any)._locale as Record<string, string>
     l['CooperativeGesturesHandler.WindowsHelpText'] = t('map.gestureWindows')
     l['CooperativeGesturesHandler.MacHelpText'] = t('map.gestureMac')
