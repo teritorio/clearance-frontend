@@ -210,7 +210,6 @@ const groups = computed(() =>
   color: var(--el-text-color-regular);
   text-decoration: none;
   font-size: 0.75rem;
-  white-space: nowrap;
   transition: background 0.15s, color 0.15s;
 }
 
