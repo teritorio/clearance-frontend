@@ -105,4 +105,9 @@ export default {
     tabValidators: 'Validadores',
   },
   atomFeed: 'Fuente Atom',
+  map: {
+    gestureWindows: 'Use Ctrl + desplazamiento para hacer zoom en el mapa',
+    gestureMac: 'Use ⌘ + desplazamiento para hacer zoom en el mapa',
+    gestureMobile: 'Use dos dedos para mover el mapa',
+  },
 }

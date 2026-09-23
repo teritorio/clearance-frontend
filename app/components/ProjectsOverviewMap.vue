@@ -19,6 +19,10 @@ const PROJECT_COLORS = ['#2364AA', '#EA7317', '#73BFB8', '#FEC601', '#3DA5D9', '
 const mapContainer = useTemplateRef<HTMLDivElement>('mapContainer')
 const mapLoaded = ref(false)
 
+let map: Map | undefined
+
+const { updateCoopGestureLocale } = useCoopGestureLocale(() => map)
+
 function getTitle(project: InitializedProject): string {
   const m = project.title
   return m[locale.value] || m.en || Object.values(m).find((v) => !!v) || project.id
@@ -61,7 +65,7 @@ onMounted(() => {
     }),
   )
 
-  const map = new Map({
+  map = new Map({
     container: mapContainer.value,
     style: runtimeConfig.public.mapStyleUrl as string,
     cooperativeGestures: true,
@@ -70,9 +74,17 @@ onMounted(() => {
     zoom: 1,
   })
 
-  const mapLoadPromise = new Promise<void>((resolve) => map.once('load', resolve))
+  const mapLoadPromise = new Promise<void>((resolve) => {
+    map!.once('load', () => {
+      updateCoopGestureLocale()
+      resolve()
+    })
+  })
 
   Promise.all([mapLoadPromise, polygonsPromise]).then(([, projectData]) => {
+    if (!map) {
+      return
+    }
     const allFeatures = projectData.flatMap((d) => d.features)
     const geojson: FeatureCollection = { type: 'FeatureCollection', features: allFeatures }
 
@@ -117,7 +129,7 @@ onMounted(() => {
       el.setAttribute('aria-label', getTitle(project))
       el.addEventListener('click', () => router.push(`/${project.id}/changes_logs`))
 
-      new Marker({ element: el }).setLngLat(center).addTo(map)
+      new Marker({ element: el }).setLngLat(center).addTo(map!)
     })
   })
 })

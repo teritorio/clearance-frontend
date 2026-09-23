@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { IFeature, LoChaData } from '@teritorio/openstreetmap-logical-history-component'
 import type { ClearanceApiLink, ClearanceLoChaData, ClearanceMatch, ValidatorAction } from '~/composables/useChangesLogs'
+import type { Validators as ValidatorsType } from '~/libs/types'
 import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'
 import { LoCha } from '@teritorio/openstreetmap-logical-history-component'
 import dayjs from 'dayjs'
@@ -26,13 +27,24 @@ dayjs.extend(relativeTime)
 const _daysjsLocale = { en, fr, es }
 
 const { t, locale } = useI18n()
+
+const mapLocale = computed(() => ({
+  'CooperativeGesturesHandler.WindowsHelpText': t('map.gestureWindows'),
+  'CooperativeGesturesHandler.MacHelpText': t('map.gestureMac'),
+  'CooperativeGesturesHandler.MobileHelpText': t('map.gestureMobile'),
+}))
+
 const router = useRouter()
 const route = useRoute()
 const projectSlug = route.params.project as string
 const config = useRuntimeConfig()
+const nuxtApp = useNuxtApp()
 const user = useUser()
 const { data, status } = await useChangesLogs(projectSlug)
-const { data: validators } = await useAsyncData(`validators:${projectSlug}`, () => getValidators(config.public.api, projectSlug), { lazy: true })
+const { data: validators } = await useAsyncData(`validators:${projectSlug}`, () => getValidators(config.public.api, projectSlug), {
+  lazy: true,
+  getCachedData: (key) => (nuxtApp.payload.data[key] ?? nuxtApp.static.data[key]) as ValidatorsType | undefined,
+})
 const validatorDescriptions = computed<Record<string, string | null>>(() =>
   Object.fromEntries((validators.value ?? []).map((v) => [v.settings.id, v.settings.description])),
 )
@@ -416,7 +428,7 @@ function getGroupChangesets(loCha: ClearanceLoChaData, groupIndex: number) {
                   </strong>
                 </div>
               </template>
-              <LoCha :id="String(loCha.metadata.locha_id)" :data="adaptedLoChaData.get(loCha.metadata.locha_id)!" :map-style-url="config.public.mapStyleUrl as string" :hash="route.hash">
+              <LoCha :id="String(loCha.metadata.locha_id)" :data="adaptedLoChaData.get(loCha.metadata.locha_id)!" :map-style-url="config.public.mapStyleUrl as string" :map-locale="mapLocale" :hash="route.hash">
                 <template v-if="isProjectUser" #header-start-end="{ index: groupIndex }">
                   <el-popconfirm
                     :title="$t('logs.validate_group_confirm')"

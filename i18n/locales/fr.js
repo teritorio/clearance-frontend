@@ -105,4 +105,9 @@ export default {
     tabValidators: 'Validateurs',
   },
   atomFeed: 'Flux Atom',
+  map: {
+    gestureWindows: 'Utilisez Ctrl + défilement pour zoomer sur la carte',
+    gestureMac: 'Utilisez ⌘ + défilement pour zoomer sur la carte',
+    gestureMobile: 'Utilisez deux doigts pour déplacer la carte',
+  },
 }

@@ -25,6 +25,10 @@ const colors = ['#2364AA', '#EA7317', '#73BFB8', '#FEC601', '#3DA5D9']
 const mapContainer = useTemplateRef<HTMLDivElement>('mapContainer')
 const mapLoaded = ref(false)
 
+let map: Map | undefined
+
+const { updateCoopGestureLocale } = useCoopGestureLocale(() => map)
+
 onMounted(async () => {
   if (props.showMap === false) {
     return
@@ -66,7 +70,7 @@ onMounted(async () => {
       }),
   )
 
-  const map = new Map({
+  map = new Map({
     container: mapContainer.value,
     style: runtimeConfig.public.mapStyleUrl as string,
     cooperativeGestures: true,
@@ -75,9 +79,14 @@ onMounted(async () => {
     zoom: 1,
   })
 
-  const mapLoadPromise = new Promise<void>((resolve) => map.once('load', resolve))
+  map.once('load', updateCoopGestureLocale)
+
+  const mapLoadPromise = new Promise<void>((resolve) => map!.once('load', resolve))
 
   Promise.all([mapLoadPromise, polygonsPromise]).then(([, allPolygons]) => {
+    if (!map) {
+      return
+    }
     const geojson = {
       type: 'FeatureCollection',
       features: _.compact(allPolygons),
