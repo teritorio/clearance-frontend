@@ -85,6 +85,7 @@ const rows = computed(() =>
   flex-direction: column;
   gap: 12px;
   padding-top: 12px;
+  overflow-x: auto;
 }
 
 .intro-text {
