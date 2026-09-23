@@ -69,6 +69,7 @@ onMounted(() => {
     style: runtimeConfig.public.mapStyleUrl as string,
     cooperativeGestures: true,
     attributionControl: false,
+    renderWorldCopies: false,
     center: [0, 20],
     zoom: 1,
   })
@@ -78,7 +79,6 @@ onMounted(() => {
       return
     }
     updateCoopGestureLocale()
-    mapLoaded.value = true
     map.addControl(new FullscreenControl())
 
     polygonsPromise.then((projectData) => {
@@ -92,6 +92,7 @@ onMounted(() => {
       if (geojson.features.length > 0) {
         m.fitBounds(new LngLatBounds(bbox(geojson) as [number, number, number, number]), { maxZoom: 8, padding: 50, animate: false })
       }
+      mapLoaded.value = true
 
       m.addSource('projects', { type: 'geojson', data: geojson })
       m.addLayer({
