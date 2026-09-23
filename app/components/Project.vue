@@ -63,7 +63,7 @@ const lastUpdateTitle = computed(() => {
             </div>
           </div>
         </div>
-        <nuxt-link :to="`/${project.id}/changes_logs`" class="card-next" :class="{ 'card-next--pending': project.to_be_validated }" :title="project.to_be_validated ? `${$t('project.details')} - ${project.to_be_validated} ${$t('project.toBeValidated')}` : $t('project.details')">
+        <nuxt-link :to="`/${project.id}/changes_logs`" class="card-next card-next--pending" :title="project.to_be_validated ? `${$t('project.details')} - ${project.to_be_validated} ${$t('project.toBeValidated')}` : $t('project.details')">
           <span v-if="project.to_be_validated" class="card-next-count">
             <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
           </span>
