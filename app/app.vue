@@ -58,12 +58,16 @@ body {
 }
 
 .el-zoom-in-center-enter-active,
-.el-zoom-in-center-leave-active {
+.el-zoom-in-center-leave-active,
+.el-zoom-in-top-enter-active,
+.el-zoom-in-top-leave-active {
   transition: none !important;
 }
 
 .el-zoom-in-center-enter-from,
-.el-zoom-in-center-leave-active {
+.el-zoom-in-center-leave-active,
+.el-zoom-in-top-enter-from,
+.el-zoom-in-top-leave-active {
   opacity: 1 !important;
   transform: none !important;
 }
