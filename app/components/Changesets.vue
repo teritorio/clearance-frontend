@@ -11,8 +11,8 @@ const accordion = ref<string | number | undefined>(undefined)
 <template>
   <el-timeline v-if="changesets.length">
     <el-timeline-item
-      v-for="(changeset, index) in changesets"
-      :key="index"
+      v-for="changeset in changesets"
+      :key="changeset.id"
       :timestamp="changeset.created_at"
       placement="top"
     >
@@ -42,7 +42,7 @@ const accordion = ref<string | number | undefined>(undefined)
           class="comments-link"
         >💬</a>
         <el-collapse v-model="accordion" accordion>
-          <el-collapse-item :name="index">
+          <el-collapse-item :name="changeset.id">
             <template #title>
               <a
                 :href="`https://www.openstreetmap.org/changeset/${changeset.id}`"
