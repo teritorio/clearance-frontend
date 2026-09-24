@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import type { Feature, FeatureCollection, MultiPolygon, Polygon } from 'geojson'
-import type { FillLayerSpecification, LineLayerSpecification } from 'maplibre-gl'
+import type { Feature, FeatureCollection, MultiPolygon, Point, Polygon } from 'geojson'
+import type { CircleLayerSpecification, FillLayerSpecification, LineLayerSpecification } from 'maplibre-gl'
 import type { InitializedProject } from '~/libs/types'
 import bbox from '@turf/bbox'
-import { LngLatBounds, Map, Marker } from 'maplibre-gl'
-import _ from 'underscore'
+import { FullscreenControl, LngLatBounds, Map } from 'maplibre-gl'
 
 const props = defineProps<{
   projects: InitializedProject[]
@@ -18,6 +17,10 @@ const PROJECT_COLORS = ['#2364AA', '#EA7317', '#73BFB8', '#FEC601', '#3DA5D9', '
 
 const mapContainer = useTemplateRef<HTMLDivElement>('mapContainer')
 const mapLoaded = ref(false)
+
+let map: Map | undefined
+
+const { updateCoopGestureLocale } = useCoopGestureLocale(() => map)
 
 function getTitle(project: InitializedProject): string {
   const m = project.title
@@ -61,68 +64,96 @@ onMounted(() => {
     }),
   )
 
-  const map = new Map({
+  map = new Map({
     container: mapContainer.value,
     style: runtimeConfig.public.mapStyleUrl as string,
     cooperativeGestures: true,
     attributionControl: false,
+    renderWorldCopies: false,
     center: [0, 20],
     zoom: 1,
   })
 
-  const mapLoadPromise = new Promise<void>((resolve) => map.once('load', resolve))
-
-  Promise.all([mapLoadPromise, polygonsPromise]).then(([, projectData]) => {
-    const allFeatures = projectData.flatMap((d) => d.features)
-    const geojson: FeatureCollection = { type: 'FeatureCollection', features: allFeatures }
-
-    if (geojson.features.length > 0) {
-      map.fitBounds(new LngLatBounds(bbox(geojson) as [number, number, number, number]), { maxZoom: 8, padding: 50, animate: false })
+  map.once('load', () => {
+    if (!map) {
+      return
     }
+    updateCoopGestureLocale()
+    map.addControl(new FullscreenControl())
 
-    mapLoaded.value = true
-
-    map.addSource('projects', { type: 'geojson', data: geojson })
-    map.addLayer({
-      id: 'projectsFill',
-      type: 'fill',
-      source: 'projects',
-      paint: {
-        'fill-color': ['get', 'color'],
-        'fill-opacity': 0.15,
-      },
-    } as FillLayerSpecification)
-    map.addLayer({
-      id: 'projectsBorder',
-      type: 'line',
-      source: 'projects',
-      paint: {
-        'line-color': ['get', 'color'],
-        'line-width': 2,
-      },
-    } as LineLayerSpecification)
-
-    projectData.forEach(({ project, color, features }) => {
-      if (!features.length) {
+    polygonsPromise.then((projectData) => {
+      if (!map) {
         return
       }
-      const fc: FeatureCollection = { type: 'FeatureCollection', features }
-      const [minLon, minLat, maxLon, maxLat] = bbox(fc) as [number, number, number, number]
-      const center: [number, number] = [(minLon + maxLon) / 2, (minLat + maxLat) / 2]
+      const m = map
+      const allFeatures = projectData.flatMap((d) => d.features)
+      const geojson: FeatureCollection = { type: 'FeatureCollection', features: allFeatures }
 
-      const el = document.createElement('button')
-      el.className = 'project-pin'
-      el.style.setProperty('--pin-color', color)
-      el.title = getTitle(project)
-      el.setAttribute('aria-label', getTitle(project))
-      el.addEventListener('click', () => router.push(`/${project.id}/changes_logs`))
+      if (geojson.features.length > 0) {
+        m.fitBounds(new LngLatBounds(bbox(geojson) as [number, number, number, number]), { maxZoom: 8, padding: 50, animate: false })
+      }
+      mapLoaded.value = true
 
-      new Marker({ element: el }).setLngLat(center).addTo(map)
+      m.addSource('projects', { type: 'geojson', data: geojson })
+      m.addLayer({
+        id: 'projectsFill',
+        type: 'fill',
+        source: 'projects',
+        paint: {
+          'fill-color': ['get', 'color'],
+          'fill-opacity': 0.15,
+        },
+      } as FillLayerSpecification)
+      m.addLayer({
+        id: 'projectsBorder',
+        type: 'line',
+        source: 'projects',
+        paint: {
+          'line-color': ['get', 'color'],
+          'line-width': 2,
+        },
+      } as LineLayerSpecification)
+
+      const pins: Feature<Point>[] = projectData
+        .filter(({ features }) => features.length > 0)
+        .map(({ project, color, features }) => {
+          const fc: FeatureCollection = { type: 'FeatureCollection', features }
+          const [minLon, minLat, maxLon, maxLat] = bbox(fc) as [number, number, number, number]
+          return {
+            type: 'Feature',
+            geometry: { type: 'Point', coordinates: [(minLon + maxLon) / 2, (minLat + maxLat) / 2] },
+            properties: { color, projectId: project.id },
+          }
+        })
+
+      m.addSource('projectPins', { type: 'geojson', data: { type: 'FeatureCollection', features: pins } })
+      m.addLayer({
+        id: 'projectPins',
+        type: 'circle',
+        source: 'projectPins',
+        paint: {
+          'circle-radius': 8,
+          'circle-color': ['get', 'color'],
+          'circle-stroke-width': 2.5,
+          'circle-stroke-color': '#fff',
+        },
+      } as CircleLayerSpecification)
+
+      m.on('mouseenter', 'projectPins', () => {
+        m.getCanvas().style.cursor = 'pointer'
+      })
+      m.on('mouseleave', 'projectPins', () => {
+        m.getCanvas().style.cursor = ''
+      })
+      m.on('click', 'projectPins', (e) => {
+        const projectId = e.features?.[0]?.properties?.projectId
+        if (projectId) {
+          router.push(`/${projectId}/changes_logs`)
+        }
+      })
     })
   })
 })
-
-const _unused = _.identity
 </script>
 
 <template>
@@ -134,22 +165,6 @@ const _unused = _.identity
 
 <style>
 @import url('maplibre-gl/dist/maplibre-gl.css');
-
-.project-pin {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background-color: var(--pin-color);
-  border: 2.5px solid #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
-  cursor: pointer;
-  padding: 0;
-  transition: transform 0.15s;
-}
-
-.project-pin:hover {
-  transform: scale(1.4);
-}
 </style>
 
 <style scoped>
@@ -158,6 +173,7 @@ const _unused = _.identity
   width: 100%;
   height: 280px;
   overflow: hidden;
+  isolation: isolate;
   margin-bottom: 1.5rem;
 }
 

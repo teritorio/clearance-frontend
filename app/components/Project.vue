@@ -15,7 +15,7 @@ dayjs.extend(relativeTime)
 
 const _daysjsLocale = { en, fr, es }
 
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 
 const lastUpdateCompact = computed(() => {
   if (!props.project.date_last_update) {
@@ -23,15 +23,15 @@ const lastUpdateCompact = computed(() => {
   }
   const diff = dayjs().diff(dayjs(props.project.date_last_update), 'minute')
   if (diff < 60) {
-    return `${diff}m`
+    return `${diff}${t('time.minutes')}`
   }
   if (diff < 60 * 24) {
-    return `${Math.floor(diff / 60)}h`
+    return `${Math.floor(diff / 60)}${t('time.hours')}`
   }
   if (diff < 60 * 24 * 30) {
-    return `${Math.floor(diff / (60 * 24))}d`
+    return `${Math.floor(diff / (60 * 24))}${t('time.days')}`
   }
-  return `${Math.floor(diff / (60 * 24 * 30))}mo`
+  return `${Math.floor(diff / (60 * 24 * 30))}${t('time.months')}`
 })
 
 const lastUpdateTitle = computed(() => {
@@ -63,7 +63,7 @@ const lastUpdateTitle = computed(() => {
             </div>
           </div>
         </div>
-        <nuxt-link :to="`/${project.id}/changes_logs`" class="card-next" :class="{ 'card-next--pending': project.to_be_validated }" :title="project.to_be_validated ? `${$t('project.details')} - ${project.to_be_validated} ${$t('project.toBeValidated')}` : $t('project.details')">
+        <nuxt-link :to="`/${project.id}/changes_logs`" class="card-next card-next--pending" :title="project.to_be_validated ? `${$t('project.details')} - ${project.to_be_validated} ${$t('project.toBeValidated')}` : $t('project.details')">
           <span v-if="project.to_be_validated" class="card-next-count">
             <el-icon><CircleCheck /></el-icon>{{ project.to_be_validated }}
           </span>

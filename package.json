@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "0.5.3",
+  "version": "0.7.1",
   "private": true,
   "packageManager": "yarn@4.5.0",
   "scripts": {
@@ -19,7 +19,7 @@
     "@element-plus/icons-vue": "^2.3.2",
     "@element-plus/nuxt": "^1.1.5",
     "@sentry/nuxt": "^10.47.0",
-    "@teritorio/openstreetmap-logical-history-component": "0.8.5",
+    "@teritorio/openstreetmap-logical-history-component": "0.8.8",
     "@turf/bbox": "^7.3.4",
     "@turf/boolean-equal": "^7.3.4",
     "@turf/helpers": "^7.3.4",

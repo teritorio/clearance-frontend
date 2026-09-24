@@ -105,4 +105,15 @@ export default {
     tabValidators: 'Validators',
   },
   atomFeed: 'Atom Feed',
+  map: {
+    gestureWindows: 'Use Ctrl + scroll to zoom the map',
+    gestureMac: 'Use ⌘ + scroll to zoom the map',
+    gestureMobile: 'Use two fingers to move the map',
+  },
+  time: {
+    minutes: 'm',
+    hours: 'h',
+    days: 'd',
+    months: 'mo',
+  },
 }
