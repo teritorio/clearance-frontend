@@ -3,6 +3,9 @@
   "version": "0.7.1",
   "private": true,
   "packageManager": "yarn@4.5.0",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "scripts": {
     "build": "nuxi build",
     "dev": "CERTS_DIR=$(git worktree list --porcelain | grep '^worktree ' | head -1 | sed 's/^worktree //')/.certs UID=$(id -u) GID=$(id -g) docker compose -f docker-compose.dev.yaml up --build --force-recreate",
@@ -39,7 +42,7 @@
     "@nuxt/test-utils": "^3.19.1",
     "@nuxtjs/i18n": "^10.2.4",
     "@types/diff": "^8.0.0",
-    "@types/node": "^22.0.0",
+    "@types/node": "^24.0.0",
     "@types/underscore": "^1.11.15",
     "@vue/test-utils": "^2.4.6",
     "eslint": "^9.38.0",
