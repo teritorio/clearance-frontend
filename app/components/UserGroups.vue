@@ -93,6 +93,7 @@ onMounted(async () => {
     } as FeatureCollection
 
     if (geojson.features.length > 0) {
+      map.resize()
       map.fitBounds(new LngLatBounds(bbox(geojson) as [number, number, number, number]), { maxZoom: 20, padding: 50, animate: false })
     }
 
