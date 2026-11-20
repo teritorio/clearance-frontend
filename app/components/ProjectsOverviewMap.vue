@@ -4,6 +4,7 @@ import type { CircleLayerSpecification, FillLayerSpecification, LineLayerSpecifi
 import type { InitializedProject } from '~/libs/types'
 import bbox from '@turf/bbox'
 import { FullscreenControl, LngLatBounds, Map } from 'maplibre-gl'
+import { fetchPolygon } from '~/libs/fetchPolygon'
 
 const props = defineProps<{
   projects: InitializedProject[]
@@ -42,14 +43,9 @@ onMounted(() => {
 
       return Promise.all(
         polygonUrls.map((url) =>
-          fetch(url)
-            .then(async (r) => {
-              if (r.ok) {
-                return { geometry: await r.json() as Polygon | MultiPolygon, ok: true as const }
-              }
-              return { ok: false as const }
-            })
-            .catch(() => ({ ok: false as const })),
+          fetchPolygon(url).then((geometry) =>
+            geometry ? { geometry, ok: true as const } : { ok: false as const },
+          ),
         ),
       ).then((results) => {
         const features: Feature<Polygon | MultiPolygon>[] = results
@@ -80,6 +76,7 @@ onMounted(() => {
     }
     updateCoopGestureLocale()
     map.addControl(new FullscreenControl())
+    mapLoaded.value = true
 
     polygonsPromise.then((projectData) => {
       if (!map) {
@@ -93,7 +90,6 @@ onMounted(() => {
         m.resize()
         m.fitBounds(new LngLatBounds(bbox(geojson) as [number, number, number, number]), { maxZoom: 8, padding: 50, animate: false })
       }
-      mapLoaded.value = true
 
       m.addSource('projects', { type: 'geojson', data: geojson })
       m.addLayer({
@@ -152,6 +148,8 @@ onMounted(() => {
           router.push(`/${projectId}/changes_logs`)
         }
       })
+    }).catch(() => {
+      // polygon fetches failed, map is already visible
     })
   })
 })
