@@ -11,6 +11,7 @@ import {
   Map,
 } from 'maplibre-gl'
 import _ from 'underscore'
+import { fetchPolygon } from '~/libs/fetchPolygon'
 
 const props = withDefaults(defineProps<{
   userGroups: UserGroup[]
@@ -51,21 +52,15 @@ onMounted(async () => {
     coloredGroups
       .filter((userGroup) => !!userGroup.polygon)
       .map((userGroup) => {
-        return fetch(userGroup.polygon!).then(async (data) => {
-          if (data.ok) {
-            const geojson: Feature<Polygon | MultiPolygon> = {
-              type: 'Feature',
-              geometry: await data.json(),
-              properties: { color: userGroup.color },
-            }
-            return geojson
+        return fetchPolygon(userGroup.polygon!).then((geometry) => {
+          if (!geometry) {
+            return undefined
           }
-          else {
-            console.error(`Failed to fetch polygon "${userGroup.polygon}": HTTP ${data.status}`)
-          }
-        }).catch((err) => {
-          console.error(`Failed to fetch polygon "${userGroup.polygon}":`, err)
-          return undefined
+          return {
+            type: 'Feature',
+            geometry,
+            properties: { color: userGroup.color },
+          } as Feature<Polygon | MultiPolygon>
         })
       }),
   )
@@ -83,6 +78,11 @@ onMounted(async () => {
 
   const mapLoadPromise = new Promise<void>((resolve) => map!.once('load', resolve))
 
+  // Show the map as soon as the style loads, without waiting for polygon fetches
+  mapLoadPromise.then(() => {
+    mapLoaded.value = true
+  }).catch(() => {})
+
   Promise.all([mapLoadPromise, polygonsPromise]).then(([, allPolygons]) => {
     if (!map) {
       return
@@ -96,8 +96,6 @@ onMounted(async () => {
       map.resize()
       map.fitBounds(new LngLatBounds(bbox(geojson) as [number, number, number, number]), { maxZoom: 20, padding: 50, animate: false })
     }
-
-    mapLoaded.value = true
 
     map.addSource('geojson', { type: 'geojson', data: geojson })
     map.addLayer({
@@ -120,6 +118,8 @@ onMounted(async () => {
         'line-width': 2,
       },
     } as LineLayerSpecification)
+  }).catch(() => {
+    // polygon fetches failed, map is already visible
   })
 })
 
